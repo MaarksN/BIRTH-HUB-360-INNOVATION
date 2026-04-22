@@ -51,6 +51,7 @@ void test("dispatchAgentMeshTrigger queues the mesh execution and any matching e
   (prisma.workflow.findMany as unknown as (args: unknown) => Promise<unknown>) = () =>
     Promise.resolve([
       {
+        eventTopic: "customer.renewal_at_risk",
         id: "wf_renewal_guardrail",
         organizationId: "org_renewal"
       }

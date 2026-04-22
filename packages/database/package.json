@@ -14,8 +14,8 @@
     "seed": "tsx prisma/seed.ts"
   },
   "scripts": {
-    "prebuild": "pnpm run db:generate",
-    "pretypecheck": "pnpm --filter @birthub/config build && pnpm --filter @birthub/logger build && pnpm run db:generate",
+    "prebuild": "pnpm --filter @birthub/config build && pnpm --filter @birthub/logger build && pnpm run db:generate",
+    "pretypecheck": "pnpm --filter @birthub/config build && pnpm --filter @birthub/logger build",
     "build": "tsc -b tsconfig.json --force",
     "db:bootstrap:ci": "node --import tsx scripts/bootstrap-ci.ts",
     "db:generate": "node scripts/prisma-runtime-compat.mjs && prisma generate --schema prisma/schema.prisma",
@@ -26,9 +26,9 @@
     "db:seed:destructive": "node --import tsx prisma/seed.ts --profile=destructive --mode=destructive",
     "db:seed:safe": "node --import tsx prisma/seed.ts --profile=safe",
     "lint": "eslint .",
-    "test": "pnpm run db:generate && pnpm run test:unit",
+    "test": "pnpm run test:unit",
     "test:unit": "node --import tsx --test test/access-control.repo.test.ts test/base.repo.test.ts test/client.test.ts test/cross-tenant-access.error.test.ts test/database-availability.test.ts test/database-script-pipelines.test.ts test/engagement.test.ts test/exceeded-quota.error.test.ts test/index.test.ts test/prisma-query-timeout.error.test.ts test/prisma-schema.test.ts test/query-budget.test.ts test/schema-drift-environment.test.ts test/script-runtime.test.ts test/seed-runtime.test.ts test/tenant-required.error.test.ts test/tenant-scope.test.ts test/user-repository.test.ts",
-    "test:isolation": "pnpm run db:generate && node --import tsx --test test/migration.test.ts test/rls.test.ts test/maternal-domain.rls.test.ts",
+    "test:isolation": "pnpm --filter @birthub/config build && pnpm --filter @birthub/logger build && pnpm run db:generate && node --import tsx --test test/migration.test.ts test/rls.test.ts test/maternal-domain.rls.test.ts",
     "typecheck": "tsc -b tsconfig.typecheck.json",
     "db:check:all": "node --import tsx scripts/post-migration-checklist.ts",
     "db:check:drift": "node --import tsx scripts/check-schema-drift.ts",

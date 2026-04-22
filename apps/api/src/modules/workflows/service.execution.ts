@@ -298,12 +298,6 @@ export async function runWorkflowNow(
     throw new Error("WORKFLOW_NOT_PUBLISHED");
   }
 
-  await assertMonthlyWorkflowExecutionLimit({
-    isDryRun: input.dryRun,
-    organizationId: workflow.organizationId,
-    tenantId: workflow.tenantId
-  });
-
   const resumeContext = input.retry
     ? await buildResumeContext({
         organizationId: workflow.organizationId,
@@ -354,6 +348,12 @@ export async function runWorkflowNow(
       };
     }
   }
+
+  await assertMonthlyWorkflowExecutionLimit({
+    isDryRun: input.dryRun,
+    organizationId: workflow.organizationId,
+    tenantId: workflow.tenantId
+  });
 
   const execution = await prisma.$transaction(async (tx) => {
     const createdExecution = await tx.workflowExecution.create({

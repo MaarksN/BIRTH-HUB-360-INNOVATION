@@ -39,6 +39,12 @@
       ],
       "outputs": []
     },
+    "@birthub/database#test": {
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": []
+    },
     "test:isolation": {
       "dependsOn": [
         "^build"

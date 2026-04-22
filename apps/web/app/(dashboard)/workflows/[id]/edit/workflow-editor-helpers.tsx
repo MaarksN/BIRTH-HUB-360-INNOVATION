@@ -266,6 +266,7 @@ export function buildValidation(nodes: Node<BuilderNodeData>[], edges: Edge[]): 
   for (const node of nodes) {
     const parsed = stepSchema.safeParse({
       config: node.data.config,
+      ...(node.data.stepType.startsWith("TRIGGER") ? { isTrigger: true } : {}),
       key: node.id,
       name: node.data.label,
       type: node.data.stepType

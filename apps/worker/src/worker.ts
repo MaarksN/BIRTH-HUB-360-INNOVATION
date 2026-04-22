@@ -349,7 +349,7 @@ export function createBirthHubWorker(): WorkerRuntime {
         data: payload,
         jobName: "workflow-trigger",
         options: {
-          jobId: `${payload.workflowId}:${payload.tenantId}:${Date.now()}`
+          jobId: payload.idempotencyKey ?? `${payload.workflowId ?? payload.topic}:${payload.tenantId}:${Date.now()}`
         },
         queue: WORKFLOW_QUEUE_NAMES.trigger
       });

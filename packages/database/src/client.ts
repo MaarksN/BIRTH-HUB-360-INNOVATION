@@ -8,14 +8,19 @@ import {
 } from "@birthub/config";
 import { createLogger } from "@birthub/logger";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { Prisma, PrismaClient } from "@prisma/client";
+import prismaClientModule, {
+  type Prisma,
+  type PrismaClient
+} from "@prisma/client";
 
 import { PrismaQueryTimeoutError } from "./errors/prisma-query-timeout.error.js";
 import { createPrismaProxy } from "./prisma-proxy.js";
 import { getTenantContext, requireTenantId } from "./tenant-context.js";
 import { scopePrismaArgs } from "./tenant-scope.js";
 
-export { Prisma, PrismaClient } from "@prisma/client";
+const { Prisma, PrismaClient } = prismaClientModule as typeof import("@prisma/client");
+
+export { Prisma, PrismaClient };
 
 const DEFAULT_QUERY_TIMEOUT_MS = 5_000;
 const DEFAULT_DATABASE_CONNECTION_LIMIT = 10;

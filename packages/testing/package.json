@@ -9,8 +9,6 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "prebuild": "pnpm --filter @birthub/database build",
-    "pretypecheck": "pnpm --filter @birthub/database build",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint .",
     "test": "node --import tsx --test src/**/*.test.ts",

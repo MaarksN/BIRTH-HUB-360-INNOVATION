@@ -5,6 +5,7 @@ import {
   WorkflowExecutionStatus,
   WorkflowStepOnError
 } from "@birthub/database";
+import { maskSensitivePayload } from "@birthub/workflows-core";
 
 import type { WorkflowExecutionJobPayload } from "./runner.js";
 import type {
@@ -14,7 +15,6 @@ import type {
 import {
   MAX_ATTEMPTS,
   calculateBackoff,
-  maskSensitivePayload,
   recordWorkflowExecutionUsage,
   shouldFollowTransition
 } from "./runner.shared.js";

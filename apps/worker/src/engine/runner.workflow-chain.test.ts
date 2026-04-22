@@ -36,10 +36,13 @@ void test("Workflow runner chains HTTP, agent execution and notification with mo
   const originalCreateResult = prisma.stepResult.create.bind(prisma.stepResult);
   const originalUpdateExecution = prisma.workflowExecution.update.bind(prisma.workflowExecution);
   const originalFindQuota = prisma.quotaUsage.findFirst.bind(prisma.quotaUsage);
+  const originalFindSubscription = prisma.subscription.findFirst.bind(prisma.subscription);
+  const originalCreateUsage = prisma.usageRecord.create.bind(prisma.usageRecord);
 
   const queuedJobs: WorkflowExecutionJobPayload[] = [];
   const createdResults: Array<Record<string, unknown>> = [];
   const executionUpdates: Array<Record<string, unknown>> = [];
+  const usageRecords: Array<Record<string, unknown>> = [];
   const agentCalls: Array<{ agentId: string; contextSummary: string; input: Record<string, unknown> }> = [];
   const notifications: Array<Record<string, unknown>> = [];
   let outboundBody: unknown = null;
@@ -159,6 +162,12 @@ void test("Workflow runner chains HTTP, agent execution and notification with mo
       return Promise.resolve(args.data);
     };
   (prisma.quotaUsage.findFirst as unknown as (args: unknown) => Promise<unknown>) = () => Promise.resolve(null);
+  (prisma.subscription.findFirst as unknown as (args: unknown) => Promise<unknown>) = () => Promise.resolve(null);
+  (prisma.usageRecord.create as unknown as (args: { data: Record<string, unknown> }) => Promise<unknown>) =
+    (args) => {
+      usageRecords.push(args.data);
+      return Promise.resolve(args.data);
+    };
 
   try {
     const fakeQueue = {
@@ -233,6 +242,7 @@ void test("Workflow runner chains HTTP, agent execution and notification with mo
       executionUpdates.some((update) => update.status === WorkflowExecutionStatus.SUCCESS),
       "Execution should finish as success"
     );
+    assert.equal(usageRecords.length, 1);
   } finally {
     prisma.workflowExecution.findUnique = originalFindExecution;
     prisma.workflow.findFirst = originalFindWorkflow;
@@ -240,6 +250,8 @@ void test("Workflow runner chains HTTP, agent execution and notification with mo
     prisma.stepResult.create = originalCreateResult;
     prisma.workflowExecution.update = originalUpdateExecution;
     prisma.quotaUsage.findFirst = originalFindQuota;
+    prisma.subscription.findFirst = originalFindSubscription;
+    prisma.usageRecord.create = originalCreateUsage;
   }
 });
 

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { JSDOM } from "jsdom";
-import React from "react";
+import React, { act } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 
@@ -28,39 +28,59 @@ void test("login page hydrates without mismatch", async () => {
   const originalDocument = globalThis.document;
   const originalNavigator = globalThis.navigator;
   const originalConsoleError = console.error;
+  const reactActGlobal = globalThis as typeof globalThis & {
+    IS_REACT_ACT_ENVIRONMENT?: boolean;
+  };
+  const originalActEnvironment = reactActGlobal.IS_REACT_ACT_ENVIRONMENT;
   const hydrationErrors: string[] = [];
+  let root: ReturnType<typeof hydrateRoot> | null = null;
 
   Object.defineProperty(globalThis, "window", { configurable: true, value: dom.window });
   Object.defineProperty(globalThis, "document", { configurable: true, value: dom.window.document });
   Object.defineProperty(globalThis, "navigator", { configurable: true, value: dom.window.navigator });
+  reactActGlobal.IS_REACT_ACT_ENVIRONMENT = true;
 
   console.error = (...args: unknown[]) => {
     hydrationErrors.push(args.join(" "));
   };
 
-  const root = hydrateRoot(
-    container,
-    React.createElement(LoginForm, {
-      initialRequestId: "req_test",
-      navigate: () => undefined
-    })
-  );
+  const waitForHydration = () =>
+    new Promise((resolve) => {
+      dom.window.setTimeout(resolve, 0);
+    });
 
-  await new Promise((resolve) => {
-    dom.window.setTimeout(resolve, 50);
-  });
+  try {
+    await act(async () => {
+      root = hydrateRoot(
+        container,
+        React.createElement(LoginForm, {
+          initialRequestId: "req_test",
+          navigate: () => undefined
+        })
+      );
+      await waitForHydration();
+    });
 
-  root.unmount();
-  await new Promise((resolve) => {
-    dom.window.setTimeout(resolve, 50);
-  });
-  dom.window.close();
+    assert.deepEqual(hydrationErrors, []);
+  } finally {
+    if (root) {
+      await act(async () => {
+        root?.unmount();
+        await waitForHydration();
+      });
+    }
 
-  console.error = originalConsoleError;
+    dom.window.close();
+    console.error = originalConsoleError;
 
-  Object.defineProperty(globalThis, "window", { configurable: true, value: originalWindow });
-  Object.defineProperty(globalThis, "document", { configurable: true, value: originalDocument });
-  Object.defineProperty(globalThis, "navigator", { configurable: true, value: originalNavigator });
+    if (originalActEnvironment === undefined) {
+      delete reactActGlobal.IS_REACT_ACT_ENVIRONMENT;
+    } else {
+      reactActGlobal.IS_REACT_ACT_ENVIRONMENT = originalActEnvironment;
+    }
 
-  assert.deepEqual(hydrationErrors, []);
+    Object.defineProperty(globalThis, "window", { configurable: true, value: originalWindow });
+    Object.defineProperty(globalThis, "document", { configurable: true, value: originalDocument });
+    Object.defineProperty(globalThis, "navigator", { configurable: true, value: originalNavigator });
+  }
 });

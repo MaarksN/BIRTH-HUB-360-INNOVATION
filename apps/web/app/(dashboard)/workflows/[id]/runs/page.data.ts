@@ -1,6 +1,9 @@
 import type { Edge, Node } from "reactflow";
 
-import type { WorkflowCanvas } from "@birthub/workflows-core/nextjs";
+import {
+  maskSensitivePayload,
+  type WorkflowCanvas
+} from "@birthub/workflows-core/nextjs";
 
 import { fetchWithSession } from "../../../../../lib/auth-client";
 
@@ -12,8 +15,13 @@ export type WorkflowExecutionSnapshot = {
   isDryRun?: boolean;
   startedAt: string;
   status: "CANCELLED" | "FAILED" | "RUNNING" | "SUCCESS" | "WAITING";
+  triggerPayload: Record<string, unknown> | null;
   stepResults: Array<{
+    attempt: number;
+    durationMs: number | null;
+    errorCode: string | null;
     errorMessage: string | null;
+    nextRetryAt: string | null;
     input: Record<string, unknown> | null;
     output: Record<string, unknown> | null;
     status: "FAILED" | "SKIPPED" | "SUCCESS" | "WAITING";
@@ -67,15 +75,7 @@ export function buildGraph(canvas: WorkflowCanvas | null): {
 }
 
 export function maskSecrets(payload: Record<string, unknown>): string {
-  const clone = { ...payload };
-  for (const key of Object.keys(clone)) {
-    const normalizedKey = key.toLowerCase();
-    if (normalizedKey.includes("secret") || normalizedKey.includes("token")) {
-      clone[key] = "***";
-    }
-  }
-
-  return JSON.stringify(clone, null, 2);
+  return JSON.stringify(maskSensitivePayload(payload), null, 2);
 }
 
 export async function loadWorkflowRuns(workflowId: string): Promise<WorkflowResponse> {

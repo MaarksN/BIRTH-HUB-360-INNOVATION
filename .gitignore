@@ -33,3 +33,11 @@
 # Build metadata and transient logs.
 *.tsbuildinfo
 *.log
+
+# Package source trees should contain TypeScript sources only; package builds emit to dist/.
+/packages/config/src/*.js
+/packages/config/src/*.d.ts
+/packages/config/src/*.d.ts.map
+/packages/logger/src/*.js
+/packages/logger/src/*.d.ts
+/packages/logger/src/*.d.ts.map

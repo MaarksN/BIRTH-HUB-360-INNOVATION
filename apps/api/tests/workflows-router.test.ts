@@ -178,7 +178,9 @@ void test("workflows router reverts a revision using the authenticated tenant sc
         workflowRevision: {
           create: async (args: unknown) => {
             receivedTransactionCreate = args;
-            return {};
+            return {
+              id: "rev_new"
+            };
           }
         },
         workflowStep: {
@@ -261,21 +263,14 @@ void test("workflows router reverts a revision using the authenticated tenant sc
           organizationId: "org_1",
           tenantId: "tenant_1",
           type: "TRIGGER_WEBHOOK",
-          workflowId: "wf_1"
+          workflowId: "wf_1",
+          workflowRevisionId: "rev_new"
         }
       }
     ]);
     assert.equal(transitionCreateCount, 0);
-    assert.deepEqual(receivedTransitionDelete, {
-      where: {
-        workflowId: "wf_1"
-      }
-    });
-    assert.deepEqual(receivedStepDelete, {
-      where: {
-        workflowId: "wf_1"
-      }
-    });
+    assert.equal(receivedTransitionDelete, null);
+    assert.equal(receivedStepDelete, null);
     assert.equal(response.body.requestId, "req_1");
     assert.equal(response.body.workflow.id, "wf_1");
     assert.equal(response.body.workflow.status, "DRAFT");

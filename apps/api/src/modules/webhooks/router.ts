@@ -57,8 +57,13 @@ function createWebhookSettingsAudit(input: {
     action: input.action,
     entityType: input.entityType ?? "webhook_endpoint",
     requireActor: true,
-    resolveEntityId: (request, _response, result) =>
-      result?.endpointId ?? result?.deliveryId ?? String(request.params.id ?? "unknown")
+    resolveEntityId: (request, _response, result) => {
+      if (!result) {
+        return String(request.params.id ?? "unknown");
+      }
+
+      return result.endpointId ?? result.deliveryId ?? String(request.params.id ?? "unknown");
+    }
   });
 }
 

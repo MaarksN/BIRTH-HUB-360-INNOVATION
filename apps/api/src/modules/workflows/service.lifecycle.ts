@@ -28,6 +28,11 @@ import type {
 
 const WORKFLOW_LIST_LIMIT = 100;
 const WORKFLOW_METRICS_WINDOW = 50;
+const WORKFLOW_TERMINAL_EXECUTION_STATUSES: readonly WorkflowExecutionStatus[] = [
+  WorkflowExecutionStatus.SUCCESS,
+  WorkflowExecutionStatus.FAILED,
+  WorkflowExecutionStatus.CANCELLED
+];
 
 function resolveCanvasFromInput(input: Pick<WorkflowCreateInput | WorkflowUpdateInput, "canvas" | "dsl">): {
   canvas: WorkflowCanvas | undefined;
@@ -72,11 +77,7 @@ function buildWorkflowListMetrics(
   }>
 ) {
   const finishedRuns = executions.filter((execution) =>
-    [
-      WorkflowExecutionStatus.SUCCESS,
-      WorkflowExecutionStatus.FAILED,
-      WorkflowExecutionStatus.CANCELLED
-    ].includes(execution.status)
+    WORKFLOW_TERMINAL_EXECUTION_STATUSES.includes(execution.status)
   );
   const successes = finishedRuns.filter(
     (execution) => execution.status === WorkflowExecutionStatus.SUCCESS
@@ -198,7 +199,7 @@ export async function createWorkflow(
         cronExpression: input.cronExpression ?? null,
         definition: canvas as Prisma.InputJsonValue,
         description: input.description ?? null,
-        eventTopic: input.eventTopic ?? definition.eventTopic ?? null,
+        eventTopic: definition.eventTopic ?? input.eventTopic ?? null,
         maxDepth: input.maxDepth,
         name: input.name,
         organizationId: identity.organizationId,
@@ -292,10 +293,10 @@ async function updateWorkflowInScope(
       workflowUpdateData.description = input.description;
     }
 
-    if (input.eventTopic !== undefined) {
-      workflowUpdateData.eventTopic = input.eventTopic;
-    } else if (definition.eventTopic !== undefined) {
+    if (definition.eventTopic !== undefined) {
       workflowUpdateData.eventTopic = definition.eventTopic;
+    } else if (input.eventTopic !== undefined) {
+      workflowUpdateData.eventTopic = input.eventTopic;
     }
 
     if (input.maxDepth !== undefined) {
@@ -310,10 +311,10 @@ async function updateWorkflowInScope(
       workflowUpdateData.triggerConfig = input.triggerConfig as Prisma.InputJsonValue;
     }
 
-    if (input.triggerType !== undefined) {
-      workflowUpdateData.triggerType = input.triggerType;
-    } else if (definition.triggerType !== undefined) {
+    if (definition.triggerType !== undefined) {
       workflowUpdateData.triggerType = definition.triggerType;
+    } else if (input.triggerType !== undefined) {
+      workflowUpdateData.triggerType = input.triggerType;
     }
 
     if (nextCanvas) {

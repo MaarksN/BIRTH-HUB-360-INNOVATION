@@ -88,10 +88,20 @@ function createMockStepResult(overrides: Record<string, unknown> = {}): Record<s
 
 void test("Workflow runner smoke test executes CEO agent and persists the result", async () => {
 
+  const originalFindExecution = prisma.workflowExecution.findUnique.bind(prisma.workflowExecution);
+  const originalFindWorkflow = prisma.workflow.findFirst.bind(prisma.workflow);
+  const originalFindResults = prisma.stepResult.findMany.bind(prisma.stepResult);
+  const originalCreateResult = prisma.stepResult.create.bind(prisma.stepResult);
+  const originalUpdateExecution = prisma.workflowExecution.update.bind(prisma.workflowExecution);
+  const originalFindQuota = prisma.quotaUsage.findFirst.bind(prisma.quotaUsage);
+  const originalFindSubscription = prisma.subscription.findFirst.bind(prisma.subscription);
+  const originalCreateUsage = prisma.usageRecord.create.bind(prisma.usageRecord);
   const createdResults: Array<Record<string, unknown>> = [];
   const executionUpdates: Array<Record<string, unknown>> = [];
+  const usageRecords: Array<Record<string, unknown>> = [];
   const agentCalls: Array<{ agentId: string; contextSummary: string; input: Record<string, unknown> }> = [];
 
+  try {
     // @ts-expect-error test limit
     prisma.workflowExecution.findUnique = mock.fn(async () => createMockWorkflowExecution());
     // @ts-expect-error test limit
@@ -104,6 +114,10 @@ void test("Workflow runner smoke test executes CEO agent and persists the result
     prisma.workflowExecution.update = mock.fn(async (args) => { executionUpdates.push(args.data); return createMockWorkflowExecution(args.data); });
     // @ts-expect-error test limit
     prisma.quotaUsage.findFirst = mock.fn(async () => null);
+    // @ts-expect-error test limit
+    prisma.subscription.findFirst = mock.fn(async () => null);
+    // @ts-expect-error test limit
+    prisma.usageRecord.create = mock.fn(async (args) => { usageRecords.push(args.data); return args.data; });
     const fakeQueue = { add: () => Promise.resolve(undefined) };
     // @ts-expect-error test mock limit
     const runner = new WorkflowRunner(fakeQueue, {
@@ -143,6 +157,17 @@ void test("Workflow runner smoke test executes CEO agent and persists the result
       verdict: "OK"
     });
     assert.ok(executionUpdates.some((update) => update.status === WorkflowExecutionStatus.SUCCESS));
+    assert.equal(usageRecords.length, 1);
+  } finally {
+    prisma.workflowExecution.findUnique = originalFindExecution;
+    prisma.workflow.findFirst = originalFindWorkflow;
+    prisma.stepResult.findMany = originalFindResults;
+    prisma.stepResult.create = originalCreateResult;
+    prisma.workflowExecution.update = originalUpdateExecution;
+    prisma.quotaUsage.findFirst = originalFindQuota;
+    prisma.subscription.findFirst = originalFindSubscription;
+    prisma.usageRecord.create = originalCreateUsage;
+  }
 });
 
 

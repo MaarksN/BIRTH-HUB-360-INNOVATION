@@ -6,6 +6,10 @@ import "reactflow/dist/style.css";
 import { use, useEffect, useMemo, useState, useTransition, type ReactNode } from "react";
 
 import { getWebConfig } from "@birthub/config/web";
+import {
+  WORKFLOW_CONNECTOR_ACTIONS,
+  WORKFLOW_EVENT_TOPICS
+} from "@birthub/workflows-core/nextjs";
 import { Play, Save, Shuffle, Zap } from "lucide-react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import ReactFlow, {
@@ -267,6 +271,64 @@ function WorkflowEditorCanvas({
   );
 }
 
+function WorkflowBuilderControls({
+  connectorAction,
+  onAddConnectorStep,
+  onConnectorActionChange,
+  onTriggerTopicChange,
+  triggerTopic
+}: {
+  connectorAction: (typeof WORKFLOW_CONNECTOR_ACTIONS)[number];
+  onAddConnectorStep: () => void;
+  onConnectorActionChange: (action: (typeof WORKFLOW_CONNECTOR_ACTIONS)[number]) => void;
+  onTriggerTopicChange: (topic: (typeof WORKFLOW_EVENT_TOPICS)[number]) => void;
+  triggerTopic: string;
+}) {
+  return (
+    <div
+      style={{
+        alignItems: "center",
+        background: "#f8fafc",
+        border: "1px solid #d0d8e1",
+        borderRadius: 10,
+        display: "flex",
+        gap: "0.6rem",
+        padding: "0.55rem"
+      }}
+    >
+      <select
+        onChange={(event) =>
+          onTriggerTopicChange(event.target.value as (typeof WORKFLOW_EVENT_TOPICS)[number])
+        }
+        value={triggerTopic}
+      >
+        {WORKFLOW_EVENT_TOPICS.map((topic) => (
+          <option key={topic} value={topic}>
+            {topic}
+          </option>
+        ))}
+      </select>
+      <select
+        onChange={(event) =>
+          onConnectorActionChange(
+            event.target.value as (typeof WORKFLOW_CONNECTOR_ACTIONS)[number]
+          )
+        }
+        value={connectorAction}
+      >
+        {WORKFLOW_CONNECTOR_ACTIONS.map((action) => (
+          <option key={action} value={action}>
+            {action}
+          </option>
+        ))}
+      </select>
+      <button onClick={onAddConnectorStep} type="button">
+        <Zap size={14} /> Adicionar connector
+      </button>
+    </div>
+  );
+}
+
 function WorkflowSidebar({
   form,
   loadingError,
@@ -361,6 +423,9 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
   const [simulationPayload, setSimulationPayload] = useState("{}");
   const [showSimulationModal, setShowSimulationModal] = useState(false);
   const [simulatedResults, setSimulatedResults] = useState<Record<string, "SUCCESS" | "FAILED" | "WAITING">>({});
+  const [connectorAction, setConnectorAction] = useState<(typeof WORKFLOW_CONNECTOR_ACTIONS)[number]>(
+    WORKFLOW_CONNECTOR_ACTIONS[0]
+  );
 
   useWorkflowLoader({
     id,
@@ -377,6 +442,11 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
     [nodes, selectedNodeId]
   );
   const form = useWorkflowForm(selectedNode);
+  const triggerTopic = useMemo(() => {
+    const trigger = nodes.find((node) => node.data.stepType === "TRIGGER_EVENT");
+    const topic = trigger?.data.config.topic;
+    return typeof topic === "string" ? topic : WORKFLOW_EVENT_TOPICS[0];
+  }, [nodes]);
   const validation = useMemo(() => buildValidation(nodes, edges), [edges, nodes]);
   const decoratedNodes = useMemo(() => {
     return decorateNodes(nodes, validation.invalidNodeIds).map((node) => {
@@ -463,6 +533,83 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
     }
   }
 
+  function handleTriggerTopicChange(topic: (typeof WORKFLOW_EVENT_TOPICS)[number]): void {
+    setNodes((currentNodes) => {
+      const triggerIndex = currentNodes.findIndex((node) => node.data.category === "trigger");
+      if (triggerIndex < 0) {
+        return [
+          {
+            data: {
+              category: "trigger",
+              config: { topic },
+              label: `Trigger ${topic}`,
+              status: workflowStatus === "PUBLISHED" ? "published" : "draft",
+              stepType: "TRIGGER_EVENT"
+            },
+            id: "trigger_event",
+            position: { x: 0, y: 0 },
+            type: "trigger"
+          },
+          ...currentNodes
+        ];
+      }
+
+      return currentNodes.map((node, index) =>
+        index === triggerIndex
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                category: "trigger",
+                config: { topic },
+                label: `Trigger ${topic}`,
+                stepType: "TRIGGER_EVENT"
+              },
+              type: "trigger"
+            }
+          : node
+      );
+    });
+  }
+
+  function handleAddConnectorStep(): void {
+    setNodes((currentNodes) => {
+      const stepNumber = currentNodes.length + 1;
+      const stepKey = `connector_${stepNumber}`;
+      const previousStep = currentNodes.at(-1);
+      if (previousStep) {
+        setEdges((currentEdges) => [
+          ...currentEdges,
+          {
+            id: `edge_${currentEdges.length + 1}`,
+            source: previousStep.id,
+            target: stepKey,
+            type: "smoothstep"
+          }
+        ]);
+      }
+
+      return autoLayout([
+        ...currentNodes,
+        {
+          data: {
+            category: "action",
+            config: {
+              action: connectorAction,
+              payload: {}
+            },
+            label: connectorAction,
+            status: workflowStatus === "PUBLISHED" ? "published" : "draft",
+            stepType: "CONNECTOR_ACTION"
+          },
+          id: stepKey,
+          position: { x: 0, y: 0 },
+          type: "action"
+        }
+      ]);
+    });
+  }
+
   return (
     <section
       style={{
@@ -472,25 +619,34 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
         height: "calc(100vh - 110px)"
       }}
     >
-      <WorkflowEditorCanvas
-        decoratedNodes={decoratedNodes}
-        edges={edges}
-        isPending={isPending}
-        onConnectEdge={(connection) => setEdges((currentEdges) => addEdge(connection, currentEdges))}
-        onEdgesChange={onEdgesChange}
-        onNodesChange={onNodesChange}
-        onPickNode={setSelectedNodeId}
-        onPublish={() => handlePersist("PUBLISHED")}
-        onSave={() => handlePersist("DRAFT")}
-        onShuffle={() => setNodes((currentNodes) => autoLayout(currentNodes))}
-        setWorkflowName={setWorkflowName}
-        validationErrors={validation.errors}
-        workflowId={id}
-        workflowName={workflowName}
-        workflowStatus={workflowStatus}
-        simulating={simulating}
-        onSimulate={() => setShowSimulationModal(true)}
-      />
+      <div style={{ display: "grid", gap: "0.55rem", minHeight: 0 }}>
+        <WorkflowBuilderControls
+          connectorAction={connectorAction}
+          onAddConnectorStep={handleAddConnectorStep}
+          onConnectorActionChange={setConnectorAction}
+          onTriggerTopicChange={handleTriggerTopicChange}
+          triggerTopic={triggerTopic}
+        />
+        <WorkflowEditorCanvas
+          decoratedNodes={decoratedNodes}
+          edges={edges}
+          isPending={isPending}
+          onConnectEdge={(connection) => setEdges((currentEdges) => addEdge(connection, currentEdges))}
+          onEdgesChange={onEdgesChange}
+          onNodesChange={onNodesChange}
+          onPickNode={setSelectedNodeId}
+          onPublish={() => handlePersist("PUBLISHED")}
+          onSave={() => handlePersist("DRAFT")}
+          onShuffle={() => setNodes((currentNodes) => autoLayout(currentNodes))}
+          setWorkflowName={setWorkflowName}
+          validationErrors={validation.errors}
+          workflowId={id}
+          workflowName={workflowName}
+          workflowStatus={workflowStatus}
+          simulating={simulating}
+          onSimulate={() => setShowSimulationModal(true)}
+        />
+      </div>
       <WorkflowSidebar
         form={form}
         loadingError={loadingError}

@@ -49,8 +49,21 @@ function createSessionStubs(): Array<() => void> {
     })),
     stubMethod(prisma.organization, "findFirst", () => Promise.resolve({
       id: "org_1",
+      plan: {
+        code: "starter",
+        id: "plan_starter",
+        limits: {},
+        name: "Starter"
+      },
       slug: "tenant-one",
+      stripeCustomerId: null,
+      subscriptions: [],
       tenantId: "tenant_1"
+    })),
+    stubMethod(prisma.billingCredit, "aggregate", () => Promise.resolve({
+      _sum: {
+        amountCents: 0
+      }
     })),
     stubMethod(prisma.membership, "findUnique", () => Promise.resolve({
       organizationId: "org_1",
@@ -78,11 +91,14 @@ void test("workflow retry endpoint resumes from failed checkpoint with transacti
       output: { started: true },
       outputPreview: null,
       outputSize: 18,
+      durationMs: 2000,
+      errorCode: null,
       startedAt: new Date("2026-04-01T10:00:01.000Z"),
       status: StepResultStatus.SUCCESS,
       step: { key: "trigger_step" },
       stepId: "step_trigger",
-      workflowId: "wf_1"
+      workflowId: "wf_1",
+      workflowRevisionId: "rev_source"
     },
     {
       attempt: 1,
@@ -95,11 +111,14 @@ void test("workflow retry endpoint resumes from failed checkpoint with transacti
       output: null,
       outputPreview: null,
       outputSize: 0,
+      durationMs: 5000,
+      errorCode: "CONNECTOR_TIMEOUT",
       startedAt: new Date("2026-04-01T10:01:01.000Z"),
       status: StepResultStatus.FAILED,
       step: { key: "http_step" },
       stepId: "step_http",
-      workflowId: "wf_1"
+      workflowId: "wf_1",
+      workflowRevisionId: "rev_source"
     }
   ];
 
@@ -121,9 +140,23 @@ void test("workflow retry endpoint resumes from failed checkpoint with transacti
       ],
       tenantId: "tenant_1"
     })),
+    stubMethod(prisma.workflowRevision, "findFirst", () => Promise.resolve({
+      id: "rev_source",
+      steps: [
+        {
+          key: "trigger_step",
+          type: "TRIGGER_WEBHOOK"
+        },
+        {
+          key: "http_step",
+          type: "HTTP_REQUEST"
+        }
+      ]
+    })),
     stubMethod(prisma.workflowExecution, "findFirst", () => Promise.resolve({
       id: "exec_source",
-      status: WorkflowExecutionStatus.FAILED
+      status: WorkflowExecutionStatus.FAILED,
+      workflowRevisionId: "rev_source"
     })),
     stubMethod(prisma.stepResult, "findFirst", () => Promise.resolve({
       step: { key: "http_step" }

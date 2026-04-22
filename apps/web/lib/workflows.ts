@@ -12,10 +12,19 @@ export interface WorkflowListItem {
     steps: number;
   };
   createdAt: string;
+  currentVersion?: number;
   description: string | null;
+  eventTopic?: string | null;
   id: string;
+  lastExecution?: {
+    completedAt: string | null;
+    id: string;
+    startedAt: string;
+    status: string;
+  } | null;
   name: string;
   status: WorkflowStatus;
+  successRate?: number | null;
   stepLint?: {
     findings: unknown[];
     score: number;
@@ -35,13 +44,19 @@ export interface WorkflowExecutionSnapshot {
   durationMs: number | null;
   errorMessage: string | null;
   id: string;
+  isDryRun?: boolean;
   startedAt: string;
   status: "CANCELLED" | "FAILED" | "RUNNING" | "SUCCESS" | "WAITING";
+  triggerPayload?: Record<string, unknown> | null;
   stepResults: Array<{
+    attempt: number;
+    durationMs: number | null;
+    errorCode: string | null;
     errorMessage: string | null;
     finishedAt: string | null;
     id: string;
     input: Record<string, unknown> | null;
+    nextRetryAt: string | null;
     output: Record<string, unknown> | null;
     startedAt: string;
     status: "FAILED" | "SKIPPED" | "SUCCESS" | "WAITING";

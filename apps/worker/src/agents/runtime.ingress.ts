@@ -277,6 +277,7 @@ export async function dispatchAgentMeshTrigger(
       createdAt: "asc"
     },
     select: {
+      eventTopic: true,
       id: true,
       organizationId: true
     },
@@ -290,13 +291,21 @@ export async function dispatchAgentMeshTrigger(
     }
   });
 
-  for (const workflow of workflows) {
+  const matchingTopics = uniqueStrings(
+    workflows
+      .map((workflow) => readString(workflow.eventTopic))
+      .filter((topic): topic is string => Boolean(topic))
+  );
+
+  for (const topic of matchingTopics) {
     await dependencies.enqueueWorkflowTrigger({
-      organizationId: workflow.organizationId,
+      eventSource: inferSourceSystem(event),
+      idempotencyKey: `${inferSourceSystem(event)}:${topic}:${blueprint.executionPayload.executionId}`,
+      organizationId: event.organizationId ?? event.tenantId,
       tenantId: event.tenantId,
       triggerPayload: blueprint.executionPayload.input,
       triggerType: WorkflowTriggerType.EVENT,
-      workflowId: workflow.id
+      topic
     });
   }
 

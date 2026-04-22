@@ -252,6 +252,7 @@ function RunsDebugger(props: {
   decoratedEdges: Edge[];
   decoratedNodes: Node[];
   onNodeSelect: (nodeId: string | null) => void;
+  selectedRun: WorkflowExecutionSnapshot | null;
   selectedStepResult: WorkflowExecutionSnapshot["stepResults"][number] | null;
 }) {
   return (
@@ -281,7 +282,7 @@ function RunsDebugger(props: {
           border: "1px solid #d9e2ec",
           borderRadius: 14,
           display: "grid",
-          gridTemplateRows: "auto auto 1fr 1fr",
+          gridTemplateRows: "auto auto 1fr 1fr 1fr",
           padding: "0.7rem"
         }}
       >
@@ -289,6 +290,12 @@ function RunsDebugger(props: {
         <small style={{ color: "#4f5d75" }}>
           Clique no no para inspecionar input/output real com secrets mascarados.
         </small>
+        <div>
+          <h5 style={{ marginBottom: 6 }}>Trigger Payload</h5>
+          <pre style={{ fontSize: 12, margin: 0, whiteSpace: "pre-wrap" }}>
+            {props.selectedRun?.triggerPayload ? maskSecrets(props.selectedRun.triggerPayload) : "{}"}
+          </pre>
+        </div>
         <div>
           <h5 style={{ marginBottom: 6 }}>Input</h5>
           <pre style={{ fontSize: 12, margin: 0, whiteSpace: "pre-wrap" }}>
@@ -300,6 +307,21 @@ function RunsDebugger(props: {
           <pre style={{ fontSize: 12, margin: 0, whiteSpace: "pre-wrap" }}>
             {props.selectedStepResult?.output ? maskSecrets(props.selectedStepResult.output) : "{}"}
           </pre>
+          {props.selectedStepResult ? (
+            <small style={{ color: "#4f5d75" }}>
+              tentativa {props.selectedStepResult.attempt} ·{" "}
+              {props.selectedStepResult.durationMs ?? 0} ms
+              {props.selectedStepResult.errorCode
+                ? ` · ${props.selectedStepResult.errorCode}`
+                : ""}
+              {props.selectedStepResult.nextRetryAt
+                ? ` · retry ${new Date(props.selectedStepResult.nextRetryAt).toLocaleString("pt-BR")}`
+                : ""}
+              {props.selectedStepResult.errorMessage
+                ? ` · ${props.selectedStepResult.errorMessage}`
+                : ""}
+            </small>
+          ) : null}
         </div>
       </aside>
     </div>
@@ -441,6 +463,7 @@ export default function WorkflowRunsPage({ params }: { params: Promise<{ id: str
         decoratedEdges={model.decoratedEdges}
         decoratedNodes={model.decoratedNodes}
         onNodeSelect={model.selectNode}
+        selectedRun={model.selectedRun}
         selectedStepResult={model.selectedStepResult}
       />
     </section>

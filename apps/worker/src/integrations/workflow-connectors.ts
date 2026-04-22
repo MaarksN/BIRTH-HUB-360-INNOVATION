@@ -1,6 +1,7 @@
 import {
   createDefaultConnectorRuntime,
-  decryptConnectorToken
+  decryptConnectorToken,
+  type ConnectorCredentials
 } from "@birthub/connectors-core";
 import { getWorkerConfig } from "@birthub/config";
 import { Prisma, prisma } from "@birthub/database";
@@ -27,6 +28,41 @@ function decryptCredentialValue(encryptedValue: string): string {
     allowLegacyPlaintext: config.ALLOW_LEGACY_PLAINTEXT_CONNECTOR_SECRETS,
     secret: config.AUTH_MFA_ENCRYPTION_KEY
   });
+}
+
+function toConnectorCredentials(
+  account: Awaited<ReturnType<typeof resolveConnectorAccount>>
+): ConnectorCredentials {
+  const credentials: ConnectorCredentials = {};
+
+  for (const credential of account?.credentials ?? []) {
+    const value = decryptCredentialValue(credential.encryptedValue);
+    switch (credential.credentialType) {
+      case "accessToken":
+        credentials.accessToken = value;
+        break;
+      case "apiKey":
+      case "privateAppToken":
+        credentials.apiKey = value;
+        break;
+      case "appKey":
+        credentials.appKey = value;
+        break;
+      case "appSecret":
+        credentials.appSecret = value;
+        break;
+      case "baseUrl":
+        credentials.baseUrl = value;
+        break;
+      case "botToken":
+        credentials.botToken = value;
+        break;
+      default:
+        break;
+    }
+  }
+
+  return credentials;
 }
 
 async function resolveOrganization(input: { tenantId: string }) {
@@ -408,14 +444,26 @@ async function executeCalendarEvent(input: {
 async function executeGenericConnectorAction(input: {
   action: Extract<ConnectorActionRequest, { kind: "CONNECTOR_ACTION" }>;
   executionId: string;
+  organizationId: string;
   tenantId: string;
   workflowId: string;
 }) {
   const [provider, ...actionParts] = input.action.action.split(".");
+  if (!provider || actionParts.length === 0) {
+    throw new Error(`Unsupported workflow connector action: ${input.action.action}`);
+  }
+  const connectorAccount = await resolveConnectorAccount({
+    ...(input.action.connectorAccountId
+      ? { connectorAccountId: input.action.connectorAccountId }
+      : {}),
+    organizationId: input.organizationId,
+    provider,
+    tenantId: input.tenantId
+  });
   const runtime = createDefaultConnectorRuntime();
   const result = await runtime.execute({
     action: actionParts.join(".") as Parameters<typeof runtime.execute>[0]["action"],
-    credentials: {},
+    credentials: toConnectorCredentials(connectorAccount),
     metadata: {
       executionId: input.executionId,
       workflowId: input.workflowId
@@ -446,6 +494,7 @@ export async function executeWorkflowConnectorAction(input: {
       return executeGenericConnectorAction({
         action: input.action,
         executionId: input.executionId,
+        organizationId: organization.id,
         tenantId: input.tenantId,
         workflowId: input.workflowId
       });

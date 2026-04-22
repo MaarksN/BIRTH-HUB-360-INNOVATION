@@ -63,8 +63,8 @@ void test("workflow runs helpers build graph output and redact secret-like keys"
     }),
     JSON.stringify(
       {
-        accessToken: "***",
-        nestedSecret: "***",
+        accessToken: "[REDACTED]",
+        nestedSecret: "[REDACTED]",
         publicValue: "ok"
       },
       null,

@@ -252,7 +252,13 @@ async function executeWorkflowStep(
     if (context.step.type === "HTTP_REQUEST") {
       return { status: 200, body: { dryRun: true }, headers: {} };
     }
-    if (context.step.type === "CRM_UPSERT" || context.step.type === "WHATSAPP_SEND" || context.step.type === "GOOGLE_EVENT" || context.step.type === "MS_EVENT") {
+    if (
+      context.step.type === "CONNECTOR_ACTION" ||
+      context.step.type === "CRM_UPSERT" ||
+      context.step.type === "WHATSAPP_SEND" ||
+      context.step.type === "GOOGLE_EVENT" ||
+      context.step.type === "MS_EVENT"
+    ) {
       return { success: true, dryRun: true };
     }
   }

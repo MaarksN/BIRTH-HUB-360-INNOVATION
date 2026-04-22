@@ -17,11 +17,21 @@ type WorkflowListPayload = {
       steps: number;
     };
     createdAt: string;
+    currentVersion?: number;
+    eventTopic?: string | null;
     id: string;
+    lastExecution?: {
+      completedAt: string | null;
+      id: string;
+      startedAt: string;
+      status: string;
+    } | null;
     name: string;
     status: "ARCHIVED" | "DRAFT" | "PUBLISHED";
+    successRate?: number | null;
     triggerType: string;
     updatedAt: string;
+    version: number;
   }>;
 };
 
@@ -63,9 +73,23 @@ export default async function WorkflowsPage() {
                 </span>
               </div>
               <p className="workflow-card__meta">
-                {translateLabel(copy.workflowsPage.triggerLabels, workflow.triggerType)} ·{" "}
+                {workflow.eventTopic ??
+                  translateLabel(copy.workflowsPage.triggerLabels, workflow.triggerType)} ·{" "}
                 {workflow._count.steps} {copy.workflowsPage.stepsLabel} ·{" "}
                 {workflow._count.executions} {copy.workflowsPage.executionsLabel}
+              </p>
+              <p className="workflow-card__meta">
+                v{workflow.currentVersion ?? workflow.version} ·{" "}
+                {workflow.lastExecution
+                  ? `${workflow.lastExecution.status} ${formatDateTime(locale, workflow.lastExecution.startedAt, {
+                      dateStyle: "medium",
+                      timeStyle: "short"
+                    })}`
+                  : "sem execucoes"}{" "}
+                ·{" "}
+                {workflow.successRate === null || workflow.successRate === undefined
+                  ? "sucesso n/a"
+                  : `${Math.round(workflow.successRate * 100)}% sucesso`}
               </p>
               <p className="workflow-card__updated">
                 {copy.workflowsPage.updatedAtLabel}{" "}
