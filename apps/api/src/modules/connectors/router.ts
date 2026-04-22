@@ -174,13 +174,10 @@ function buildCallbackPayload(input: Record<string, unknown>) {
   const legacyOauthKeys = [
     "access_token",
     "account_key",
-    "accessToken",
     "display_name",
     "expires_at",
-    "expiresAt",
     "external_account_id",
     "refresh_token",
-    "refreshToken",
     "scope"
   ] as const;
 
@@ -194,10 +191,13 @@ function buildCallbackPayload(input: Record<string, unknown>) {
   }
 
   return callbackSchema.parse({
+    accessToken: readOptionalString(input.accessToken),
     accountKey: readOptionalString(input.accountKey),
     code: readOptionalString(input.code),
     displayName: readOptionalString(input.displayName),
+    expiresAt: readOptionalString(input.expiresAt),
     externalAccountId: readOptionalString(input.externalAccountId),
+    refreshToken: readOptionalString(input.refreshToken),
     scopes: readOptionalScopes(input.scopes),
     state: readOptionalString(input.state)
   });
@@ -280,12 +280,15 @@ function buildFinalizeConnectSessionInput(input: {
     ...(input.payload.accountKey || input.callbackContext.accountKey
       ? { accountKey: input.payload.accountKey ?? input.callbackContext.accountKey }
       : {}),
+    ...(input.payload.accessToken ? { accessToken: input.payload.accessToken } : {}),
     ...(input.payload.code ? { code: input.payload.code } : {}),
     config: input.config,
     ...(input.payload.displayName ? { displayName: input.payload.displayName } : {}),
+    ...(input.payload.expiresAt ? { expiresAt: input.payload.expiresAt } : {}),
     ...(input.payload.externalAccountId ? { externalAccountId: input.payload.externalAccountId } : {}),
     organizationId: input.callbackContext.organizationId,
     provider: input.provider,
+    ...(input.payload.refreshToken ? { refreshToken: input.payload.refreshToken } : {}),
     ...(input.payload.scopes ? { scopes: input.payload.scopes } : {}),
     state: input.payload.state,
     tenantId: input.callbackContext.tenantId

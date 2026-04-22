@@ -42,6 +42,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS "workflow_transitions_workflowRevisionId_sourc
 CREATE UNIQUE INDEX IF NOT EXISTS "workflow_executions_tenantId_idempotencyKey_key"
   ON "workflow_executions"("tenantId", "idempotencyKey");
 
+CREATE INDEX IF NOT EXISTS "workflow_executions_tenantId_workflowRevisionId_idx"
+  ON "workflow_executions"("tenantId", "workflowRevisionId");
+
 CREATE INDEX IF NOT EXISTS "step_results_tenantId_workflowRevisionId_idx"
   ON "step_results"("tenantId", "workflowRevisionId");
 

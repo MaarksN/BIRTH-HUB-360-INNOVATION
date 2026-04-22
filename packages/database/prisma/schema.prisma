@@ -482,6 +482,7 @@ model WorkflowExecution {
   @@index([tenantId, id])
   @@index([organizationId])
   @@index([tenantId, workflowId])
+  @@index([tenantId, workflowRevisionId])
   @@index([tenantId, status])
   @@index([tenantId, startedAt])
   @@index([tenantId, dedupeHash])

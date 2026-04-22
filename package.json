@@ -20,7 +20,7 @@
     "security:licenses": "node ./scripts/ci/check-dependency-licenses.mjs",
     "security:sarif:gate": "node ./scripts/ci/assert-sarif-threshold.mjs",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
+    "test": "turbo run test --concurrency=1",
     "db:generate": "pnpm --filter @birthub/database db:generate",
     "db:migrate:deploy": "pnpm --filter @birthub/database db:migrate:deploy",
     "db:check:all": "pnpm --filter @birthub/database db:check:all",

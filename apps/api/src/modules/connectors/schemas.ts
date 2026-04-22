@@ -54,14 +54,21 @@ export const connectSchema = z
 
 export const callbackSchema = z
   .object({
+    accessToken: z.string().min(1).optional(),
     accountKey: z.string().min(1).optional(),
-    code: z.string().min(1),
+    code: z.string().min(1).optional(),
     displayName: z.string().min(1).optional(),
+    expiresAt: z.string().datetime().optional(),
     externalAccountId: z.string().min(1).optional(),
+    refreshToken: z.string().min(1).optional(),
     scopes: z.array(z.string().min(1)).optional(),
     state: z.string().min(1)
   })
-  .strict();
+  .strict()
+  .refine((payload) => Boolean(payload.code || payload.accessToken), {
+    message: "Connector callback requires either code or accessToken.",
+    path: ["code"]
+  });
 
 export const syncSchema = z
   .object({
