@@ -1,0 +1,35 @@
+# Monorepo hygiene at the repository root.
+/node_modules/
+/dist/
+/build/
+/coverage/
+/.turbo/
+/.next/
+/artifacts/
+/tmp/
+/temp/
+
+# Workspace-local generated content inside apps/ and packages/.
+/apps/**/node_modules/
+/apps/**/dist/
+/apps/**/build/
+/apps/**/coverage/
+/apps/**/.turbo/
+/apps/**/.next/
+/apps/**/artifacts/
+/apps/**/tmp/
+/apps/**/temp/
+
+/packages/**/node_modules/
+/packages/**/dist/
+/packages/**/build/
+/packages/**/coverage/
+/packages/**/.turbo/
+/packages/**/.next/
+/packages/**/artifacts/
+/packages/**/tmp/
+/packages/**/temp/
+
+# Build metadata and transient logs.
+*.tsbuildinfo
+*.log

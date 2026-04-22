@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "baseUrl": ".",
+    "strict": false,
+    "noImplicitAny": false,
+    "exactOptionalPropertyTypes": false,
+    "useUnknownInCatchVariables": false,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@birthub/agents-core": [
+        "packages/agents-core/src/index.ts"
+      ],
+      "@birthub/agents-core/policy": [
+        "packages/agents-core/src/policy/engine.ts"
+      ],
+      "@birthub/agents-core/tools": [
+        "packages/agents-core/src/tools/index.ts"
+      ],
+      "@birthub/config/web": [
+        "packages/config/src/web.ts"
+      ],
+      "@birthub/integrations/hubspot-crm-adapter": [
+        "packages/integrations/src/adapters/hubspot-crm-adapter.ts"
+      ],
+      "@birthub/integrations/hubspot-webhooks": [
+        "packages/integrations/src/adapters/hubspot-webhooks.ts"
+      ],
+      "@birthub/integrations/slack-message-adapter": [
+        "packages/integrations/src/adapters/slack-message-adapter.ts"
+      ],
+      "@birthub/utils/fetch": [
+        "packages/utils/src/fetch.ts"
+      ],
+      "@birthub/workflows-core/nextjs": [
+        "packages/workflows-core/src/nextjs.ts"
+      ],
+      "@birthub/*": [
+        "packages/*/src/index.ts",
+        "packages/*/src"
+      ]
+    },
+    "ignoreDeprecations": "5.0"
+  }
+}
