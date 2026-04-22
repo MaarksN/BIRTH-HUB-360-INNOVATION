@@ -14,8 +14,22 @@ import type {
 import {
   MAX_ATTEMPTS,
   calculateBackoff,
+  maskSensitivePayload,
+  recordWorkflowExecutionUsage,
   shouldFollowTransition
 } from "./runner.shared.js";
+
+function resolveErrorCode(error: unknown): string {
+  if (error instanceof Error && error.name && error.name !== "Error") {
+    return error.name;
+  }
+
+  if (error instanceof Error && /^[A-Z0-9_:-]+$/.test(error.message)) {
+    return error.message.split(":")[0] ?? "STEP_EXECUTION_FAILED";
+  }
+
+  return "STEP_EXECUTION_FAILED";
+}
 
 async function recordSuccessfulStep(
   context: ExecutionContext,
@@ -24,16 +38,18 @@ async function recordSuccessfulStep(
 ): Promise<void> {
   const normalizedOutput = context.normalizeOutput(output);
   const isDelayStep = context.step.type === "DELAY";
+  const finishedAt = new Date();
 
   await prisma.stepResult.create({
     data: {
       attempt: payload.attempt,
+      durationMs: finishedAt.getTime() - context.now.getTime(),
       executionId: payload.executionId,
       externalPayloadUrl: normalizedOutput.externalPayloadUrl,
-      finishedAt: context.now,
+      finishedAt,
       input: {
         _cacheHash: context.stepInputHash,
-        triggerPayload: payload.triggerPayload
+        triggerPayload: maskSensitivePayload(payload.triggerPayload)
       } as Prisma.InputJsonValue,
       organizationId: payload.organizationId,
       output: normalizedOutput.output as Prisma.InputJsonValue,
@@ -43,6 +59,7 @@ async function recordSuccessfulStep(
       status: isDelayStep ? StepResultStatus.WAITING : StepResultStatus.SUCCESS,
       stepId: context.step.id,
       tenantId: payload.tenantId,
+      workflowRevisionId: context.execution.workflowRevisionId,
       workflowId: payload.workflowId
     }
   });
@@ -58,15 +75,28 @@ async function recordSuccessfulStep(
 }
 
 async function markExecutionSuccess(context: ExecutionContext): Promise<void> {
+  const completedAt = new Date();
+  const durationMs = completedAt.getTime() - context.execution.startedAt.getTime();
   await prisma.workflowExecution.update({
     data: {
-      completedAt: new Date(),
-      durationMs: Date.now() - context.execution.startedAt.getTime(),
+      completedAt,
+      durationMs,
       status: WorkflowExecutionStatus.SUCCESS
     },
     where: {
       id: context.execution.id
     }
+  });
+
+  await recordWorkflowExecutionUsage({
+    durationMs,
+    executionId: context.execution.id,
+    isDryRun: context.execution.isDryRun,
+    organizationId: context.execution.organizationId,
+    status: WorkflowExecutionStatus.SUCCESS,
+    tenantId: context.execution.tenantId,
+    workflowId: context.execution.workflowId,
+    workflowRevisionId: context.execution.workflowRevisionId
   });
 }
 
@@ -95,6 +125,7 @@ function buildQueuedPayload(
     organizationId: payload.organizationId,
     stepKey,
     tenantId: payload.tenantId,
+    triggerEventId: payload.triggerEventId,
     triggerPayload: payload.triggerPayload,
     triggerType: payload.triggerType,
     workflowId: payload.workflowId
@@ -173,24 +204,30 @@ async function handleSuccessfulExecution(input: {
 async function recordFailedStep(
   context: ExecutionContext,
   payload: WorkflowExecutionJobPayload,
-  error: unknown
+  error: unknown,
+  nextRetryAt: Date | null
 ): Promise<void> {
+  const finishedAt = new Date();
   await prisma.stepResult.create({
     data: {
       attempt: payload.attempt,
+      durationMs: finishedAt.getTime() - context.now.getTime(),
+      errorCode: resolveErrorCode(error),
       errorMessage: error instanceof Error ? error.message : "Unknown step execution error",
       executionId: payload.executionId,
-      finishedAt: context.now,
+      finishedAt,
       input: {
         _cacheHash: context.stepInputHash,
-        triggerPayload: payload.triggerPayload
+        triggerPayload: maskSensitivePayload(payload.triggerPayload)
       } as Prisma.InputJsonValue,
+      nextRetryAt,
       organizationId: payload.organizationId,
       outputSize: 0,
       startedAt: context.now,
       status: StepResultStatus.FAILED,
       stepId: context.step.id,
       tenantId: payload.tenantId,
+      workflowRevisionId: context.execution.workflowRevisionId,
       workflowId: payload.workflowId
     }
   });
@@ -198,7 +235,8 @@ async function recordFailedStep(
 
 async function scheduleRetry(
   executionQueue: WorkflowExecutionQueue,
-  payload: WorkflowExecutionJobPayload
+  payload: WorkflowExecutionJobPayload,
+  nextRetryAt: Date
 ): Promise<void> {
   await executionQueue.add(
     "workflow-step",
@@ -207,7 +245,7 @@ async function scheduleRetry(
       attempt: payload.attempt + 1
     },
     {
-      delay: calculateBackoff(payload.attempt),
+      delay: Math.max(0, nextRetryAt.getTime() - Date.now()),
       jobId: `${payload.executionId}:${payload.stepKey}:${payload.attempt + 1}`
     }
   );
@@ -243,16 +281,29 @@ async function failExecution(input: {
   context: ExecutionContext;
   error: unknown;
 }): Promise<void> {
+  const completedAt = new Date();
+  const durationMs = completedAt.getTime() - input.context.execution.startedAt.getTime();
   await prisma.workflowExecution.update({
     data: {
-      completedAt: new Date(),
-      durationMs: Date.now() - input.context.execution.startedAt.getTime(),
+      completedAt,
+      durationMs,
       errorMessage: input.error instanceof Error ? input.error.message : "Workflow execution failed",
       status: WorkflowExecutionStatus.FAILED
     },
     where: {
       id: input.context.execution.id
     }
+  });
+
+  await recordWorkflowExecutionUsage({
+    durationMs,
+    executionId: input.context.execution.id,
+    isDryRun: input.context.execution.isDryRun,
+    organizationId: input.context.execution.organizationId,
+    status: WorkflowExecutionStatus.FAILED,
+    tenantId: input.context.execution.tenantId,
+    workflowId: input.context.execution.workflowId,
+    workflowRevisionId: input.context.execution.workflowRevisionId
   });
 }
 
@@ -274,10 +325,15 @@ export async function handleExecutionOutcome(input: {
     return;
   }
 
-  await recordFailedStep(input.context, input.payload, input.error);
+  const nextRetryAt =
+    input.payload.attempt < MAX_ATTEMPTS
+      ? new Date(Date.now() + calculateBackoff(input.payload.attempt))
+      : null;
 
-  if (input.payload.attempt < MAX_ATTEMPTS) {
-    await scheduleRetry(input.executionQueue, input.payload);
+  await recordFailedStep(input.context, input.payload, input.error, nextRetryAt);
+
+  if (nextRetryAt) {
+    await scheduleRetry(input.executionQueue, input.payload, nextRetryAt);
     return;
   }
 
