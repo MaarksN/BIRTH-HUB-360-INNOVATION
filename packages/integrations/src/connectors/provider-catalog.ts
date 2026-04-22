@@ -88,7 +88,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["oauth", "service_account"],
-    capabilities: ["calendar", "messaging", "webhook", "sync"],
+    capabilities: ["calendar", "messaging"],
     defaultAuthType: "oauth",
     defaultScopes: [
       "https://www.googleapis.com/auth/calendar",
@@ -147,7 +147,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["api_key", "oauth"],
-    capabilities: ["marketing", "messaging", "sync", "webhook"],
+    capabilities: ["marketing", "messaging"],
     defaultAuthType: "api_key",
     description: "Automacao, cadencias, listas e eventos do ActiveCampaign.",
     displayName: "ActiveCampaign",
@@ -158,7 +158,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["oauth", "webhook_secret"],
-    capabilities: ["messaging", "webhook", "sync"],
+    capabilities: ["messaging"],
     defaultAuthType: "oauth",
     description: "API oficial do WhatsApp Business Platform.",
     displayName: "WhatsApp Business API",
@@ -169,7 +169,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["messaging", "webhook", "sync"],
+    capabilities: ["messaging", "webhook"],
     defaultAuthType: "api_key",
     description: "Mensageria transacional e atendimento via Zenvia.",
     displayName: "Zenvia",
@@ -180,7 +180,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["messaging", "automation", "webhook", "sync"],
+    capabilities: ["messaging", "automation"],
     defaultAuthType: "api_key",
     description: "Construcao de jornadas e bots via Take Blip.",
     displayName: "Take Blip",
@@ -191,7 +191,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "oauth", "webhook_secret"],
-    capabilities: ["messaging", "customer_success", "webhook", "sync"],
+    capabilities: ["messaging", "customer_success"],
     defaultAuthType: "api_key",
     description: "Suporte e atendimento omnichannel via Zendesk.",
     displayName: "Zendesk",
@@ -202,7 +202,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["webhook_secret", "oauth"],
-    capabilities: ["messaging", "webhook"],
+    capabilities: ["messaging"],
     defaultAuthType: "webhook_secret",
     description: "Alertas, comunidades e interacoes em servidores do Discord.",
     displayName: "Discord",
@@ -213,7 +213,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["api_key", "oauth", "webhook_secret"],
-    capabilities: ["messaging", "automation", "webhook", "sync"],
+    capabilities: ["messaging", "automation", "webhook"],
     defaultAuthType: "api_key",
     description: "Mensagens operacionais e notificacoes corporativas no Slack.",
     displayName: "Slack",
@@ -224,7 +224,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["oauth", "webhook_secret"],
-    capabilities: ["messaging", "calendar", "webhook", "sync"],
+    capabilities: ["messaging", "calendar"],
     defaultAuthType: "oauth",
     description: "Mensagens, reunioes e colaboracao no Microsoft Teams.",
     displayName: "Microsoft Teams",
@@ -247,7 +247,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "oauth"],
-    capabilities: ["crm", "sync", "webhook"],
+    capabilities: ["crm"],
     defaultAuthType: "api_key",
     description: "CRM comercial da RD para pipeline e negocio.",
     displayName: "RD Station CRM",
@@ -258,7 +258,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key"],
-    capabilities: ["crm", "sync"],
+    capabilities: ["crm"],
     defaultAuthType: "api_key",
     description: "CRM Agendor para equipes comerciais.",
     displayName: "Agendor",
@@ -269,7 +269,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["oauth", "api_key"],
-    capabilities: ["crm", "sync", "webhook"],
+    capabilities: ["crm"],
     defaultAuthType: "oauth",
     description: "CRM Pipedrive para pessoas, organizacoes e deals.",
     displayName: "Pipedrive",
@@ -280,7 +280,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["oauth"],
-    capabilities: ["crm", "sync", "webhook"],
+    capabilities: ["crm"],
     defaultAuthType: "oauth",
     description: "Salesforce para contas, leads, oportunidades e eventos.",
     displayName: "Salesforce",
@@ -291,7 +291,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key"],
-    capabilities: ["crm", "prospecting", "sync"],
+    capabilities: ["crm", "prospecting"],
     defaultAuthType: "api_key",
     description: "Prospeccao e qualificacao comercial via Exact Sales.",
     displayName: "Exact Sales",
@@ -302,7 +302,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["oauth", "webhook_secret"],
-    capabilities: ["contracts", "webhook", "sync"],
+    capabilities: ["contracts"],
     defaultAuthType: "oauth",
     description: "Assinatura eletronica e fluxo contratual via Clicksign.",
     displayName: "Clicksign",
@@ -313,7 +313,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["contracts", "webhook", "sync"],
+    capabilities: ["contracts"],
     defaultAuthType: "api_key",
     description: "Assinatura eletronica via ZapSign.",
     displayName: "ZapSign",
@@ -324,7 +324,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["contracts", "webhook", "sync"],
+    capabilities: ["contracts"],
     defaultAuthType: "api_key",
     description: "Assinatura eletronica e gestao documental via Autentique.",
     displayName: "Autentique",
@@ -335,7 +335,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["oauth", "webhook_secret"],
-    capabilities: ["contracts", "payments", "webhook", "sync"],
+    capabilities: ["contracts", "payments"],
     defaultAuthType: "oauth",
     description: "Assinaturas e eventos de envelopes via DocuSign.",
     displayName: "DocuSign",
@@ -346,7 +346,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["payments", "webhook", "sync"],
+    capabilities: ["payments"],
     defaultAuthType: "api_key",
     description: "Cobranca, assinatura e recebiveis via Asaas.",
     displayName: "Asaas",
@@ -357,7 +357,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["payments", "webhook", "sync"],
+    capabilities: ["payments"],
     defaultAuthType: "api_key",
     description: "Recorrencia e billing via Vindi.",
     displayName: "Vindi",
@@ -368,7 +368,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["payments", "webhook", "sync"],
+    capabilities: ["payments"],
     defaultAuthType: "api_key",
     description: "Pagamentos e assinaturas via Iugu.",
     displayName: "Iugu",
@@ -379,7 +379,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["payments", "webhook", "sync"],
+    capabilities: ["payments"],
     defaultAuthType: "api_key",
     description: "Checkout, cobranca e marketplace via Mercado Pago.",
     displayName: "Mercado Pago",
@@ -390,7 +390,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["payments", "webhook", "sync"],
+    capabilities: ["payments"],
     defaultAuthType: "api_key",
     description: "Pagamentos e cobranca via PagSeguro.",
     displayName: "PagSeguro",
@@ -401,7 +401,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["api_key", "webhook_secret"],
-    capabilities: ["payments", "webhook", "sync"],
+    capabilities: ["payments", "webhook"],
     defaultAuthType: "api_key",
     description: "Cobranca, subscriptions e webhooks via Stripe.",
     displayName: "Stripe",
@@ -412,7 +412,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["oauth", "api_key"],
-    capabilities: ["erp", "payments", "sync"],
+    capabilities: ["erp", "payments"],
     defaultAuthType: "oauth",
     description: "ERP financeiro com clientes, faturamento e conciliacao.",
     displayName: "Conta Azul",
@@ -423,7 +423,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: true,
     authTypes: ["api_key"],
-    capabilities: ["erp", "payments", "sync", "webhook"],
+    capabilities: ["erp", "payments", "sync"],
     defaultAuthType: "api_key",
     description: "ERP Omie para clientes, notas e financeiro.",
     displayName: "Omie",
@@ -434,7 +434,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key", "basic_auth"],
-    capabilities: ["erp", "sync"],
+    capabilities: ["erp"],
     defaultAuthType: "api_key",
     description: "ERP Sankhya para backoffice e operacao.",
     displayName: "Sankhya",
@@ -445,7 +445,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key"],
-    capabilities: ["erp", "sync"],
+    capabilities: ["erp"],
     defaultAuthType: "api_key",
     description: "ERP Bling para pedidos, estoque e faturamento.",
     displayName: "Bling",
@@ -456,7 +456,7 @@ export const connectorProviderCatalog = [
   defineProvider({
     anchor: false,
     authTypes: ["api_key"],
-    capabilities: ["erp", "sync"],
+    capabilities: ["erp"],
     defaultAuthType: "api_key",
     description: "ERP Tiny para e-commerce e operacao.",
     displayName: "Tiny",
