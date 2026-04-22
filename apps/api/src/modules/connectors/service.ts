@@ -1,4 +1,5 @@
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual   createDefaultConnectorRuntime,
+} from "node:crypto";
 
 import type { ApiConfig } from "@birthub/config";
 import {
@@ -1002,12 +1003,17 @@ export const connectorsService = {
           allowLegacyPlaintext: input.config.ALLOW_LEGACY_PLAINTEXT_CONNECTOR_SECRETS,
           secret: input.config.AUTH_MFA_ENCRYPTION_KEY
         });
-        const adapter = new OmieErpAdapter({
-          appKey,
-          appSecret,
-          baseUrl: input.config.OMIE_BASE_URL
+        const runtime = createDefaultConnectorRuntime();
+        await runtime.execute({
+          action: "health.check",
+          credentials: {
+            appKey,
+            appSecret,
+            baseUrl: input.config.OMIE_BASE_URL
+          },
+          payload: {},
+          provider: enabledProvider
         });
-        await adapter.validateCredentials();
 
         await updateConnectorHealthState({
           accountId: account.id,
@@ -1117,31 +1123,21 @@ export const connectorsService = {
         allowLegacyPlaintext: input.config.ALLOW_LEGACY_PLAINTEXT_CONNECTOR_SECRETS,
         secret: input.config.AUTH_MFA_ENCRYPTION_KEY
       });
-      if (enabledProvider === "hubspot") {
-        const adapter = new HubspotCrmAdapter({
-          accessToken
-        });
-        if (normalizeConnectorCredentialType(credential.credentialType) === "accessToken") {
-          await adapter.validateAccessToken();
-        } else {
-          await adapter.validateCrmAccess();
-        }
-      } else if (enabledProvider === "slack") {
-        const adapter = new SlackMessageAdapter({
-          accessToken
-        });
-        await adapter.validateAccessToken();
-      } else if (enabledProvider === "zenvia") {
-        const adapter = new ZenviaMessageAdapter({
-          apiToken: accessToken
-        });
-        await adapter.validateApiToken();
-      } else {
-        const adapter = new StripePaymentAdapter({
-          apiKey: accessToken
-        });
-        await adapter.validateApiKey();
-      }
+
+      const runtime = createDefaultConnectorRuntime();
+      await runtime.execute({
+        action: "health.check",
+        credentials: {
+          accessToken,
+          apiKey: accessToken,
+          botToken: accessToken
+        },
+        metadata: {
+          credentialType: credential.credentialType
+        },
+        payload: {},
+        provider: enabledProvider
+      });
 
       await updateConnectorHealthState({
         accountId: account.id,
