@@ -11,7 +11,9 @@
     "./repositories": "./dist/repositories/index.js"
   },
 
-  "scripts": {
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
     "prebuild": "pnpm --filter @birthub/config build && pnpm --filter @birthub/logger build && pnpm run db:generate:if-needed",
     "pretypecheck": "pnpm --filter @birthub/config build && pnpm --filter @birthub/logger build",
     "build": "tsc -b tsconfig.json --force",
