@@ -16,6 +16,7 @@ import {
   DEFAULT_REMOVE_ON_FAIL,
   QUEUE_CONFIG
 } from "./definitions.js";
+import { QueueIdempotencyStore } from "./idempotency.js";
 import {
   createRuntimeWorkerProcessor,
   mergeQueueJobOptions,
@@ -433,6 +434,10 @@ export class QueueClient {
     request: RepeatableJobRequest<DataType>
   ): Promise<void> {
     return this.getRuntime(request.redisUrl).upsertRepeatableJob(request);
+  }
+
+  getIdempotencyStore(options?: { redisUrl?: string }): QueueIdempotencyStore {
+    return new QueueIdempotencyStore(this.getRuntime(options?.redisUrl).redis);
   }
 
   async ping(options?: { redisUrl?: string }): Promise<string> {

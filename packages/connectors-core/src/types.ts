@@ -36,6 +36,7 @@ export type ConnectorActionName =
   | "crm.contact.upsert"
   | "erp.customer.upsert"
   | "erp.sales-order.create"
+  | "health.check"
   | "message.send"
   | "payment.read";
 
@@ -84,6 +85,7 @@ export type ConnectorActionPayload = {
   "crm.contact.upsert": HubspotContactUpsertInput;
   "erp.customer.upsert": OmieCustomerUpsertInput;
   "erp.sales-order.create": OmieSalesOrderCreateInput;
+  "health.check": Record<string, unknown>;
   "message.send": MessageSendPayload;
   "payment.read": StripePaymentReadInput;
 };

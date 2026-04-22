@@ -464,7 +464,6 @@ model WorkflowExecution {
   triggerType           WorkflowTriggerType
   triggerPayload        Json?
   isDryRun              Boolean                 @default(false)
-  dedupeHash            String?
   depth                 Int                     @default(0)
   startedAt             DateTime                @default(now())
   completedAt           DateTime?
@@ -485,7 +484,6 @@ model WorkflowExecution {
   @@index([tenantId, workflowRevisionId])
   @@index([tenantId, status])
   @@index([tenantId, startedAt])
-  @@index([tenantId, dedupeHash])
   @@unique([tenantId, idempotencyKey])
   @@map("workflow_executions")
 }

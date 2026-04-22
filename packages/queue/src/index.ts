@@ -22,6 +22,7 @@ export {
   TenantQueueRateLimitError,
   queueClient
 } from "./runtime.js";
+export { QueueIdempotencyStore } from "./idempotency.js";
 export {
   buildDlqPayload,
   createRuntimeWorkerProcessor,

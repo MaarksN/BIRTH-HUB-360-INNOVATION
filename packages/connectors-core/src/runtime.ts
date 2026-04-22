@@ -364,3 +364,117 @@ export function createDefaultConnectorRuntime(
     createZenviaMessageSendHandler(dependencies)
   ]);
 }
+
+export function createHubspotHealthCheckHandler(dependencies: ConnectorRuntimeDependencies = {}): ConnectorActionHandler<"health.check"> {
+  return {
+    action: "health.check",
+    provider: "hubspot",
+    async execute(request) {
+      const accessToken = request.credentials.accessToken ?? request.credentials.apiKey;
+      if (!accessToken) throw new MissingConnectorCredentialError("hubspot", "accessToken");
+      const adapter = new HubspotCrmAdapter({
+        accessToken,
+        ...(request.credentials.baseUrl ? { baseUrl: request.credentials.baseUrl } : {}),
+        ...(dependencies.fetchImpl ? { fetchImpl: resolveHubspotFetch(dependencies) } : {})
+      });
+      if (request.metadata?.credentialType === "apiKey") {
+        await adapter.validateCrmAccess();
+      } else {
+        await adapter.validateAccessToken();
+      }
+      return { action: request.action, provider: request.provider, status: "success" };
+    }
+  };
+}
+
+export function createOmieHealthCheckHandler(dependencies: ConnectorRuntimeDependencies = {}): ConnectorActionHandler<"health.check"> {
+  return {
+    action: "health.check",
+    provider: "omie",
+    async execute(request) {
+      const appKey = request.credentials.appKey ?? request.credentials.apiKey;
+      const appSecret = request.credentials.appSecret ?? request.credentials.accessToken;
+      if (!appKey) throw new MissingConnectorCredentialError("omie", "appKey");
+      if (!appSecret) throw new MissingConnectorCredentialError("omie", "appSecret");
+      const adapter = new OmieErpAdapter({
+        appKey,
+        appSecret,
+        ...(request.credentials.baseUrl ? { baseUrl: request.credentials.baseUrl } : {}),
+        ...(dependencies.fetchImpl ? { fetchImpl: resolveOmieFetch(dependencies) } : {})
+      });
+      await adapter.validateCredentials();
+      return { action: request.action, provider: request.provider, status: "success" };
+    }
+  };
+}
+
+export function createSlackHealthCheckHandler(dependencies: ConnectorRuntimeDependencies = {}): ConnectorActionHandler<"health.check"> {
+  return {
+    action: "health.check",
+    provider: "slack",
+    async execute(request) {
+      const accessToken = request.credentials.botToken ?? request.credentials.accessToken ?? request.credentials.apiKey;
+      if (!accessToken) throw new MissingConnectorCredentialError("slack", "botToken");
+      const adapter = new SlackMessageAdapter({
+        accessToken,
+        ...(request.credentials.baseUrl ? { baseUrl: request.credentials.baseUrl } : {}),
+        ...(dependencies.fetchImpl ? { fetchImpl: resolveSlackFetch(dependencies) } : {})
+      });
+      await adapter.validateAccessToken();
+      return { action: request.action, provider: request.provider, status: "success" };
+    }
+  };
+}
+
+export function createStripeHealthCheckHandler(dependencies: ConnectorRuntimeDependencies = {}): ConnectorActionHandler<"health.check"> {
+  return {
+    action: "health.check",
+    provider: "stripe",
+    async execute(request) {
+      const apiKey = request.credentials.apiKey;
+      if (!apiKey) throw new MissingConnectorCredentialError("stripe", "apiKey");
+      const adapter = new StripePaymentAdapter({
+        apiKey,
+        ...(request.credentials.baseUrl ? { baseUrl: request.credentials.baseUrl } : {}),
+        ...(dependencies.fetchImpl ? { fetchImpl: resolveStripeFetch(dependencies) } : {})
+      });
+      await adapter.validateApiKey();
+      return { action: request.action, provider: request.provider, status: "success" };
+    }
+  };
+}
+
+export function createZenviaHealthCheckHandler(dependencies: ConnectorRuntimeDependencies = {}): ConnectorActionHandler<"health.check"> {
+  return {
+    action: "health.check",
+    provider: "zenvia",
+    async execute(request) {
+      const apiToken = request.credentials.apiKey ?? request.credentials.accessToken;
+      if (!apiToken) throw new MissingConnectorCredentialError("zenvia", "apiKey");
+      const adapter = new ZenviaMessageAdapter({
+        apiToken,
+        ...(request.credentials.baseUrl ? { baseUrl: request.credentials.baseUrl } : {}),
+        ...(dependencies.fetchImpl ? { fetchImpl: resolveZenviaFetch(dependencies) } : {})
+      });
+      await adapter.validateApiToken();
+      return { action: request.action, provider: request.provider, status: "success" };
+    }
+  };
+}
+
+export function createDefaultConnectorRuntime(dependencies: ConnectorRuntimeDependencies = {}): ConnectorRuntime {
+  return new ConnectorRuntime([
+    createHubspotCompanyUpsertHandler(dependencies),
+    createHubspotContactUpsertHandler(dependencies),
+    createHubspotHealthCheckHandler(dependencies),
+    createOmieCustomerUpsertHandler(dependencies),
+    createOmieSalesOrderCreateHandler(dependencies),
+    createOmieHealthCheckHandler(dependencies),
+    createSlackMessageSendHandler(dependencies),
+    createSlackHealthCheckHandler(dependencies),
+    createStripePaymentReadHandler(dependencies),
+    createStripeHealthCheckHandler(dependencies),
+    createZenviaMessageSendHandler(dependencies),
+    createZenviaHealthCheckHandler(dependencies)
+  ]);
+}
