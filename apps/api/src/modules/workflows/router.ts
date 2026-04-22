@@ -1,4 +1,4 @@
-import { createHmac } from "node:crypto";
+import { createHmac, randomUUID } from "node:crypto";
 
 import type { ApiConfig } from "@birthub/config";
 import { Role, WorkflowTriggerType } from "@birthub/database";
@@ -350,10 +350,13 @@ function registerWorkflowEventRoute(router: Router, config: ApiConfig): void {
       await workflowQueueAdapter.enqueueWorkflowTrigger(config, {
         actorId: parsed.actorId,
         eventSource: parsed.source,
-        idempotencyKey: parsed.eventId ?? `${parsed.source}:${topic}:${Date.now()}`,
+        idempotencyKey: parsed.eventId
+          ? `${parsed.source}:${topic}:${parsed.eventId}`
+          : `${parsed.source}:${topic}:${randomUUID()}`,
         organizationId: request.context.organizationId ?? tenantId,
         tenantId,
         topic,
+        triggerEventId: parsed.eventId,
         triggerPayload: {
           ...parsed.payload,
           ...(parsed.eventId ? { eventId: parsed.eventId } : {})

@@ -14,6 +14,7 @@ pnpm typecheck
 pnpm lint
 pnpm test
 pnpm build
+pnpm clean
 ```
 
 ## Convenções
@@ -22,6 +23,7 @@ pnpm build
 - Mantenha lint e formatação passando sem bypass.
 - Não comitar artefatos gerados (`dist`, `*.tsbuildinfo`, caches).
 - Preferir testes unitários com mocks quando não há necessidade real de infraestrutura externa.
+- Manter testes que exigem banco real em scripts explícitos de isolamento, fora do `pnpm test` unitário.
 
 ## Commit e PR
 

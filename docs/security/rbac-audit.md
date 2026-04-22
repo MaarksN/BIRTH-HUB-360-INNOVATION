@@ -34,6 +34,16 @@ As mutacoes de conectores auditadas nesta fase sao:
 
 O log de conectores registra apenas identificadores, provider, status e flags operacionais. Credenciais, access tokens, refresh tokens, OAuth state, authorization URLs e assinaturas nao devem entrar em audit log.
 
+## Webhooks administrativos
+
+As mutacoes administrativas de webhooks tambem entram no envelope `Auditable`:
+
+- `webhook_endpoint.created`
+- `webhook_endpoint.updated`
+- `webhook_delivery.retry_requested`
+
+O audit log recebe apenas endpoint/delivery ids, status, topico e flag operacional de fila. O segredo gerado para assinatura do endpoint nao deve ser retornado ao wrapper de auditoria.
+
 ## PII e Retencao
 
 - PII em audit log deve ser minimizada; prefira ids internos e metadados nao sensiveis.
@@ -45,4 +55,5 @@ O log de conectores registra apenas identificadores, provider, status e flags op
 
 - `apps/api/tests/rbac.test.ts` valida a matriz basica de RBAC.
 - `apps/api/tests/connectors-router.test.ts` valida `ADMIN` no callback OAuth e auditoria redigida de conectores.
+- `apps/api/tests/webhooks.audit.test.ts` valida auditoria de mutacoes administrativas de webhook sem persistir segredo gerado.
 - `apps/api/tests/audit-redaction.test.ts` valida redacao centralizada de segredos no audit envelope.

@@ -33,6 +33,7 @@
     "start:web": "pnpm --filter @birthub/web start",
     "start:api": "pnpm --filter @birthub/api start",
     "start:worker": "pnpm --filter @birthub/worker start",
+    "clean": "rimraf --glob .turbo \"apps/*/.turbo\" \"apps/*/dist\" \"apps/web/.next\" \"packages/*/.turbo\" \"packages/*/dist\" \"packages/*/*.tsbuildinfo\" \"packages/config/src/*.js\" \"packages/config/src/*.d.ts\" \"packages/config/src/*.d.ts.map\"",
     "format": "prettier --write ."
   },
   "devDependencies": {

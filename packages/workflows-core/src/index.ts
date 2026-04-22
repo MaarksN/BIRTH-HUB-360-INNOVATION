@@ -3,6 +3,7 @@
 export * from "./errors.js";
 export * from "./interpolation/interpolate.js";
 export * from "./lint/semanticStepLint.js";
+export * from "./masking.js";
 export * from "./nodes/agentExecute.js";
 export * from "./nodes/agentHandoff.js";
 export * from "./nodes/aiTextExtract.js";

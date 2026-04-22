@@ -2,6 +2,7 @@ import type { ApiConfig } from "@birthub/config";
 import {
   Prisma,
   prisma,
+  WorkflowExecutionStatus,
   WorkflowStatus,
   WorkflowTriggerType
 } from "@birthub/database";
@@ -26,6 +27,68 @@ import type {
 } from "./schemas.js";
 
 const WORKFLOW_LIST_LIMIT = 100;
+const WORKFLOW_METRICS_WINDOW = 50;
+
+function resolveCanvasFromInput(input: Pick<WorkflowCreateInput | WorkflowUpdateInput, "canvas" | "dsl">): {
+  canvas: WorkflowCanvas | undefined;
+  eventTopic: string | undefined;
+  triggerType: WorkflowTriggerType | undefined;
+} {
+  if (input.canvas) {
+    const eventTrigger = input.canvas.steps.find((step) => step.type === "TRIGGER_EVENT");
+    const topic =
+      eventTrigger && typeof eventTrigger.config.topic === "string"
+        ? eventTrigger.config.topic
+        : undefined;
+
+    return {
+      canvas: input.canvas,
+      eventTopic: topic,
+      triggerType: topic ? WorkflowTriggerType.EVENT : undefined
+    };
+  }
+
+  if (!input.dsl) {
+    return {
+      canvas: undefined,
+      eventTopic: undefined,
+      triggerType: undefined
+    };
+  }
+
+  return {
+    canvas: compileDslToCanvas(input.dsl),
+    eventTopic: input.dsl.trigger.eventTopic,
+    triggerType: WorkflowTriggerType.EVENT
+  };
+}
+
+function buildWorkflowListMetrics(
+  executions: Array<{
+    completedAt: Date | null;
+    id: string;
+    startedAt: Date;
+    status: WorkflowExecutionStatus;
+  }>
+) {
+  const finishedRuns = executions.filter((execution) =>
+    [
+      WorkflowExecutionStatus.SUCCESS,
+      WorkflowExecutionStatus.FAILED,
+      WorkflowExecutionStatus.CANCELLED
+    ].includes(execution.status)
+  );
+  const successes = finishedRuns.filter(
+    (execution) => execution.status === WorkflowExecutionStatus.SUCCESS
+  ).length;
+  const successRate = finishedRuns.length === 0 ? null : successes / finishedRuns.length;
+  const lastExecution = executions[0] ?? null;
+
+  return {
+    lastExecution,
+    successRate
+  };
+}
 
 export async function getWorkflowById(
   workflowId: string,
@@ -63,13 +126,35 @@ export type PersistedWorkflow = Awaited<ReturnType<typeof getWorkflowById>>;
 export type WorkflowRecord = NonNullable<PersistedWorkflow>;
 
 export async function listWorkflows(tenantId: string) {
-  return prisma.workflow.findMany({
+  const workflows = await prisma.workflow.findMany({
     include: {
       _count: {
         select: {
           executions: true,
           steps: true
         }
+      },
+      executions: {
+        orderBy: {
+          startedAt: "desc"
+        },
+        select: {
+          completedAt: true,
+          id: true,
+          startedAt: true,
+          status: true
+        },
+        take: WORKFLOW_METRICS_WINDOW
+      },
+      revisions: {
+        orderBy: {
+          version: "desc"
+        },
+        select: {
+          id: true,
+          version: true
+        },
+        take: 1
       }
     },
     orderBy: {
@@ -80,6 +165,12 @@ export async function listWorkflows(tenantId: string) {
       tenantId
     }
   });
+
+  return workflows.map((workflow) => ({
+    ...workflow,
+    currentVersion: workflow.revisions[0]?.version ?? workflow.version,
+    ...buildWorkflowListMetrics(workflow.executions)
+  }));
 }
 
 export async function createWorkflow(
@@ -89,7 +180,8 @@ export async function createWorkflow(
 ): Promise<WorkflowRecord> {
   const identity = await resolveScopedIdentity(tenantReference);
   await assertWorkflowLimit(identity);
-  const canvas = input.canvas ?? (input.dsl ? compileDslToCanvas(input.dsl) : null);
+  const definition = resolveCanvasFromInput(input);
+  const canvas = definition.canvas ?? null;
   if (!canvas) {
     throw new Error("WORKFLOW_DEFINITION_REQUIRED");
   }
@@ -106,7 +198,7 @@ export async function createWorkflow(
         cronExpression: input.cronExpression ?? null,
         definition: canvas as Prisma.InputJsonValue,
         description: input.description ?? null,
-        eventTopic: input.eventTopic ?? null,
+        eventTopic: input.eventTopic ?? definition.eventTopic ?? null,
         maxDepth: input.maxDepth,
         name: input.name,
         organizationId: identity.organizationId,
@@ -114,9 +206,9 @@ export async function createWorkflow(
         status: input.status,
         tenantId: identity.tenantId,
         triggerConfig: input.triggerConfig as Prisma.InputJsonValue,
-        triggerType: input.triggerType,
+        triggerType: definition.triggerType ?? input.triggerType,
         webhookSecret:
-          input.triggerType === WorkflowTriggerType.WEBHOOK
+          (definition.triggerType ?? input.triggerType) === WorkflowTriggerType.WEBHOOK
             ? createWebhookSecret(identity, input.name)
             : null
       }
@@ -136,7 +228,7 @@ export async function createWorkflow(
     return created;
   });
 
-  if (input.triggerType === WorkflowTriggerType.CRON) {
+  if ((definition.triggerType ?? input.triggerType) === WorkflowTriggerType.CRON) {
     await upsertCronTrigger(config, {
       cronExpression: workflow.cronExpression,
       id: workflow.id,
@@ -165,10 +257,9 @@ async function updateWorkflowInScope(
     throw new Error("WORKFLOW_NOT_FOUND");
   }
 
-  if (input.canvas) {
-    ensureCanvasIsDag(input.canvas);
-  } else if (input.dsl) {
-    ensureCanvasIsDag(compileDslToCanvas(input.dsl));
+  const definition = resolveCanvasFromInput(input);
+  if (definition.canvas) {
+    ensureCanvasIsDag(definition.canvas);
   }
 
   const updated = await prisma.$transaction(async (tx) => {
@@ -192,7 +283,7 @@ async function updateWorkflowInScope(
       workflowUpdateData.cronExpression = input.cronExpression;
     }
 
-    const nextCanvas = input.canvas ?? (input.dsl ? compileDslToCanvas(input.dsl) : undefined);
+    const nextCanvas = definition.canvas;
     if (nextCanvas !== undefined) {
       workflowUpdateData.definition = nextCanvas as Prisma.InputJsonValue;
     }
@@ -203,6 +294,8 @@ async function updateWorkflowInScope(
 
     if (input.eventTopic !== undefined) {
       workflowUpdateData.eventTopic = input.eventTopic;
+    } else if (definition.eventTopic !== undefined) {
+      workflowUpdateData.eventTopic = definition.eventTopic;
     }
 
     if (input.maxDepth !== undefined) {
@@ -219,6 +312,8 @@ async function updateWorkflowInScope(
 
     if (input.triggerType !== undefined) {
       workflowUpdateData.triggerType = input.triggerType;
+    } else if (definition.triggerType !== undefined) {
+      workflowUpdateData.triggerType = definition.triggerType;
     }
 
     if (nextCanvas) {
@@ -243,16 +338,6 @@ async function updateWorkflowInScope(
         }
       });
 
-      await tx.workflowTransition.deleteMany({
-        where: {
-          workflowId
-        }
-      });
-      await tx.workflowStep.deleteMany({
-        where: {
-          workflowId
-        }
-      });
       await persistCanvas(tx, identity, workflowId, nextCanvas, createdRevision.id);
     }
 

@@ -21,11 +21,13 @@ Fase 2 endurece o isolamento por tenant sem abrir novos conectores. A regra oper
 - Connectors: contas e credenciais de provider sao persistidas por `tenantId` em `upsert`.
 - Dashboard: organizacao e membership sao resolvidas com tenant no `where`.
 - Marketplace: estatisticas de aprovacao nao consultam feedback sem tenant e sempre filtram `agentFeedback` por tenant.
+- Conversations e Search: servicos de workspace foram adicionados ao lint tenant-aware; leituras e mutacoes usam `tenantId` e, quando aplicavel, `organizationId`.
 - Worker persistence: execucoes, conversas e webhooks outbound carregam tenant em leituras e mutacoes.
 
 ## Testes
 
 - `apps/api/tests/marketplace-budget.smoke.test.ts` valida que feedback do marketplace nao e consultado sem tenant e que a query inclui `tenantId`.
+- `apps/api/tests/conversations-router.test.ts` valida mutacao de status dentro do escopo autenticado e bloqueio de mass assignment top-level.
 - `apps/worker/src/agents/conversations.test.ts` valida que a resolucao de threads existentes filtra por tenant.
 - `apps/worker/src/worker.execution-state.test.ts` valida que a persistencia de execucoes escreve com `tenantId`.
 - A suite existente de tenant scope em `packages/database` cobre injecao e bloqueio de acesso cross-tenant.

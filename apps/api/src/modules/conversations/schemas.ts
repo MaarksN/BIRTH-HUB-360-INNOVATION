@@ -12,13 +12,13 @@ export const createConversationSchema = z.object({
   initialMessage: z.string().trim().min(1).max(5_000).optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
   subject: z.string().trim().min(1).max(160)
-});
+}).strict();
 
 export const appendMessageSchema = z.object({
   content: z.string().trim().min(1).max(5_000)
-});
+}).strict();
 
 export const updateStatusSchema = z.object({
   status: z.string().trim().min(1).max(40)
-});
+}).strict();
 

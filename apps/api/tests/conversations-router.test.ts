@@ -275,6 +275,33 @@ void test("conversations router validates subject before creating a thread", asy
   assert.match(String(body.detail ?? ""), /invalid/i);
 });
 
+void test("conversations router rejects top-level mass assignment fields", async () => {
+  let createdThread = false;
+  const restore = stubMethod(prisma, "$transaction", () => {
+    createdThread = true;
+    return Promise.resolve({ id: "thread_unused" });
+  });
+
+  try {
+    const response = await request(createConversationsTestApp())
+      .post("/api/v1/conversations")
+      .send({
+        organizationId: "org_attacker",
+        subject: "Tentativa indevida",
+        tenantId: "tenant_attacker",
+        userId: "user_attacker"
+      })
+      .expect(400);
+
+    const body: unknown = response.body;
+    assertProblemBody(body);
+    assert.match(String(body.detail ?? ""), /invalid/i);
+    assert.equal(createdThread, false);
+  } finally {
+    restore();
+  }
+});
+
 void test("conversations router returns not found when the requested thread does not exist", async () => {
   const restore = stubMethod(prisma.conversationThread, "findFirst", () => Promise.resolve(null));
 
@@ -293,17 +320,17 @@ void test("conversations router returns not found when the requested thread does
 });
 
 void test("conversations router updates status inside the authenticated tenant scope", async () => {
-  let receivedScopeLookup: unknown = null;
   let receivedUpdateArgs: unknown = null;
+  let receivedReloadArgs: unknown = null;
   const restores = [
-    stubMethod(prisma.conversationThread, "findFirst", (args: unknown) => {
-      receivedScopeLookup = args;
+    stubMethod(prisma.conversationThread, "updateMany", (args: unknown) => {
+      receivedUpdateArgs = args;
       return Promise.resolve({
-        id: "thread_1"
+        count: 1
       });
     }),
-    stubMethod(prisma.conversationThread, "update", (args: unknown) => {
-      receivedUpdateArgs = args;
+    stubMethod(prisma.conversationThread, "findFirst", (args: unknown) => {
+      receivedReloadArgs = args;
       return Promise.resolve({
         id: "thread_1",
         status: "closed",
@@ -320,19 +347,21 @@ void test("conversations router updates status inside the authenticated tenant s
       })
       .expect(200);
 
-    assert.deepEqual(receivedScopeLookup, {
+    assert.deepEqual(receivedUpdateArgs, {
+      data: {
+        status: "closed"
+      },
       where: {
         id: "thread_1",
         organizationId: "org_product",
         tenantId: "tenant_product"
       }
     });
-    assert.deepEqual(receivedUpdateArgs, {
-      data: {
-        status: "closed"
-      },
+    assert.deepEqual(receivedReloadArgs, {
       where: {
-        id: "thread_1"
+        id: "thread_1",
+        organizationId: "org_product",
+        tenantId: "tenant_product"
       }
     });
     assert.deepEqual(response.body, {

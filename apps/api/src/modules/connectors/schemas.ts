@@ -54,13 +54,10 @@ export const connectSchema = z
 
 export const callbackSchema = z
   .object({
-    accessToken: z.string().min(1).optional(),
     accountKey: z.string().min(1).optional(),
-    code: z.string().min(1).optional(),
+    code: z.string().min(1),
     displayName: z.string().min(1).optional(),
-    expiresAt: z.string().datetime().optional(),
     externalAccountId: z.string().min(1).optional(),
-    refreshToken: z.string().min(1).optional(),
     scopes: z.array(z.string().min(1)).optional(),
     state: z.string().min(1)
   })

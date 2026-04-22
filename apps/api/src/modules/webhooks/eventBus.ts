@@ -1,12 +1,9 @@
-import { EventEmitter } from "node:events";
+import { randomUUID } from "node:crypto";
 
 import type { ApiConfig } from "@birthub/config";
-import { prisma, WorkflowStatus, WorkflowTriggerType } from "@birthub/database";
+import { WorkflowTriggerType } from "@birthub/database";
 
-import { runWorkflowNow } from "../workflows/service.js";
-
-const eventBus = new EventEmitter();
-const INTERNAL_TOPIC = "workflow-internal-event";
+import { workflowQueueAdapter } from "../workflows/service.js";
 
 interface WorkflowInternalEvent {
   payload: Record<string, unknown>;
@@ -14,47 +11,24 @@ interface WorkflowInternalEvent {
   topic: string;
 }
 
-const INTERNAL_EVENT_WORKFLOW_LIMIT = 100;
-
-let isBridgeInitialized = false;
+let bridgeConfig: ApiConfig | null = null;
 
 export function initializeWorkflowInternalEventBridge(config: ApiConfig): void {
-  if (isBridgeInitialized) {
-    return;
-  }
-
-  isBridgeInitialized = true;
-  eventBus.on(INTERNAL_TOPIC, (event: WorkflowInternalEvent) => {
-    void (async () => {
-      const workflows = await prisma.workflow.findMany({
-        orderBy: {
-          createdAt: "asc"
-        },
-        take: INTERNAL_EVENT_WORKFLOW_LIMIT,
-        where: {
-          eventTopic: event.topic,
-          status: WorkflowStatus.PUBLISHED,
-          tenantId: event.tenantId,
-          triggerType: WorkflowTriggerType.EVENT
-        }
-      });
-
-      for (const workflow of workflows) {
-        await runWorkflowNow(
-          config,
-          workflow.id,
-          workflow.organizationId,
-          {
-            async: true,
-            payload: event.payload
-          },
-          WorkflowTriggerType.EVENT
-        );
-      }
-    })();
-  });
+  bridgeConfig = config;
 }
 
 export function emitWorkflowInternalEvent(event: WorkflowInternalEvent): void {
-  eventBus.emit(INTERNAL_TOPIC, event);
+  if (!bridgeConfig) {
+    return;
+  }
+
+  void workflowQueueAdapter.enqueueWorkflowTrigger(bridgeConfig, {
+    eventSource: "internal",
+    idempotencyKey: `internal:${event.topic}:${randomUUID()}`,
+    organizationId: event.tenantId,
+    tenantId: event.tenantId,
+    topic: event.topic,
+    triggerPayload: event.payload,
+    triggerType: WorkflowTriggerType.EVENT
+  });
 }

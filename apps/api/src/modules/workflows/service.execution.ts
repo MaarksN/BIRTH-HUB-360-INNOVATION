@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 import type { ApiConfig } from "@birthub/config";
 import {
   Prisma,
@@ -6,8 +8,11 @@ import {
   WorkflowStatus,
   WorkflowTriggerType
 } from "@birthub/database";
+import { maskSensitivePayload } from "@birthub/workflows-core";
 
 import { ProblemDetailsError } from "../../lib/problem-details.js";
+import { readNumericPlanLimit } from "../billing/plan.utils.js";
+import { getBillingSnapshot } from "../billing/service.js";
 import { getWorkflowById } from "./service.lifecycle.js";
 import {
   listStepResultsForExecution,
@@ -21,6 +26,62 @@ type ResumeCheckpoint = {
   fromExecutionId: string;
   fromStepKey?: string | undefined;
 };
+
+const WORKFLOW_RUN_LIMIT_KEYS = ["workflowExecutions", "workflow_runs", "workflowRuns"] as const;
+
+function resolveWorkflowRunLimit(limits: unknown): number {
+  for (const key of WORKFLOW_RUN_LIMIT_KEYS) {
+    const limit = readNumericPlanLimit(limits, key, Number.POSITIVE_INFINITY);
+    if (Number.isFinite(limit)) {
+      return limit;
+    }
+  }
+
+  return Number.POSITIVE_INFINITY;
+}
+
+function startOfCurrentMonth(): Date {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+}
+
+async function assertMonthlyWorkflowExecutionLimit(input: {
+  isDryRun: boolean;
+  organizationId: string;
+  tenantId: string;
+}): Promise<void> {
+  if (input.isDryRun) {
+    return;
+  }
+
+  const snapshot = await getBillingSnapshot(input.tenantId, 3);
+  const limit = resolveWorkflowRunLimit(snapshot.plan.limits);
+  if (!Number.isFinite(limit)) {
+    return;
+  }
+
+  const current = await prisma.usageRecord.aggregate({
+    _sum: {
+      quantity: true
+    },
+    where: {
+      metric: "workflow.execution",
+      occurredAt: {
+        gte: startOfCurrentMonth()
+      },
+      organizationId: input.organizationId,
+      tenantId: input.tenantId
+    }
+  });
+
+  if ((current._sum.quantity ?? 0) >= limit) {
+    throw new ProblemDetailsError({
+      detail: `The active plan allows ${limit} workflow executions this month.`,
+      status: 402,
+      title: "Payment Required"
+    });
+  }
+}
 
 async function resolveResumeStepKey(input: {
   execution: NonNullable<Awaited<ReturnType<typeof prisma.workflowExecution.findFirst>>>;
@@ -65,6 +126,7 @@ async function buildResumeContext(input: {
   depth: number;
   resumeStepKey: string;
   resumedFromExecutionId: string;
+  workflowRevisionId: string | null;
 }> {
   const sourceExecution = await prisma.workflowExecution.findFirst({
     where: {
@@ -101,6 +163,9 @@ async function buildResumeContext(input: {
     where: {
       key: resumeStepKey,
       tenantId: input.tenantId,
+      ...(sourceExecution.workflowRevisionId
+        ? { workflowRevisionId: sourceExecution.workflowRevisionId }
+        : {}),
       workflowId: input.workflowId
     }
   });
@@ -126,7 +191,8 @@ async function buildResumeContext(input: {
   return {
     depth: resumeIndex,
     resumeStepKey,
-    resumedFromExecutionId: sourceExecution.id
+    resumedFromExecutionId: sourceExecution.id,
+    workflowRevisionId: sourceExecution.workflowRevisionId
   };
 }
 
@@ -151,6 +217,8 @@ async function cloneCheckpointResults(input: {
     await input.client.stepResult.createMany({
       data: checkpointResults.map((result) => ({
         attempt: result.attempt,
+        durationMs: result.durationMs,
+        errorCode: result.errorCode,
         errorMessage: result.errorMessage,
         executionId: input.executionId,
         externalPayloadUrl: result.externalPayloadUrl,
@@ -164,12 +232,49 @@ async function cloneCheckpointResults(input: {
         status: result.status,
         stepId: result.stepId,
         tenantId: input.tenantId,
+        workflowRevisionId: result.workflowRevisionId,
         workflowId: input.workflowId
       }))
     });
   }
 
   return checkpointResults.length;
+}
+
+async function getLatestWorkflowRevision(input: {
+  tenantId: string;
+  workflowId: string;
+}) {
+  return prisma.workflowRevision.findFirst({
+    include: {
+      steps: {
+        orderBy: {
+          createdAt: "asc"
+        }
+      }
+    },
+    orderBy: {
+      version: "desc"
+    },
+    where: {
+      tenantId: input.tenantId,
+      workflowId: input.workflowId
+    }
+  });
+}
+
+function findTriggerStep(
+  steps: Array<{
+    key: string;
+    type: string;
+  }>
+) {
+  return steps.find(
+    (step) =>
+      step.type === "TRIGGER_WEBHOOK" ||
+      step.type === "TRIGGER_CRON" ||
+      step.type === "TRIGGER_EVENT"
+  );
 }
 
 export async function runWorkflowNow(
@@ -193,12 +298,11 @@ export async function runWorkflowNow(
     throw new Error("WORKFLOW_NOT_PUBLISHED");
   }
 
-  const triggerStep = workflow.steps.find(
-    (step) =>
-      step.type === "TRIGGER_WEBHOOK" ||
-      step.type === "TRIGGER_CRON" ||
-      step.type === "TRIGGER_EVENT"
-  );
+  await assertMonthlyWorkflowExecutionLimit({
+    isDryRun: input.dryRun,
+    organizationId: workflow.organizationId,
+    tenantId: workflow.tenantId
+  });
 
   const resumeContext = input.retry
     ? await buildResumeContext({
@@ -208,16 +312,65 @@ export async function runWorkflowNow(
         workflowId: workflow.id
       })
     : null;
+
+  const revision = resumeContext?.workflowRevisionId
+    ? await prisma.workflowRevision.findFirst({
+        include: {
+          steps: {
+            orderBy: {
+              createdAt: "asc"
+            }
+          }
+        },
+        where: {
+          id: resumeContext.workflowRevisionId,
+          tenantId: workflow.tenantId,
+          workflowId: workflow.id
+        }
+      })
+    : await getLatestWorkflowRevision({
+        tenantId: workflow.tenantId,
+        workflowId: workflow.id
+      });
+  const triggerStep = revision ? findTriggerStep(revision.steps) : null;
+  const triggerPayload = maskSensitivePayload(input.payload);
+  const requestedIdempotencyKey = input.retry
+    ? `replay:${resumeContext?.resumedFromExecutionId ?? "unknown"}:${randomUUID()}`
+    : input.idempotencyKey;
+
+  if (requestedIdempotencyKey && !input.retry) {
+    const existingExecution = await prisma.workflowExecution.findFirst({
+      where: {
+        idempotencyKey: requestedIdempotencyKey,
+        tenantId: workflow.tenantId
+      }
+    });
+
+    if (existingExecution) {
+      return {
+        executionId: existingExecution.id,
+        mode: input.async ? "async" : "sync",
+        status: "accepted"
+      };
+    }
+  }
+
   const execution = await prisma.$transaction(async (tx) => {
     const createdExecution = await tx.workflowExecution.create({
       data: {
+        eventSource: "manual",
         depth: resumeContext?.depth ?? 0,
+        idempotencyKey: requestedIdempotencyKey ?? null,
+        isDryRun: input.dryRun,
         organizationId: workflow.organizationId,
         resumedFromExecutionId: resumeContext?.resumedFromExecutionId ?? null,
         status: WorkflowExecutionStatus.RUNNING,
         tenantId: workflow.tenantId,
-        triggerPayload: input.payload as Prisma.InputJsonValue,
+        triggerEventId: typeof input.payload.eventId === "string" ? input.payload.eventId : null,
+        triggerKey: triggerStep?.key ?? null,
+        triggerPayload: triggerPayload as Prisma.InputJsonValue,
         triggerType,
+        workflowRevisionId: revision?.id ?? null,
         workflowId: workflow.id
       }
     });
@@ -241,9 +394,11 @@ export async function runWorkflowNow(
     await workflowQueueAdapter.enqueueWorkflowExecution(config, {
       attempt: 1,
       executionId: execution.id,
+      isDryRun: input.dryRun,
       organizationId: workflow.organizationId,
       stepKey: resumeContext.resumeStepKey,
       tenantId: workflow.tenantId,
+      triggerEventId: typeof input.payload.eventId === "string" ? input.payload.eventId : undefined,
       triggerPayload: input.payload,
       triggerType,
       workflowId: workflow.id
@@ -252,9 +407,11 @@ export async function runWorkflowNow(
     await workflowQueueAdapter.enqueueWorkflowExecution(config, {
       attempt: 1,
       executionId: execution.id,
+      isDryRun: input.dryRun,
       organizationId: workflow.organizationId,
       stepKey: triggerStep.key,
       tenantId: workflow.tenantId,
+      triggerEventId: typeof input.payload.eventId === "string" ? input.payload.eventId : undefined,
       triggerPayload: input.payload,
       triggerType,
       workflowId: workflow.id
@@ -262,6 +419,7 @@ export async function runWorkflowNow(
   } else {
     await workflowQueueAdapter.enqueueWorkflowTrigger(config, {
       organizationId: workflow.organizationId,
+      isDryRun: input.dryRun,
       tenantId: workflow.tenantId,
       triggerPayload: input.payload,
       triggerType,

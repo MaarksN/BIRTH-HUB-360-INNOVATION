@@ -42,9 +42,11 @@ export default [
     files: [
       "apps/api/src/modules/connectors/service.oauth.ts",
       "apps/api/src/modules/connectors/service.shared.ts",
+      "apps/api/src/modules/conversations/service.ts",
       "apps/api/src/modules/dashboard/service.ts",
       "apps/api/src/modules/dashboard/service.shared.ts",
       "apps/api/src/modules/marketplace/marketplace-service.ts",
+      "apps/api/src/modules/search/service.ts",
       "apps/worker/src/agents/conversations.ts",
       "apps/worker/src/webhooks/outbound.ts",
       "apps/worker/src/worker.execution-state.ts"

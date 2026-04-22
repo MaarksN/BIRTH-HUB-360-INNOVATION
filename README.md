@@ -23,6 +23,7 @@ pnpm build
 pnpm typecheck
 pnpm lint
 pnpm test
+pnpm clean
 ```
 
 ## Padrões da base
@@ -36,7 +37,9 @@ pnpm test
 
 - `pnpm dev`: inicia web + api + worker em paralelo.
 - `pnpm format`: aplica Prettier no workspace.
+- `pnpm clean`: remove saídas locais de build/cache (`dist`, `.next`, `.turbo`, `*.tsbuildinfo`).
 - `pnpm db:generate`: gera client Prisma do pacote de database.
+- `pnpm --filter @birthub/database test:isolation`: roda validações que podem exigir banco real/RLS.
 
 ## Qualidade mínima para PR
 

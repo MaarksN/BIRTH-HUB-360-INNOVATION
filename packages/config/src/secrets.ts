@@ -101,8 +101,8 @@ export function describeSecretSource(value: string): SecretSourceDescriptor {
     };
   }
 
-  const scheme = matchedReference.groups.scheme.toLowerCase();
-  const reference = matchedReference.groups.reference.trim();
+  const scheme = matchedReference.groups.scheme?.toLowerCase();
+  const reference = matchedReference.groups.reference?.trim();
   const descriptor = secretReferenceCatalog[scheme as keyof typeof secretReferenceCatalog];
 
   if (!descriptor || !reference) {

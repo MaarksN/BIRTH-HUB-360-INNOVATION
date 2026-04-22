@@ -2,10 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ES2022",
-    "lib": [
-      "ES2022",
-      "DOM"
-    ],
+    "lib": ["ES2022", "DOM"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "baseUrl": ".",
@@ -21,37 +18,33 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "paths": {
-      "@birthub/agents-core": [
-        "packages/agents-core/src/index.ts"
-      ],
-      "@birthub/agents-core/policy": [
-        "packages/agents-core/src/policy/engine.ts"
-      ],
-      "@birthub/agents-core/tools": [
-        "packages/agents-core/src/tools/index.ts"
-      ],
-      "@birthub/config/web": [
-        "packages/config/src/web.ts"
-      ],
+      "@birthub/agents-core": ["packages/agents-core/src/index.ts"],
+      "@birthub/agents-core/policy": ["packages/agents-core/src/policy/engine.ts"],
+      "@birthub/agents-core/tools": ["packages/agents-core/src/tools/index.ts"],
+      "@birthub/config/web": ["packages/config/src/web.ts"],
+      "@birthub/database/client": ["packages/database/src/client.ts"],
+      "@birthub/database/repositories": ["packages/database/src/repositories/index.ts"],
       "@birthub/integrations/hubspot-crm-adapter": [
         "packages/integrations/src/adapters/hubspot-crm-adapter.ts"
       ],
       "@birthub/integrations/hubspot-webhooks": [
         "packages/integrations/src/adapters/hubspot-webhooks.ts"
       ],
+      "@birthub/integrations/omie-erp-adapter": [
+        "packages/integrations/src/adapters/omie-erp-adapter.ts"
+      ],
       "@birthub/integrations/slack-message-adapter": [
         "packages/integrations/src/adapters/slack-message-adapter.ts"
       ],
-      "@birthub/utils/fetch": [
-        "packages/utils/src/fetch.ts"
+      "@birthub/integrations/stripe-payment-adapter": [
+        "packages/integrations/src/adapters/stripe-payment-adapter.ts"
       ],
-      "@birthub/workflows-core/nextjs": [
-        "packages/workflows-core/src/nextjs.ts"
+      "@birthub/integrations/zenvia-message-adapter": [
+        "packages/integrations/src/adapters/zenvia-message-adapter.ts"
       ],
-      "@birthub/*": [
-        "packages/*/src/index.ts",
-        "packages/*/src"
-      ]
+      "@birthub/utils/fetch": ["packages/utils/src/fetch.ts"],
+      "@birthub/workflows-core/nextjs": ["packages/workflows-core/src/nextjs.ts"],
+      "@birthub/*": ["packages/*/src/index.ts", "packages/*/src"]
     },
     "ignoreDeprecations": "5.0"
   }

@@ -1,10 +1,11 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
 import type { ApiConfig } from "@birthub/config";
 import { prisma, Role, WebhookEndpointStatus, WorkflowTriggerType } from "@birthub/database";
 import { Router } from "express";
 import { z } from "zod";
 
+import { Auditable } from "../../audit/auditable.js";
 import {
   RequireRole,
   requireAuthenticatedSession
@@ -12,7 +13,7 @@ import {
 import { validateExternalUrl } from "../../lib/external-url.js";
 import { asyncHandler, ProblemDetailsError } from "../../lib/problem-details.js";
 import { dedupeTriggerPayload } from "../workflows/runnerQueue.js";
-import { runWorkflowNow } from "../workflows/service.js";
+import { workflowQueueAdapter } from "../workflows/service.js";
 import {
   createTenantWebhookEndpoint,
   listTenantWebhookDeliveries,
@@ -39,6 +40,27 @@ const webhookEndpointUpdateSchema = z
 const deliveryQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(25)
 });
+
+type WebhookSettingsAuditResult = {
+  deliveryId?: string;
+  endpointId?: string;
+  queued?: boolean;
+  status?: string;
+  topic?: string;
+};
+
+function createWebhookSettingsAudit(input: {
+  action: string;
+  entityType?: string;
+}) {
+  return Auditable<WebhookSettingsAuditResult>({
+    action: input.action,
+    entityType: input.entityType ?? "webhook_endpoint",
+    requireActor: true,
+    resolveEntityId: (request, _response, result) =>
+      result?.endpointId ?? result?.deliveryId ?? String(request.params.id ?? "unknown")
+  });
+}
 
 function safeCompare(left: string, right: string): boolean {
   const leftBuffer = Buffer.from(left);
@@ -77,6 +99,10 @@ function assertSafeWebhookTarget(rawUrl: string): string {
   }
 
   return validation.url.toString();
+}
+
+function buildWebhookIdempotencyKey(workflowId: string, payload: Record<string, unknown>): string {
+  return `webhook:${workflowId}:${createHash("sha256").update(JSON.stringify(payload)).digest("hex")}`;
 }
 
 export function createWebhooksRouter(config: ApiConfig): Router {
@@ -129,20 +155,20 @@ export function createWebhooksRouter(config: ApiConfig): Router {
         return;
       }
 
-      const execution = await runWorkflowNow(
-        config,
-        workflow.id,
-        workflow.organizationId,
-        {
-          async: true,
-          payload
-        },
-        WorkflowTriggerType.WEBHOOK
-      );
+      await workflowQueueAdapter.enqueueWorkflowTrigger(config, {
+        eventSource: "webhook",
+        idempotencyKey: buildWebhookIdempotencyKey(workflow.id, payload),
+        organizationId: workflow.organizationId,
+        tenantId: workflow.tenantId,
+        triggerPayload: payload,
+        triggerType: WorkflowTriggerType.WEBHOOK,
+        workflowId: workflow.id
+      });
 
       response.status(202).json({
+        accepted: true,
         deduplicated: false,
-        executionId: execution.executionId
+        workflowId: workflow.id
       });
     })
   );
@@ -174,63 +200,81 @@ export function createWebhooksRouter(config: ApiConfig): Router {
     "/api/v1/settings/webhooks",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
-    asyncHandler(async (request, response) => {
-      const tenantReference = request.context.tenantId;
+    asyncHandler(
+      createWebhookSettingsAudit({
+        action: "webhook_endpoint.created"
+      })(async (request, response) => {
+        const tenantReference = request.context.tenantId;
 
-      if (!tenantReference) {
-        throw new ProblemDetailsError({
-          detail: "Active tenant context is required.",
-          status: 401,
-          title: "Unauthorized"
+        if (!tenantReference) {
+          throw new ProblemDetailsError({
+            detail: "Active tenant context is required.",
+            status: 401,
+            title: "Unauthorized"
+          });
+        }
+
+        const payload = webhookEndpointSchema.parse(request.body);
+        const endpoint = await createTenantWebhookEndpoint({
+          createdByUserId: request.context.userId,
+          tenantReference,
+          topics: payload.topics,
+          url: assertSafeWebhookTarget(payload.url)
         });
-      }
 
-      const payload = webhookEndpointSchema.parse(request.body);
-      const endpoint = await createTenantWebhookEndpoint({
-        createdByUserId: request.context.userId,
-        tenantReference,
-        topics: payload.topics,
-        url: assertSafeWebhookTarget(payload.url)
-      });
+        response.status(201).json({
+          endpoint,
+          requestId: request.context.requestId
+        });
 
-      response.status(201).json({
-        endpoint,
-        requestId: request.context.requestId
-      });
-    })
+        return {
+          endpointId: endpoint.id,
+          status: String(endpoint.status)
+        };
+      })
+    )
   );
 
   router.patch(
     "/api/v1/settings/webhooks/:id",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
-    asyncHandler(async (request, response) => {
-      const tenantReference = request.context.tenantId;
+    asyncHandler(
+      createWebhookSettingsAudit({
+        action: "webhook_endpoint.updated"
+      })(async (request, response) => {
+        const tenantReference = request.context.tenantId;
 
-      if (!tenantReference) {
-        throw new ProblemDetailsError({
-          detail: "Active tenant context is required.",
-          status: 401,
-          title: "Unauthorized"
+        if (!tenantReference) {
+          throw new ProblemDetailsError({
+            detail: "Active tenant context is required.",
+            status: 401,
+            title: "Unauthorized"
+          });
+        }
+
+        const payload = webhookEndpointUpdateSchema.parse(request.body);
+        const endpoint = await updateTenantWebhookEndpoint({
+          endpointId: String(request.params.id ?? ""),
+          tenantReference,
+          ...(payload.status !== undefined ? { status: payload.status } : {}),
+          ...(payload.topics !== undefined ? { topics: payload.topics } : {}),
+          ...(payload.url !== undefined
+            ? { url: assertSafeWebhookTarget(payload.url) }
+            : {})
         });
-      }
 
-      const payload = webhookEndpointUpdateSchema.parse(request.body);
-      const endpoint = await updateTenantWebhookEndpoint({
-        endpointId: String(request.params.id ?? ""),
-        tenantReference,
-        ...(payload.status !== undefined ? { status: payload.status } : {}),
-        ...(payload.topics !== undefined ? { topics: payload.topics } : {}),
-        ...(payload.url !== undefined
-          ? { url: assertSafeWebhookTarget(payload.url) }
-          : {})
-      });
+        response.status(200).json({
+          endpoint,
+          requestId: request.context.requestId
+        });
 
-      response.status(200).json({
-        endpoint,
-        requestId: request.context.requestId
-      });
-    })
+        return {
+          endpointId: endpoint.id,
+          status: String(endpoint.status)
+        };
+      })
+    )
   );
 
   router.get(
@@ -266,28 +310,41 @@ export function createWebhooksRouter(config: ApiConfig): Router {
     "/api/v1/settings/webhooks/deliveries/:id/retry",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
-    asyncHandler(async (request, response) => {
-      const tenantReference = request.context.tenantId;
+    asyncHandler(
+      createWebhookSettingsAudit({
+        action: "webhook_delivery.retry_requested",
+        entityType: "webhook_delivery"
+      })(async (request, response) => {
+        const tenantReference = request.context.tenantId;
 
-      if (!tenantReference) {
-        throw new ProblemDetailsError({
-          detail: "Active tenant context is required.",
-          status: 401,
-          title: "Unauthorized"
+        if (!tenantReference) {
+          throw new ProblemDetailsError({
+            detail: "Active tenant context is required.",
+            status: 401,
+            title: "Unauthorized"
+          });
+        }
+
+        const deliveryId = String(request.params.id ?? "");
+        const result = await retryWebhookDelivery({
+          config,
+          deliveryId,
+          tenantReference
         });
-      }
 
-      const result = await retryWebhookDelivery({
-        config,
-        deliveryId: String(request.params.id ?? ""),
-        tenantReference
-      });
+        response.status(202).json({
+          requestId: request.context.requestId,
+          ...result
+        });
 
-      response.status(202).json({
-        requestId: request.context.requestId,
-        ...result
-      });
-    })
+        return {
+          deliveryId,
+          endpointId: result.endpointId,
+          queued: result.queued,
+          topic: result.topic
+        };
+      })
+    )
   );
 
   return router;

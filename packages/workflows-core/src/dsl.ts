@@ -28,6 +28,11 @@ export const workflowDslSchema = z.object({
 
 export type WorkflowDsl = z.infer<typeof workflowDslSchema>;
 
+/*
+ * eventTopic routes a domain event to every published EVENT workflow listening to
+ * that topic. triggerKey is the stable key of the implicit TRIGGER_EVENT step
+ * stored inside a WorkflowRevision and used for execution lineage/audit.
+ */
 export function compileDslToCanvas(dsl: WorkflowDsl): WorkflowCanvas {
   const triggerKey = dsl.trigger.triggerKey;
   const steps = [

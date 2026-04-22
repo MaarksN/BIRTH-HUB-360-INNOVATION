@@ -15,10 +15,12 @@ Fase 2 endurece contratos de entrada para impedir que o cliente envie campos int
 - Auth: login, MFA e refresh rejeitam campos inesperados.
 - Organizations/invites/API keys/users/privacy: mutations sensiveis rejeitam campos fora do DTO.
 - Tasks: campos top-level de contexto sao bloqueados antes de consumo de budget ou enqueue.
+- Conversations: criacao de thread, append de mensagem e troca de status rejeitam campos top-level fora do contrato.
 - Webhook settings e connectors ja usam schemas estritos para create/update internos.
 
 ## Testes
 
 - `packages/config/src/contracts.test.ts` cobre rejeicao de campos inesperados nos contratos compartilhados.
 - `apps/api/tests/tasks-router.test.ts` cobre tentativa de mass assignment em task enqueue e garante ausencia de side effects.
+- `apps/api/tests/conversations-router.test.ts` cobre tentativa de mass assignment em criacao de conversa.
 - Testes existentes de dashboard e webhook settings seguem cobrindo rejeicao de propriedades inesperadas em endpoints sensiveis.

@@ -282,14 +282,40 @@ export async function updateConversationStatus(input: {
   status: string;
   tenantId: string;
 }) {
-  await assertConversationScope(input);
-
-  return prisma.conversationThread.update({
+  const result = await prisma.conversationThread.updateMany({
     data: {
       status: input.status
     },
     where: {
-      id: input.conversationId
+      id: input.conversationId,
+      organizationId: input.organizationId,
+      tenantId: input.tenantId
     }
   });
+
+  if (result.count === 0) {
+    throw new ProblemDetailsError({
+      detail: "Conversation not found for the active tenant.",
+      status: 404,
+      title: "Not Found"
+    });
+  }
+
+  const conversation = await prisma.conversationThread.findFirst({
+    where: {
+      id: input.conversationId,
+      organizationId: input.organizationId,
+      tenantId: input.tenantId
+    }
+  });
+
+  if (!conversation) {
+    throw new ProblemDetailsError({
+      detail: "Conversation status was updated but could not be reloaded.",
+      status: 500,
+      title: "Conversation reload failed"
+    });
+  }
+
+  return conversation;
 }

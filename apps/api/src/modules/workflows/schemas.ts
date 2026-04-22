@@ -68,6 +68,8 @@ export const workflowRevertSchema = z
 export const workflowRunSchema = z
   .object({
     async: z.boolean().default(true),
+    dryRun: z.boolean().default(false),
+    idempotencyKey: z.string().min(1).optional(),
     payload: z.record(z.string(), z.unknown()).default({}),
     retry: z
       .object({

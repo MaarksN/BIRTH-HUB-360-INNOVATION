@@ -392,7 +392,7 @@ model WorkflowStep {
   targetTransitions WorkflowTransition[]    @relation("WorkflowTransitionTarget")
   results          StepResult[]
 
-  @@unique([workflowId, key])
+  @@unique([workflowRevisionId, key])
   @@index([tenantId])
   @@index([tenantId, id])
   @@index([organizationId])
@@ -417,7 +417,7 @@ model WorkflowTransition {
   sourceStep     WorkflowStep            @relation("WorkflowTransitionSource", fields: [sourceStepId], references: [id], onDelete: Cascade)
   targetStep     WorkflowStep            @relation("WorkflowTransitionTarget", fields: [targetStepId], references: [id], onDelete: Cascade)
 
-  @@unique([workflowId, sourceStepId, targetStepId, route])
+  @@unique([workflowRevisionId, sourceStepId, targetStepId, route])
   @@index([tenantId])
   @@index([tenantId, id])
   @@index([organizationId])
@@ -440,6 +440,7 @@ model WorkflowRevision {
   steps          WorkflowStep[]
   transitions    WorkflowTransition[]
   executions     WorkflowExecution[]
+  stepResults    StepResult[]
 
   @@unique([workflowId, version])
   @@index([tenantId])
@@ -484,7 +485,7 @@ model WorkflowExecution {
   @@index([tenantId, status])
   @@index([tenantId, startedAt])
   @@index([tenantId, dedupeHash])
-  @@unique([tenantId, workflowId, idempotencyKey])
+  @@unique([tenantId, idempotencyKey])
   @@map("workflow_executions")
 }
 
@@ -493,10 +494,13 @@ model StepResult {
   tenantId           String
   organizationId     String
   workflowId         String
+  workflowRevisionId String?
   executionId        String
   stepId             String
   status             StepResultStatus @default(SUCCESS)
   attempt            Int              @default(1)
+  nextRetryAt        DateTime?
+  durationMs         Int?
   input              Json?
   output             Json?
   outputSize         Int              @default(0)
@@ -504,11 +508,13 @@ model StepResult {
   externalPayloadUrl String?
   startedAt          DateTime         @default(now())
   finishedAt         DateTime?
+  errorCode          String?
   errorMessage       String?
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   organization       Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   workflow           Workflow         @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflowRevision   WorkflowRevision? @relation(fields: [workflowRevisionId], references: [id], onDelete: SetNull)
   execution          WorkflowExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
   step               WorkflowStep     @relation(fields: [stepId], references: [id], onDelete: Cascade)
 
@@ -518,8 +524,10 @@ model StepResult {
   @@index([organizationId])
   @@index([tenantId, executionId])
   @@index([tenantId, workflowId])
+  @@index([tenantId, workflowRevisionId])
   @@index([tenantId, stepId])
   @@index([tenantId, status])
+  @@index([tenantId, nextRetryAt])
   @@map("step_results")
 }
 

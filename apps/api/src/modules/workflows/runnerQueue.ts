@@ -11,6 +11,7 @@ export interface WorkflowExecutionJobPayload {
   organizationId: string;
   stepKey: string;
   tenantId: string;
+  triggerEventId?: string | undefined;
   triggerPayload: Record<string, unknown>;
   triggerType: WorkflowTriggerType;
   workflowId: string;
@@ -22,6 +23,7 @@ export interface WorkflowTriggerJobPayload {
   idempotencyKey?: string | undefined;
   isDryRun?: boolean | undefined;
   organizationId: string;
+  triggerEventId?: string | undefined;
   tenantId: string;
   topic?: string | undefined;
   triggerPayload: Record<string, unknown>;

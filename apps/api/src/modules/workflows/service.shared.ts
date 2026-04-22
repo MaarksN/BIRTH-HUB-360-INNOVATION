@@ -32,6 +32,8 @@ export type WorkflowWriteClient = Pick<Prisma.TransactionClient, "workflowStep" 
 
 export type WorkflowStepResultRecord = {
   attempt: number;
+  durationMs: number | null;
+  errorCode: string | null;
   errorMessage: string | null;
   executionId: string;
   externalPayloadUrl: string | null;
@@ -47,6 +49,7 @@ export type WorkflowStepResultRecord = {
     key: string;
   };
   stepId: string;
+  workflowRevisionId: string | null;
 };
 
 export type WorkflowExecutionPageRecord = {
