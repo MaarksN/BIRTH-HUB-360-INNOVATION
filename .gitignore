@@ -9,6 +9,10 @@
 /tmp/
 /temp/
 
+# Environment files (secrets must not be committed)
+.env.local
+.env.*.local
+
 # Workspace-local generated content inside apps/ and packages/.
 /apps/**/node_modules/
 /apps/**/dist/

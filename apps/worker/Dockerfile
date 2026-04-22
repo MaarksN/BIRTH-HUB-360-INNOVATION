@@ -1,25 +1,82 @@
-FROM node:24.14.0-alpine AS base
-RUN apk add --no-cache libc6-compat
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-WORKDIR /repo
+# Multi-stage optimized Dockerfile for Worker service
+# Stage 1: Base with pnpm
+FROM node:24-alpine AS base
 
-FROM base AS build
-COPY . .
-RUN pnpm install --frozen-lockfile
-RUN pnpm --filter @birthub/worker... build
-RUN pnpm deploy --filter @birthub/worker --prod /prod/worker
-
-FROM node:24.14.0-alpine AS runner
-RUN apk add --no-cache wget
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 WORKDIR /app
+
+RUN npm install -g pnpm@9.15.9 && \
+    pnpm config set store-dir /.pnpm-store
+
+# Stage 2: Development
+FROM base AS development
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY tsconfig.json tsconfig.base.json ./
+COPY patches ./patches
+
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+
+WORKDIR /app/apps/worker
+
+EXPOSE 3100 9230
+
+ENV NODE_ENV=development
+ENV NODE_OPTIONS="--no-warnings --inspect=0.0.0.0:9230"
+
+CMD ["pnpm", "dev"]
+
+# Stage 3: Builder
+FROM base AS builder
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY tsconfig.json tsconfig.base.json ./
+COPY patches ./patches
+
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+
+RUN pnpm --filter @birthub/worker build
+
+# Stage 4: Production (slim, optimized)
+FROM node:24-alpine AS production
+
+WORKDIR /app
+
 ENV NODE_ENV=production
-COPY --from=build --chown=node:node /prod/worker ./
+
+# Install pnpm
+RUN npm install -g pnpm@9.15.9 && \
+    pnpm config set store-dir /.pnpm-store
+
+# Copy workspace config
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY tsconfig.json tsconfig.base.json ./
+COPY patches ./patches
+
+# Install production dependencies only
+RUN pnpm install --prod --frozen-lockfile && \
+    pnpm store prune
+
+# Copy built application from builder
+COPY --from=builder /app/dist ./dist
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S node -u 1001
+
+# Set permissions
+RUN chown -R node:nodejs /app && \
+    chmod -R 555 /app
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=5 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3100/health || exit 1
+
+EXPOSE 3100
+
 USER node
-EXPOSE 3002
-HEALTHCHECK --interval=30s --timeout=5s CMD wget --no-verbose --tries=1 --spider http://localhost:3002/health || exit 1
-CMD ["pnpm", "start"]
+
+CMD ["node", "dist/apps/worker/src/index.js"]

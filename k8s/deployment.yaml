@@ -1,0 +1,307 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: birthub
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: birthub-config
+  namespace: birthub
+data:
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  CORS_ORIGINS: "https://birthub.com,https://app.birthub.com"
+  API_PORT: "3000"
+  WORKER_CONCURRENCY: "5"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: birthub-secrets
+  namespace: birthub
+type: Opaque
+stringData:
+  DATABASE_URL: postgresql://birthub:CHANGEME@postgres:5432/birthub
+  REDIS_URL: redis://redis:6379/0
+  API_AUTH_COOKIE_NAME: __Secure-auth
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger-collector:4318
+---
+# ============ API DEPLOYMENT ============
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: birthub-api
+  namespace: birthub
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: birthub-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: birthub-api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: birthub-api
+      containers:
+        - name: api
+          image: ghcr.io/birthub/birthub/api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: birthub-config
+            - secretRef:
+                name: birthub-secrets
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/readiness
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: cache
+              mountPath: /app/.next/cache
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - birthub-api
+                topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: birthub-api
+  namespace: birthub
+spec:
+  type: ClusterIP
+  selector:
+    app: birthub-api
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
+---
+# ============ WORKER DEPLOYMENT ============
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: birthub-worker
+  namespace: birthub
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: birthub-worker
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: birthub-worker
+    spec:
+      serviceAccountName: birthub-worker
+      containers:
+        - name: worker
+          image: ghcr.io/birthub/birthub/worker:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: health
+              containerPort: 3100
+          envFrom:
+            - configMapRef:
+                name: birthub-config
+            - secretRef:
+                name: birthub-secrets
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: health
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: health
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - birthub-worker
+                topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: birthub-worker
+  namespace: birthub
+spec:
+  type: ClusterIP
+  selector:
+    app: birthub-worker
+  ports:
+    - name: health
+      port: 3100
+      targetPort: 3100
+---
+# ============ INGRESS ============
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: birthub-ingress
+  namespace: birthub
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - birthub.com
+        - api.birthub.com
+        - app.birthub.com
+      secretName: birthub-tls
+  rules:
+    - host: api.birthub.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: birthub-api
+                port:
+                  number: 3000
+    - host: app.birthub.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: birthub-web
+                port:
+                  number: 3001
+---
+# ============ RBAC ============
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: birthub-api
+  namespace: birthub
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: birthub-worker
+  namespace: birthub
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: birthub-api
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: birthub-api
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: birthub-api
+subjects:
+  - kind: ServiceAccount
+    name: birthub-api
+    namespace: birthub

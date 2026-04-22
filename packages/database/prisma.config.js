@@ -1,3 +1,0 @@
-module.exports = {
-  seed: 'tsx prisma/seed.ts',
-};

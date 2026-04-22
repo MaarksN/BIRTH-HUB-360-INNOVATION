@@ -1,0 +1,241 @@
+version: '3.9'
+
+services:
+  # ============ DATABASES ============
+  postgres:
+    image: postgres:17-alpine
+    container_name: birthub-postgres-dev
+    environment:
+      POSTGRES_DB: birthub
+      POSTGRES_USER: birthub
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev-password}
+      POSTGRES_INITDB_ARGS: "-c max_connections=500"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U birthub -d birthub"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - birthub-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: birthub-redis-dev
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - birthub-network
+
+  # ============ OBSERVABILITY ============
+  jaeger:
+    image: jaegertracing/all-in-one:1.52
+    container_name: birthub-jaeger-dev
+    ports:
+      - "6831:6831/udp"  # Jaeger agent
+      - "6832:6832/udp"  # Jaeger agent
+      - "16686:16686"    # Jaeger UI
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: ":9411"
+      COLLECTOR_OTLP_ENABLED: "true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:14269"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - birthub-network
+
+  prometheus:
+    image: prom/prometheus:v2.50.0
+    container_name: birthub-prometheus-dev
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/-/healthy"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - birthub-network
+
+  # ============ APPLICATIONS ============
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.dev
+      args:
+        NODE_ENV: development
+    container_name: birthub-api-dev
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      NODE_OPTIONS: "--no-warnings --inspect=0.0.0.0:9229"
+      REDIS_URL: ${REDIS_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      API_PORT: 3000
+      API_CORS_ORIGINS: ${API_CORS_ORIGINS}
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+    volumes:
+      - ./apps/api/src:/app/apps/api/src
+      - ./packages:/app/packages
+      - ./node_modules:/app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      jaeger:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    networks:
+      - birthub-network
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/api/src
+          target: /app/apps/api/src
+        - action: sync
+          path: ./packages
+          target: /app/packages
+        - action: rebuild
+          path: ./package.json
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
+      args:
+        NODE_ENV: development
+    container_name: birthub-web-dev
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+      NEXT_PUBLIC_LOG_LEVEL: debug
+    volumes:
+      - ./apps/web/src:/app/apps/web/src
+      - ./packages:/app/packages
+      - ./node_modules:/app/node_modules
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    networks:
+      - birthub-network
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/web/src
+          target: /app/apps/web/src
+        - action: sync
+          path: ./packages
+          target: /app/packages
+        - action: rebuild
+          path: ./package.json
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile.dev
+      args:
+        NODE_ENV: development
+    container_name: birthub-worker-dev
+    environment:
+      NODE_ENV: development
+      NODE_OPTIONS: "--no-warnings --inspect=0.0.0.0:9230"
+      REDIS_URL: ${REDIS_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      WORKER_HEALTH_PORT: 3100
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-5}
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+    ports:
+      - "3100:3100"
+      - "9230:9230"  # Debug port
+    volumes:
+      - ./apps/worker/src:/app/apps/worker/src
+      - ./packages:/app/packages
+      - ./node_modules:/app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      jaeger:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    networks:
+      - birthub-network
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/worker/src
+          target: /app/apps/worker/src
+        - action: sync
+          path: ./packages
+          target: /app/packages
+        - action: rebuild
+          path: ./package.json
+
+  # ============ UTILITIES ============
+  adminer:
+    image: adminer:4.8.1-standalone
+    container_name: birthub-adminer-dev
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    depends_on:
+      - postgres
+    networks:
+      - birthub-network
+
+networks:
+  birthub-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  prometheus-data:
+    driver: local

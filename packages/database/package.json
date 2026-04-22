@@ -10,10 +10,10 @@
     "./client": "./dist/client.js",
     "./repositories": "./dist/repositories/index.js"
   },
-
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
+  "scripts": {
     "prebuild": "pnpm --filter @birthub/config build && pnpm --filter @birthub/logger build && pnpm run db:generate:if-needed",
     "pretypecheck": "pnpm --filter @birthub/config build && pnpm --filter @birthub/logger build",
     "build": "tsc -b tsconfig.json --force",

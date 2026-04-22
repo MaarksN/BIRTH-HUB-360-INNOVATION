@@ -5,7 +5,7 @@
   "description": "Repositório canônico da plataforma SaaS BirthHub 360.",
   "packageManager": "pnpm@9.15.9",
   "engines": {
-    "node": ">=24 <25",
+    "node": ">=20.9.0",
     "pnpm": "9.15.9"
   },
   "type": "commonjs",
@@ -19,6 +19,7 @@
     "lint": "turbo run lint",
     "security:licenses": "node ./scripts/ci/check-dependency-licenses.mjs",
     "security:sarif:gate": "node ./scripts/ci/assert-sarif-threshold.mjs",
+    "setup:dev": "node scripts/setup-dev.js",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test --concurrency=1",
     "db:generate": "pnpm --filter @birthub/database db:generate",

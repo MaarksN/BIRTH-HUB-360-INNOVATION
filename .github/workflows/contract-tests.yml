@@ -1,0 +1,62 @@
+# Contract Testing Pipeline (Pact)
+
+name: Contract Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  contract-tests:
+    runs-on: ubuntu-latest
+    name: Pact Contract Tests
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: birthub_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build applications
+        run: pnpm build
+
+      - name: Run contract tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/birthub_test
+        run: pnpm packs:test
+
+      - name: Upload contract results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pact-results
+          path: |
+            pacts/
+            coverage/
+        continue-on-error: true
