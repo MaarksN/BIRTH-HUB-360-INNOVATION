@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BirthHub 360 - Auditoria Técnica de Finalidade</title>
+  <style>
+    :root{--bg:#0b1220;--p:#121c31;--p2:#172640;--t:#eef3ff;--m:#a6b6d7;--l:#2d3d5c;--g:#45c77f;--y:#f2b74b;--r:#ef6b6b;--b:#78b7ff}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#08101c,#0b1321);color:var(--t);font:15px/1.6 "Segoe UI",system-ui,sans-serif}
+    .wrap{width:min(1200px,calc(100vw - 24px));margin:0 auto;padding:18px 0 48px}
+    .hero,.card,details,.item{background:rgba(18,28,49,.92);border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 14px 40px rgba(0,0,0,.25)}
+    .hero{padding:24px}.grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    h1,h2,h3{margin:0}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--b);font-weight:700}.hero h1{font-size:clamp(28px,4vw,40px);line-height:1.06;margin-top:8px}
+    p{margin:.7em 0 0;color:var(--m)} section{margin-top:18px}.title{font-size:24px;margin-bottom:8px}.panel{padding:18px}
+    .score{padding:16px}.label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--m)} .value{font-size:32px;font-weight:800;line-height:1;margin-top:6px}
+    .sub{font-size:13px;color:var(--m);margin-top:8px}.chips,.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.chips{margin-top:14px}
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--m)}
+    .ok{color:var(--g);border-color:rgba(69,199,127,.25);background:rgba(69,199,127,.1)} .warn{color:var(--y);border-color:rgba(242,183,75,.25);background:rgba(242,183,75,.1)} .bad{color:var(--r);border-color:rgba(239,107,107,.25);background:rgba(239,107,107,.1)} .info{color:var(--b);border-color:rgba(120,183,255,.25);background:rgba(120,183,255,.1)}
+    table{width:100%;border-collapse:collapse} th,td{padding:12px 10px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(255,255,255,.08)} th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--b);background:rgba(255,255,255,.03)} tr:last-child td{border-bottom:none}
+    .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:7px}.bar>span{display:block;height:100%;background:linear-gradient(90deg,#5ba7ff,#8fd7ff)}
+    .bar.bad>span{background:linear-gradient(90deg,#d46161,#ffb0b0)} .bar.warn>span{background:linear-gradient(90deg,#d9a03b,#f6d07d)}
+    .item{padding:16px}.head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.name{font-size:18px;font-weight:800;line-height:1.35}.meta{font-size:13px;color:var(--m);display:grid;gap:3px;margin-top:6px}
+    .fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.f{padding:10px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:13px}
+    .f b{display:block;margin-bottom:6px}.controls{margin:10px 0 14px}.btn{cursor:pointer} .btn.active{color:var(--t);border-color:rgba(120,183,255,.35);background:rgba(120,183,255,.14)}
+    input{flex:1 1 260px;min-width:220px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:11px 12px;color:var(--t)}
+    details summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:800} details .panel{padding-top:0}
+    pre{margin:0;padding:14px;border-radius:14px;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.08);overflow:auto;color:#dbe6ff}
+    code{font-family:Consolas,monospace;color:#dbe6ff} .small{font-size:13px}.foot{font-size:13px;color:var(--m)}
+    .hidden{display:none!important}
+    @media(max-width:980px){.g4,.g3,.g2,.fgrid{grid-template-columns:1fr 1fr}} @media(max-width:700px){.g4,.g3,.g2,.fgrid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="eyebrow">Auditoria Técnica de Finalidade + Orquestração de Agentes</div>
+      <h1>BirthHub 360 e um SaaS de workflow governado real. Nao e, ainda, um sistema multi-agente autonomo real.</h1>
+      <p>O repositorio nao e prototipo puro. Existe monorepo funcional, API, worker, banco multi-tenant, health checks, observabilidade, workflow engine, catalogo de agentes e UI real. O problema central e de coerencia: a camada mais vendida como "AI multi-agent" ainda e, no codigo, um runtime deterministico guiado por manifesto, com tools sinteticas e handoffs sem ciclo fechado. A validacao executada em 2026-04-07 reforcou essa leitura: os testes principais passam, mas os gates de qualidade do repo nao fecham.</p>
+      <div class="chips">
+        <span class="chip warn">⚠️ Status: Semi-funcional</span>
+        <span class="chip info">Data: 2026-04-07</span>
+        <span class="chip info">378 manifests auditados</span>
+        <span class="chip bad">378/378 com schemas genericos</span>
+        <span class="chip warn">Validacao real executada com Node 24 portatil</span>
+      </div>
+      <div class="grid g4" style="margin-top:16px">
+        <div class="score"><div class="label">Score Geral</div><div class="value">56</div><div class="sub">Produto real, promessa agentic inflada.</div></div>
+        <div class="score"><div class="label">Maturidade SaaS</div><div class="value">72</div><div class="sub">Casca operacional forte.</div></div>
+        <div class="score"><div class="label">Maturidade AI Agents</div><div class="value">29</div><div class="sub">Governanca sim; autonomia nao.</div></div>
+        <div class="score"><div class="label">Status Comercial</div><div class="value">Beta</div><div class="sub">Vendavel so com escopo rebaixado.</div></div>
+      </div>
+    </div>
+
+    <section>
+      <h2 class="title">1. Resumo Executivo</h2>
+      <div class="grid g3">
+        <div class="card panel"><span class="chip info">O que existe</span><p>Marketplace de agentes, install flow, worker assíncrono, workflow engine, policy engine, budgets, artifacts, shared learning, conversations, billing e tenancy reais.</p></div>
+        <div class="card panel"><span class="chip bad">O que nao existe</span><p>Planner cognitivo real, adapters reais para a maioria das tools declaradas, ciclo automatico de handoff entre agentes e uso evidente de LLM no caminho principal.</p></div>
+        <div class="card panel"><span class="chip warn">Leitura correta</span><p>Ha um sistema de execucao governada de manifestos. Nao ha, ainda, uma malha de agentes autonomos coordenando trabalho de ponta a ponta.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="title">2. Score por Dominio</h2>
+      <div class="grid g3">
+        <div class="card panel"><div class="label">Finalidade e coerencia</div><div class="value">44</div><div class="bar bad"><span style="width:44%"></span></div><div class="sub">Produto real; narrativa inflada.</div></div>
+        <div class="card panel"><div class="label">Arquitetura core SaaS</div><div class="value">74</div><div class="bar"><span style="width:74%"></span></div><div class="sub">Separacao de web/api/worker/db e boa.</div></div>
+        <div class="card panel"><div class="label">Sistema de agentes</div><div class="value">34</div><div class="bar bad"><span style="width:34%"></span></div><div class="sub">Runtime governado, pouca inteligencia real.</div></div>
+        <div class="card panel"><div class="label">Orquestracao multi-agente</div><div class="value">28</div><div class="bar bad"><span style="width:28%"></span></div><div class="sub">Handoff persiste estado; nao coordena execucao.</div></div>
+        <div class="card panel"><div class="label">Banco e estado</div><div class="value">79</div><div class="bar"><span style="width:79%"></span></div><div class="sub">Tenancy, RLS, persistencia e bons sinais.</div></div>
+        <div class="card panel"><div class="label">Seguranca e operacao</div><div class="value">75</div><div class="bar"><span style="width:75%"></span></div><div class="sub">Health, metrics, CSRF, RBAC, readiness.</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="title">3. Validacao Executada em 2026-04-07</h2>
+      <div class="card panel">
+        <table>
+          <thead><tr><th>Comando</th><th>Status</th><th>Resultado</th><th>Leitura</th></tr></thead>
+          <tbody>
+            <tr><td><code>workspace:audit</code></td><td><span class="chip bad">Falhou</span></td><td><code>package.json</code> referencia <code>tests/workflow-retry-lineage.integration.test.ts</code>, arquivo inexistente.</td><td>O proprio gate do repo denuncia drift entre scripts e arvore real.</td></tr>
+            <tr><td><code>--filter @birthub/workflows-core test</code></td><td><span class="chip ok">Passou</span></td><td>11/11 testes.</td><td>O nucleo de workflow e a parte mais robusta da camada de execucao.</td></tr>
+            <tr><td><code>--filter @birthub/api test:auth</code></td><td><span class="chip ok">Passou</span></td><td>11/11 testes.</td><td>Auth local esta funcional no baseline auditado.</td></tr>
+            <tr><td><code>--filter @birthub/api test:rbac</code></td><td><span class="chip ok">Passou</span></td><td>1/1 teste.</td><td>RBAC basico passou no fluxo exercitado.</td></tr>
+            <tr><td><code>--filter @birthub/api test:security</code></td><td><span class="chip ok">Passou</span></td><td>3/3 testes.</td><td>Headers/origin/session guard responderam no caminho testado.</td></tr>
+            <tr><td><code>--filter @birthub/worker test</code></td><td><span class="chip ok">Passou</span></td><td>58 testes passaram, 3 foram pulados por dependerem de <code>DATABASE_URL</code> real.</td><td>Worker, runtime e workflow smoke estao vivos; a integracao DB-backed do runtime agentic continua parcialmente sem lastro local.</td></tr>
+            <tr><td><code>--filter @birthub/web test</code></td><td><span class="chip ok">Passou</span></td><td>34/34 testes.</td><td>Camada web e BFF estao saudaveis no escopo testado.</td></tr>
+            <tr><td><code>typecheck:core</code></td><td><span class="chip bad">Falhou</span></td><td><code>apps/api/src/modules/clinical/service.ts</code> quebra com erros de tipagem de cursor/paginacao e <code>apps/api/tests/clinical.service.test.ts</code> usa enum inexistente <code>COMPLETED</code>.</td><td>O gate estatico mais importante do core nao fecha.</td></tr>
+            <tr><td><code>lint:core</code></td><td><span class="chip bad">Falhou</span></td><td><code>packages/security/src/__tests__/security.test.ts</code> tem 10 erros <code>no-floating-promises</code>; <code>packages/workflows-core/src/nodes/executeStep.ts</code> ainda acumula 6 warnings <code>require-await</code>.</td><td>Higiene de qualidade nao acompanha a narrativa de prontidao.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="title">4. Finalidade Real vs Prometida</h2>
+      <div class="card panel">
+        <table>
+          <thead><tr><th>Aspecto</th><th>Prometido</th><th>Implementado</th><th>Gap</th></tr></thead>
+          <tbody>
+            <tr><td>Core canônico</td><td><code>apps/web</code>, <code>apps/api</code>, <code>apps/worker</code>, <code>packages/database</code> como nucleo.</td><td>Real.</td><td>Docs divergem do HEAD: <code>README.md:9-24</code>, <code>docs/service-catalog.md:17-27</code>, <code>apps/dashboard</code> existe, surfaces legacy citadas nao.</td></tr>
+            <tr><td>Marketplace de agentes</td><td>Catalogo oficial, instalavel e governado.</td><td>Real: <code>apps/api/src/modules/marketplace/marketplace-service.ts:67-120</code> e <code>pack-installer.service.ts:185-260</code>.</td><td>Baixo no shell; alto no conteudo do catalogo.</td></tr>
+            <tr><td>Sistema multi-agente autonomo</td><td>Selecao de agente, approval engine, workflow engine e operacao preventiva.</td><td>Parcial. O planner comum apenas faz <code>manifest.tools.map</code>: <code>packages/agents-core/src/runtime/manifestRuntime.ts:291-319</code>.</td><td>Critico.</td></tr>
+            <tr><td>Execucao AI real</td><td>Agentes aparentam raciocinar e decidir.</td><td>Client de LLM existe em <code>packages/llm-client/src/index.ts</code>, mas grep repo-wide fora do pacote retornou <code>NO_MATCHES</code>.</td><td>Critico.</td></tr>
+            <tr><td>Workflow engine</td><td>Pipeline com retry/fallback/agentes.</td><td>Real e forte: <code>dagValidator.ts:125-198</code>, <code>runner.execution.outcomes.ts:198-256</code>, <code>runner.db-integration.test.ts:16-168</code>.</td><td>Baixo.</td></tr>
+            <tr><td>Memoria compartilhada</td><td>Shared learning governado.</td><td>Real no runtime comum: <code>apps/worker/src/agents/runtime.memory.ts:131-237</code>.</td><td>Medio. Memoria nao resolve falta de planner.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="title">5. Arquitetura Geral</h2>
+      <div class="grid g3">
+        <div class="card panel"><h3>Forca</h3><p>Monorepo real com workspaces, turbo e separacao de dominios. Evidencia: <code>package.json:5-9</code>, <code>package.json:176-179</code>.</p></div>
+        <div class="card panel"><h3>Incoerencia</h3><p>Pacotes paralelos e superficies residuais: <code>packages/agent-runtime</code> sem uso principal, <code>agents-registry</code> pouco usado, docs citam apps legacy inexistentes.</p></div>
+        <div class="card panel"><h3>Higiene</h3><p><code>.gitattributes</code> esta com conflito de merge em <code>:40-53</code>. Isso e ruído operacional real, nao detalhe cosmetico.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="title">6. Analise dos Agentes</h2>
+      <p>Foram encontrados <strong>376 agentes</strong> e <strong>2 descriptors</strong>. A analise profunda foi feita no runtime comum, nos agentes que explicitamente prometem orquestracao e nas duas grandes coortes do catalogo. Isso e o metodo correto aqui porque todos passam pelo mesmo <code>manifest-runtime</code>.</p>
+      <div class="controls">
+        <input id="agentSearch" type="search" placeholder="Filtrar agente/coorte por nome, pack ou risco">
+        <button class="chip btn active" data-af="all">Todos</button>
+        <button class="chip btn" data-af="critical">Critico</button>
+        <button class="chip btn" data-af="medium">Medio</button>
+      </div>
+      <div id="agents"></div>
+      <details open><summary>Resumo de catálogo</summary><div class="panel"><table><thead><tr><th>Metrica</th><th>Valor</th><th>Leitura</th></tr></thead><tbody>
+        <tr><td>Total de manifests</td><td>378</td><td>Catalogo maior que a profundidade real do runtime.</td></tr>
+        <tr><td>Corporate v1</td><td>43</td><td>Colecao mais alinhada ao positioning BirthHub.</td></tr>
+        <tr><td>GitHub compiled</td><td>335</td><td>Colecao inflada por compilacao automatica via <code>scripts/agent/compile-github-agents.ts:335-520</code>.</td></tr>
+        <tr><td>Schemas genericos</td><td>378/378</td><td>Todos os manifests auditados usam schemas <code>{ type:"object" }</code> para skills e tools.</td></tr>
+        <tr><td>Claims explicitos de multi-agent/orchestrator</td><td>4</td><td><code>maestro-orchestrator-pack</code>, <code>context-memory-pack</code>, <code>policy-and-approval-guard-pack</code>, <code>campaign-orchestrator-github-pack</code>.</td></tr>
+      </tbody></table></div></details>
+    </section>
+
+    <section>
+      <h2 class="title">7. Criticas Brutais</h2>
+      <div class="controls">
+        <input id="issueSearch" type="search" placeholder="Filtrar critica por problema, impacto ou arquivo">
+        <button class="chip btn active" data-s="all">Todas</button>
+        <button class="chip btn" data-s="blocker">Bloqueador</button>
+        <button class="chip btn" data-s="high">Alto</button>
+        <button class="chip btn" data-s="medium">Medio</button>
+      </div>
+      <div id="issues"></div>
+    </section>
+
+    <section>
+      <h2 class="title">8. Meritos Reais</h2>
+      <div class="card panel">
+        <table><thead><tr><th>Merito</th><th>Onde</th><th>Por que importa</th></tr></thead><tbody>
+          <tr><td>Workflow engine tem substancia</td><td><code>packages/workflows-core/src/parser/dagValidator.ts</code>, <code>apps/worker/src/engine/*.test.ts</code></td><td>Isso sustenta um produto real de automacao.</td></tr>
+          <tr><td>Tenancy e RLS sao serios</td><td><code>packages/database/src/client.ts:301-311</code>, migration <code>20260331000100_cycle12_rls_policy_alignment</code></td><td>Reduz risco de vazamento entre tenants.</td></tr>
+          <tr><td>API tem boa base de seguranca</td><td><code>apps/api/src/app/core.ts:147-249</code>, <code>require-role.ts:9-28</code></td><td>Helmet, CSRF, rate limit, RBAC e metrics ajudam operacao real.</td></tr>
+          <tr><td>Worker tem readiness/metrics</td><td><code>apps/worker/src/index.ts:110-277</code></td><td>Fila nao esta rodando no escuro.</td></tr>
+          <tr><td>HTTP tool foi pensada com prudencia</td><td><code>packages/agents-core/src/tools/httpTool.ts:82-163</code></td><td>Timeout, retry, allowlist e SSRF guard sao bons sinais.</td></tr>
+          <tr><td>As suites funcionais principais passaram quando executadas</td><td><code>@birthub/workflows-core test</code>, <code>@birthub/api test:auth|rbac|security</code>, <code>@birthub/worker test</code>, <code>@birthub/web test</code></td><td>Ha produto real sendo exercitado; o problema esta mais nos gates de qualidade e no overclaim agentic do que em ausencia total de software.</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="title">9. Gaps Criticos</h2>
+      <div id="gaps"></div>
+    </section>
+
+    <section>
+      <h2 class="title">10. Roadmap de Correcao</h2>
+      <details open><summary>FASE 1 - SOBREVIVENCIA</summary><div class="panel small"><p>1. Corrigir imediatamente <code>workspace:audit</code>, <code>typecheck:core</code> e <code>lint:core</code>.</p><p>2. Resolver <code>.gitattributes</code> quebrado e alinhar docs com o HEAD atual.</p><p>3. Parar de vender multi-agent autonomy enquanto <code>buildAgentRuntimePlan</code> continuar linear e <code>ManifestCapabilityTool</code> sintetico.</p><p>4. Remover duplicidade entre <code>runtime.ts</code> e <code>runtime.orchestration.ts</code>.</p></div></details>
+      <details open><summary>FASE 2 - ESTRUTURACAO</summary><div class="panel small"><p>1. Canonicalizar um unico agent runtime core.</p><p>2. Exigir schemas reais por agente e por tool.</p><p>3. Integrar <code>agents-registry</code> de verdade ou aposentar a narrativa.</p><p>4. Reduzir catalogo e aumentar profundidade real.</p></div></details>
+      <details open><summary>FASE 3 - INTELIGENCIA REAL</summary><div class="panel small"><p>1. Introduzir planner real com LLM e selecao dinamica de tools.</p><p>2. Implementar adapters concretos para tools declaradas.</p><p>3. Fechar o loop de handoff com enfileiramento e execucao do agente alvo.</p><p>4. Criar approval engine real.</p></div></details>
+      <details open><summary>FASE 4 - ESCALA</summary><div class="panel small"><p>1. Suite E2E com Redis + Postgres + worker reais.</p><p>2. Tracing distribuido por execution/workflow/handoff.</p><p>3. Quotas e budgets por tenant/connectors/agentes.</p><p>4. Testes de carga focados em workflow + runtime agentic.</p></div></details>
+    </section>
+
+    <section>
+      <h2 class="title">11. Mapa de Arquitetura Alvo</h2>
+      <div class="grid g2">
+        <div class="card panel"><pre>[apps/web]
+  |
+[apps/api]
+  +-- agent-catalog
+  +-- policy-approval
+  +-- workflow-engine
+  +-- agent-runtime-core
+        +-- planner-llm
+        +-- tool-adapters
+        +-- memory
+        +-- handoff-orchestrator
+  |
+[apps/worker]
+  +-- workflow jobs
+  +-- agent jobs
+  +-- connector jobs
+  +-- approval jobs
+  |
+[packages/database]</pre></div>
+        <div class="card panel"><pre>apps/
+  web/
+  api/
+  worker/
+
+packages/
+  agent-catalog/
+  agent-runtime-core/
+  planner-llm/
+  tool-adapters/
+  handoff-orchestrator/
+  workflows-core/
+  database/
+  security/
+  observability/
+  integrations/</pre></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="title">12. Veredito Final</h2>
+      <div class="card panel">
+        <p><strong>Isso e um sistema real?</strong> Sim, como plataforma SaaS/workflow governada.</p>
+        <p><strong>Isso e um sistema multi-agente autonomo real?</strong> Nao.</p>
+        <p><strong>Isso esta pronto?</strong> Nao. Mesmo no perimetro SaaS/workflow, o repo ainda falha em <code>workspace:audit</code>, <code>lint:core</code> e <code>typecheck:core</code>.</p>
+        <p><strong>Isso e vendavel?</strong> So como "workflow platform com catalogo de agentes governados". Vender como "autonomous multi-agent SaaS" hoje seria tecnicamente desonesto.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="title">13. Metodologia e Limites</h2>
+      <div class="card panel">
+        <p>Baseado em leitura direta de codigo, schema, migrations, testes, UI e scripts. As afirmacoes centrais estao ancoradas em arquivos do repo.</p>
+        <p><strong>Evidencias principais:</strong> <code>packages/agents-core/src/runtime/manifestRuntime.ts</code>, <code>apps/worker/src/agents/runtime.tools.ts</code>, <code>apps/worker/src/executors/planExecutor.defaults.ts</code>, <code>packages/workflows-core/src/parser/dagValidator.ts</code>, <code>apps/worker/src/engine/runner.db-integration.test.ts</code>, <code>packages/database/src/client.ts</code>, <code>apps/api/src/app/core.ts</code>, <code>apps/worker/src/index.ts</code>.</p>
+        <p><strong>Validacao executada:</strong> o repo foi rodado com <code>.tools/node-v24.14.0-win-x64/node.exe</code> e <code>corepack/pnpm</code> local. O sandbox bloqueava <code>spawn</code> de workers de teste, entao as suites reais foram rerodadas fora do sandbox.</p>
+        <p><strong>Limite atual:</strong> nao rodei <code>ci:full</code>, packs, E2E, satellites nem a trilha completa DB-backed do runtime agentic. O proprio worker reportou skips quando faltou <code>DATABASE_URL</code> real para alguns testes de integracao.</p>
+        <p class="foot">Ponto-chave: agora o veredito tem duas bases ao mesmo tempo. O gap mais grave continua visivel no desenho do runtime/planner, e os gates reais de qualidade provaram que o core ainda nao fecha como baseline de producao.</p>
+      </div>
+    </section>
+  </div>
+  <script>
+    const agents=[
+      {sev:"critical",name:"Maestro Orchestrator",path:"packages/agent-packs/corporate-v1/maestro-orchestrator-pack/manifest.json",p:"Promete cerebro de coordenacao, approval engine, workflow engine e operacao autonoma.",r:"Na pratica e um wrapper do mesmo manifest-runtime comum, com plano linear e tools sinteticas.",e:["Manifesto inflado: .../maestro-orchestrator-pack/manifest.json:6-10","Schemas genericos: .../maestro-orchestrator-pack/manifest.json:58-146 e 170-221","Planner comum: packages/agents-core/src/runtime/manifestRuntime.ts:291-319","Tools sinteticas: apps/worker/src/agents/runtime.tools.ts:15-67"],f:[["F1","warn","Proposito claro no texto."],["F2","bad","Contrato fraco."],["F3","bad","Sem autonomia real."],["F4","bad","Integracoes declaradas, nao reais."],["F5","bad","Nao fecha loop multi-agente."],["F6","warn","Memoria compartilhada existe."],["F7","warn","Boa rastreabilidade de runtime."]]},
+      {sev:"critical",name:"Context Memory Bot",path:"packages/agent-packs/corporate-v1/context-memory-pack/manifest.json",p:"Promete memoria contextual para execucao multi-agent.",r:"A memoria compartilhada existe no runtime comum, mas o agente continua dependente do mesmo planner deterministico.",e:["Memoria real: apps/worker/src/agents/runtime.memory.ts:131-237","Claim multi-agent detectado no scan repo-wide","378/378 manifests com schema generico"],f:[["F1","warn","Nome comunica funcao."],["F2","bad","Sem schema forte."],["F3","bad","Nao ha planner cognitivo."],["F4","warn","Usa baseline comum de memoria."],["F5","bad","Memoria nao e orquestracao."],["F6","ok","Aqui existe valor real."],["F7","warn","Rastreabilidade herdada do runtime."]]},
+      {sev:"critical",name:"Policy & Approval Guard",path:"packages/agent-packs/corporate-v1/policy-and-approval-guard-pack/manifest.json",p:"Promete governance e approval para execucoes sensiveis.",r:"Policy engine existe; approval engine ainda e mais naming convention e templating do que fluxo robusto.",e:["Policy engine real: packages/agents-core/test/policyEngine.test.ts:6-50","Governanca de output: packages/agents-core/src/runtime/manifestRuntime.ts:322-339","Output template: packages/agents-core/src/runtime/manifestRuntime.ts:342-408"],f:[["F1","ok","Papel faz sentido."],["F2","bad","Manifesto frouxo."],["F3","warn","Policy existe; approval ainda raso."],["F4","warn","Conecta ao runtime comum."],["F5","bad","Nao governa ciclo multi-agente fechado."],["F6","warn","Contexto comum existe."],["F7","ok","Audit e artifact ajudam."]]},
+      {sev:"critical",name:"CampaignOrchestrator Agent",path:"packages/agent-packs/github-agents-v1/campaign-orchestrator-github-pack/manifest.json",p:"Orchestrator derivado da colecao GitHub.",r:"Exemplo de agente compilado automaticamente, com prompt padrao, tools padrao e schemas genericos.",e:["buildSkills: scripts/agent/compile-github-agents.ts:335-344","buildTools: scripts/agent/compile-github-agents.ts:347-359","buildManifest: scripts/agent/compile-github-agents.ts:451-520"],f:[["F1","warn","Persona clara."],["F2","bad","Contrato generico."],["F3","bad","Orchestrator no nome, nao no runtime."],["F4","bad","Sem adapter real por agente."],["F5","bad","Overclaim direto."],["F6","warn","Depende do baseline comum."],["F7","warn","Depende do baseline comum."]]},
+      {sev:"medium",name:"Coorte Corporate v1 especialista (40 agentes)",path:"packages/agent-packs/corporate-v1/*/manifest.json",p:"Especialistas proprietarios de negocio.",r:"Boa embalagem comercial sobre um runtime unico. Sao wrappers governados, nao especialistas autonomos independentes.",e:["43 manifests no pack corporate-v1","Todos com schemas genericos no scan","UI oficial em apps/web/app/(dashboard)/agents/page.tsx:17-25"],f:[["F1","ok","Personas legiveis."],["F2","bad","Schemas fracos."],["F3","bad","Autonomia narrativa."],["F4","warn","Algum valor via runtime comum."],["F5","bad","Nao formam ecossistema coordenado."],["F6","warn","Shared learning existe."],["F7","warn","Boa rastreabilidade comum."]]},
+      {sev:"medium",name:"Coorte GitHub compiled (335 manifests)",path:"packages/agent-packs/github-agents-v1/*/manifest.json",p:"Colecao extensa de especialistas GTM/finance/ops.",r:"Industrializacao de catalogo em volume, nao em profundidade tecnica.",e:["335 manifests nesse pack","Prompt padrao: scripts/agent/compile-github-agents.ts:383-448","Colecao compilada: scripts/agent/compile-github-agents.ts:478-520"],f:[["F1","warn","Bom para vitrine."],["F2","bad","Contrato generico em lote."],["F3","bad","Mesmo runtime deterministico."],["F4","bad","Integracao pouco real."],["F5","bad","Nao ha malha multi-agente."],["F6","warn","Depende do baseline comum."],["F7","warn","Depende do baseline comum."]]}
+    ];
+    const issues=[
+      {sev:"blocker",t:"Sistema de agentes nao planeja; ele expande linearmente a lista de tools do manifesto",w:"packages/agents-core/src/runtime/manifestRuntime.ts:291-319",i:"Zero autonomia real no planner.",d:"O codigo usa manifest.tools.map(...). Isso nao e planejamento; e serializacao de declaracao."},
+      {sev:"blocker",t:"Tools customizadas do manifesto sao wrappers sinteticos",w:"apps/worker/src/agents/runtime.tools.ts:15-67 e 106-118",i:"O catalogo promete capacidades que o runtime nao executa de verdade.",d:"ManifestCapabilityTool apenas achata numeros/strings e devolve summary/evidence/average."},
+      {sev:"blocker",t:"db-read e db-write no runtime principal estao stubados",w:"apps/worker/src/agents/runtime.tools.ts:83-100",i:"O agente parece ter acesso a banco sem ter de fato.",d:"db-read retorna payload sintetico e db-write retorna Promise.resolve(1)."},
+      {sev:"blocker",t:"Output do agente e montado por template",w:"packages/agents-core/src/runtime/manifestRuntime.ts:342-408",i:"Soa sofisticado sem provar inteligencia real.",d:"summary, status e preventive plan sao gerados por regras fixas."},
+      {sev:"high",t:"Handoff entre agentes para em persistencia queued",w:"apps/worker/src/agents/handoffs.ts:52-97 e apps/worker/src/worker.ts:230-243",i:"Nao existe sistema multi-agente fechado.",d:"O worker persiste o handoff, mas nao executa automaticamente o targetAgent."},
+      {sev:"high",t:"Planner default do executor e um MockPlanBuilder",w:"apps/worker/src/executors/planExecutor.defaults.ts:21-39",i:"A propria implementacao admite que o planejamento ainda nao e um planner de produto.",d:"Ou reaproveita toolCalls de entrada ou retorna vazio."},
+      {sev:"high",t:"Client de LLM existe, mas nao aparece no caminho principal",w:"packages/llm-client/src/index.ts + grep repo-wide = NO_MATCHES",i:"A narrativa de IA fica sem lastro claro no core runtime.",d:"Sem uso real do LLM client, a camada agentic vira runtime governado com templates."},
+      {sev:"high",t:"workspace:audit falha no proprio repositório canônico",w:"package.json -> script test:integration -> tests/workflow-retry-lineage.integration.test.ts",i:"O baseline de governanca do monorepo nao fecha nem no auto-check declarado pelo projeto.",d:"Script aponta para arquivo inexistente, logo o gate de workspace ja nasce vermelho."},
+      {sev:"high",t:"typecheck:core quebra no modulo clinico da API",w:"apps/api/src/modules/clinical/service.ts e apps/api/tests/clinical.service.test.ts",i:"O core nao esta tipado de ponta a ponta, entao regressao estrutural pode entrar sem bloqueio efetivo.",d:"Erros reais em cursor/paginacao com exactOptionalPropertyTypes e enum COMPLETED inexistente nos testes."},
+      {sev:"medium",t:"lint:core falha em pacote de seguranca e acumula warnings no workflow core",w:"packages/security/src/__tests__/security.test.ts e packages/workflows-core/src/nodes/executeStep.ts",i:"A disciplina de qualidade esta abaixo do discurso de prod-ready.",d:"Ha 10 erros no-floating-promises e 6 warnings require-await na base central."},
+      {sev:"high",t:"Ha duplicidade de implementacao no runtime de agentes",w:"apps/worker/src/agents/runtime.ts e runtime.orchestration.ts",i:"Drift, manutencao pior e risco de divergencia.",d:"Ambos exportam executeManifestAgentRuntime com pipeline muito parecido."},
+      {sev:"high",t:"O catalogo foi industrializado mais rapido do que a capacidade de execucao",w:"packages/agent-packs/**/manifest.json e scripts/agent/compile-github-agents.ts",i:"Risco comercial e tecnico de overclaim.",d:"335 agentes compilados automaticamente; 378/378 manifests com schemas genericos."},
+      {sev:"medium",t:"Documentacao canonica diverge do HEAD",w:"README.md:9-24, docs/service-catalog.md:17-27, apps/",i:"Onboarding e governanca ficam ambiguos.",d:"README/service catalog citam apps legacy inexistentes e omitem apps/dashboard."},
+      {sev:"medium",t:"Repositorio com conflito de merge em .gitattributes",w:".gitattributes:40-53",i:"Ruido operacional real e sinal ruim de baseline control.",d:"Entradas >>>>>>> e <<<<<<< estao versionadas."},
+      {sev:"medium",t:"Testes de auth/RBAC/security sao em grande parte baseados em Prisma stubado",w:"apps/api/tests/auth.test.ts, rbac.test.ts, security.test.ts",i:"Ajuda, mas nao substitui confianca de stack real.",d:"O padrao recorrente e sobrescrever metodos do Prisma em memoria."}
+    ];
+    const gaps=[
+      {sev:"blocker",t:"Planner cognitivo real com LLM e selecao dinamica de ferramentas",w:"Sem isso, autonomia e claim publicitario."},
+      {sev:"blocker",t:"Adapters reais para tools declaradas no manifesto",w:"Sem adapters, o catalogo e brochure operacional."},
+      {sev:"blocker",t:"Loop de handoff que execute o agente alvo automaticamente",w:"Sem isso, nao ha sistema multi-agente."},
+      {sev:"high",t:"Schemas fortes por agente e por tool",w:"Sem contrato forte, replay e integracao sao frágeis."},
+      {sev:"high",t:"Registry de agentes integrado ao fluxo principal",w:"Hoje lifecycle parece mais intencao do que infraestrutura usada."},
+      {sev:"high",t:"Suite E2E do agent runtime com Postgres + Redis + worker reais",w:"A camada mais vendida ainda esta sem lastro de producao."},
+      {sev:"medium",t:"Convergencia entre docs, estrutura real e legado",w:"A plataforma precisa de um mapa unico e verdadeiro."},
+      {sev:"medium",t:"Baseline reprodutivel de dev/test",w:"Package manager e engine exigidos precisam ser facilmente reproduziveis."}
+    ];
+    const tone={blocker:"bad",high:"bad",medium:"warn",critical:"bad"};
+    const A=document.getElementById("agents"),I=document.getElementById("issues"),G=document.getElementById("gaps");
+    function rA(f="all",q=""){A.innerHTML="";q=q.trim().toLowerCase();agents.filter(x=>f==="all"||x.sev===f).filter(x=>!q||[x.name,x.path,x.p,x.r].join(" ").toLowerCase().includes(q)).forEach(x=>{const d=document.createElement("div");d.className="item";d.innerHTML=`<div class=head><div><div class=name>${x.name}</div><div class=meta><span><b>Arquivo:</b> <code>${x.path}</code></span><span><b>Prometido:</b> ${x.p}</span><span><b>Funcao real:</b> ${x.r}</span></div></div><span class="chip ${x.sev==="critical"?"bad":"warn"}">${x.sev==="critical"?"🔴 Critico":"🟡 Medio"}</span></div><div class=fgrid>${x.f.map(y=>`<div class=f><b>${y[0]}</b><span class="chip ${y[1]}">${y[1]==="ok"?"🟢 Excelente":y[1]==="warn"?"🟡 Medio":"🔴 Critico"}</span><div>${y[2]}</div></div>`).join("")}</div><div class=meta style="margin-top:10px">${x.e.map(y=>`<span><b>Evidencia:</b> ${y}</span>`).join("")}</div>`;A.appendChild(d)})}
+    function rI(f="all",q=""){I.innerHTML="";q=q.trim().toLowerCase();issues.filter(x=>f==="all"||x.sev===f).filter(x=>!q||[x.t,x.w,x.i,x.d].join(" ").toLowerCase().includes(q)).forEach(x=>{const d=document.createElement("div");d.className="item";d.innerHTML=`<div class=head><div><div class=name>${x.t}</div><div class=meta><span><b>Onde:</b> <code>${x.w}</code></span><span><b>Impacto real:</b> ${x.i}</span><span><b>Leitura:</b> ${x.d}</span></div></div><span class="chip ${tone[x.sev]}">${x.sev==="blocker"?"🔴 Bloqueador":x.sev==="high"?"🟠 Alto":"🟡 Medio"}</span></div>`;I.appendChild(d)})}
+    gaps.forEach(x=>{const d=document.createElement("div");d.className="item";d.innerHTML=`<div class=head><div><div class=name>${x.t}</div><div class=meta><span><b>Impacto:</b> ${x.w}</span></div></div><span class="chip ${tone[x.sev]}">${x.sev==="blocker"?"🔴 Bloqueador":x.sev==="high"?"🟠 Alto":"🟡 Medio"}</span></div>`;G.appendChild(d)});
+    let sf="all",af="all",sq="",aq="";
+    document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{sf=b.dataset.s;document.querySelectorAll("[data-s]").forEach(x=>x.classList.toggle("active",x===b));rI(sf,sq)});
+    document.querySelectorAll("[data-af]").forEach(b=>b.onclick=()=>{af=b.dataset.af;document.querySelectorAll("[data-af]").forEach(x=>x.classList.toggle("active",x===b));rA(af,aq)});
+    document.getElementById("issueSearch").oninput=e=>{sq=e.target.value||"";rI(sf,sq)};
+    document.getElementById("agentSearch").oninput=e=>{aq=e.target.value||"";rA(af,aq)};
+    rA();rI();
+  </script>
+</body>
+</html>

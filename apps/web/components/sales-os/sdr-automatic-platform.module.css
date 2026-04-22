@@ -1,0 +1,516 @@
+.platformShell {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(280px, 330px) minmax(0, 1fr);
+}
+
+.sidebar,
+.workspace,
+.heroCard,
+.premiumCard,
+.metricCard,
+.navItem,
+.userCard,
+.surfaceCard,
+.promptCard,
+.noteBlock,
+.recommendationCard,
+.slotCard {
+  backdrop-filter: blur(18px);
+  background: var(--surface-panel);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-glass);
+  transition:
+    background 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.sidebar {
+  border-radius: 30px;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.brand,
+.cardHeader,
+.scoreWrap,
+.workspaceHeader,
+.workspacePills,
+.inlineMetrics,
+.navItem,
+.userCard,
+.recommendationMeta {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.brandMark,
+.navIcon,
+.userAvatar {
+  align-items: center;
+  background: linear-gradient(135deg, rgba(24, 122, 115, 0.16), rgba(125, 215, 194, 0.22));
+  border-radius: 18px;
+  color: var(--accent);
+  display: inline-flex;
+  height: 2.75rem;
+  justify-content: center;
+  width: 2.75rem;
+}
+
+.sectionEyebrow {
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heroCard {
+  background:
+    radial-gradient(circle at top right, rgba(125, 215, 194, 0.22), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(109, 167, 255, 0.16), transparent 40%),
+    var(--surface-panel-strong);
+  border-radius: 28px;
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+}
+
+.premiumCard {
+  background:
+    radial-gradient(circle at top right, rgba(96, 165, 250, 0.18), transparent 36%),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 58, 138, 0.88));
+  border-color: rgba(148, 163, 184, 0.24);
+  border-radius: 26px;
+  color: #f8fafc;
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+}
+
+.heroCard h2,
+.workspaceHeader h2 {
+  margin: 0.1rem 0 0;
+}
+
+.heroCard p,
+.premiumCard p,
+.workspaceHeader p,
+.cardHeader p,
+.tableLead span,
+.signalList p,
+.timelineList p,
+.noteBlock p,
+.promptCard p,
+.recommendationCard p,
+.userCard span,
+.metricCard span,
+.slotCard span {
+  color: var(--muted);
+  margin: 0;
+}
+
+.premiumCard .sectionEyebrow {
+  color: rgba(191, 219, 254, 0.88);
+}
+
+.metricStack,
+.navList,
+.signalList,
+.stack,
+.timelineList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.metricStack {
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+}
+
+.metricCard {
+  border-radius: 22px;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem;
+}
+
+.metricCard strong {
+  font-size: 1.4rem;
+}
+
+.navItem {
+  background:
+    radial-gradient(circle at top right, rgba(125, 215, 194, 0.12), transparent 46%),
+    var(--surface-panel);
+  border-radius: 24px;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.95rem;
+  text-align: left;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.navItem:hover,
+.navItem[data-active="true"] {
+  border-color: rgba(24, 122, 115, 0.24);
+  box-shadow: var(--shadow-grow);
+  transform: translateY(-1px);
+}
+
+.navCopy {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.navCopy strong,
+.cardHeader strong,
+.surfaceCard strong,
+.noteBlock strong,
+.promptCard span,
+.tableLead strong {
+  display: block;
+}
+
+.navCopy small {
+  color: var(--muted);
+}
+
+.userCard {
+  border-radius: 22px;
+  justify-content: flex-start;
+  margin-top: auto;
+  padding: 0.85rem;
+}
+
+.userCard strong {
+  display: block;
+}
+
+.workspace {
+  border-radius: 30px;
+  display: grid;
+  gap: 1rem;
+  min-height: 72vh;
+  padding: 1rem;
+}
+
+.workspaceHeader {
+  align-items: flex-start;
+  background:
+    radial-gradient(circle at top right, rgba(125, 215, 194, 0.18), transparent 32%),
+    linear-gradient(135deg, var(--surface-panel-strong), rgba(219, 238, 234, 0.72));
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 1.1rem 1.15rem;
+}
+
+.workspacePills {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.workspacePills span,
+.inlineMetrics span,
+.recommendationMeta span,
+.priorityPill {
+  background: rgba(24, 122, 115, 0.1);
+  border-radius: 999px;
+  color: var(--accent-strong);
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+}
+
+.viewGrid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.9fr);
+}
+
+.surfaceCard {
+  border-radius: 28px;
+  display: grid;
+  gap: 1rem;
+  padding: 1.1rem;
+}
+
+.cardHeader {
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid rgba(31, 29, 23, 0.08);
+  padding: 0.9rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tableLead {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 220px;
+}
+
+.scoreWrap {
+  min-width: 140px;
+}
+
+.scoreBar {
+  background: rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  flex: 1;
+  height: 0.7rem;
+  overflow: hidden;
+}
+
+.scoreFill {
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+}
+
+.scoreFill[data-tone="critical"] {
+  background: linear-gradient(90deg, #ef4444, #f97316);
+}
+
+.scoreFill[data-tone="high"] {
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+}
+
+.scoreFill[data-tone="warm"] {
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+}
+
+.priorityPill[data-tone="critical"] {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+}
+
+.priorityPill[data-tone="high"] {
+  background: rgba(245, 158, 11, 0.16);
+  color: #a16207;
+}
+
+.priorityPill[data-tone="warm"] {
+  background: rgba(14, 165, 233, 0.12);
+  color: #0f766e;
+}
+
+.actionButton,
+.primaryCta {
+  align-items: center;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: 0.55rem;
+  justify-content: center;
+  padding: 0.72rem 0.95rem;
+  text-decoration: none;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.actionButton:hover,
+.primaryCta:hover,
+.slotCard:hover {
+  transform: translateY(-1px);
+}
+
+.actionButton,
+.primaryCta {
+  background: linear-gradient(135deg, var(--accent), #42bba8);
+}
+
+.premiumActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.premiumPrimaryLink,
+.premiumSecondaryLink {
+  align-items: center;
+  border-radius: 999px;
+  color: inherit;
+  display: inline-flex;
+  font-weight: 600;
+  justify-content: center;
+  padding: 0.7rem 0.95rem;
+  text-decoration: none;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    border-color 160ms ease;
+}
+
+.premiumPrimaryLink {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f8fafc;
+}
+
+.premiumSecondaryLink {
+  border: 1px solid rgba(191, 219, 254, 0.28);
+  color: #bfdbfe;
+}
+
+.signalList article,
+.timelineList article {
+  border: 1px solid rgba(31, 29, 23, 0.08);
+  border-radius: 22px;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem;
+}
+
+.notesPanel,
+.summaryGrid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.noteBlock,
+.promptCard,
+.recommendationCard {
+  border-radius: 24px;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem;
+}
+
+.promptCard {
+  background:
+    radial-gradient(circle at top right, rgba(125, 215, 194, 0.14), transparent 40%),
+    var(--surface-panel);
+}
+
+.promptCard span {
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.recommendationCard {
+  background:
+    radial-gradient(circle at top right, rgba(125, 215, 194, 0.16), transparent 36%),
+    var(--surface-panel);
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.recommendationCard span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.recommendationCard strong {
+  font-size: 1.3rem;
+}
+
+.recommendationMeta {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.slotGrid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.slotCard {
+  align-items: flex-start;
+  border-radius: 22px;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem;
+  text-align: left;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.slotCard[data-recommended="true"] {
+  border-color: rgba(24, 122, 115, 0.22);
+  box-shadow: var(--shadow-grow);
+}
+
+.premiumPrimaryLink:hover,
+.premiumSecondaryLink:hover {
+  transform: translateY(-1px);
+}
+
+.slotCard strong {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 1120px) {
+  .platformShell,
+  .viewGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .metricStack,
+  .slotGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .workspaceHeader,
+  .cardHeader,
+  .recommendationCard {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendationCard {
+    display: grid;
+  }
+
+  .workspace,
+  .sidebar {
+    padding: 0.9rem;
+  }
+}

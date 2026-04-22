@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Código — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}code{font-family:Consolas,Courier New,monospace;font-size:.92em}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Código</span>
+    <h1>Dívida de Código</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Código</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> apps/**/src, packages/**/src, componentes do front-end canônico e artefatos de duplicação/complexidade versionados.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 2</p>
+      <p><strong>Status final da análise:</strong> Achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:07:42.707Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>Foram inspecionados arquivos ativos de API, web e pacotes compartilhados, além dos artefatos de duplicação e complexidade já materializados no repositório. Os itens abaixo estão apoiados em código e relatórios concretos do próprio workspace.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Supressão massiva de TypeScript no runtime canônico</h2>
+      <p><strong>Diagnóstico:</strong> A checagem estática foi desligada em centenas de arquivos ativos. O typecheck oficial perde valor como barreira de regressão. O padrão aparece em API, web e worker.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>A inspeção com `git grep -n &quot;@ts-nocheck&quot; -- apps/api apps/web apps/worker packages` retornou 695 ocorrências no workspace auditado.</li><li>apps/api/src/lib/encryption.ts:1 contém `// @ts-nocheck`.</li><li>apps/api/src/modules/workflows/service.ts:1 contém `// @ts-nocheck`.</li><li>apps/web/components/agents/PolicyManager.tsx:1 contém `// @ts-nocheck`.</li><li>apps/web/components/agents/agent-detail-tabs.tsx:1 contém `// @ts-nocheck`.</li><li>package.json:68-71 mantém `pnpm typecheck` e `pnpm typecheck:policy` como gates oficiais.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Erros de contrato e integração deixam de ser barrados cedo nas superfícies mais alteradas. Refatorações ficam mais caras porque o compilador deixa de proteger os pontos de maior mudança.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Inventariar as supressões por pasta e priorizar primeiro API e web canônicas.</li><li>Remover `@ts-nocheck` dos arquivos críticos, corrigindo tipos reais em vez de trocar por novos escapes.</li><li>Reduzir a baseline e bloquear novas supressões enquanto o passivo remanescente é pago por lote.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de software sênior responsável por remover supressões amplas de TypeScript sem expandir o escopo.
+
+Missão
+Eliminar `// @ts-nocheck` dos arquivos-alvo com correção real de tipos.
+
+Escopo
+Atue somente sobre as supressões e erros necessários para restabelecer tipagem correta nos arquivos citados.
+
+Arquivos-alvo
+- apps/api/src/lib/encryption.ts
+- apps/api/src/modules/workflows/service.ts
+- apps/web/components/agents/PolicyManager.tsx
+- apps/web/components/agents/agent-detail-tabs.tsx
+
+Correções obrigatórias
+- Confirmar antes quais erros são mascarados pelas supressões.
+- Remover as supressões apenas após corrigir os tipos reais.
+- Atualizar testes impactados.
+- Atualizar documentação impactada se algum contrato interno precisar de esclarecimento.
+
+Restrições
+- Não usar novos `any`, `@ts-ignore` ou `@ts-nocheck`.
+- Não refatorar módulos não citados sem necessidade direta.
+- Não alterar comportamento funcional não relacionado.
+
+Critérios de aceite
+- Os arquivos-alvo deixam de usar `// @ts-nocheck`.
+- O typecheck passa sem novos escapes amplos.
+- Testes afetados continuam passando.
+
+Validação
+- pnpm typecheck
+- pnpm lint
+- pnpm test:core</pre>
+      </details>
+    </article>
+    <article class="item">
+      <h2>Componentes de agentes concentram duplicação estrutural</h2>
+      <p><strong>Diagnóstico:</strong> As superfícies de gestão e detalhe de agentes repetem blocos inteiros de layout e estilo inline. A duplicação já está medida nos artefatos do projeto. O custo de manutenção cresce por cópia e cola.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>artifacts/quality/jscpd/jscpd-report.json registra `apps/web/components/agents/PolicyManager.tsx` com `duplicatedLines=196` e `percentage=87.5`.</li><li>artifacts/quality/jscpd/jscpd-report.json registra `apps/web/components/agents/agent-detail-tabs.tsx` com `duplicatedLines=102` e `percentage=54.84`.</li><li>A inspeção textual dos dois arquivos encontrou 71 ocorrências de `style={{`.</li><li>Os blocos repetidos aparecem nas seções de cards, listas, formulários, abas e detalhes de execução dentro dos mesmos componentes.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Qualquer ajuste visual ou comportamental exige edição manual em vários pontos. Revisões ficam mais lentas e inconsistências entram fácil quando uma cópia evolui e a outra não.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Extrair blocos repetidos de card, seção, estado vazio e tabela para primitivas reutilizáveis.</li><li>Mover apresentação repetida para classes CSS e tokens já existentes.</li><li>Revalidar as páginas de agentes para garantir que a extração preservou layout e comportamento.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de front-end sênior responsável por reduzir duplicação estrutural sem alterar comportamento das telas de agentes.
+
+Missão
+Reduzir a duplicação comprovada em `PolicyManager` e `agent-detail-tabs`.
+
+Escopo
+Atue somente nas superfícies de agentes citadas e nos estilos reutilizáveis estritamente necessários.
+
+Arquivos-alvo
+- apps/web/components/agents/PolicyManager.tsx
+- apps/web/components/agents/agent-detail-tabs.tsx
+- apps/web/app/globals.css
+
+Correções obrigatórias
+- Identificar primeiro os blocos realmente duplicados.
+- Extrair primitivas ou classes compartilhadas para cards, seções e estados repetidos.
+- Substituir estilos inline repetidos por CSS reutilizável quando a mudança for mecânica e segura.
+- Atualizar testes impactados.
+
+Restrições
+- Não alterar contratos de dados dos componentes.
+- Não reescrever toda a tela sem evidência de necessidade.
+- Não introduzir design novo fora do padrão já adotado.
+
+Critérios de aceite
+- A duplicação comprovada diminui de forma verificável.
+- Os componentes continuam renderizando os mesmos dados e ações.
+- A apresentação repetida passa a morar em classes ou primitivas reutilizáveis.
+
+Validação
+- pnpm lint
+- pnpm typecheck
+- pnpm test:core</pre>
+      </details>
+    </article>
+  </section>
+</main>
+</body>
+</html>

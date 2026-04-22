@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatorio 02 - Divida de Arquitetura</title>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;line-height:1.5;margin:32px;max-width:1100px}
+    code,pre{font-family:Consolas,monospace} pre{white-space:pre-wrap;background:#f6f8fa;padding:12px;border:1px solid #d0d7de}
+    .item{border:1px solid #d0d7de;border-radius:10px;padding:18px;margin:18px 0} .gravidade{font-weight:700;color:#9a3412}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Relatorio 02 - Divida de Arquitetura</h1>
+    <p><strong>Projeto:</strong> BirthHub 360 Innovation</p>
+    <p><strong>Data:</strong> 2026-04-12</p>
+    <p><strong>Escopo:</strong> Organizacao de modulos, fronteiras arquiteturais e hotspots de concentracao de responsabilidade.</p>
+  </header>
+  <main>
+    <section id="metodo">
+      <h2>Metodo</h2>
+      <p>A avaliacao cruzou manifests do monorepo, catalogo de servicos, estrutura de apps e arquivos de maior volume para localizar acoplamentos estruturais e componentes com responsabilidade excessiva.</p>
+    </section>
+    <section id="resultado">
+      <h2>Resultado</h2>
+      <article class="item">
+        <h3>Item 1 - Superficie legacy ainda participa do grafo principal do workspace</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> O monorepo ainda inclui um segmento legacy dentro do workspace ativo, mesmo com o catalogo funcional tratando parte dessa superficie como quarentena ou fora do head principal.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>pnpm-workspace.yaml:3</code> inclui <code>apps/legacy/*</code>.</li>
+          <li><code>apps/legacy/dashboard</code> esta presente no repositório.</li>
+          <li><code>docs/service-catalog.md:21-24</code> caracteriza superficies legacy/quarantine e ausencias em HEAD.</li>
+        </ul>
+        <p><strong>Impacto:</strong> Aumenta custo cognitivo do workspace, abre margem para imports acidentais e enfraquece a leitura do que e realmente arquitetura alvo versus preservacao historica.</p>
+        <p><strong>Plano sequencial:</strong> 1. Delimitar oficialmente a zona legacy. 2. Remover do workspace ou isolar build. 3. Atualizar catalogo e owners. 4. Adicionar bloqueios contra dependencia cruzada.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Isole a superficie legacy do grafo principal do monorepo. Revise pnpm-workspace.yaml, explicite a estrategia para apps/legacy/* e implemente guardrails para impedir imports acidentais entre codigo ativo e codigo preservado, mantendo documentacao e catalogo coerentes com a decisao.</pre>
+        </details>
+      </article>
+      <article class="item">
+        <h3>Item 2 - Servico clinico monolitico concentra regras demais em um unico arquivo</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> O modulo clinico centraliza volume excessivo de regras, consultas e orquestracao em um unico service, sinalizando ausencia de fatias arquiteturais menores.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>apps/api/src/modules/clinical/service.ts</code> possui 2211 linhas.</li>
+          <li>O arquivo atua como ponto unico de concentracao do dominio clinico na API.</li>
+        </ul>
+        <p><strong>Impacto:</strong> Reduz testabilidade por unidade, dificulta ownership, aumenta risco de regressao por efeito colateral e torna revisoes muito mais custosas.</p>
+        <p><strong>Plano sequencial:</strong> 1. Separar casos de uso por agregado. 2. Extrair portas e adapters. 3. Encapsular validacoes e queries por modulo. 4. Reforcar testes de contrato entre fatias.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Quebre apps/api/src/modules/clinical/service.ts em modulos menores orientados a casos de uso e agregados do dominio clinico. Preserve comportamento externo, extraia responsabilidades de validacao, leitura, escrita e integracao, e deixe o service principal como composicao fina entre dependencias e fluxos.</pre>
+        </details>
+      </article>
+      <article class="item">
+        <h3>Item 3 - Hotspots de front-end concentram shell e constantes em arquivos gigantes</h3>
+        <p class="gravidade">Gravidade: media</p>
+        <p><strong>Diagnostico:</strong> O front-end comercial possui arquivos de shell e constantes grandes demais, indicando mistura de apresentacao, configuracao e regras de tela em artefatos pouco modulados.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>apps/web/lib/sales-os/constants.ts</code> possui 6939 linhas.</li>
+          <li><code>apps/web/components/sales-os/SalesOsShell.tsx</code> possui 822 linhas.</li>
+        </ul>
+        <p><strong>Impacto:</strong> Aumenta o tempo de manutencao, dificulta reaproveitamento e faz a camada de UI absorver decisoes que deveriam estar em configuracao ou componentes menores.</p>
+        <p><strong>Plano sequencial:</strong> 1. Segmentar constantes por dominio. 2. Extrair subcomponentes e hooks. 3. Definir limites entre config, copy e layout. 4. Cobrir a shell com testes de composicao.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Refatore o conjunto de arquivos de Sales OS para reduzir hotspots arquiteturais. Divida apps/web/lib/sales-os/constants.ts por dominio funcional e extraia de apps/web/components/sales-os/SalesOsShell.tsx os subcomponentes, hooks e configuracoes que hoje estao concentrados em um unico shell gigante.</pre>
+        </details>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

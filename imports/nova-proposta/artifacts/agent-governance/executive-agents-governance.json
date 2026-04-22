@@ -1,0 +1,1294 @@
+﻿{
+  "generatedAt": "2026-04-11T23:20:36.155Z",
+  "source": "scripts/audit/executive-agents-governance.mjs",
+  "summary": {
+    "agentCount": 15,
+    "maturityCounts": {
+      "estrutural": 14,
+      "frágil": 0,
+      "operacional": 0,
+      "parcial": 1
+    },
+    "topRisks": [
+      {
+        "affectedAgents": [
+          "boardprep-ai",
+          "brand-guardian",
+          "budget-fluid",
+          "capital-allocator",
+          "churn-deflector",
+          "competitor-xray",
+          "crisis-navigator",
+          "culture-pulse",
+          "expansion-mapper",
+          "market-sentinel",
+          "narrative-weaver",
+          "pipeline-oracle",
+          "pricing-optimizer",
+          "quota-architect",
+          "trend-catcher"
+        ],
+        "id": "typed-surface-suppressed",
+        "severity": "high",
+        "title": "Superfície crítica ainda protegida por @ts-nocheck."
+      },
+      {
+        "affectedAgents": [
+          "brand-guardian",
+          "budget-fluid",
+          "capital-allocator",
+          "churn-deflector",
+          "competitor-xray",
+          "crisis-navigator",
+          "culture-pulse",
+          "expansion-mapper",
+          "market-sentinel",
+          "narrative-weaver",
+          "pipeline-oracle",
+          "pricing-optimizer",
+          "quota-architect",
+          "trend-catcher"
+        ],
+        "id": "declared-runtime-governance-not-enforced",
+        "severity": "high",
+        "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+      },
+      {
+        "affectedAgents": [
+          "boardprep-ai",
+          "brand-guardian",
+          "budget-fluid",
+          "capital-allocator",
+          "churn-deflector",
+          "competitor-xray",
+          "crisis-navigator",
+          "culture-pulse",
+          "expansion-mapper",
+          "market-sentinel",
+          "narrative-weaver",
+          "pipeline-oracle",
+          "pricing-optimizer",
+          "quota-architect",
+          "trend-catcher"
+        ],
+        "id": "console-based-observability",
+        "severity": "medium",
+        "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+      }
+    ]
+  },
+  "agents": [
+    {
+      "agentId": "boardprep-ai",
+      "checks": {
+        "declaresRuntimeEnforcement": false,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": false,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": false,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_BOARDPREPAI_CONTRACT",
+        "importedToolIds": "BOARDPREPAI_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_BOARDPREPAI_CONTRACT",
+      "expectedToolIds": "BOARDPREPAI_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_BOARDPREPAI_CONTRACT",
+      "importedToolIds": "BOARDPREPAI_TOOL_IDS",
+      "maturity": "parcial",
+      "path": "packages/agents/executivos/boardprep-ai",
+      "riskCount": 2,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/boardprep-ai/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/boardprep-ai/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/boardprep-ai/agent.ts",
+              "line": 437
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 72
+    },
+    {
+      "agentId": "brand-guardian",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_BRANDGUARDIAN_CONTRACT",
+        "importedToolIds": "BRANDGUARDIAN_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_BRANDGUARDIAN_CONTRACT",
+      "expectedToolIds": "BRANDGUARDIAN_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_BRANDGUARDIAN_CONTRACT",
+      "importedToolIds": "BRANDGUARDIAN_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/brand-guardian",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/brand-guardian/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/brand-guardian/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/brand-guardian/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/brand-guardian/contract.yaml",
+              "line": 191
+            },
+            {
+              "file": "packages/agents/executivos/brand-guardian/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/brand-guardian/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "budget-fluid",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_BUDGETFLUID_CONTRACT",
+        "importedToolIds": "BUDGETFLUID_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_BUDGETFLUID_CONTRACT",
+      "expectedToolIds": "BUDGETFLUID_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_BUDGETFLUID_CONTRACT",
+      "importedToolIds": "BUDGETFLUID_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/budget-fluid",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/budget-fluid/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/budget-fluid/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/budget-fluid/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/budget-fluid/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/budget-fluid/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/budget-fluid/agent.ts",
+              "line": 521
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "capital-allocator",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_CAPITALALLOCATOR_CONTRACT",
+        "importedToolIds": "CAPITALALLOCATOR_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_CAPITALALLOCATOR_CONTRACT",
+      "expectedToolIds": "CAPITALALLOCATOR_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_CAPITALALLOCATOR_CONTRACT",
+      "importedToolIds": "CAPITALALLOCATOR_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/capital-allocator",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/capital-allocator/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/capital-allocator/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/capital-allocator/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/capital-allocator/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/capital-allocator/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/capital-allocator/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "churn-deflector",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_CHURNDEFLECTOR_CONTRACT",
+        "importedToolIds": "CHURNDEFLECTOR_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_CHURNDEFLECTOR_CONTRACT",
+      "expectedToolIds": "CHURNDEFLECTOR_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_CHURNDEFLECTOR_CONTRACT",
+      "importedToolIds": "CHURNDEFLECTOR_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/churn-deflector",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/churn-deflector/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/churn-deflector/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/churn-deflector/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/churn-deflector/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/churn-deflector/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/churn-deflector/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "competitor-xray",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_COMPETITORXRAY_CONTRACT",
+        "importedToolIds": "COMPETITORXRAY_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_COMPETITORXRAY_CONTRACT",
+      "expectedToolIds": "COMPETITORXRAY_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_COMPETITORXRAY_CONTRACT",
+      "importedToolIds": "COMPETITORXRAY_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/competitor-xray",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/competitor-xray/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/competitor-xray/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/competitor-xray/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/competitor-xray/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/competitor-xray/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/competitor-xray/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "crisis-navigator",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_CRISISNAVIGATOR_CONTRACT",
+        "importedToolIds": "CRISISNAVIGATOR_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_CRISISNAVIGATOR_CONTRACT",
+      "expectedToolIds": "CRISISNAVIGATOR_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_CRISISNAVIGATOR_CONTRACT",
+      "importedToolIds": "CRISISNAVIGATOR_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/crisis-navigator",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/crisis-navigator/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/crisis-navigator/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/crisis-navigator/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/crisis-navigator/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/crisis-navigator/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/crisis-navigator/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "culture-pulse",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_CULTUREPULSE_CONTRACT",
+        "importedToolIds": "CULTUREPULSE_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_CULTUREPULSE_CONTRACT",
+      "expectedToolIds": "CULTUREPULSE_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_CULTUREPULSE_CONTRACT",
+      "importedToolIds": "CULTUREPULSE_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/culture-pulse",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/culture-pulse/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/culture-pulse/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/culture-pulse/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/culture-pulse/contract.yaml",
+              "line": 191
+            },
+            {
+              "file": "packages/agents/executivos/culture-pulse/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/culture-pulse/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "expansion-mapper",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_EXPANSIONMAPPER_CONTRACT",
+        "importedToolIds": "EXPANSIONMAPPER_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_EXPANSIONMAPPER_CONTRACT",
+      "expectedToolIds": "EXPANSIONMAPPER_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_EXPANSIONMAPPER_CONTRACT",
+      "importedToolIds": "EXPANSIONMAPPER_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/expansion-mapper",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/expansion-mapper/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/expansion-mapper/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/expansion-mapper/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/expansion-mapper/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/expansion-mapper/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/expansion-mapper/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "market-sentinel",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_MARKETSENTINEL_CONTRACT",
+        "importedToolIds": "MARKETSENTINEL_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_MARKETSENTINEL_CONTRACT",
+      "expectedToolIds": "MARKETSENTINEL_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_MARKETSENTINEL_CONTRACT",
+      "importedToolIds": "MARKETSENTINEL_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/market-sentinel",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/market-sentinel/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/market-sentinel/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/market-sentinel/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/market-sentinel/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/market-sentinel/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/market-sentinel/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "narrative-weaver",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_NARRATIVEWEAVER_CONTRACT",
+        "importedToolIds": "NARRATIVEWEAVER_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_NARRATIVEWEAVER_CONTRACT",
+      "expectedToolIds": "NARRATIVEWEAVER_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_NARRATIVEWEAVER_CONTRACT",
+      "importedToolIds": "NARRATIVEWEAVER_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/narrative-weaver",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/narrative-weaver/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/narrative-weaver/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/narrative-weaver/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/narrative-weaver/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/narrative-weaver/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/narrative-weaver/agent.ts",
+              "line": 531
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "pipeline-oracle",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_PIPELINEORACLE_CONTRACT",
+        "importedToolIds": "PIPELINEORACLE_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_PIPELINEORACLE_CONTRACT",
+      "expectedToolIds": "PIPELINEORACLE_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_PIPELINEORACLE_CONTRACT",
+      "importedToolIds": "PIPELINEORACLE_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/pipeline-oracle",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/pipeline-oracle/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/pipeline-oracle/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/pipeline-oracle/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/pipeline-oracle/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/pipeline-oracle/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/pipeline-oracle/agent.ts",
+              "line": 524
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "pricing-optimizer",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_PRICINGOPTIMIZER_CONTRACT",
+        "importedToolIds": "PRICINGOPTIMIZER_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_PRICINGOPTIMIZER_CONTRACT",
+      "expectedToolIds": "PRICINGOPTIMIZER_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_PRICINGOPTIMIZER_CONTRACT",
+      "importedToolIds": "PRICINGOPTIMIZER_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/pricing-optimizer",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/pricing-optimizer/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/pricing-optimizer/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/pricing-optimizer/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/pricing-optimizer/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/pricing-optimizer/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/pricing-optimizer/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "quota-architect",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_QUOTAARCHITECT_CONTRACT",
+        "importedToolIds": "QUOTAARCHITECT_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_QUOTAARCHITECT_CONTRACT",
+      "expectedToolIds": "QUOTAARCHITECT_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_QUOTAARCHITECT_CONTRACT",
+      "importedToolIds": "QUOTAARCHITECT_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/quota-architect",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/quota-architect/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/quota-architect/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/quota-architect/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/quota-architect/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/quota-architect/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/quota-architect/agent.ts",
+              "line": 524
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    },
+    {
+      "agentId": "trend-catcher",
+      "checks": {
+        "declaresRuntimeEnforcement": true,
+        "enforcesRuntimeGovernance": false,
+        "hasContractLoader": true,
+        "hasFallbackHandling": true,
+        "hasInputSchema": true,
+        "hasOutputFallbackContract": true,
+        "hasOutputSchema": true,
+        "hasRequestIdInSchema": true,
+        "hasRetryBudget": true,
+        "hasSchemaTests": true,
+        "hasStructuredObservability": true,
+        "hasTsNoCheckAgent": true,
+        "hasTsNoCheckSchema": true,
+        "hasTsNoCheckTools": true,
+        "hasUnitTests": true,
+        "runtimeEnforcementGap": true,
+        "toolConstMismatch": false,
+        "usesConsoleLogging": true,
+        "usesRequestIdInRuntime": true,
+        "validatesToolInputsAndOutputs": true,
+        "importedDefaultContract": "DEFAULT_TRENDCATCHER_CONTRACT",
+        "importedToolIds": "TRENDCATCHER_TOOL_IDS"
+      },
+      "expectedDefaultContract": "DEFAULT_TRENDCATCHER_CONTRACT",
+      "expectedToolIds": "TRENDCATCHER_TOOL_IDS",
+      "importedDefaultContract": "DEFAULT_TRENDCATCHER_CONTRACT",
+      "importedToolIds": "TRENDCATCHER_TOOL_IDS",
+      "maturity": "estrutural",
+      "path": "packages/agents/executivos/trend-catcher",
+      "riskCount": 3,
+      "risks": [
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/trend-catcher/agent.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/trend-catcher/schemas.ts",
+              "line": 1
+            },
+            {
+              "file": "packages/agents/executivos/trend-catcher/tools.ts",
+              "line": 1
+            }
+          ],
+          "id": "typed-surface-suppressed",
+          "severity": "high",
+          "title": "Superfície crítica ainda protegida por @ts-nocheck."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/trend-catcher/contract.yaml",
+              "line": 193
+            },
+            {
+              "file": "packages/agents/executivos/trend-catcher/agent.ts",
+              "line": 1
+            }
+          ],
+          "id": "declared-runtime-governance-not-enforced",
+          "severity": "high",
+          "title": "O contrato declara runtime_enforcement/runtime_cycle, mas o runtime nao aplica essa governanca."
+        },
+        {
+          "evidence": [
+            {
+              "file": "packages/agents/executivos/trend-catcher/agent.ts",
+              "line": 523
+            }
+          ],
+          "id": "console-based-observability",
+          "severity": "medium",
+          "title": "Observabilidade depende de console.* local, sem sink estruturado, correlacao ou roteamento operacional."
+        }
+      ],
+      "score": 42
+    }
+  ]
+}
+

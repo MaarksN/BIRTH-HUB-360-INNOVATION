@@ -1,0 +1,30 @@
+{
+  "finishedAt": "2026-04-18T05:15:49.915Z",
+  "runId": "db-bootstrap-ci-2026-04-18T05-15-48-349Z",
+  "script": "db-bootstrap-ci",
+  "startedAt": "2026-04-18T05:15:48.349Z",
+  "status": "success",
+  "steps": [
+    {
+      "critical": true,
+      "durationMs": 1045,
+      "finishedAt": "2026-04-18T05:15:49.395Z",
+      "name": "prisma migrate deploy",
+      "startedAt": "2026-04-18T05:15:48.350Z",
+      "status": "success",
+      "type": "migrate",
+      "command": "/opt/hostedtoolcache/node/24.14.1/x64/bin/node /home/runner/work/PROJETO-FINAL-BIRTHUB-360-INNOVATION/PROJETO-FINAL-BIRTHUB-360-INNOVATION/packages/database/node_modules/prisma/build/index.js migrate deploy --schema /home/runner/work/PROJETO-FINAL-BIRTHUB-360-INNOVATION/PROJETO-FINAL-BIRTHUB-360-INNOVATION/packages/database/prisma/schema.prisma"
+    },
+    {
+      "critical": true,
+      "durationMs": 519,
+      "finishedAt": "2026-04-18T05:15:49.914Z",
+      "name": "provision rls runtime role",
+      "startedAt": "2026-04-18T05:15:49.395Z",
+      "status": "success",
+      "type": "infra",
+      "command": "/opt/hostedtoolcache/node/24.14.1/x64/bin/node --import tsx /home/runner/work/PROJETO-FINAL-BIRTHUB-360-INNOVATION/PROJETO-FINAL-BIRTHUB-360-INNOVATION/packages/database/scripts/provision-rls-runtime-role.ts",
+      "script": "provision-rls-runtime-role.ts"
+    }
+  ]
+}

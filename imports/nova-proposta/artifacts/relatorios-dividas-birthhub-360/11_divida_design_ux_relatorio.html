@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Design/UX — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Design/UX</span>
+    <h1>Dívida de Design/UX</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Design/UX</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> Componentes de agentes no front-end canônico, tokens visuais globais e guardrails de consistência de estilo já adotados pelo projeto.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 1</p>
+      <p><strong>Status final da análise:</strong> Achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:11:14.638Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>A auditoria comparou o design system efetivo do app (`globals.css`) com componentes de agentes que materializam apresentação inline e duplicação local. Também foram considerados os guardrails já codificados para evitar novas ocorrências.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Superfícies de agentes contornam o design system com estilo inline</h2>
+      <p><strong>Diagnóstico:</strong> O app já possui tokens globais de cor, tipografia e superfície. Mesmo assim, as telas de agentes concentram dezenas de estilos inline e blocos visuais duplicados. A consistência visual fica dependente de edição manual por componente.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>apps/web/app/globals.css:1-12 define tokens globais como `--font-sans`, `--surface`, `--text`, `--accent`, `--card` e `--border`.</li><li>scripts/ci/check-web-inline-style-freeze.mjs:5-10 protege apenas quatro arquivos específicos contra novos `style={` e orienta mover apresentação para CSS.</li><li>scripts/ci/check-web-inline-style-freeze.mjs:61-69 declara explicitamente que novos inline styles devem ir para CSS compartilhado.</li><li>apps/web/components/agents/PolicyManager.tsx` e `apps/web/components/agents/agent-detail-tabs.tsx` somam 71 ocorrências de `style={{` na inspeção textual.</li><li>artifacts/quality/jscpd/jscpd-report.json registra `PolicyManager.tsx` com 87.5% de linhas duplicadas e `agent-detail-tabs.tsx` com 54.84%.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Pequenos ajustes de UX, tema e consistência visual custam mais do que deveriam. O front-end passa a ter ilhas visuais que não evoluem no mesmo ritmo do design system central.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Levar os padrões repetidos de card, seção, tabela e detalhe para classes ou primitivas compartilhadas.</li><li>Ampliar o guardrail de inline style para incluir as superfícies de agentes que já concentram dívida.</li><li>Revalidar as telas de agentes em desktop e mobile após a extração.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de front-end responsável por alinhar superfícies críticas ao design system existente.
+
+Missão
+Reduzir estilos inline e duplicação visual nas superfícies de agentes.
+
+Escopo
+Atue somente nos componentes de agentes citados e nos estilos compartilhados estritamente necessários.
+
+Arquivos-alvo
+- apps/web/components/agents/PolicyManager.tsx
+- apps/web/components/agents/agent-detail-tabs.tsx
+- apps/web/app/globals.css
+- scripts/ci/check-web-inline-style-freeze.mjs
+
+Correções obrigatórias
+- Mapear os padrões visuais repetidos antes de editar.
+- Mover estilos repetidos para classes ou primitivas alinhadas aos tokens globais.
+- Atualizar o guardrail de inline style para cobrir as superfícies de agentes corrigidas.
+
+Restrições
+- Não criar um novo design system paralelo.
+- Não alterar o comportamento funcional das telas de agentes.
+- Não introduzir inline styles novos durante a correção.
+
+Critérios de aceite
+- Os componentes de agentes passam a reutilizar tokens e estilos compartilhados.
+- A quantidade de apresentação duplicada cai de forma verificável.
+- O guardrail impede regressão do mesmo problema.
+
+Validação
+- pnpm lint
+- pnpm typecheck
+- pnpm test:core</pre>
+      </details>
+    </article>
+  </section>
+</main>
+</body>
+</html>

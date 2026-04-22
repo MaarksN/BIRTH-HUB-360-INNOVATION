@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Segurança — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Segurança</span>
+    <h1>Dívida de Segurança</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Segurança</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> Autenticação, armazenamento/rotação de token e tratamento de segredos de conectores no runtime canônico.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 2</p>
+      <p><strong>Status final da análise:</strong> Achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:09:35.430Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>Foram auditados apenas trechos que lidam com autenticação, refresh token e segredo de conectores. Os itens abaixo são sustentados por implementação direta, sem inferência sobre comportamento externo não visível no código.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Revogação de refresh token é volátil por processo</h2>
+      <p><strong>Diagnóstico:</strong> A revogação/rotação de refresh token depende de um `Map` em memória local. O estado não é compartilhado entre processos. Reinício e escala horizontal quebram a consistência do controle.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>packages/auth/index.ts:21 define `const refreshStore = new Map&lt;string, JWTPayload&gt;();`.</li><li>packages/auth/index.ts:38 grava o estado com `refreshStore.set(refreshPayload.jti, refreshPayload);`.</li><li>packages/auth/index.ts:50-51 valida e revoga com `refreshStore.has(...)` e `refreshStore.delete(...)`.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Um token pode parecer revogado em uma instância e válido em outra. Reinícios limpam o estado de revogação e abrem janela de inconsistência exatamente em um controle de sessão sensível.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Persistir o estado de refresh token em armazenamento compartilhado por tenant, usuário e `jti`.</li><li>Usar política explícita de expiração e revogação independente do processo atual.</li><li>Cobrir rotação e revogação com testes de persistência.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de segurança responsável por corrigir o controle de revogação de sessão.
+
+Missão
+Substituir a revogação volátil de refresh token por um controle compartilhado e consistente.
+
+Escopo
+Atue somente sobre a implementação de autenticação, armazenamento de refresh token e testes diretamente impactados.
+
+Arquivos-alvo
+- packages/auth/index.ts
+- packages/database/**
+- apps/api/tests/**
+
+Correções obrigatórias
+- Modelar armazenamento persistente ou compartilhado para o estado do refresh token.
+- Preservar os contratos públicos de emissão e rotação de token.
+- Adicionar testes que provem revogação consistente após restart ou entre instâncias lógicas.
+
+Restrições
+- Não manter fallback em memória como caminho principal.
+- Não afrouxar validação de token para simplificar a migração.
+- Não alterar sessões não relacionadas.
+
+Critérios de aceite
+- A revogação deixa de depender do processo corrente.
+- Rotação continua funcionando com contratos preservados.
+- Os testes cobrem revogação e replay de refresh token.
+
+Validação
+- pnpm test:auth
+- pnpm typecheck</pre>
+      </details>
+    </article>
+    <article class="item">
+      <h2>Decriptação de connector token falha em modo fail-open</h2>
+      <p><strong>Diagnóstico:</strong> Quando o valor não está no formato esperado ou a decriptação falha, a função devolve o texto original. O caminho de erro preserva o segredo em estado bruto. O comportamento silencioso elimina a distinção entre ciphertext válido e valor malformado.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>apps/api/src/lib/encryption.ts:43 retorna o valor original quando não há `:` no texto.</li><li>apps/api/src/lib/encryption.ts:47 retorna o valor original quando `parts.length !== 3`.</li><li>apps/api/src/lib/encryption.ts:50 retorna o valor original quando faltam `ivHex`, `authTagHex` ou `encryptedHex`.</li><li>apps/api/src/lib/encryption.ts:65-68 captura falha de decriptação e retorna `encryptedText`.</li><li>apps/api/src/lib/encryption.ts:66-67 documenta que esse fallback existe para facilitar migração de valores antes salvos em plain-text.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Credenciais malformadas ou ainda em plain text atravessam o fluxo sem erro explícito. Um controle que deveria proteger segredo vira comportamento permissivo e difícil de auditar.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Separar migração retroativa de token plaintext do caminho normal de leitura de segredo.</li><li>Passar a rejeitar ciphertext inválido depois da janela de migração controlada.</li><li>Auditar e migrar registros legados antes de remover o fallback permissivo.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de segurança responsável por remover um fallback permissivo de segredo.
+
+Missão
+Remover o comportamento fail-open da decriptação de connector token sem perder a capacidade de migrar dados legados de forma controlada.
+
+Escopo
+Atue somente sobre a biblioteca de encriptação de conectores, rotas/serviços que a consomem e testes diretamente afetados.
+
+Arquivos-alvo
+- apps/api/src/lib/encryption.ts
+- apps/api/tests/**
+- docs/**
+
+Correções obrigatórias
+- Confirmar antes quais formatos de token ainda existem no armazenamento atual.
+- Criar caminho explícito de migração ou saneamento para plaintext legado.
+- Fazer o fluxo normal falhar de forma clara para ciphertext inválido.
+- Atualizar testes e documentação da migração.
+
+Restrições
+- Não manter retorno silencioso do valor bruto após a correção.
+- Não usar mocks ou placeholders para esconder falhas reais de decriptação.
+- Não mudar contratos públicos fora do necessário para sinalizar erro corretamente.
+
+Critérios de aceite
+- Valores inválidos não passam mais como segredo válido.
+- Tokens legados seguem um fluxo explícito de migração.
+- Os testes cobrem sucesso, legado controlado e falha de decriptação.
+
+Validação
+- pnpm test:security
+- pnpm typecheck</pre>
+      </details>
+    </article>
+  </section>
+</main>
+</body>
+</html>

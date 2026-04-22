@@ -1,0 +1,203 @@
+{
+  "generatedAt": "2026-04-06T02:11:19.046Z",
+  "sourceReport": "audit\\auditor-prime-2026-04-05.json",
+  "top15Ids": [
+    "TD-089",
+    "TD-001",
+    "TD-002",
+    "TD-054",
+    "TD-055",
+    "TD-056",
+    "TD-057",
+    "TD-058",
+    "TD-003",
+    "TD-004",
+    "TD-005",
+    "TD-006",
+    "TD-007",
+    "TD-008",
+    "TD-090"
+  ],
+  "sprints": [
+    {
+      "sprint": 1,
+      "theme": "Segurança + multi-tenancy",
+      "items": [
+        {
+          "id": "TD-089",
+          "title": "Prova runtime de RLS por tenant ainda não fecha no runner soberano",
+          "owner": "@platform-architecture",
+          "effort": "1-3 dias",
+          "dependencies": [],
+          "acceptanceCriteria": "Prova de isolamento atualizada em `artifacts/tenancy/rls-proof-head.json`, controles de tenancy verificados e item rebaixado/removido na próxima auditoria.",
+          "path": "artifacts/tenancy/rls-proof-head.json"
+        },
+        {
+          "id": "TD-090",
+          "title": "Ausência de superfícies explícitas de interoperabilidade clínica padrão",
+          "owner": "@platform-architecture",
+          "effort": "1-2 semanas",
+          "dependencies": [],
+          "acceptanceCriteria": "Capacidade operacional/multi-tenant materializada com evidência versionada, critério técnico validado e item rebaixado/removido na próxima auditoria.",
+          "path": "packages/integrations/src/clients/http.ts"
+        }
+      ]
+    },
+    {
+      "sprint": 2,
+      "theme": "Qualidade + observabilidade",
+      "items": []
+    },
+    {
+      "sprint": 3,
+      "theme": "Performance + UX técnica",
+      "items": [
+        {
+          "id": "TD-001",
+          "title": "Complexidade acima do limiar em registerAuthRoutes",
+          "owner": "@platform-api",
+          "effort": "2-5 dias",
+          "dependencies": [],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/api/src/app/auth-routes.ts"
+        },
+        {
+          "id": "TD-002",
+          "title": "Arquivo grande demais para o boundary atual (473 linhas)",
+          "owner": "@platform-api",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/api/src/modules/billing/service.checkout.ts"
+        },
+        {
+          "id": "TD-054",
+          "title": "Consulta findMany sem paginação explícita",
+          "owner": "@platform-api",
+          "effort": "0.5-2 dias",
+          "dependencies": [],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/analytics/reporting.service.ts"
+        },
+        {
+          "id": "TD-055",
+          "title": "Consulta findMany sem paginação explícita",
+          "owner": "@platform-api",
+          "effort": "0.5-2 dias",
+          "dependencies": [
+            "TD-054"
+          ],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/analytics/reporting.service.ts"
+        },
+        {
+          "id": "TD-056",
+          "title": "Consulta findMany sem paginação explícita",
+          "owner": "@platform-api",
+          "effort": "0.5-2 dias",
+          "dependencies": [
+            "TD-054"
+          ],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/analytics/usage.service.ts"
+        },
+        {
+          "id": "TD-057",
+          "title": "Consulta findMany sem paginação explícita",
+          "owner": "@platform-api",
+          "effort": "0.5-2 dias",
+          "dependencies": [
+            "TD-054"
+          ],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/analytics/usage.service.ts"
+        },
+        {
+          "id": "TD-058",
+          "title": "Consulta findMany sem paginação explícita",
+          "owner": "@platform-api",
+          "effort": "0.5-2 dias",
+          "dependencies": [
+            "TD-054"
+          ],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/analytics/usage.service.ts"
+        },
+        {
+          "id": "TD-003",
+          "title": "Complexidade acima do limiar em <anonymous>",
+          "owner": "@platform-automation",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/worker/src/worker.process-job.ts"
+        },
+        {
+          "id": "TD-004",
+          "title": "Complexidade acima do limiar em createConnectorsRouter",
+          "owner": "@platform-api",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/api/src/modules/connectors/router.ts"
+        },
+        {
+          "id": "TD-005",
+          "title": "Complexidade acima do limiar em createJobProcessor",
+          "owner": "@platform-automation",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/worker/src/worker.process-job.ts"
+        },
+        {
+          "id": "TD-006",
+          "title": "Complexidade acima do limiar em DeveloperWebhooksPage",
+          "owner": "@product-frontend",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/web/app/(dashboard)/settings/developers/webhooks/page.tsx"
+        },
+        {
+          "id": "TD-007",
+          "title": "Complexidade acima do limiar em executeStep",
+          "owner": "@platform-architecture",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "packages/workflows-core/src/nodes/executeStep.ts"
+        },
+        {
+          "id": "TD-008",
+          "title": "Complexidade acima do limiar em WorkflowRunsPage",
+          "owner": "@product-frontend",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/web/app/(dashboard)/workflows/[id]/runs/page.tsx"
+        }
+      ]
+    },
+    {
+      "sprint": 4,
+      "theme": "Inovação somente após estabilização do core",
+      "items": [],
+      "gate": "Iniciar inovação apenas depois que os critérios de aceite dos sprints 1-3 estiverem fechados e os itens VDI 4.0+ tiverem sido eliminados ou rebaixados."
+    }
+  ]
+}

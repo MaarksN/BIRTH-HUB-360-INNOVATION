@@ -1,0 +1,8 @@
+{
+  "checkedAt": "2026-04-19T03:42:51.771Z",
+  "findings": [],
+  "ok": true,
+  "reason": "DATABASE_URL not configured",
+  "scannedUsers": 0,
+  "skipped": true
+}

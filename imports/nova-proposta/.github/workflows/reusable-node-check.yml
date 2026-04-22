@@ -1,0 +1,103 @@
+name: Reusable Node Check
+
+on:
+  workflow_call:
+    inputs:
+      command:
+        required: true
+        type: string
+      fetch_depth:
+        default: 1
+        required: false
+        type: number
+      timeout_minutes:
+        default: 20
+        required: false
+        type: number
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+          standalone: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        if: contains(inputs.command, 'test:e2e')
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Prisma diagnostics
+        run: |
+          node -e "const pkg=require('./packages/database/package.json'); console.log('prisma(dev):', pkg.devDependencies?.prisma ?? 'missing'); console.log('@prisma/client(dep):', pkg.dependencies?.['@prisma/client'] ?? 'missing');"
+          pnpm ls @prisma/client
+          pnpm ls prisma
+          cat packages/database/prisma/schema.prisma | grep -A 5 datasource || true
+          sha256sum packages/database/prisma/schema.prisma || true
+
+      - name: Run command
+        env:
+          NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+          WEB_BASE_URL: ${{ vars.WEB_BASE_URL }}
+          WORKFLOW_COMMAND: ${{ inputs.command }}
+        run: |
+          case "$WORKFLOW_COMMAND" in
+            "pnpm branch:check")
+              pnpm branch:check
+              ;;
+            "pnpm ci:commitlint")
+              pnpm ci:commitlint
+              ;;
+            "pnpm security:inline-credentials")
+              pnpm security:inline-credentials
+              ;;
+            "pnpm docs:check-links")
+              pnpm docs:check-links
+              ;;
+            "pnpm hygiene:check")
+              pnpm hygiene:check
+              ;;
+            "pnpm ci:task pack-tests")
+              pnpm ci:task pack-tests
+              ;;
+            "pnpm quality:mutation:check")
+              pnpm quality:mutation:check
+              ;;
+            "pnpm monorepo:doctor && RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard && pnpm audit:ownership")
+              pnpm monorepo:doctor
+              RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard
+              pnpm audit:ownership
+              ;;
+            "pnpm test:e2e:release")
+              NEXT_PUBLIC_API_URL="${NEXT_PUBLIC_API_URL:-http://127.0.0.1:3400}" \
+              NEXT_PUBLIC_APP_URL="${NEXT_PUBLIC_APP_URL:-http://127.0.0.1:3001}" \
+              NEXT_PUBLIC_ENVIRONMENT="${NEXT_PUBLIC_ENVIRONMENT:-test}" \
+              WEB_BASE_URL="${WEB_BASE_URL:-http://127.0.0.1:3001}" \
+              pnpm test:e2e:release
+              ;;
+            *)
+              echo "Unsupported workflow command: $WORKFLOW_COMMAND" >&2
+              exit 1
+              ;;
+          esac

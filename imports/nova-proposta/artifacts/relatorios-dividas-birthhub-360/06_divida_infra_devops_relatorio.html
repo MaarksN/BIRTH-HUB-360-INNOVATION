@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Infra/DevOps — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Infra/DevOps</span>
+    <h1>Dívida de Infra/DevOps</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Infra/DevOps</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> Artefatos oficiais de backup e disaster recovery usados como evidência operacional do repositório.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 1</p>
+      <p><strong>Status final da análise:</strong> Achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:09:35.430Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>Foram auditados os artefatos oficiais de prontidão operacional já materializados em `artifacts/backups` e `artifacts/dr`. O foco foi o estado comprovado de backup e readiness, sem inferir ambientes externos não representados no workspace.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Prontidão de backup e DR falha no artefato oficial</h2>
+      <p><strong>Diagnóstico:</strong> O relatório oficial de readiness está em fail. Não há backup encontrado no diretório esperado. O drill de recuperação existe, mas foi marcado como insuficiente para auditoria.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>artifacts/dr/readiness-report.json:28-31 lista os blockers `No backup files found...` e `DR drill artifact exists but is insufficient for auditability`.</li><li>artifacts/dr/readiness-report.json:81-82 registra `overallStatus: fail`.</li><li>artifacts/backups/backup-health.txt:2-4 registra `Status: FAIL` e `Latest backup: missing`.</li><li>artifacts/dr/readiness-report.json:48-53 marca o check `disaster recovery drill` como `fail`.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> A recuperação deixa de ter prova auditável dentro do fluxo oficial do repositório. Em incidente real, a equipe gasta tempo descobrindo se existe material restaurável em vez de executar um plano confiável.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Produzir artefatos reais de backup no diretório monitorado ou ajustar a origem oficial se ela mudou.</li><li>Corrigir o drill para registrar cenário, evidência de backup e validação de RTO/RPO de forma auditável.</li><li>Voltar a tratar readiness apenas como PASS quando os dois controles estiverem materializados.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de plataforma responsável por restabelecer evidência operacional válida de backup e DR.
+
+Missão
+Corrigir o readiness atual de backup e disaster recovery com artefatos reais e auditáveis.
+
+Escopo
+Atue somente sobre scripts, pipelines e documentação necessários para gerar artefatos reais de backup/DR e corrigir o readiness atual.
+
+Arquivos-alvo
+- artifacts/dr/readiness-report.json
+- artifacts/backups/backup-health.txt
+- scripts/ops/check-backup-health.ts
+- scripts/ops/record-disaster-recovery-drill-auto.ts
+- scripts/ops/generate-disaster-recovery-report.ts
+
+Correções obrigatórias
+- Confirmar a origem correta dos backups e a forma esperada de materialização.
+- Fazer os scripts registrarem backup real e drill auditável com RTO/RPO explícitos.
+- Atualizar documentação e pipeline impactadas.
+
+Restrições
+- Não simular backup ou drill com placeholders.
+- Não marcar readiness como pass sem evidência concreta.
+- Não expandir o escopo para observabilidade ou release fora do necessário.
+
+Critérios de aceite
+- Os artefatos oficiais deixam de reportar backup ausente.
+- O drill passa a ser suficiente para auditoria.
+- O readiness resultante reflete evidência real.
+
+Validação
+- pnpm ops:backup:health
+- pnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario=automated-release-readiness-rehearsal
+- pnpm ops:dr:report</pre>
+      </details>
+    </article>
+  </section>
+</main>
+</body>
+</html>

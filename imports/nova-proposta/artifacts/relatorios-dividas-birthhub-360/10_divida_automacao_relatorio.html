@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Automação — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Automação</span>
+    <h1>Dívida de Automação</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Automação</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> Workflows agendados e scripts já existentes para materialização automática de evidência operacional.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 1</p>
+      <p><strong>Status final da análise:</strong> Achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:11:14.638Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>A análise comparou o workflow recorrente semanal com os scripts e gates de backup/DR já codificados no pipeline de CD. O foco foi verificar se a automação existente cobre de fato a evidência operacional crítica.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Recorrência semanal não materializa evidência de backup e DR</h2>
+      <p><strong>Diagnóstico:</strong> O repositório já tem scripts para checar backup e reconstruir readiness de DR. A automação semanal agendada não chama esses scripts. A evidência crítica fica restrita ao caminho manual/de produção do CD.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>.github/workflows/release-rehearsal.yml:4-6 agenda execução semanal (`cron: &quot;0 9 * * 1&quot;`).</li><li>.github/workflows/release-rehearsal.yml:36-37 executa apenas `pnpm release:verify:cycle0` na recorrência semanal.</li><li>.github/workflows/cd.yml:638-647 executa `pnpm ops:backup:health` apenas no job `backup-health-gate` condicionado a `workflow_dispatch` de produção.</li><li>.github/workflows/cd.yml:856-862 reconstrói evidência com `pnpm ops:backup:health`, `pnpm ops:dr:record:auto` e `pnpm ops:dr:report` no caminho de produção.</li><li>artifacts/dr/readiness-report.json:82 registra `overallStatus: fail`, mostrando que a evidência crítica já está degradada.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> A automação recorrente existe, mas não cobre o controle operacional mais sensível. O problema só reaparece quando alguém entra no fluxo de produção ou olha artefatos já falhados.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Estender a recorrência semanal para materializar backup health e readiness de DR.</li><li>Publicar esses artefatos no workflow agendado com status explícito.</li><li>Separar um workflow recorrente dedicado se o rehearsal atual não for o lugar certo para essa responsabilidade.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de automação responsável por materializar evidência operacional crítica de forma recorrente.
+
+Missão
+Fazer a automação recorrente produzir evidência real de backup e disaster recovery.
+
+Escopo
+Atue somente sobre workflows agendados e scripts já existentes para backup/DR readiness.
+
+Arquivos-alvo
+- .github/workflows/release-rehearsal.yml
+- .github/workflows/cd.yml
+- package.json
+- scripts/ops/check-backup-health.ts
+- scripts/ops/record-disaster-recovery-drill-auto.ts
+- scripts/ops/generate-disaster-recovery-report.ts
+
+Correções obrigatórias
+- Reaproveitar os scripts oficiais já existentes para backup e DR.
+- Garantir que a recorrência gere artefatos publicáveis e auditáveis.
+- Documentar quando a execução recorrente deve falhar.
+
+Restrições
+- Não criar workflow placebo que só rode echo ou placeholder.
+- Não duplicar lógica de backup/DR fora dos scripts oficiais sem necessidade.
+- Não remover os gates de produção já existentes.
+
+Critérios de aceite
+- A automação agendada produz evidência real de backup e DR.
+- Os artefatos recorrentes ficam disponíveis para auditoria.
+- Falhas de backup/DR aparecem antes do caminho manual de produção.
+
+Validação
+- pnpm ops:backup:health
+- pnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario=automated-release-readiness-rehearsal
+- pnpm ops:dr:report</pre>
+      </details>
+    </article>
+  </section>
+</main>
+</body>
+</html>

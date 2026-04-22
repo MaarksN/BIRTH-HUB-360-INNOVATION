@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birth Hub 360 — Master Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080c14;
+  --surface: #0e1520;
+  --surface2: #141d2e;
+  --surface3: #1a2538;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8edf5;
+  --text-muted: #6b7a94;
+  --text-dim: #3d4f6a;
+  --indigo: #6366f1;
+  --indigo-glow: rgba(99,102,241,0.15);
+  --violet: #8b5cf6;
+  --amber: #f59e0b;
+  --emerald: #10b981;
+  --rose: #f43f5e;
+  --cyan: #06b6d4;
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+/* Background grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+.page { max-width: 1080px; margin: 0 auto; padding: 2.5rem 1.5rem 6rem; position: relative; z-index: 1; }
+
+/* ── HEADER ── */
+.hero {
+  margin-bottom: 3rem;
+  padding: 2.5rem 2.5rem 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--indigo);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.hero-eyebrow::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--indigo); }
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #e8edf5 0%, #818cf8 50%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub { color: var(--text-muted); font-size: 0.9rem; max-width: 520px; margin-bottom: 2rem; }
+.hero-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hero-stat .n {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+.hero-stat .l { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.stat-div { width: 1px; background: var(--border2); align-self: stretch; }
+
+/* ── PROGRESS GLOBAL ── */
+.progress-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.progress-panel .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.progress-track {
+  flex: 1;
+  min-width: 200px;
+  height: 6px;
+  background: var(--surface3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--indigo), var(--violet));
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.progress-pct {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--indigo);
+  white-space: nowrap;
+}
+.progress-count { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+
+/* ── TOOLBAR ── */
+.toolbar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.45rem 0.875rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--text-muted);
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+.btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+.btn-primary { background: var(--indigo-glow); border-color: rgba(99,102,241,0.4); color: #a5b4fc; }
+.btn-primary:hover { background: rgba(99,102,241,0.25); color: #c7d2fe; }
+
+/* ── CYCLE TIMELINE ── */
+.timeline-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+.tc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.tc::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--tc-color);
+  opacity: 0.8;
+}
+.tc:hover { background: var(--surface2); border-color: var(--border2); transform: translateY(-1px); }
+.tc-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--tc-color);
+  margin-bottom: 0.25rem;
+}
+.tc h5 { font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 0.25rem; }
+.tc .tc-weeks { font-size: 0.65rem; color: var(--text-muted); }
+.tc .tc-bar { height: 2px; background: var(--surface3); border-radius: 99px; margin-top: 0.625rem; overflow: hidden; }
+.tc .tc-bar-fill { height: 100%; background: var(--tc-color); border-radius: 99px; transition: width 0.4s ease; }
+
+/* ── SECTION TITLE ── */
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1rem;
+  margin-top: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── CYCLE BLOCK ── */
+.cycle-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.cycle-block:hover { border-color: var(--border2); }
+.cycle-header {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.cycle-header:hover { background: rgba(255,255,255,0.02); }
+.cycle-badge {
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  background: var(--cc);
+}
+.cycle-info { flex: 1; min-width: 0; }
+.cycle-info h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.cycle-meta { font-size: 0.75rem; color: var(--text-muted); }
+.cycle-progress-wrap { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+.cycle-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  min-width: 34px;
+  text-align: right;
+}
+.cycle-mini-bar { width: 80px; height: 4px; background: var(--surface3); border-radius: 99px; overflow: hidden; }
+.cycle-mini-fill { height: 100%; border-radius: 99px; background: var(--cc); transition: width 0.4s ease; }
+.cycle-chevron { color: var(--text-dim); font-size: 0.8rem; transition: transform 0.2s; flex-shrink: 0; }
+.cycle-chevron.open { transform: rotate(90deg); }
+
+/* ── CYCLE BODY ── */
+.cycle-body { display: none; border-top: 1px solid var(--border); }
+.cycle-body.open { display: block; }
+
+/* ── PHASE ── */
+.phase { padding: 1.25rem 1.5rem 0.75rem; }
+.phase + .phase { border-top: 1px solid var(--border); }
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed var(--border);
+}
+.phase-icon { font-size: 0.875rem; }
+.phase-title { font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--text); flex: 1; }
+.phase-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  background: var(--surface3);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+/* ── ITEM ── */
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.45rem 0.375rem;
+  border-radius: 6px;
+  transition: background 0.12s;
+  cursor: pointer;
+}
+.item:hover { background: rgba(255,255,255,0.03); }
+.item input[type=checkbox] {
+  width: 14px; height: 14px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--indigo);
+  cursor: pointer;
+}
+.item-tags { display: flex; gap: 3px; flex-shrink: 0; margin-top: 2px; }
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 500;
+  border-radius: 3px;
+  padding: 1px 4px;
+  line-height: 1.4;
+}
+.tag-m { background: rgba(16,185,129,0.12); color: #34d399; }
+.tag-n { background: rgba(139,92,246,0.15); color: #a78bfa; }
+.tag-crit { background: rgba(244,63,94,0.12); color: #fb7185; }
+.tag-ia { background: rgba(6,182,212,0.12); color: #22d3ee; }
+.item label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1.5;
+  flex: 1;
+  transition: color 0.15s;
+}
+.item:hover label { color: var(--text); }
+.item.done label { text-decoration: line-through; color: var(--text-dim); }
+
+/* ── LEGEND ── */
+.legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.legend-item { display: flex; align-items: center; gap: 0.375rem; font-size: 0.7rem; color: var(--text-muted); }
+
+/* ── AUDIT SECTION ── */
+.audit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 0.875rem;
+}
+.audit-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.125rem;
+  border-top: 2px solid var(--ac);
+}
+.audit-card h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.audit-card h4 .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ac); flex-shrink: 0; }
+.audit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.audit-item:last-child { border-bottom: none; }
+.audit-item input[type=checkbox] { margin-top: 2px; accent-color: var(--indigo); flex-shrink: 0; width: 12px; height: 12px; cursor: pointer; }
+.audit-item label { font-size: 0.75rem; color: var(--text-muted); line-height: 1.45; cursor: pointer; }
+.audit-item.done label { text-decoration: line-through; color: var(--text-dim); }
+.audit-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.audit-progress .ap-track { flex: 1; height: 3px; background: var(--surface3); border-radius: 99px; overflow: hidden; }
+.audit-progress .ap-fill { height: 100%; background: var(--ac); transition: width 0.3s; }
+.audit-progress .ap-pct { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); }
+
+@media print {
+  body::before { display: none; }
+  .toolbar, .hero::before { display: none; }
+  .cycle-body { display: block !important; }
+  .page { max-width: 100%; padding: 0; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 1.5rem 1.25rem; }
+  .cycle-mini-bar { display: none; }
+  .timeline { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+.cycle-block { animation: fadeIn 0.3s ease both; }
+
+/* New Status Colors */
+.item.status-done { background: rgba(16, 185, 129, 0.1) !important; border-left: 3px solid var(--emerald) !important; }
+.item.status-todo { background: rgba(244, 63, 94, 0.1) !important; border-left: 3px solid var(--rose) !important; }
+.item.status-wip { background: rgba(245, 158, 11, 0.1) !important; border-left: 3px solid var(--amber) !important; }
+/* Override checkbox */
+.item.status-done input[type="checkbox"],
+.item.status-todo input[type="checkbox"],
+.item.status-wip input[type="checkbox"] {
+  display: none;
+}
+/* Visual indicator replacing checkbox */
+.item.status-done::before { content: "✅"; margin-right: 8px; font-size: 14px; }
+.item.status-todo::before { content: "❌"; margin-right: 8px; font-size: 14px; }
+.item.status-wip::before { content: "⚠️"; margin-right: 8px; font-size: 14px; }
+
+
+.audit-item.status-done input[type="checkbox"],
+.audit-item.status-todo input[type="checkbox"],
+.audit-item.status-wip input[type="checkbox"] { display: none; }
+.audit-item.status-done::before { content: "✅"; margin-right: 8px; font-size: 14px; }
+.audit-item.status-todo::before { content: "❌"; margin-right: 8px; font-size: 14px; }
+.audit-item.status-wip::before { content: "⚠️"; margin-right: 8px; font-size: 14px; }
+
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Birth Hub 360 · Master Roadmap v2.0</div>
+  <h1>Da Fundação ao<br>Enterprise de IA</h1>
+  <p class="hero-sub">Roadmap estruturado em 10 ciclos, 200 entregas ordenadas por dependência técnica e 10 checklists de auditoria por gate.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="n" id="stat-done">0</div><div class="l">Concluídos</div></div>
+    <div class="stat-div"></div>
+    <div class="hero-stat"><div class="n">200</div><div class="l">Entregas</div></div>
+    <div class="stat-div"></div>
+    <div class="hero-stat"><div class="n">10</div><div class="l">Ciclos</div></div>
+    <div class="stat-div"></div>
+    <div class="hero-stat"><div class="n">~42</div><div class="l">Semanas</div></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-panel">
+  <span class="label">Progresso Global</span>
+  <div class="progress-track"><div class="progress-fill" id="gp-fill" style="width:0%"></div></div>
+  <span class="progress-pct" id="gp-pct">0%</span>
+  <span class="progress-count" id="gp-count">0 / 200</span>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <button class="btn btn-primary" onclick="expandAll()">▼ Expandir tudo</button>
+  <button class="btn" onclick="collapseAll()">▶ Recolher tudo</button>
+  <button class="btn" onclick="markC0()">✓ Marcar Ciclo 0 como feito</button>
+  <button class="btn" onclick="clearAll()">✕ Limpar progresso</button>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline-title">Visão geral dos ciclos — clique para navegar</div>
+<div class="timeline" id="timeline"></div>
+
+<div class="legend">
+  <div class="legend-item"><span class="tag tag-m">M</span> Melhoria da base</div>
+  <div class="legend-item"><span class="tag tag-n">N</span> Nova implementação</div>
+  <div class="legend-item"><span class="tag tag-crit">🔴</span> Crítico/bloqueante</div>
+  <div class="legend-item"><span class="tag tag-ia">IA</span> Feature de IA</div>
+</div>
+
+<div class="section-title">Ciclos de Implementação</div>
+<div id="cycles"></div>
+
+<div class="section-title" style="margin-top:3.5rem">Checklists de Auditoria — Gates por Ciclo</div>
+<p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:1.5rem;">Valide cada gate antes de iniciar o próximo ciclo. 100% = aprovado para avançar.</p>
+<div class="audit-grid" id="audit-grid"></div>
+
+</div>
+
+<script>
+const CYCLES = [
+  { id:0, name:"Fundação", weeks:"Concluído", color:"#64748b",
+    phases:[
+      { name:"Monorepo & Setup Inicial", icon:"🏗", items:[
+        { id:"c0_1", t:"N", text:"Turborepo com workspaces: apps/web, apps/api, packages/shared", crit:true },
+        { id:"c0_2", t:"N", text:"Next.js 14+ (App Router) com TypeScript strict no pacote web" },
+        { id:"c0_3", t:"N", text:"Fastify com TypeScript e estrutura de pastas inicial no pacote api" },
+        { id:"c0_4", t:"N", text:"Prisma ORM com PostgreSQL e schema inicial (Deal, Idea)" },
+        { id:"c0_5", t:"N", text:"Scripts root unificados (turbo dev / build / test)" },
+        { id:"c0_6", t:"N", text:".env.example documentado com todas as variáveis necessárias" },
+      ]}
+    ]
+  },
+  { id:1, name:"Engineering Foundation", weeks:"Sem. 1–4", color:"#ef4444",
+    phases:[
+      { name:"Padrões & Qualidade de Código", icon:"🛠", items:[
+        { id:"c1_1", t:"M", text:"ESLint strict + Prettier com regras compartilhadas em todos os pacotes", crit:true },
+        { id:"c1_2", t:"M", text:"Husky + lint-staged: bloquear commits com erros de lint/TypeScript", crit:true },
+        { id:"c1_3", t:"M", text:"Aliases de caminho (@/components, @/lib, @/hooks) no tsconfig de todos os apps" },
+        { id:"c1_4", t:"M", text:"Eliminar todo uso de 'any': substituir por tipos Zod inferidos ou generics explícitos" },
+        { id:"c1_5", t:"M", text:"Variáveis de ambiente validadas no build com Zod (@shared/env) — falha se ausentes", crit:true },
+        { id:"c1_6", t:"M", text:"Pacote @shared/types com DTOs e schemas Zod compartilhados entre frontend e backend" },
+        { id:"c1_7", t:"M", text:"Documentação interna com Nextra ou Docusaurus: guias de API e onboarding dev" },
+      ]},
+      { name:"Refatoração da API (Fastify)", icon:"⚙️", items:[
+        { id:"c1_8", t:"M", text:"Refatorar rotas para padrão Controller → Service → Repository", crit:true },
+        { id:"c1_9", t:"M", text:"Validação de payload Zod em 100% das rotas (body, params, querystring)" },
+        { id:"c1_10", t:"M", text:"Handler global de erros com respostas padronizadas { error, code, message }" },
+        { id:"c1_11", t:"M", text:"Substituir console.log por Pino logger com contexto de requestId, userId, tenantId" },
+        { id:"c1_12", t:"M", text:"Paginação cursor-based em GET /deals, GET /ideas e demais listagens" },
+        { id:"c1_13", t:"M", text:"Formato padrão de resposta: { data, meta: { total, page, pageSize } }" },
+        { id:"c1_14", t:"M", text:"CORS restritivo: apenas domínios do frontend (staging + prod) permitidos" },
+        { id:"c1_15", t:"M", text:"Rate Limiting: 100 req/min por IP nos endpoints públicos; 10/min em /auth/*" },
+        { id:"c1_16", t:"M", text:"Refatorar chat flutuante para hook useChat com estado, histórico e streaming" },
+      ]},
+      { name:"Banco de Dados (Prisma)", icon:"🗄", items:[
+        { id:"c1_17", t:"M", text:"Prisma Migrations formais — proibir schema push direto em staging/prod", crit:true },
+        { id:"c1_18", t:"M", text:"Índices compostos: (stage, tenantId), (score, tenantId), (deletedAt, tenantId)" },
+        { id:"c1_19", t:"M", text:"@db.VarChar(255) em campos curtos; Text em descrições longas" },
+        { id:"c1_20", t:"M", text:"Nomenclatura: camelCase no schema Prisma → snake_case no banco via @map/@@map" },
+        { id:"c1_21", t:"M", text:"Enums Prisma para Stages do Pipeline (LEAD, QUALIFICADO, PROPOSTA, GANHO, PERDIDO)" },
+        { id:"c1_22", t:"M", text:"Seed reproduzível com faker-js para dados realistas de dev; rodar em CI" },
+        { id:"c1_23", t:"M", text:"Soft Delete (deletedAt DateTime?) em Deal, Idea e entidades críticas" },
+        { id:"c1_24", t:"M", text:"Connection pooling otimizado: pgBouncer ou Prisma Accelerate" },
+      ]},
+      { name:"Segurança Core", icon:"🔒", items:[
+        { id:"c1_25", t:"M", text:"@fastify/helmet com configuração segura de headers (HSTS, X-Frame-Options)", crit:true },
+        { id:"c1_26", t:"M", text:"Substituir IDs Int por CUID2/UUID v4 em todas as entidades expostas na API", crit:true },
+        { id:"c1_27", t:"M", text:"Sanitizar inputs de texto livre (Ideias, Notas, Deals) para prevenir XSS" },
+        { id:"c1_28", t:"M", text:"CSP (Content Security Policy) configurado no next.config.js via headers" },
+        { id:"c1_29", t:"M", text:"Mensagens de erro do banco sanitizadas antes de retornar (sem stack trace)" },
+        { id:"c1_30", t:"M", text:"Log de auditoria para exclusões e modificações críticas (quem, quando, o quê)" },
+        { id:"c1_31", t:"M", text:"Brute-force protection especial em /auth/login e /auth/register" },
+        { id:"c1_32", t:"M", text:"Dependabot ativo no GitHub para varredura semanal de vulnerabilidades npm" },
+      ]}
+    ]
+  },
+  { id:2, name:"Auth & Multi-Tenant", weeks:"Sem. 5–8", color:"#f59e0b",
+    phases:[
+      { name:"Autenticação & Isolamento", icon:"🔑", items:[
+        { id:"c2_1", t:"N", text:"Better Auth (ou Auth.js v5) com adapter Prisma instalado e configurado", crit:true },
+        { id:"c2_2", t:"N", text:"Entidade Tenant (Workspace) no schema: name, slug, plan, createdAt", crit:true },
+        { id:"c2_3", t:"N", text:"Entidade User + tabela Membership (userId, tenantId, role, joinedAt)" },
+        { id:"c2_4", t:"N", text:"POST /auth/register — cria Workspace + usuário Admin em transação atômica" },
+        { id:"c2_5", t:"N", text:"Injeção automática de tenantId em todas as queries via Prisma Middleware/Extension", crit:true },
+        { id:"c2_6", t:"N", text:"POST /auth/forgot-password com link expirável em 1h via Resend/SendGrid" },
+        { id:"c2_7", t:"N", text:"Login Social Google OAuth 2.0 e Microsoft Azure AD (provedor corporativo)" },
+        { id:"c2_8", t:"N", text:"Middleware de auth no Fastify: valida JWT, injeta userId e tenantId no request context" },
+        { id:"c2_9", t:"N", text:"Múltiplos Workspaces por usuário: troca via dropdown no header sem re-login" },
+        { id:"c2_10", t:"N", text:"RLS (Row Level Security) no PostgreSQL para isolamento total no nível do banco", crit:true },
+        { id:"c2_11", t:"M", text:"HTTP-Only + Secure + SameSite=Strict cookies para tokens de sessão" },
+      ]},
+      { name:"Gestão de Usuários & RBAC", icon:"👥", items:[
+        { id:"c2_12", t:"N", text:"Roles no Prisma Enum: ADMIN, MANAGER, REP, VIEWER com capabilities distintas" },
+        { id:"c2_13", t:"N", text:"Tela 'Membros da Equipe' em Configurações: listar, convidar, alterar role, remover" },
+        { id:"c2_14", t:"N", text:"Convite por email com token único de aceite e expiração de 7 dias" },
+        { id:"c2_15", t:"N", text:"Desativação temporária de usuários (isActive: false) sem deletar histórico" },
+        { id:"c2_16", t:"N", text:"Guards de permissão: decorador @RequireRole(Role[]) em rotas sensíveis" },
+        { id:"c2_17", t:"N", text:"Transferência de propriedade de Deals entre vendedores (ADMIN/MANAGER only)" },
+        { id:"c2_18", t:"N", text:"Views condicionais 'Meus Negócios' vs 'Negócios da Equipe' por permissão" },
+        { id:"c2_19", t:"N", text:"Log de Atividades por usuário: timeline auditável com filtro por período" },
+        { id:"c2_20", t:"N", text:"Metas de faturamento mensais por usuário com acompanhamento no dashboard" },
+        { id:"c2_21", t:"N", text:"Upload de foto de perfil via S3 presigned URL com redimensionamento 200x200px" },
+      ]}
+    ]
+  },
+  { id:3, name:"UI/UX & Design System", weeks:"Sem. 9–12", color:"#3b82f6",
+    phases:[
+      { name:"Design System Core", icon:"🎨", items:[
+        { id:"c3_1", t:"M", text:"Migrar todo CSS global legado para Tailwind + shadcn/ui (por arquivo, sem regressões)", crit:true },
+        { id:"c3_2", t:"M", text:"ThemeProvider com next-themes: Dark/Light mode sem flash de FOUC" },
+        { id:"c3_3", t:"M", text:"Design tokens no tailwind.config.ts: paleta Indigo/Violet, escala tipográfica, espaçamentos" },
+        { id:"c3_4", t:"M", text:"Escala tipográfica: pesos 400/500/600 para body/subheading/heading; sem mistura arbitrária" },
+        { id:"c3_5", t:"M", text:"Componente Avatar: fallback para iniciais coloridas por hash determinístico do nome" },
+        { id:"c3_6", t:"M", text:"Skeleton Loaders em listas, cards de Kanban, gráficos e dashboards" },
+        { id:"c3_7", t:"M", text:"Toast Notifications com Sonner (sucesso, erro, info — duração e posição configuráveis)" },
+        { id:"c3_8", t:"M", text:"Tooltips em todos os ícones de ação na barra lateral e nav bar" },
+      ]},
+      { name:"Experiência do Usuário", icon:"✨", items:[
+        { id:"c3_9", t:"M", text:"Estado do Sidebar (expanded/collapsed) persistido no localStorage sem flash de hidratação" },
+        { id:"c3_10", t:"M", text:"Command Palette (Cmd+K): busca global de Deals, Contatos e navegação por rota" },
+        { id:"c3_11", t:"M", text:"Drag-and-drop real no Kanban com @hello-pangea/dnd + optimistic UI update" },
+        { id:"c3_12", t:"M", text:"Feedback de estado em botões: spinner de loading → check de sucesso → X de erro" },
+        { id:"c3_13", t:"M", text:"Máscaras BRL automáticas em campos de valor (R$ 1.000,00)" },
+        { id:"c3_14", t:"M", text:"Empty States ilustrados para listas sem dados (Deals, Ideias, Contatos, Tarefas)" },
+        { id:"c3_15", t:"M", text:"Contraste dos badges de Score corrigido (mínimo 4.5:1 em todos os temas)" },
+        { id:"c3_16", t:"M", text:"Animações de transição de rota com Framer Motion (fade+slide, 200ms)" },
+        { id:"c3_17", t:"M", text:"Kanban responsivo em mobile: swipe horizontal por coluna com snap-scroll nativo" },
+      ]},
+      { name:"Performance Frontend", icon:"⚡", items:[
+        { id:"c3_18", t:"M", text:"Code Splitting por rota com next/dynamic para modais, charts e módulos pesados" },
+        { id:"c3_19", t:"M", text:"Migrar de Chart.js para Recharts (bundle menor, composable, integração React nativa)" },
+        { id:"c3_20", t:"M", text:"Lazy loading de modais e do Chat Widget (importar apenas ao abrir pela primeira vez)" },
+        { id:"c3_21", t:"M", text:"Importações atômicas de lucide-react para tree-shaking efetivo" },
+        { id:"c3_22", t:"M", text:"Layouts sem interatividade convertidos para React Server Components" },
+        { id:"c3_23", t:"M", text:"Cache de rotas no Next.js: stale-while-revalidate em dados de dashboard" },
+        { id:"c3_24", t:"M", text:"React.memo + useMemo no Kanban para evitar re-renders em movimentações de card" },
+        { id:"c3_25", t:"M", text:"Substituir toda tag <img> por next/image com sizes, loading=lazy e priority acima da dobra" },
+        { id:"c3_26", t:"M", text:"Debounce de 300ms em barras de busca e filtros dinâmicos" },
+        { id:"c3_27", t:"M", text:"PurgeCSS/Tailwind purge em produção: remover classes não utilizadas do bundle" },
+      ]},
+      { name:"Acessibilidade (WCAG AA)", icon:"♿", items:[
+        { id:"c3_28", t:"M", text:"aria-label descritivo em todos os ícones e botões sem texto visível" },
+        { id:"c3_29", t:"M", text:"Contraste mínimo 4.5:1 auditado em textos sobre fundos escuros (Dark Mode)" },
+        { id:"c3_30", t:"M", text:"Kanban 100% navegável via teclado: Tab entre cards, Enter abre modal, Setas movem card" },
+        { id:"c3_31", t:"M", text:"Tabelas visually-hidden nos gráficos para leitores de tela (dados acessíveis)" },
+        { id:"c3_32", t:"M", text:"Link 'Pular para conteúdo principal' como primeiro elemento focalizável da página" },
+        { id:"c3_33", t:"M", text:"Focus ring visível: outline 2px solid indigo em todos os elementos interativos" },
+        { id:"c3_34", t:"M", text:"Atributos alt descritivos em imagens e avatares não-decorativos" },
+        { id:"c3_35", t:"M", text:"Tags HTML5 semânticas: <main>, <nav>, <aside>, <article>, <section>" },
+        { id:"c3_36", t:"M", text:"prefers-reduced-motion: desativar animações Framer Motion para usuários sensíveis" },
+        { id:"c3_37", t:"M", text:"Focus trap dentro de modais; restaurar foco no elemento original ao fechar" },
+      ]}
+    ]
+  },
+  { id:4, name:"CRM & Pipeline Avançado", weeks:"Sem. 13–18", color:"#22c55e",
+    phases:[
+      { name:"Pipeline Configurável", icon:"🔀", items:[
+        { id:"c4_1", t:"N", text:"Múltiplos Pipelines por Workspace (Vendas, Onboarding, CS, Renovação) com nome e cor" },
+        { id:"c4_2", t:"N", text:"Interface de personalização de Stages: CRUD + reorder drag-and-drop por pipeline" },
+        { id:"c4_3", t:"M", text:"Filtros dinâmicos no Pipeline: período, responsável, tag, valor estimado e data de fechamento" },
+        { id:"c4_4", t:"M", text:"Edição inline de ticket e nome do Deal no Kanban sem abrir modal" },
+        { id:"c4_5", t:"N", text:"Visão Lista/Tabela dos Deals (toggle Kanban ↔ Lista) com sorting por coluna" },
+        { id:"c4_6", t:"N", text:"Expected Close Date com badge 'em atraso' (past due, cor vermelha)" },
+      ]},
+      { name:"Entidade Contatos & Empresas", icon:"👤", items:[
+        { id:"c4_7", t:"N", text:"Entidade Contact: nome, email, telefone, cargo, empresa vinculada, linkedinUrl" },
+        { id:"c4_8", t:"N", text:"Relacionamento Contacts ↔ Deals (N contatos por deal, contato principal destacado)" },
+        { id:"c4_9", t:"N", text:"Tela de Contatos: listagem, busca, filtros e vinculação rápida a Deals" },
+        { id:"c4_10", t:"M", text:"Constraint de unicidade de nome de empresa por tenant no Prisma" },
+      ]},
+      { name:"Features Avançadas de Deal", icon:"💼", items:[
+        { id:"c4_11", t:"N", text:"Notas ricas em Deals: editor markdown com menções @usuario e timestamps" },
+        { id:"c4_12", t:"N", text:"Tarefas e Follow-ups vinculados ao Deal com data de vencimento e responsável" },
+        { id:"c4_13", t:"N", text:"Catálogo de Produtos/Serviços com preço base; adicionar itens ao Deal com desconto" },
+        { id:"c4_14", t:"N", text:"Win/Loss Reasons ao mover Deal para Ganho/Perdido (obrigatório, com analytics)" },
+        { id:"c4_15", t:"N", text:"Custom Fields em Deals: texto, número, select, data — configuráveis por workspace" },
+        { id:"c4_16", t:"M", text:"Relacionamento Ideias ↔ Deals no banco (ideia gerada de objeção no Deal X)" },
+        { id:"c4_17", t:"M", text:"Infinite scroll cursor-based na listagem de Ideias (20 itens por carga)" },
+        { id:"c4_18", t:"M", text:"Índices adicionais e constraints conforme queries do CRM avançado" },
+      ]}
+    ]
+  },
+  { id:5, name:"Arsenal de IA & Birthy", weeks:"Sem. 19–24", color:"#a855f7",
+    phases:[
+      { name:"AI Gateway & Infraestrutura", icon:"🤖", items:[
+        { id:"c5_1", t:"N", text:"Pacote @services/ai-gateway: facade para Gemini, OpenAI e Anthropic com fallback automático", crit:true },
+        { id:"c5_2", t:"N", text:"pgvector no PostgreSQL para armazenamento de embeddings da base de conhecimento" },
+        { id:"c5_3", t:"N", text:"RAG (Retrieval-Augmented Generation): chunk + embed + search vetorial com contexto" },
+        { id:"c5_4", t:"N", text:"Tracking de custo/tokens por Tenant: salva por requisição para debitação de créditos" },
+        { id:"c5_5", t:"N", text:"Tela Arsenal: gerenciador de Prompts customizados com variáveis dinâmicas e preview" },
+      ]},
+      { name:"Features de IA no CRM", icon:"🧠", items:[
+        { id:"c5_6", t:"N", text:"Deal Scorer: probabilidade de fechamento (0–100%) com base em histórico e perfil", ia:true },
+        { id:"c5_7", t:"N", text:"Gerador de Cold Emails personalizado por nome/empresa/setor do contato no Deal", ia:true },
+        { id:"c5_8", t:"N", text:"Sumarização de reuniões: upload de transcrição → IA extrai próximos passos e decisões", ia:true },
+        { id:"c5_9", t:"N", text:"Sugestão de Next Actions ao mover Deal entre estágios (com base em histórico)", ia:true },
+        { id:"c5_10", t:"N", text:"Detector de duplicados: IA sugere unificação de contatos/empresas com nomes similares", ia:true },
+        { id:"c5_11", t:"N", text:"Tradução simultânea de notas feitas em outros idiomas para equipes internacionais", ia:true },
+      ]},
+      { name:"Birthy — Assistente Virtual", icon:"💬", items:[
+        { id:"c5_12", t:"N", text:"Persistência de threads (tabelas ChatThread e ChatMessage) por usuário/workspace" },
+        { id:"c5_13", t:"N", text:"Histórico de sessões: usuário retoma conversas anteriores com contexto preservado" },
+        { id:"c5_14", t:"N", text:"Function Calling: Birthy move Deals, cria tarefas e busca dados via tools da IA" },
+        { id:"c5_15", t:"N", text:"BI conversacional: 'Birthy, qual o faturamento do trimestre?' com dados reais" },
+        { id:"c5_16", t:"N", text:"Streaming real-time via SSE nas respostas do Birthy" },
+        { id:"c5_17", t:"N", text:"RAG contextual: Birthy ingere PDFs de produtos/serviços do workspace" },
+        { id:"c5_18", t:"N", text:"Suporte a anexos no chat (imagem, PDF) para análise pelo modelo multimodal" },
+        { id:"c5_19", t:"N", text:"Atalhos rápidos: 'Sugira resposta', 'Explique o funil', 'Resuma deals da semana'" },
+        { id:"c5_20", t:"N", text:"Feedback 👍/👎 por mensagem armazenado para calibração contínua" },
+        { id:"c5_21", t:"N", text:"Painel Admin: perguntas mais frequentes ao Birthy para identificar gaps de knowledge" },
+      ]}
+    ]
+  },
+  { id:6, name:"Hub de Ideias & Academia", weeks:"Sem. 25–28", color:"#06b6d4",
+    phases:[
+      { name:"Hub de Ideias — Polimento", icon:"💡", items:[
+        { id:"c6_1", t:"M", text:"Markdown na descrição de ideias com preview em tempo real (react-markdown)" },
+        { id:"c6_2", t:"M", text:"Tags visuais coloridas para categorizar ideias (UX, Produto, Processos, Revenue)" },
+        { id:"c6_3", t:"M", text:"Bloqueio de upvote duplicado: constraint único userId+ideaId no banco" },
+        { id:"c6_4", t:"M", text:"Indicador 'Ideias em Alta': algoritmo de velocidade de votos nas últimas 24h" },
+        { id:"c6_5", t:"M", text:"Modal de detalhe da Ideia com URL compartilhável própria (/ideas/:id)" },
+        { id:"c6_6", t:"M", text:"Histórico de mudanças de Status (quem alterou, quando, de qual → para qual)" },
+        { id:"c6_7", t:"M", text:"Campo 'Tempo em Análise': duração desde criação até status atual" },
+        { id:"c6_8", t:"M", text:"Ordenação: Mais Votados, Mais Recentes, Status, Em Alta" },
+        { id:"c6_9", t:"M", text:"Identidade visual por Status: Planejada=verde, Em Análise=âmbar, Implementada=roxo" },
+      ]},
+      { name:"Hub de Ideias — Novas Features", icon:"🚀", items:[
+        { id:"c6_10", t:"N", text:"Comentários aninhados (nested threads) com menções e reações emoji" },
+        { id:"c6_11", t:"N", text:"Refinamento de IA: expande ideia em Prós, Contras e Esforço estimado ao criar", ia:true },
+        { id:"c6_12", t:"N", text:"Roadmap de Ideias: Kanban interno de ideias aprovadas com stages de execução" },
+        { id:"c6_13", t:"N", text:"Gamificação: pontos por ideia criada, votada e implementada com ranking interno" },
+        { id:"c6_14", t:"N", text:"Filtros avançados: busca semântica por texto, criador, período, tags e votos mínimos" },
+        { id:"c6_15", t:"N", text:"Score de Viabilidade: Impacto Técnico × Impacto Comercial (1-5 × 1-5)" },
+        { id:"c6_16", t:"N", text:"Campanhas de Ideias com prazo configurável, destacadas no topo da listagem" },
+        { id:"c6_17", t:"N", text:"Business Case PDF gerado via IA para ideias aprovadas (problema, solução, ROI)", ia:true },
+        { id:"c6_18", t:"N", text:"Notificações In-App em tempo real: votos, comentários e mudanças de status" },
+      ]},
+      { name:"Academia de Ferramentas", icon:"🎓", items:[
+        { id:"c6_19", t:"N", text:"Módulo Playbooks: estrutura de pastas/árvore para roteiros e conteúdo de vendas" },
+        { id:"c6_20", t:"N", text:"Upload de assets para S3/Cloudflare R2 com URL segura e CDN" },
+        { id:"c6_21", t:"N", text:"Trilhas de Aprendizado: sequência de módulos com progresso salvo e prerequisitos" },
+        { id:"c6_22", t:"N", text:"Quizzes automáticos via IA com base no conteúdo do módulo lido (múltipla escolha)", ia:true },
+        { id:"c6_23", t:"N", text:"Certificados internos: gerados em PDF com nome, data e assinatura ao concluir trilha" },
+        { id:"c6_24", t:"N", text:"Dashboard do Gestor: progresso de cada membro da equipe por trilha" },
+        { id:"c6_25", t:"N", text:"Embed de vídeos Vimeo/YouTube nos módulos da Academia" },
+        { id:"c6_26", t:"N", text:"IA sugere conteúdo de estudo baseado nos Loss Reasons do vendedor", ia:true },
+        { id:"c6_27", t:"N", text:"Favoritos: biblioteca pessoal de playbooks para acesso rápido" },
+        { id:"c6_28", t:"N", text:"Pesquisa semântica nos textos da Academia via embeddings + pgvector", ia:true },
+      ]}
+    ]
+  },
+  { id:7, name:"Analytics Corporativo", weeks:"Sem. 29–32", color:"#6366f1",
+    phases:[
+      { name:"Analytics — Polimento & Mobile", icon:"📊", items:[
+        { id:"c7_1", t:"M", text:"Recharts ResponsiveContainer em todos os gráficos com breakpoints de tela" },
+        { id:"c7_2", t:"M", text:"Tooltip rico: valor, delta vs período anterior, % do total ao hover nos pontos" },
+        { id:"c7_3", t:"M", text:"Seletor de Período global: 7d, 30d, Mês atual, Trimestre, Ano, Customizado" },
+        { id:"c7_4", t:"M", text:"Gráfico de Rosca para divisão de receita por produto/serviço ou pipeline" },
+        { id:"c7_5", t:"M", text:"Exportação de gráficos para PNG (canvas.toBlob) e relatório PDF (jsPDF)" },
+        { id:"c7_6", t:"M", text:"Cards de KPIs no topo: Ticket Médio, CAC, LTV, Taxa de Conversão do Funil" },
+        { id:"c7_7", t:"M", text:"Polling suave a cada 60s nos KPIs com SWR refreshInterval" },
+        { id:"c7_8", t:"M", text:"Comparação com período anterior: delta % com seta verde/vermelha por card" },
+        { id:"c7_9", t:"M", text:"Ranking de vendedores consumindo dados reais do banco em tempo real" },
+        { id:"c7_10", t:"M", text:"Funil de Vendas: conversão por stage com drop-off % visualizado em gráfico" },
+      ]},
+      { name:"Analytics Avançado & BI", icon:"🔭", items:[
+        { id:"c7_11", t:"N", text:"Dashboard Customizável: drag-and-drop de widgets (gráficos, KPIs, tabelas) por usuário" },
+        { id:"c7_12", t:"N", text:"Pipeline Snapshot: fotografia do funil em D-7 e D-30 para análise histórica" },
+        { id:"c7_13", t:"N", text:"Análise de Cohort: retenção de clientes ganhos por mês de fechamento" },
+        { id:"c7_14", t:"N", text:"Velocidade de Vendas: ciclo médio em dias por stage e por vendedor" },
+        { id:"c7_15", t:"N", text:"Endpoint /api/bi/export em JSON/CSV para integração com Metabase/PowerBI" },
+        { id:"c7_16", t:"N", text:"Relatórios agendados por email: ADMIN configura envio semanal/mensal (BullMQ)" },
+        { id:"c7_17", t:"N", text:"Insight de IA diário: análise proativa de anomalias e tendências no período", ia:true },
+        { id:"c7_18", t:"N", text:"Leaderboard gamificado com posições, pontos e badges de desempenho mensal" },
+        { id:"c7_19", t:"N", text:"Forecasting: projeção de receita de fechamento baseada em pipeline e taxa histórica", ia:true },
+        { id:"c7_20", t:"N", text:"Painel Metas vs Realizado: barras de progresso interativas por usuário e pipeline" },
+      ]}
+    ]
+  },
+  { id:8, name:"Billing & SaaS Maturity", weeks:"Sem. 33–36", color:"#ec4899",
+    phases:[
+      { name:"Integração Stripe & Planos", icon:"💳", items:[
+        { id:"c8_1", t:"N", text:"Stripe Billing: Checkout Session, Customer Portal e Subscription lifecycle", crit:true },
+        { id:"c8_2", t:"N", text:"Planos: Growth (limitado/grátis), Pro (R$299/mês), Enterprise (custom)" },
+        { id:"c8_3", t:"N", text:"Guards no backend validando limites do plano por tenant (ex: max 500 deals no Growth)" },
+        { id:"c8_4", t:"N", text:"Sistema de Créditos de IA: saldo por workspace, debitado por chamada ao AI Gateway" },
+        { id:"c8_5", t:"N", text:"Painel de Faturas e Consumo para Admin: histórico, créditos de IA e downloads" },
+        { id:"c8_6", t:"N", text:"Upgrades e Downgrades self-service com proration automático via Stripe API" },
+        { id:"c8_7", t:"N", text:"Paywalls contextuais: CTA de upgrade integrado no contexto da feature bloqueada" },
+        { id:"c8_8", t:"N", text:"Webhooks Stripe: grace period em falha de pagamento, bloqueio em cancelamento" },
+        { id:"c8_9", t:"N", text:"Trial de 14 dias com contador regressivo no Header + sequência de emails de nurturing" },
+      ]},
+      { name:"Qualidade, Compliance & Testes", icon:"🧪", items:[
+        { id:"c8_10", t:"N", text:"Nota Fiscal SaaS automática no BR após pagamento confirmado (Nuvem Fiscal API)" },
+        { id:"c8_11", t:"M", text:"Jest + Testing Library: testes unitários de utils, hooks e componentes React" },
+        { id:"c8_12", t:"M", text:"Vitest na API Fastify: testes de integração para rotas de auth, deals e billing" },
+        { id:"c8_13", t:"M", text:"Playwright E2E: registro → login → criar deal → mover kanban → marcar ganho" },
+        { id:"c8_14", t:"M", text:"Prisma Accelerate para edge caching de queries frequentes (Analytics, Rankings)" },
+        { id:"c8_15", t:"M", text:"Cobertura de testes ≥ 70% nos utils e services críticos" },
+      ]}
+    ]
+  },
+  { id:9, name:"Scale & Enterprise DevOps", weeks:"Sem. 37–42", color:"#14b8a6",
+    phases:[
+      { name:"Containerização & Deploy", icon:"🐳", items:[
+        { id:"c9_1", t:"N", text:"Dockerfiles multi-stage otimizados para Web (Next.js), API (Fastify) e Workers (BullMQ)", crit:true },
+        { id:"c9_2", t:"N", text:"Docker Compose para dev local: PostgreSQL, Redis, API e Web em um comando" },
+        { id:"c9_3", t:"N", text:"Deploy: Web no Vercel (edge runtime), API no Railway/Render com auto-scaling" },
+        { id:"c9_4", t:"N", text:"Workers de Background: Redis + BullMQ para emails, relatórios PDF e sync de IA" },
+        { id:"c9_5", t:"N", text:"CDN Cloudflare para assets estáticos e arquivos da Academia (S3 + CDN global)" },
+        { id:"c9_6", t:"N", text:"Backups automatizados do PostgreSQL: pg_dump diário + Point-in-Time Recovery" },
+      ]},
+      { name:"CI/CD & Observabilidade", icon:"📡", items:[
+        { id:"c9_7", t:"N", text:"GitHub Actions completo: Lint → Type Check → Unit Tests → Build → E2E → Deploy", crit:true },
+        { id:"c9_8", t:"N", text:"Preview Deployments automáticos por Pull Request (Vercel + Railway envs)" },
+        { id:"c9_9", t:"N", text:"OpenTelemetry: traces distribuídos entre Web, API e Workers → Grafana Tempo" },
+        { id:"c9_10", t:"N", text:"Métricas com Prometheus + dashboard Grafana: latência, error rate, uso por tenant" },
+        { id:"c9_11", t:"N", text:"Alertas de SLO: notificação Slack quando p99 > 2s ou error rate > 1% por 5min" },
+      ]},
+      { name:"Integrações Externas", icon:"🔌", items:[
+        { id:"c9_12", t:"N", text:"WhatsApp Business API: envio de mensagem template diretamente do Deal" },
+        { id:"c9_13", t:"N", text:"Sincronização de E-mail corporativo no Deal (IMAP/SMTP bridge ou Gmail API OAuth)" },
+        { id:"c9_14", t:"N", text:"Webhooks Outbound customizáveis: notifica URL externa em eventos de Deal" },
+        { id:"c9_15", t:"N", text:"Integração Zapier (trigger + action) para conectar a 5000+ apps sem código" },
+        { id:"c9_16", t:"M", text:"Pentest de segurança: CSP, RLS, rate limits e IDOR antes do lançamento Enterprise" },
+      ]}
+    ]
+  }
+];
+
+const AUDITS = [
+  { cycle:0, title:"Gate C0 — Fundação", color:"#64748b", items:[
+    "Monorepo funciona com um único comando (turbo dev)",
+    "TypeScript compila sem erros em todos os pacotes",
+    "Prisma migrations rodam em banco limpo sem conflito",
+    ".env.example documentado com todas as variáveis",
+    "README atualizado com instruções de setup",
+  ]},
+  { cycle:1, title:"Gate C1 — Engineering Foundation", color:"#ef4444", items:[
+    "ESLint sem warnings em 100% dos arquivos",
+    "Husky bloqueia commits com erros de lint/TS",
+    "Todas as rotas têm validação Zod no payload",
+    "Zero uso de 'any' no TypeScript (strict: true)",
+    "Migrations versionadas executando em CI",
+    "Helmet configurado — headers verificados em securityheaders.com",
+    "Todos os IDs expostos são CUID2 ou UUID",
+    "Pino logger com contexto de request configurado",
+    "Rate limiting ativo e testado",
+    "Dependabot ativo sem vulnerabilidades críticas pendentes",
+  ]},
+  { cycle:2, title:"Gate C2 — Auth & Multi-Tenant", color:"#f59e0b", items:[
+    "Login/Logout com JWT + cookie HTTP-Only funcionando",
+    "Login Social Google/Microsoft testado em staging",
+    "Tenant isolation verificado: usuário A não vê dados do tenant B",
+    "RLS ativo e validado com psql direto no banco",
+    "RBAC: Viewer recebe 403 ao tentar deletar Deal",
+    "Convite por email chegando com link de aceite funcional",
+    "Recuperação de senha expira em 1h (testado)",
+    "Troca de Workspace sem re-login funcionando",
+    "Upload de foto de perfil via S3 presigned URL OK",
+    "Log de atividades registrando ações de usuários",
+  ]},
+  { cycle:3, title:"Gate C3 — UI/UX & Design System", color:"#3b82f6", items:[
+    "Lighthouse Performance ≥ 85 em mobile (produção)",
+    "Lighthouse Accessibility ≥ 90",
+    "Zero CSS global legado (apenas Tailwind + shadcn)",
+    "Dark Mode em 100% das telas sem flash",
+    "Kanban navegável 100% via teclado",
+    "Todos os ícones têm aria-label",
+    "Skeleton loaders em listas e dashboards",
+    "Drag-and-drop funciona em mobile (touch events)",
+    "Bundle JS < 200kb gzipped na rota principal",
+    "Zero tag <img> puro (todos next/image)",
+  ]},
+  { cycle:4, title:"Gate C4 — CRM & Pipeline", color:"#22c55e", items:[
+    "Múltiplos pipelines criados e isolados por tenant",
+    "Stages customizáveis sem quebrar dados existentes",
+    "Entidade Contato vinculada a Deal e exibida no modal",
+    "Custom Fields salvando e exibindo corretamente",
+    "Win/Loss Reasons obrigatórios ao fechar deal (validação frontend)",
+    "Notas com Markdown renderizado corretamente",
+    "Follow-ups aparecendo na agenda por data",
+    "Badge 'em atraso' exibindo para Expected Close Date passadas",
+    "Infinite scroll sem glitch ou duplicação de itens",
+    "Soft Delete não quebra histórico de atividades",
+  ]},
+  { cycle:5, title:"Gate C5 — IA Arsenal & Birthy", color:"#a855f7", items:[
+    "AI Gateway roteando para fallback se provider falhar",
+    "Custo de tokens debitado corretamente por tenant",
+    "Deal Scorer retornando score com justificativa em < 3s",
+    "Birthy respondendo em streaming (tokens progressivos)",
+    "Function Calling: Birthy move Deal via chat (E2E testado)",
+    "Histórico de conversa preservado entre sessões",
+    "RAG retornando chunks relevantes (10 perguntas manuais)",
+    "Sem prompt injection possível (adversarial inputs testados)",
+    "Custo médio dentro do threshold do plano",
+    "Feedback Like/Dislike sendo salvo no banco",
+  ]},
+  { cycle:6, title:"Gate C6 — Hub & Academia", color:"#06b6d4", items:[
+    "Upvote duplicado bloqueado no backend (409)",
+    "Markdown renderizado nas descrições de ideias",
+    "Notificações In-App chegando em tempo real",
+    "Progresso de trilhas salvo ao reabrir a página",
+    "Quiz gerado pela IA com ≥ 5 questões válidas",
+    "Certificado PDF gerado com nome correto do usuário",
+    "Busca semântica retornando resultados relevantes",
+    "Business Case PDF gerado em < 10s pela IA",
+    "Campanhas expirando na data configurada",
+    "Upload de assets chegando ao S3/R2 corretamente",
+  ]},
+  { cycle:7, title:"Gate C7 — Analytics", color:"#6366f1", items:[
+    "Todos os gráficos responsivos em viewport 375px",
+    "Seletor de período alterando dados de todos os charts",
+    "Exportação PNG e PDF funcionando em Chrome e Safari",
+    "Forecasting com margem de erro < 20% (backtesting 3 meses)",
+    "Dashboard customizável salva layout por usuário",
+    "Relatórios agendados chegando no email configurado",
+    "Insight de IA diário gerado às 7h por 7 dias sem falhas",
+    "Snapshots D-7 e D-30 corretos vs dados reais",
+    "Endpoint de BI retornando JSON correto para Metabase",
+    "Leaderboard atualiza ao registrar novo deal ganho",
+  ]},
+  { cycle:8, title:"Gate C8 — Billing & SaaS", color:"#ec4899", items:[
+    "Stripe Checkout processando pagamento em sandbox",
+    "Webhook de cancelamento testado com Stripe CLI",
+    "Guard de plano bloqueando criação acima do limite (403)",
+    "Créditos de IA debitados e saldo visível no painel",
+    "Nota Fiscal gerada após pagamento confirmado (sandbox)",
+    "Upgrade/Downgrade com proration correto na fatura",
+    "Paywall aparecendo para features Premium no plano Growth",
+    "Trial expirando e bloqueando acesso corretamente",
+    "Cobertura de testes ≥ 70% em utils e services",
+    "E2E cobrindo fluxo: registro → primeiro deal",
+  ]},
+  { cycle:9, title:"Gate C9 — Scale & Enterprise", color:"#14b8a6", items:[
+    "docker compose up sobe tudo em < 60s",
+    "CI/CD passando em Pull Requests (lint, test, build, deploy)",
+    "Preview Deployment gerado automaticamente por PR",
+    "p99 de latência da API < 500ms em 100 req/s (k6)",
+    "Traces OpenTelemetry visíveis no Grafana Tempo",
+    "Alerta de SLO disparado no Slack ao simular degradação",
+    "Backup restaurado com sucesso em ambiente de teste",
+    "WhatsApp enviando mensagem template de Deal",
+    "Webhooks outbound chegando em < 2s no destino",
+    "Pentest: sem SQLi, XSS ou IDOR encontrado",
+  ]},
+];
+
+let S_DEFAULT =  {
+  "c0_1": "done",
+  "c0_2": "todo",
+  "c0_3": "todo",
+  "c0_4": "done",
+  "c0_5": "done",
+  "c0_6": "done",
+  "c1_1": "done",
+  "c1_2": "done",
+  "c1_3": "todo",
+  "c1_4": "done",
+  "c1_5": "todo",
+  "c1_6": "wip",
+  "c1_7": "todo",
+  "c1_8": "todo",
+  "c1_9": "wip",
+  "c1_10": "todo",
+  "c1_11": "todo",
+  "c1_12": "todo",
+  "c1_13": "todo",
+  "c1_14": "todo",
+  "c1_15": "todo",
+  "c1_16": "todo",
+  "c1_17": "done",
+  "c1_18": "todo",
+  "c1_19": "todo",
+  "c1_20": "done",
+  "c1_21": "done",
+  "c1_22": "todo",
+  "c1_23": "todo",
+  "c1_24": "done",
+  "c1_25": "todo",
+  "c1_26": "todo",
+  "c1_27": "todo",
+  "c1_28": "todo",
+  "c1_29": "todo",
+  "c1_30": "todo",
+  "c1_31": "todo",
+  "c1_32": "todo",
+  "c2_1": "done",
+  "c2_2": "todo",
+  "c2_3": "todo",
+  "c2_4": "todo",
+  "c2_5": "done",
+  "c2_6": "todo",
+  "c2_7": "todo",
+  "c2_8": "todo",
+  "c2_9": "todo",
+  "c2_10": "todo",
+  "c2_11": "todo",
+  "c2_12": "done",
+  "c2_13": "todo",
+  "c2_14": "todo",
+  "c2_15": "todo",
+  "c2_16": "todo",
+  "c2_17": "todo",
+  "c2_18": "todo",
+  "c2_19": "todo",
+  "c2_20": "todo",
+  "c2_21": "todo",
+  "c3_1": "todo",
+  "c3_2": "todo",
+  "c3_3": "todo",
+  "c3_4": "todo",
+  "c3_5": "todo",
+  "c3_6": "todo",
+  "c3_7": "todo",
+  "c3_8": "todo",
+  "c3_9": "todo",
+  "c3_10": "todo",
+  "c3_11": "todo",
+  "c3_12": "todo",
+  "c3_13": "todo",
+  "c3_14": "todo",
+  "c3_15": "todo",
+  "c3_16": "todo",
+  "c3_17": "todo",
+  "c3_18": "todo",
+  "c3_19": "todo",
+  "c3_20": "todo",
+  "c3_21": "todo",
+  "c3_22": "todo",
+  "c3_23": "done",
+  "c3_24": "todo",
+  "c3_25": "todo",
+  "c3_26": "todo",
+  "c3_27": "todo",
+  "c3_28": "todo",
+  "c3_29": "todo",
+  "c3_30": "todo",
+  "c3_31": "todo",
+  "c3_32": "todo",
+  "c3_33": "todo",
+  "c3_34": "todo",
+  "c3_35": "todo",
+  "c3_36": "todo",
+  "c3_37": "todo",
+  "c4_1": "todo",
+  "c4_2": "todo",
+  "c4_3": "todo",
+  "c4_4": "todo",
+  "c4_5": "todo",
+  "c4_6": "todo",
+  "c4_7": "todo",
+  "c4_8": "todo",
+  "c4_9": "todo",
+  "c4_10": "done",
+  "c4_11": "todo",
+  "c4_12": "todo",
+  "c4_13": "todo",
+  "c4_14": "todo",
+  "c4_15": "todo",
+  "c4_16": "todo",
+  "c4_17": "todo",
+  "c4_18": "todo",
+  "c5_1": "todo",
+  "c5_2": "todo",
+  "c5_3": "todo",
+  "c5_4": "todo",
+  "c5_5": "todo",
+  "c5_6": "todo",
+  "c5_7": "todo",
+  "c5_8": "todo",
+  "c5_9": "todo",
+  "c5_10": "todo",
+  "c5_11": "todo",
+  "c5_12": "todo",
+  "c5_13": "todo",
+  "c5_14": "todo",
+  "c5_15": "todo",
+  "c5_16": "todo",
+  "c5_17": "todo",
+  "c5_18": "todo",
+  "c5_19": "todo",
+  "c5_20": "todo",
+  "c5_21": "todo",
+  "c6_1": "todo",
+  "c6_2": "todo",
+  "c6_3": "todo",
+  "c6_4": "todo",
+  "c6_5": "todo",
+  "c6_6": "todo",
+  "c6_7": "todo",
+  "c6_8": "todo",
+  "c6_9": "todo",
+  "c6_10": "todo",
+  "c6_11": "todo",
+  "c6_12": "todo",
+  "c6_13": "todo",
+  "c6_14": "todo",
+  "c6_15": "todo",
+  "c6_16": "todo",
+  "c6_17": "todo",
+  "c6_18": "todo",
+  "c6_19": "todo",
+  "c6_20": "todo",
+  "c6_21": "todo",
+  "c6_22": "todo",
+  "c6_23": "todo",
+  "c6_24": "todo",
+  "c6_25": "todo",
+  "c6_26": "todo",
+  "c6_27": "todo",
+  "c6_28": "todo",
+  "c7_1": "todo",
+  "c7_2": "todo",
+  "c7_3": "todo",
+  "c7_4": "todo",
+  "c7_5": "todo",
+  "c7_6": "todo",
+  "c7_7": "todo",
+  "c7_8": "todo",
+  "c7_9": "todo",
+  "c7_10": "todo",
+  "c7_11": "todo",
+  "c7_12": "todo",
+  "c7_13": "todo",
+  "c7_14": "todo",
+  "c7_15": "todo",
+  "c7_16": "todo",
+  "c7_17": "todo",
+  "c7_18": "todo",
+  "c7_19": "todo",
+  "c7_20": "todo",
+  "c8_1": "todo",
+  "c8_2": "todo",
+  "c8_3": "todo",
+  "c8_4": "todo",
+  "c8_5": "todo",
+  "c8_6": "todo",
+  "c8_7": "todo",
+  "c8_8": "todo",
+  "c8_9": "todo",
+  "c8_10": "todo",
+  "c8_11": "todo",
+  "c8_12": "todo",
+  "c8_13": "done",
+  "c8_14": "done",
+  "c8_15": "todo",
+  "c9_1": "done",
+  "c9_2": "done",
+  "c9_3": "todo",
+  "c9_4": "done",
+  "c9_5": "todo",
+  "c9_6": "todo",
+  "c9_7": "done",
+  "c9_8": "todo",
+  "c9_9": "todo",
+  "c9_10": "todo",
+  "c9_11": "todo",
+  "c9_12": "todo",
+  "c9_13": "todo",
+  "c9_14": "todo",
+  "c9_15": "todo",
+  "c9_16": "todo"
+}
+;
+
+let S = {};
+try {
+  const stored = JSON.parse(localStorage.getItem('bh360_v2'));
+  S = stored || S_DEFAULT;
+} catch(e) {
+  S = S_DEFAULT;
+}
+
+function save() { try { localStorage.setItem('bh360_v2', JSON.stringify(S)); } catch(e){} }
+
+function allItemIds() {
+  return CYCLES.flatMap(c => c.phases.flatMap(p => p.items.map(i => i.id)));
+}
+
+function updateGlobal() {
+  const all = allItemIds();
+  const done = all.filter(id => S[id] === 'done' || S[id] === true).length;
+  const pct = Math.round((done / all.length) * 100);
+  document.getElementById('gp-fill').style.width = pct + '%';
+  document.getElementById('gp-pct').textContent = pct + '%';
+  document.getElementById('gp-count').textContent = `${done} / ${all.length}`;
+  document.getElementById('stat-done').textContent = done;
+  // Update cycle mini bars + timeline bars
+  CYCLES.forEach(c => {
+    const ids = c.phases.flatMap(p => p.items.map(i => i.id));
+    const cdone = ids.filter(id => S[id] === 'done' || S[id] === true).length;
+    const cpct = ids.length ? Math.round((cdone/ids.length)*100) : 0;
+    const mf = document.getElementById('cmf-'+c.id);
+    if(mf) mf.style.width = cpct + '%';
+    const cpctEl = document.getElementById('cpct-'+c.id);
+    if(cpctEl) cpctEl.textContent = cpct + '%';
+    const tcbf = document.getElementById('tcbf-'+c.id);
+    if(tcbf) tcbf.style.width = cpct + '%';
+  });
+  // Update audit bars
+  AUDITS.forEach(a => {
+    const total = a.items.length;
+    const done2 = a.items.filter((_,i) => S[`audit_${a.cycle}_${i}`] === 'done' || S[`audit_${a.cycle}_${i}`] === true).length;
+    const pct2 = Math.round((done2/total)*100);
+    const af = document.getElementById('apf-'+a.cycle);
+    if(af) af.style.width = pct2 + '%';
+    const ap = document.getElementById('app-'+a.cycle);
+    if(ap) ap.textContent = pct2 + '%';
+  });
+}
+
+function onCheck(id) {
+  const current = S[id];
+  let nextState;
+  if (current === 'todo' || current === false || current === undefined) nextState = 'wip';
+  else if (current === 'wip') nextState = 'done';
+  else nextState = 'todo'; // from done or true
+
+  S[id] = nextState;
+
+  const item = document.getElementById('item-'+id);
+  if (item) {
+    item.classList.remove('status-todo', 'status-wip', 'status-done', 'done');
+    item.classList.add('status-' + nextState);
+    if (nextState === 'done') item.classList.add('done');
+  }
+
+  save(); updateGlobal();
+}
+
+function onAuditCheck(cycle, i) {
+  const key = `audit_${cycle}_${i}`;
+  const current = S[key];
+  let nextState;
+  if (current === 'todo' || current === false || current === undefined) nextState = 'wip';
+  else if (current === 'wip') nextState = 'done';
+  else nextState = 'todo';
+
+  S[key] = nextState;
+
+  const wrap = document.getElementById('aw-'+cycle+'-'+i);
+  if (wrap) {
+    wrap.classList.remove('status-todo', 'status-wip', 'status-done', 'done');
+    wrap.classList.add('status-' + nextState);
+    if (nextState === 'done') wrap.classList.add('done');
+  }
+
+  save(); updateGlobal();
+}
+
+function toggleCycle(id) {
+  const body = document.getElementById('cb-body-'+id);
+  const chev = document.getElementById('chev-'+id);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function expandAll() { CYCLES.forEach(c => { document.getElementById('cb-body-'+c.id).classList.add('open'); document.getElementById('chev-'+c.id).classList.add('open'); }); }
+function collapseAll() { CYCLES.forEach(c => { document.getElementById('cb-body-'+c.id).classList.remove('open'); document.getElementById('chev-'+c.id).classList.remove('open'); }); }
+function markC0() {
+  CYCLES[0].phases.forEach(p => p.items.forEach(it => { S[it.id] = 'done'; const cb=document.getElementById('cb-'+it.id); const el=document.getElementById('item-'+it.id); if(cb) cb.checked=true; if(el) { el.classList.remove('status-todo', 'status-wip', 'status-done'); el.classList.add('status-done', 'done'); } }));
+  save(); updateGlobal();
+}
+function clearAll() {
+  if(!confirm('Limpar todo o progresso?')) return;
+  S = {};
+  save();
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked=false);
+  document.querySelectorAll('.done, .status-todo, .status-wip, .status-done').forEach(el => { el.classList.remove('done', 'status-todo', 'status-wip', 'status-done'); });
+  updateGlobal();
+}
+function scrollTo(id) {
+  const el = document.getElementById('cycle-block-'+id);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+  const body = document.getElementById('cb-body-'+id);
+  const chev = document.getElementById('chev-'+id);
+  body.classList.add('open'); chev.classList.add('open');
+}
+
+function buildTimeline() {
+  const tl = document.getElementById('timeline');
+  CYCLES.forEach(c => {
+    const ids = c.phases.flatMap(p => p.items.map(i => i.id));
+    tl.innerHTML += `<div class="tc" style="--tc-color:${c.color}" onclick="scrollTo(${c.id})">
+      <div class="tc-num">C${c.id}</div>
+      <h5>${c.name}</h5>
+      <div class="tc-weeks">${c.weeks} · ${ids.length} itens</div>
+      <div class="tc-bar"><div class="tc-bar-fill" id="tcbf-${c.id}" style="width:0%"></div></div>
+    </div>`;
+  });
+}
+
+function buildCycles() {
+  const cont = document.getElementById('cycles');
+  CYCLES.forEach((c,ci) => {
+    const ids = c.phases.flatMap(p => p.items.map(i => i.id));
+    let phasesHTML = c.phases.map(p => {
+      let itemsHTML = p.items.map(it => {
+
+        let statusClass = '';
+        let isChecked = '';
+        if (S[it.id] === 'done' || S[it.id] === true) { statusClass = 'status-done'; isChecked = 'checked'; }
+        else if (S[it.id] === 'todo' || S[it.id] === false) { statusClass = 'status-todo'; }
+        else if (S[it.id] === 'wip') { statusClass = 'status-wip'; }
+        else if (S[it.id]) { statusClass = 'done'; isChecked = 'checked'; }
+        const doneClass = statusClass + (S[it.id] === 'done' || S[it.id] === true ? ' done' : '');
+
+        let tags = `<div class="item-tags"><span class="tag tag-${it.t === 'M' ? 'm' : 'n'}">${it.t}</span>`;
+        if(it.crit) tags += `<span class="tag tag-crit">🔴</span>`;
+        if(it.ia) tags += `<span class="tag tag-ia">IA</span>`;
+        tags += '</div>';
+        return `<div class="item ${doneClass}" id="item-${it.id}" onclick="onCheck('${it.id}')">
+          <input type="checkbox" id="cb-${it.id}" ${isChecked} onclick="event.stopPropagation();onCheck('${it.id}')">
+          ${tags}
+          <label for="cb-${it.id}" onclick="event.preventDefault()">${it.text}</label>
+        </div>`;
+      }).join('');
+      return `<div class="phase">
+        <div class="phase-header">
+          <span class="phase-icon">${p.icon}</span>
+          <span class="phase-title">${p.name}</span>
+          <span class="phase-badge">${p.items.length} itens</span>
+        </div>${itemsHTML}
+      </div>`;
+    }).join('');
+    const open = ci === 0 ? 'open' : '';
+    const chevOpen = ci === 0 ? 'open' : '';
+    cont.innerHTML += `<div class="cycle-block" id="cycle-block-${c.id}" style="animation-delay:${ci*0.05}s">
+      <div class="cycle-header" onclick="toggleCycle(${c.id})">
+        <div class="cycle-badge" style="--cc:${c.color}; background:${c.color}">C${c.id}</div>
+        <div class="cycle-info">
+          <h3>${c.name}</h3>
+          <div class="cycle-meta">${c.weeks} · ${ids.length} entregas</div>
+        </div>
+        <div class="cycle-progress-wrap">
+          <div class="cycle-mini-bar"><div class="cycle-mini-fill" id="cmf-${c.id}" style="--cc:${c.color}; background:${c.color}; width:0%"></div></div>
+          <span class="cycle-pct" id="cpct-${c.id}">0%</span>
+        </div>
+        <span class="cycle-chevron ${chevOpen}" id="chev-${c.id}">▶</span>
+      </div>
+      <div class="cycle-body ${open}" id="cb-body-${c.id}">${phasesHTML}</div>
+    </div>`;
+  });
+}
+
+function buildAudit() {
+  const grid = document.getElementById('audit-grid');
+  AUDITS.forEach(a => {
+    let itemsHTML = a.items.map((it,i) => {
+      const key = `audit_${a.cycle}_${i}`;
+
+      let statusClass = '';
+      let isChecked = '';
+      if (S[key] === 'done' || S[key] === true) { statusClass = 'status-done'; isChecked = 'checked'; }
+      else if (S[key] === 'todo' || S[key] === false) { statusClass = 'status-todo'; }
+      else if (S[key] === 'wip') { statusClass = 'status-wip'; }
+      else if (S[key]) { statusClass = 'done'; isChecked = 'checked'; }
+      const doneClass = statusClass + (S[key] === 'done' || S[key] === true ? ' done' : '');
+
+      return `<div class="audit-item ${doneClass}" id="aw-${a.cycle}-${i}" onclick="onAuditCheck(${a.cycle},${i})">
+        <input type="checkbox" id="acb-${a.cycle}-${i}" ${isChecked} onclick="event.stopPropagation();onAuditCheck(${a.cycle},${i})">
+        <label onclick="event.preventDefault()">${it}</label>
+      </div>`;
+    }).join('');
+    grid.innerHTML += `<div class="audit-card" style="--ac:${a.color}">
+      <div class="audit-progress">
+        <div class="ap-track"><div class="ap-fill" id="apf-${a.cycle}" style="background:${a.color}; width:0%"></div></div>
+        <span class="ap-pct" id="app-${a.cycle}">0%</span>
+      </div>
+      <h4><span class="dot"></span>${a.title}</h4>
+      ${itemsHTML}
+    </div>`;
+  });
+}
+
+buildTimeline();
+buildCycles();
+buildAudit();
+updateGlobal();
+</script>
+</body>
+</html>

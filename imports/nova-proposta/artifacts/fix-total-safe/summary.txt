@@ -1,0 +1,16 @@
+===== RESUMO FINAL =====
+Fechar processos e limpar pnpm store          OK
+Garantir .env e artefatos mínimos             OK
+Limpar node_modules, caches e dist            OK
+Aplicar patch do workflows-core               OK
+Alinhar react e react-dom                     OK
+Instalar dependências                         FAIL
+Instalar Playwright e dependências Python     OK
+Build de pacotes internos críticos            FAIL
+Build geral                                   FAIL
+Typecheck                                     FAIL
+Security guardrails                           FAIL
+Inline credentials scan                       OK
+Testes                                        FAIL
+Coverage quality                              FAIL
+Governance gates                              FAIL

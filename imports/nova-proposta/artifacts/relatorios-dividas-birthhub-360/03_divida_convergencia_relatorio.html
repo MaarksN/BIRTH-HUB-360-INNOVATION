@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Convergência — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}code{font-family:Consolas,Courier New,monospace;font-size:.92em}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Convergência</span>
+    <h1>Dívida de Convergência</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Convergência</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> Documentos operacionais, regras efetivas de monitoramento e mapas internos de superfícies canônicas/legadas.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 2</p>
+      <p><strong>Status final da análise:</strong> Achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:07:42.707Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>Foram comparados documentos que se declaram fonte operacional com arquivos de regra efetiva e catálogos internos do próprio repositório. Os itens abaixo são divergências explícitas entre artefatos versionados.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Thresholds de observabilidade divergem das regras aplicadas</h2>
+      <p><strong>Diagnóstico:</strong> O documento operacional descreve thresholds e severidades diferentes dos alertas efetivamente codificados. O próprio documento aponta o arquivo de regra como referência. A operação fica com dois números oficiais para o mesmo incidente.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>docs/observability-alerts.md:14 aponta `infra/monitoring/alert.rules.yml` como referência de política.</li><li>docs/observability-alerts.md:19-24 documenta 5xx `&gt; 1%` por 5 min como `P0` e latência p95 `&gt; 800ms` por 10 min como `P1`.</li><li>infra/monitoring/alert.rules.yml:19-47 configura 5xx `&gt; 5%` por 10 min com `sla_severity: P1` e latência p95 `&gt; 500ms` por 10 min com `sla_severity: P2`.</li><li>docs/observability-alerts.md:39-44 define backlog `&gt; 500` e DLQ `&gt; 10%`; `infra/monitoring/alert.rules.yml:109-152` usa backlog `&gt; 200`, DLQ `increase(...) &gt; 5` e fail-rate `&gt; 10%`.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Times diferentes podem abrir, escalar ou ignorar incidentes com critérios incompatíveis. Pós-mortem, treino operacional e revisão de SLO passam a trabalhar em cima de referências conflitantes.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Escolher uma fonte única para thresholds e severidades por serviço.</li><li>Atualizar documento ou regra para que ambos reflitam exatamente os mesmos gatilhos.</li><li>Adicionar verificação automatizada que compare limites documentados com os valores codificados.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de confiabilidade responsável por alinhar política escrita e regra efetiva.
+
+Missão
+Alinhar a documentação de observabilidade com as regras efetivamente aplicadas no arquivo de alertas.
+
+Escopo
+Atue somente sobre `docs/observability-alerts.md`, `infra/monitoring/alert.rules.yml` e verificações estritamente necessárias.
+
+Arquivos-alvo
+- docs/observability-alerts.md
+- infra/monitoring/alert.rules.yml
+
+Correções obrigatórias
+- Comparar thresholds e severidades linha a linha antes de editar.
+- Definir um único valor oficial por alerta core.
+- Atualizar referências operacionais impactadas.
+
+Restrições
+- Não inventar novos alertas fora do escopo comprovado.
+- Não alterar ownership, canais ou serviços não relacionados sem necessidade.
+- Não deixar texto livre divergente após a correção.
+
+Critérios de aceite
+- Cada alerta descrito no documento corresponde ao threshold e severidade da regra efetiva.
+- Não resta dupla interpretação entre política escrita e YAML operacional.
+- As referências do documento permanecem válidas.
+
+Validação
+- pnpm docs:check-links</pre>
+      </details>
+    </article>
+    <article class="item">
+      <h2>Mapas internos do workspace discordam sobre core e legado</h2>
+      <p><strong>Diagnóstico:</strong> O catálogo canônico afirma que certas superfícies não existem mais no HEAD atual. O grafo interno ainda as desenha como parte do mapa de dependências. O repositório passa a ter duas versões do mesmo inventário estrutural.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>docs/service-catalog.md:11-13 define apenas `apps/web`, `apps/api`, `apps/worker` e `packages/database` como core canônico.</li><li>docs/service-catalog.md:25-27 afirma que `apps/api-gateway` e `packages/db` não estão presentes no HEAD atual.</li><li>docs/architecture/internal-package-graph.md:20-22 ainda desenha `apiGateway[@birthub/api-gateway] --&gt; queue` e `dbCompat[@birthub/db (legacy)] --&gt; database`.</li><li>docs/architecture/internal-package-graph.md:27-29 afirma que `@birthub/db` permanece como camada de compatibilidade.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Onboarding, revisão arquitetural e governança de dependências usam mapas incompatíveis. Discussões de boundary e cleanup partem de premissas diferentes dentro do mesmo repositório.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Escolher o catálogo canônico como base única para o inventário atual.</li><li>Atualizar ou aposentar o grafo interno para refletir apenas superfícies realmente presentes no HEAD.</li><li>Gerar o grafo a partir de manifests ou diretórios atuais para reduzir deriva manual.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um arquiteto de software responsável por reconciliar a documentação estrutural do workspace.
+
+Missão
+Reconciliar os mapas internos do workspace para que core, satélite e legado reflitam o HEAD atual.
+
+Escopo
+Atue somente sobre os documentos de inventário estrutural e scripts auxiliares necessários para prevenir nova deriva.
+
+Arquivos-alvo
+- docs/service-catalog.md
+- docs/architecture/internal-package-graph.md
+
+Correções obrigatórias
+- Comprovar primeiro quais superfícies existem e quais não existem no HEAD atual.
+- Atualizar o grafo ou removê-lo se não houver fonte confiável de geração.
+- Preservar a taxonomia canônica já adotada.
+
+Restrições
+- Não inventar superfícies novas.
+- Não alterar a classificação operacional sem evidência no workspace atual.
+- Não manter referências a pacotes ausentes como se fossem ativos.
+
+Critérios de aceite
+- Os documentos internos concordam sobre quais superfícies existem e qual é seu papel.
+- O grafo publicado não contradiz o catálogo canônico.
+- A documentação resultante pode ser usada como fonte única sem ambiguidade.
+
+Validação
+- pnpm docs:check-links
+- pnpm ci:active-product-capabilities</pre>
+      </details>
+    </article>
+  </section>
+</main>
+</body>
+</html>

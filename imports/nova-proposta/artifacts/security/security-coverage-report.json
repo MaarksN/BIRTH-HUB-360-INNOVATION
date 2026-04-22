@@ -1,0 +1,64 @@
+{
+  "checks": [
+    {
+      "artifactPath": "artifacts/security/semgrep-head.json",
+      "description": "Semgrep baseline for TypeScript and Express surfaces.",
+      "id": "semgrep",
+      "label": "semgrep",
+      "status": "unknown"
+    },
+    {
+      "description": "High-severity npm audit gate.",
+      "id": "dependency_audit",
+      "label": "dependency audit",
+      "status": "unknown"
+    },
+    {
+      "description": "Bandit, pip-audit and Safety lane for Python surfaces.",
+      "id": "python_security",
+      "label": "python security",
+      "status": "unknown"
+    },
+    {
+      "description": "RBAC regression suite on critical API endpoints.",
+      "id": "rbac_suite",
+      "label": "RBAC suite",
+      "status": "unknown"
+    },
+    {
+      "artifactPath": "artifacts/security/zap",
+      "description": "OWASP ZAP baseline against the canonical local web login route.",
+      "id": "zap_baseline",
+      "label": "ZAP baseline",
+      "status": "unknown"
+    }
+  ],
+  "dast": {
+    "targetStrategy": "local-web-login-route",
+    "targetUrl": null
+  },
+  "generatedAt": "2026-04-19T03:50:51.354Z",
+  "modules": [
+    {
+      "checks": "login/logout/session rotation + MFA challenge tests",
+      "name": "auth"
+    },
+    {
+      "checks": "role matrix on critical endpoints",
+      "name": "rbac"
+    },
+    {
+      "checks": "introspection + scoped auth guards",
+      "name": "api-keys"
+    },
+    {
+      "checks": "CSP report-only, origin checks, CSRF double-submit",
+      "name": "web"
+    },
+    {
+      "checks": "signed payload verification + tenant context checks",
+      "name": "worker"
+    }
+  ],
+  "overallStatus": "fail"
+}

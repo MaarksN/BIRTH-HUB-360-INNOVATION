@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Teste — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Teste</span>
+    <h1>Dívida de Teste</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Teste</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> Gates de cobertura, artefatos de teste do core e suites críticas de isolamento multi-tenant.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 2</p>
+      <p><strong>Status final da análise:</strong> Achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:09:35.430Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>A inspeção usou o dashboard de cobertura, o snapshot estrutural de módulos, o script de verificação de cobertura e testes críticos da camada de banco. Os achados focam na confiabilidade dos próprios controles de teste.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Gate de cobertura aceita dashboard com 0.00%</h2>
+      <p><strong>Diagnóstico:</strong> O dashboard oficial de cobertura marca PASS com todas as superfícies exibindo 0.00%. O script de verificação apenas emite WARN quando o snapshot é insuficiente. O gate atual valida presença de arquivo, não suficiência de teste.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>docs/evidence/test-coverage-dashboard.md:5 registra `Status: PASS`.</li><li>docs/evidence/test-coverage-dashboard.md:9-64 mostra `Lines: 0.00%`, `Branches: 0.00%`, `Functions: 0.00%` e `Statements: 0.00%` para todas as seis superfícies listadas.</li><li>artifacts/testing/module-coverage.json:4-8 informa `sufficient: false` e declara que o snapshot não é cobertura de linha nem de branch.</li><li>scripts/coverage/check.mjs:44-60 converte `sufficient: false` em `WARN` e apenas faz `console.warn`, sem falhar o gate.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> O pipeline pode sinalizar saúde de cobertura onde não há medição útil. Equipes passam a confiar em um indicador que não consegue barrar regressões de ausência de teste.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Mudar o gate para falhar quando o dashboard mostrar 0.00% ou quando o snapshot estiver insuficiente.</li><li>Separar claramente cobertura estrutural de cobertura instrumentada no relatório oficial.</li><li>Definir thresholds mínimos úteis por superfície antes de voltar a chamar o painel de PASS.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de qualidade responsável por transformar o controle de cobertura em um gate confiável.
+
+Missão
+Fazer o gate de cobertura falhar quando não houver evidência útil de cobertura.
+
+Escopo
+Atue somente sobre o dashboard, o script de verificação e os contratos que definem suficiência de cobertura.
+
+Arquivos-alvo
+- docs/evidence/test-coverage-dashboard.md
+- artifacts/testing/module-coverage.json
+- scripts/coverage/check.mjs
+
+Correções obrigatórias
+- Distinguir explicitamente cobertura instrumentada de snapshot estrutural.
+- Fazer o gate falhar quando a suficiência estiver falsa ou quando a cobertura oficial estiver zerada.
+- Atualizar a documentação do dashboard para refletir o novo critério.
+
+Restrições
+- Não mascarar o problema renomeando métricas sem corrigir o gate.
+- Não manter PASS quando a evidência continuar insuficiente.
+- Não introduzir relatórios sintéticos.
+
+Critérios de aceite
+- O pipeline falha quando a cobertura oficial não é útil.
+- O dashboard deixa claro o tipo de evidência exibida.
+- A documentação e o gate usam o mesmo conceito de suficiência.
+
+Validação
+- node scripts/coverage/check.mjs
+- pnpm test:core</pre>
+      </details>
+    </article>
+    <article class="item">
+      <h2>Teste crítico de isolamento por tenant pode ser totalmente pulado</h2>
+      <p><strong>Diagnóstico:</strong> A suíte de RLS depende de ambiente e privilegio corretos para sequer executar. Sem `DATABASE_URL`, o teste é pulado. Se a role atual tiver `BYPASSRLS`, o teste também é pulado.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>packages/database/test/rls.test.ts:11-12 define `const databaseUrl = process.env.DATABASE_URL ?? &quot;&quot;;` e `const testIfDatabase = databaseUrl ? test : test.skip;`.</li><li>packages/database/test/rls.test.ts:18-20 retorna cedo quando `ensureDatabaseAvailableOrSkip` não consegue validar o banco.</li><li>packages/database/test/rls.test.ts:33-35 executa `context.skip` se a role atual ignorar RLS (`superuser/BYPASSRLS`).</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Uma regressão em isolamento multi-tenant pode escapar de local e CI sem produzir falha vermelha. O controle mais sensível da camada de dados vira opcional justamente quando o ambiente diverge do esperado.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Criar uma lane determinística de banco com role compatível com validação de RLS.</li><li>Tratar ausência de ambiente ou role inadequada como falha da execução oficial, não como skip silencioso.</li><li>Separar claramente testes opcionais de testes obrigatórios de isolamento.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de testes responsável por tornar obrigatória a validação de isolamento por tenant.
+
+Missão
+Fazer a suíte de RLS rodar de forma determinística nos fluxos oficiais.
+
+Escopo
+Atue somente sobre a suíte de RLS, utilitários de disponibilidade de banco e pipeline necessária para garantir execução real.
+
+Arquivos-alvo
+- packages/database/test/rls.test.ts
+- packages/database/test/database-availability.js
+- package.json
+- scripts/**
+
+Correções obrigatórias
+- Garantir um ambiente de banco compatível com teste de RLS nos fluxos oficiais.
+- Remover skip silencioso dos caminhos que desativam a validação obrigatória.
+- Documentar como a suíte deve rodar e falhar quando os pré-requisitos não forem atendidos.
+
+Restrições
+- Não reduzir a cobertura do teste para fazer a suite passar.
+- Não trocar a validação real de RLS por mocks.
+- Não alterar regras de tenant fora do necessário para estabilizar a execução.
+
+Critérios de aceite
+- A suíte obrigatória de RLS roda de forma determinística.
+- Ausência de ambiente ou privilégio adequado falha o fluxo oficial.
+- O teste continua validando bloqueio real entre tenants.
+
+Validação
+- pnpm --filter @birthub/database test
+- pnpm test:isolation</pre>
+      </details>
+    </article>
+  </section>
+</main>
+</body>
+</html>

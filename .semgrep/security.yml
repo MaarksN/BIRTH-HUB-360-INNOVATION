@@ -1,0 +1,60 @@
+rules:
+  - id: birthub.web.no-unsafe-html
+    languages:
+      - typescript
+      - tsx
+      - javascript
+      - jsx
+    message: Rich HTML must be sanitized before using dangerouslySetInnerHTML.
+    severity: ERROR
+    patterns:
+      - pattern: dangerouslySetInnerHTML={{ __html: $HTML }}
+      - pattern-not: dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize($HTML) }}
+
+  - id: birthub.api.no-plain-signature-compare
+    languages:
+      - typescript
+      - javascript
+    message: Compare webhook signatures with timingSafeEqual or a dedicated safeCompare helper.
+    severity: ERROR
+    paths:
+      include:
+        - apps/api/src/**/*.ts
+        - apps/webhook-receiver/src/**/*.ts
+    pattern-either:
+      - pattern: return $LEFT === $RIGHT
+      - pattern: return $LEFT == $RIGHT
+      - pattern: return $LEFT !== $RIGHT
+      - pattern: return $LEFT != $RIGHT
+      - pattern: if ($LEFT === $RIGHT) { ... }
+      - pattern: if ($LEFT == $RIGHT) { ... }
+      - pattern: if ($LEFT !== $RIGHT) { ... }
+      - pattern: if ($LEFT != $RIGHT) { ... }
+    metavariable-regex:
+      metavariable: $LEFT
+      regex: (?i).*(signature|secret|digest|token|expected).*
+
+  - id: birthub.runtime.no-hardcoded-secrets
+    languages:
+      - typescript
+      - javascript
+    message: Segredos não devem ser hardcoded no runtime; use @birthub/config e secret store.
+    severity: ERROR
+    paths:
+      include:
+        - apps/api/src/**/*.ts
+        - apps/worker/src/**/*.ts
+        - apps/webhook-receiver/src/**/*.ts
+        - packages/**/*.ts
+      exclude:
+        - "**/*.test.ts"
+        - "**/*.spec.ts"
+        - "packages/config/src/**/*.ts"
+    patterns:
+      - pattern-either:
+          - pattern: $KEY = "..."
+          - pattern: $KEY: "..."
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: (?i).*(secret|token|password|api[_-]?key|client[_-]?secret|webhook[_-]?secret).*
+      - pattern-not-regex: (?i)(process\.env|env://|vault://|aws-sm://|gcp-sm://|azure-kv://)

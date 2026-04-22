@@ -1,0 +1,129 @@
+name: Security Guardrails
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+  schedule:
+    - cron: "41 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  semgrep:
+    name: Semgrep
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Run Semgrep
+        id: semgrep-scan
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p reports
+          docker run --rm \
+            -v "$PWD:/src" \
+            -w /src \
+            semgrep/semgrep \
+            semgrep scan \
+            --config .semgrep/security.yml \
+            --error \
+            --severity ERROR \
+            --sarif \
+            --output reports/semgrep.sarif \
+            .
+
+      - name: Upload Semgrep SARIF
+        if: always() && hashFiles('reports/semgrep.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          category: "/tool:semgrep"
+          sarif_file: reports/semgrep.sarif
+
+      - name: Fail on blocking Semgrep findings
+        if: steps.semgrep-scan.outcome == 'failure'
+        run: exit 1
+
+  gitleaks:
+    name: Gitleaks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install gitleaks
+        shell: bash
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz -o /tmp/gitleaks.tar.gz
+          tar -xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
+          sudo mv /tmp/gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
+      - name: Run gitleaks
+        id: gitleaks-scan
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p reports
+          gitleaks dir . \
+            --config .gitleaks.toml \
+            --redact \
+            --report-format sarif \
+            --report-path reports/gitleaks.sarif
+
+      - name: Upload gitleaks SARIF
+        if: always() && hashFiles('reports/gitleaks.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          category: "/tool:gitleaks"
+          sarif_file: reports/gitleaks.sarif
+
+      - name: Fail on detected secrets
+        if: steps.gitleaks-scan.outcome == 'failure'
+        run: exit 1
+
+  dependency-licenses:
+    name: Dependency Licenses
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: 24
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate dependency licenses
+        run: pnpm security:licenses

@@ -1,0 +1,28 @@
+{
+  "name": "@birthub/connectors-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/packages/connectors-core/src/index.js",
+  "types": "./dist/packages/connectors-core/src/index.d.ts",
+  "exports": {
+    ".": "./dist/packages/connectors-core/src/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist",
+    "lint": "eslint .",
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@birthub/integrations": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "dist"
+  ]
+}

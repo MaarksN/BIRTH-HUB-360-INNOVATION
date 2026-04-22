@@ -1,0 +1,28 @@
+{
+  "name": "@birthub/webhook-receiver",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/apps/webhook-receiver/src/index.js",
+  "types": "./dist/apps/webhook-receiver/src/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/apps/webhook-receiver/src/index.js",
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@birthub/config": "workspace:*",
+    "@birthub/integrations": "workspace:*",
+    "ioredis": "^5.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "dist"
+  ]
+}

@@ -1,0 +1,318 @@
+{
+  "checkedAt": "2026-04-19T19:18:40.173Z",
+  "createdRoutines": [
+    "get_current_tenant_id",
+    "prevent_audit_log_mutation",
+    "tenant_access_allowed"
+  ],
+  "createdViews": [],
+  "findings": [
+    {
+      "issues": [],
+      "model": "Organization",
+      "table": "organizations"
+    },
+    {
+      "issues": [],
+      "model": "Membership",
+      "table": "members"
+    },
+    {
+      "issues": [],
+      "model": "Session",
+      "table": "sessions"
+    },
+    {
+      "issues": [],
+      "model": "ApiKey",
+      "table": "api_keys"
+    },
+    {
+      "issues": [],
+      "model": "MfaRecoveryCode",
+      "table": "mfa_recovery_codes"
+    },
+    {
+      "issues": [],
+      "model": "MfaChallenge",
+      "table": "mfa_challenges"
+    },
+    {
+      "issues": [],
+      "model": "LoginAlert",
+      "table": "login_alerts"
+    },
+    {
+      "issues": [],
+      "model": "JobSigningSecret",
+      "table": "job_signing_secrets"
+    },
+    {
+      "issues": [],
+      "model": "Agent",
+      "table": "agents"
+    },
+    {
+      "issues": [],
+      "model": "AgentBudget",
+      "table": "agent_budgets"
+    },
+    {
+      "issues": [],
+      "model": "AgentBudgetEvent",
+      "table": "agent_budget_events"
+    },
+    {
+      "issues": [],
+      "model": "OutputArtifact",
+      "table": "output_artifacts"
+    },
+    {
+      "issues": [],
+      "model": "Workflow",
+      "table": "workflows"
+    },
+    {
+      "issues": [],
+      "model": "WorkflowStep",
+      "table": "workflow_steps"
+    },
+    {
+      "issues": [],
+      "model": "WorkflowTransition",
+      "table": "workflow_transitions"
+    },
+    {
+      "issues": [],
+      "model": "WorkflowRevision",
+      "table": "workflow_revisions"
+    },
+    {
+      "issues": [],
+      "model": "WorkflowExecution",
+      "table": "workflow_executions"
+    },
+    {
+      "issues": [],
+      "model": "StepResult",
+      "table": "step_results"
+    },
+    {
+      "issues": [],
+      "model": "Customer",
+      "table": "customers"
+    },
+    {
+      "issues": [],
+      "model": "Invite",
+      "table": "invites"
+    },
+    {
+      "issues": [],
+      "model": "AuditLog",
+      "table": "audit_logs"
+    },
+    {
+      "issues": [],
+      "model": "QuotaUsage",
+      "table": "quota_usage"
+    },
+    {
+      "issues": [],
+      "model": "Subscription",
+      "table": "subscriptions"
+    },
+    {
+      "issues": [],
+      "model": "Invoice",
+      "table": "invoices"
+    },
+    {
+      "issues": [],
+      "model": "PaymentMethod",
+      "table": "payment_methods"
+    },
+    {
+      "issues": [],
+      "model": "UsageRecord",
+      "table": "usage_records"
+    },
+    {
+      "issues": [],
+      "model": "BillingEvent",
+      "table": "billing_events"
+    },
+    {
+      "issues": [],
+      "model": "BillingCredit",
+      "table": "billing_credits"
+    },
+    {
+      "issues": [],
+      "model": "Notification",
+      "table": "notifications"
+    },
+    {
+      "issues": [],
+      "model": "UserPreference",
+      "table": "user_preferences"
+    },
+    {
+      "issues": [],
+      "model": "AgentExecution",
+      "table": "agent_executions"
+    },
+    {
+      "issues": [],
+      "model": "AgentFeedback",
+      "table": "agent_feedback"
+    },
+    {
+      "issues": [],
+      "model": "TenantActivityWindow",
+      "table": "tenant_activity_windows"
+    },
+    {
+      "issues": [],
+      "model": "WebhookEndpoint",
+      "table": "webhook_endpoints"
+    },
+    {
+      "issues": [],
+      "model": "WebhookDelivery",
+      "table": "webhook_deliveries"
+    },
+    {
+      "issues": [],
+      "model": "DatasetExport",
+      "table": "dataset_exports"
+    },
+    {
+      "issues": [],
+      "model": "CrmSyncEvent",
+      "table": "crm_sync_events"
+    },
+    {
+      "issues": [],
+      "model": "ConnectorAccount",
+      "table": "connector_accounts"
+    },
+    {
+      "issues": [],
+      "model": "ConnectorCredential",
+      "table": "connector_credentials"
+    },
+    {
+      "issues": [],
+      "model": "ConnectorSyncCursor",
+      "table": "connector_sync_cursors"
+    },
+    {
+      "issues": [],
+      "model": "ConversationThread",
+      "table": "conversation_threads"
+    },
+    {
+      "issues": [],
+      "model": "ConversationMessage",
+      "table": "conversation_messages"
+    },
+    {
+      "issues": [],
+      "model": "AgentHandoff",
+      "table": "agent_handoffs"
+    }
+  ],
+  "issues": [],
+  "ok": true,
+  "rlsTables": [
+    "agent_budget_events",
+    "agent_budgets",
+    "agent_executions",
+    "agent_feedback",
+    "agent_handoffs",
+    "agents",
+    "api_keys",
+    "audit_logs",
+    "billing_credits",
+    "billing_events",
+    "connector_accounts",
+    "connector_credentials",
+    "connector_sync_cursors",
+    "conversation_messages",
+    "conversation_threads",
+    "crm_sync_events",
+    "customers",
+    "dataset_exports",
+    "invites",
+    "invoices",
+    "job_signing_secrets",
+    "login_alerts",
+    "members",
+    "mfa_challenges",
+    "mfa_recovery_codes",
+    "notifications",
+    "organizations",
+    "output_artifacts",
+    "payment_methods",
+    "quota_usage",
+    "sessions",
+    "step_results",
+    "subscriptions",
+    "tenant_activity_windows",
+    "usage_records",
+    "user_preferences",
+    "webhook_deliveries",
+    "webhook_endpoints",
+    "workflow_executions",
+    "workflow_revisions",
+    "workflow_steps",
+    "workflow_transitions",
+    "workflows"
+  ],
+  "tenantScopedTables": [
+    "organizations",
+    "members",
+    "sessions",
+    "api_keys",
+    "mfa_recovery_codes",
+    "mfa_challenges",
+    "login_alerts",
+    "job_signing_secrets",
+    "agents",
+    "agent_budgets",
+    "agent_budget_events",
+    "output_artifacts",
+    "workflows",
+    "workflow_steps",
+    "workflow_transitions",
+    "workflow_revisions",
+    "workflow_executions",
+    "step_results",
+    "customers",
+    "invites",
+    "audit_logs",
+    "quota_usage",
+    "subscriptions",
+    "invoices",
+    "payment_methods",
+    "usage_records",
+    "billing_events",
+    "billing_credits",
+    "notifications",
+    "user_preferences",
+    "agent_executions",
+    "agent_feedback",
+    "tenant_activity_windows",
+    "webhook_endpoints",
+    "webhook_deliveries",
+    "dataset_exports",
+    "crm_sync_events",
+    "connector_accounts",
+    "connector_credentials",
+    "connector_sync_cursors",
+    "conversation_threads",
+    "conversation_messages",
+    "agent_handoffs"
+  ]
+}

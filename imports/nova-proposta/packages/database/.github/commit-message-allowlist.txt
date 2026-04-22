@@ -1,0 +1,6 @@
+# Commit Message Allowlist
+# Add commit SHAs that should be excluded from conventional commits validation
+# Format: one SHA per line, optionally followed by a comment explaining why
+
+# Legacy commit with non-conventional message "1" - pre-existing on main branch
+116d26e

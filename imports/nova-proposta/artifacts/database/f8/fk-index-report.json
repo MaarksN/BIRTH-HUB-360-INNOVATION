@@ -1,0 +1,623 @@
+{
+  "checkedAt": "2026-04-19T19:18:41.037Z",
+  "findings": [
+    {
+      "fields": [
+        "planId"
+      ],
+      "issues": [],
+      "model": "Organization",
+      "relationField": "plan"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "Membership",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "Membership",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "Session",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "Session",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "replacedBySessionId"
+      ],
+      "issues": [],
+      "model": "Session",
+      "relationField": "replacedBySession"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "ApiKey",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "ApiKey",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "rotatedFromId"
+      ],
+      "issues": [],
+      "model": "ApiKey",
+      "relationField": "rotatedFrom"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "MfaRecoveryCode",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "MfaChallenge",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "MfaChallenge",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "LoginAlert",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "LoginAlert",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "JobSigningSecret",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "Agent",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "AgentBudget",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "AgentBudgetEvent",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "OutputArtifact",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "Workflow",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "WorkflowStep",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "workflowId"
+      ],
+      "issues": [],
+      "model": "WorkflowStep",
+      "relationField": "workflow"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "WorkflowTransition",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "workflowId"
+      ],
+      "issues": [],
+      "model": "WorkflowTransition",
+      "relationField": "workflow"
+    },
+    {
+      "fields": [
+        "sourceStepId"
+      ],
+      "issues": [],
+      "model": "WorkflowTransition",
+      "relationField": "sourceStep"
+    },
+    {
+      "fields": [
+        "targetStepId"
+      ],
+      "issues": [],
+      "model": "WorkflowTransition",
+      "relationField": "targetStep"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "WorkflowRevision",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "workflowId"
+      ],
+      "issues": [],
+      "model": "WorkflowRevision",
+      "relationField": "workflow"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "WorkflowExecution",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "workflowId"
+      ],
+      "issues": [],
+      "model": "WorkflowExecution",
+      "relationField": "workflow"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "StepResult",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "workflowId"
+      ],
+      "issues": [],
+      "model": "StepResult",
+      "relationField": "workflow"
+    },
+    {
+      "fields": [
+        "executionId"
+      ],
+      "issues": [],
+      "model": "StepResult",
+      "relationField": "execution"
+    },
+    {
+      "fields": [
+        "stepId"
+      ],
+      "issues": [],
+      "model": "StepResult",
+      "relationField": "step"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "Customer",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "Invite",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "invitedByUserId"
+      ],
+      "issues": [],
+      "model": "Invite",
+      "relationField": "invitedBy"
+    },
+    {
+      "fields": [
+        "tenantId"
+      ],
+      "issues": [],
+      "model": "AuditLog",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "actorId"
+      ],
+      "issues": [],
+      "model": "AuditLog",
+      "relationField": "actor"
+    },
+    {
+      "fields": [
+        "tenantId"
+      ],
+      "issues": [],
+      "model": "QuotaUsage",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "Subscription",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "planId"
+      ],
+      "issues": [],
+      "model": "Subscription",
+      "relationField": "plan"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "Invoice",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "subscriptionId"
+      ],
+      "issues": [],
+      "model": "Invoice",
+      "relationField": "subscription"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "PaymentMethod",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "UsageRecord",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "subscriptionId"
+      ],
+      "issues": [],
+      "model": "UsageRecord",
+      "relationField": "subscription"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "BillingEvent",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "BillingCredit",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "subscriptionId"
+      ],
+      "issues": [],
+      "model": "BillingCredit",
+      "relationField": "subscription"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "Notification",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "Notification",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "UserPreference",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "UserPreference",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "AgentExecution",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "AgentExecution",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "executionId"
+      ],
+      "issues": [],
+      "model": "AgentFeedback",
+      "relationField": "execution"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "AgentFeedback",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "userId"
+      ],
+      "issues": [],
+      "model": "AgentFeedback",
+      "relationField": "user"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "TenantActivityWindow",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "WebhookEndpoint",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "createdByUserId"
+      ],
+      "issues": [],
+      "model": "WebhookEndpoint",
+      "relationField": "createdBy"
+    },
+    {
+      "fields": [
+        "endpointId"
+      ],
+      "issues": [],
+      "model": "WebhookDelivery",
+      "relationField": "endpoint"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "WebhookDelivery",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "DatasetExport",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "CrmSyncEvent",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "ConnectorAccount",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "ConnectorCredential",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "connectorAccountId"
+      ],
+      "issues": [],
+      "model": "ConnectorCredential",
+      "relationField": "connectorAccount"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "ConnectorSyncCursor",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "connectorAccountId"
+      ],
+      "issues": [],
+      "model": "ConnectorSyncCursor",
+      "relationField": "connectorAccount"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "ConversationThread",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "connectorAccountId"
+      ],
+      "issues": [],
+      "model": "ConversationThread",
+      "relationField": "connectorAccount"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "ConversationMessage",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "threadId"
+      ],
+      "issues": [],
+      "model": "ConversationMessage",
+      "relationField": "thread"
+    },
+    {
+      "fields": [
+        "organizationId"
+      ],
+      "issues": [],
+      "model": "AgentHandoff",
+      "relationField": "organization"
+    },
+    {
+      "fields": [
+        "threadId"
+      ],
+      "issues": [],
+      "model": "AgentHandoff",
+      "relationField": "thread"
+    }
+  ],
+  "issues": [],
+  "ok": true
+}

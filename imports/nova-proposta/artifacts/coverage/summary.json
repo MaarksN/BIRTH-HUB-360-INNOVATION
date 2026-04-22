@@ -1,0 +1,114 @@
+{
+  "generatedAt": "2026-04-08T02:11:16.503Z",
+  "ok": true,
+  "surfaces": [
+    {
+      "id": "api",
+      "label": "@birthub/api",
+      "coverage": {
+        "lines": 47.78,
+        "branches": 69.2,
+        "functions": 58.06,
+        "statements": 47.78
+      },
+      "command": "node scripts/ci/run-pnpm.mjs --filter @birthub/api test",
+      "thresholds": {
+        "lines": 45,
+        "branches": 68,
+        "functions": 51,
+        "statements": 45
+      },
+      "alerts": []
+    },
+    {
+      "id": "web",
+      "label": "@birthub/web",
+      "coverage": {
+        "lines": 16.21,
+        "branches": 60.06,
+        "functions": 53.86,
+        "statements": 16.21
+      },
+      "command": "node scripts/ci/run-pnpm.mjs --filter @birthub/web test",
+      "thresholds": {
+        "lines": 13,
+        "branches": 58,
+        "functions": 50,
+        "statements": 13
+      },
+      "alerts": []
+    },
+    {
+      "id": "worker",
+      "label": "@birthub/worker",
+      "coverage": {
+        "lines": 39.19,
+        "branches": 71.84,
+        "functions": 53.92,
+        "statements": 39.19
+      },
+      "command": "node scripts/ci/run-pnpm.mjs --filter @birthub/worker test",
+      "thresholds": {
+        "lines": 39,
+        "branches": 70,
+        "functions": 53,
+        "statements": 39
+      },
+      "alerts": []
+    },
+    {
+      "id": "database",
+      "label": "@birthub/database",
+      "coverage": {
+        "lines": 79.33,
+        "branches": 70.3,
+        "functions": 87.32,
+        "statements": 79.33
+      },
+      "command": "node scripts/ci/run-pnpm.mjs --filter @birthub/database test",
+      "thresholds": {
+        "lines": 79,
+        "branches": 70,
+        "functions": 85,
+        "statements": 79
+      },
+      "alerts": []
+    },
+    {
+      "id": "auth",
+      "label": "@birthub/auth",
+      "coverage": {
+        "lines": 100,
+        "branches": 76.47,
+        "functions": 100,
+        "statements": 100
+      },
+      "command": "node scripts/ci/run-pnpm.mjs --filter @birthub/auth test",
+      "thresholds": {
+        "lines": 80,
+        "branches": 60,
+        "functions": 80,
+        "statements": 80
+      },
+      "alerts": []
+    },
+    {
+      "id": "agents-core",
+      "label": "@birthub/agents-core",
+      "coverage": {
+        "lines": 11.65,
+        "branches": 43.58,
+        "functions": 34.48,
+        "statements": 11.65
+      },
+      "command": "node scripts/ci/run-pnpm.mjs --filter @birthub/agents-core test",
+      "thresholds": {
+        "lines": 11,
+        "branches": 43,
+        "functions": 34,
+        "statements": 11
+      },
+      "alerts": []
+    }
+  ]
+}

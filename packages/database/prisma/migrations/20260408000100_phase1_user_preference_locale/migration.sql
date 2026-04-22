@@ -1,0 +1,2 @@
+ALTER TABLE "user_preferences"
+  ADD COLUMN "locale" TEXT NOT NULL DEFAULT 'pt-BR';

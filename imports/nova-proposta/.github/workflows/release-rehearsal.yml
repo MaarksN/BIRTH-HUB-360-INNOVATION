@@ -1,0 +1,65 @@
+name: Release Rehearsal
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cycle0-rehearsal:
+    name: cycle0-rehearsal
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run recurring release rehearsal
+        run: pnpm release:verify:cycle0
+
+      - name: Rebuild backup and DR readiness evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm ops:backup:health
+          pnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario="scheduled release rehearsal"
+          pnpm ops:dr:report
+
+      - name: Upload rehearsal artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-rehearsal
+          path: |
+            artifacts/release/cycle0-flow-summary.*
+            artifacts/release/checksums-manifest.sha256
+            artifacts/release/release-artifact-catalog.json
+            artifacts/release/source-manifest.json
+            artifacts/backups/backup-health.json
+            artifacts/backups/backup-health.txt
+            artifacts/backups/drill-rto-rpo.json
+            artifacts/backups/drill-rto-rpo.txt
+            artifacts/dr/readiness-report.json
+            docs/evidence/disaster-recovery-report.md
+            releases/manifests/release_artifact_catalog.md
+            releases/notes/v1.0.0.md

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Dependência — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Dependência</span>
+    <h1>Dívida de Dependência</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Dependência</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> Manifestos, overrides e lockfile que definem a versão efetiva de dependências do front-end canônico.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 1</p>
+      <p><strong>Status final da análise:</strong> Achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:11:14.638Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>A varredura comparou a versão declarada no pacote web, o override raiz e a resolução efetiva no lockfile. O item abaixo é uma divergência objetiva entre os artefatos de dependência versionados.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Versão de Next diverge entre manifesto, override e lockfile</h2>
+      <p><strong>Diagnóstico:</strong> O pacote web declara uma versão. O override raiz impõe outra faixa. O lockfile resolve uma terceira referência efetiva. O artefato instalado não corresponde ao que o manifesto do app diz revisar.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>apps/web/package.json:20 declara `&quot;next&quot;: &quot;16.1.6&quot;`.</li><li>package.json:214 define override raiz `&quot;next&quot;: &quot;&gt;=16.1.7&quot;`.</li><li>pnpm-lock.yaml:267-269 registra para `apps/web` o specifier `&gt;=16.1.7` com resolução `16.2.3(...)`.</li><li>pnpm-lock.yaml:10 e 2882 também carregam `next: &#39;&gt;=16.1.7&#39;` como faixa efetiva.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Debug de regressão, revisão de upgrade e reprodução de build ficam ambíguos. Quem lê o manifesto do app não vê a mesma versão que realmente chega ao lockfile e ao runtime.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Escolher uma única política de versão para `next` no workspace.</li><li>Alinhar manifesto do app, override raiz e lockfile para a mesma decisão.</li><li>Usar o gate de lockfile para impedir nova deriva após regenerar a resolução.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um engenheiro de plataforma responsável por alinhar a governança de dependências do front-end canônico.
+
+Missão
+Eliminar a deriva de versão de `next` entre manifesto, override e lockfile.
+
+Escopo
+Atue somente sobre os arquivos que definem ou resolvem a dependência `next` no workspace.
+
+Arquivos-alvo
+- apps/web/package.json
+- package.json
+- pnpm-lock.yaml
+
+Correções obrigatórias
+- Definir primeiro a versão alvo única para `next` no core web.
+- Aplicar a mesma decisão no manifesto, override e lockfile.
+- Documentar a razão da versão escolhida se houver governança específica.
+
+Restrições
+- Não deixar ranges diferentes para o mesmo pacote no mesmo workspace.
+- Não alterar dependências não relacionadas.
+- Não regenerar lockfile com mudança colateral desnecessária.
+
+Critérios de aceite
+- Manifesto, override e lockfile apontam para a mesma política de versão.
+- A instalação reproduz o que o pacote do app declara.
+- O gate de governança de lockfile continua passando.
+
+Validação
+- pnpm install --frozen-lockfile
+- pnpm ci:lockfile
+- pnpm build</pre>
+      </details>
+    </article>
+  </section>
+</main>
+</body>
+</html>

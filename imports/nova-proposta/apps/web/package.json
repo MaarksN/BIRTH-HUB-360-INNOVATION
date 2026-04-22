@@ -1,0 +1,40 @@
+{
+  "name": "@birthub/web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "next build --webpack",
+    "dev": "next dev -p 3001",
+    "lint": "eslint .",
+    "start": "next start -p 3001",
+    "start:ci": "next start",
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@birthub/config": "workspace:*",
+    "@birthub/logger": "workspace:*",
+    "@birthub/utils": "workspace:*",
+    "@birthub/workflows-core": "workspace:*",
+    "@sentry/nextjs": "^10.45.0",
+    "isomorphic-dompurify": "^3.7.1",
+    "lucide-react": "^1.8.0",
+    "next": "16.2.4",
+    "react": "19.2.4",
+    "react-confetti": "^6.4.0",
+    "react-dom": "19.2.4",
+    "react-hook-form": "^7.72.1",
+    "reactflow": "^11.11.4",
+    "recharts": "^3.8.1",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^28.0.1",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "jsdom": "^29.0.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}

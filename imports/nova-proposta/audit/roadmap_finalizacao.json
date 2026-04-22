@@ -1,0 +1,140 @@
+{
+  "gerado_em": "2026-04-02T12:27:02.028Z",
+  "objetivo": "Levar a plataforma para estado operacional real e auditável de go-live.",
+  "fases": [
+    {
+      "fase": "F0",
+      "nome": "Baseline Forense",
+      "objetivo": "Congelar estado real e falhas atuais.",
+      "itens": [
+        "Inventário de stack e superfícies core/satélite/legacy",
+        "Baseline de build/lint/typecheck/test",
+        "Evidências de falhas críticas (RLS, drift, sessão)"
+      ],
+      "dependencias": [],
+      "criterio_pronto": "Artefatos de baseline gerados e rastreáveis."
+    },
+    {
+      "fase": "F1",
+      "nome": "Relatório Master de Dívida",
+      "objetivo": "Consolidar achados com severidade e bloqueio de go-live.",
+      "itens": [
+        "Classificação técnica e operacional dos achados",
+        "Mapa de risco e ilusão técnica",
+        "Top bloqueadores de produção"
+      ],
+      "dependencias": ["F0"],
+      "criterio_pronto": "Relatório master publicado com evidências por arquivo."
+    },
+    {
+      "fase": "F2",
+      "nome": "Roadmap de Finalização",
+      "objetivo": "Sequenciar correções por desbloqueio real de produção.",
+      "itens": [
+        "Ordenar correções por criticidade",
+        "Definir dependências cruzadas",
+        "Fixar critérios objetivos de go-live"
+      ],
+      "dependencias": ["F1"],
+      "criterio_pronto": "Roadmap aprovado por engenharia/plataforma."
+    },
+    {
+      "fase": "F3",
+      "nome": "Correção dos Fundamentos",
+      "objetivo": "Resolver falhas de base que bloqueiam uso real.",
+      "itens": [
+        "Corrigir validação RLS cross-tenant",
+        "Eliminar drift de schema até checklist verde",
+        "Migrar refresh token store para Redis/DB",
+        "Endurecer setup e readiness local/CI"
+      ],
+      "dependencias": ["F2"],
+      "criterio_pronto": "Testes críticos e checks de banco passam sem exceções bloqueadoras."
+    },
+    {
+      "fase": "F4",
+      "nome": "Eliminação de Ilusões",
+      "objetivo": "Remover divergências entre documentação, monitoramento e runtime.",
+      "itens": [
+        "Unificar thresholds de fila entre doc e alerta",
+        "Remover status falso-pronto em áreas core",
+        "Marcar explicitamente dependências externas não validadas"
+      ],
+      "dependencias": ["F3"],
+      "criterio_pronto": "Não há gap entre discurso operacional e comportamento real."
+    },
+    {
+      "fase": "F5",
+      "nome": "Consolidação de Fluxos Críticos",
+      "objetivo": "Validar jornada principal ponta a ponta com persistência real.",
+      "itens": [
+        "Auth/login/refresh/logout com persistência",
+        "Execução de workflow com isolamento tenant",
+        "Fluxo de billing/webhook com idempotência"
+      ],
+      "dependencias": ["F4"],
+      "criterio_pronto": "Fluxos críticos validados E2E com logs e tratamento de erro."
+    },
+    {
+      "fase": "F6",
+      "nome": "Prontidão Operacional",
+      "objetivo": "Garantir ambiente previsível para subir e operar.",
+      "itens": [
+        "Scripts de subida e env alinhados",
+        "Health/readiness/liveness consistentes",
+        "Runbooks mínimos de operação e rollback"
+      ],
+      "dependencias": ["F5"],
+      "criterio_pronto": "Stack sobe com procedimento reproduzível e observável."
+    },
+    {
+      "fase": "F7",
+      "nome": "Go-Live Readiness",
+      "objetivo": "Emitir parecer final objetivo e rastreável.",
+      "itens": [
+        "Revalidação full suite",
+        "Resumo quantitativo final",
+        "Parecer: pronta / pronta com restrições / não pronta"
+      ],
+      "dependencias": ["F6"],
+      "criterio_pronto": "Parecer assinado com evidências e pendências reais."
+    }
+  ],
+  "dependencias_cruzadas": [
+    {
+      "origem": "F3",
+      "destino": "F5",
+      "descricao": "Fluxos críticos dependem da correção de RLS e sessão persistente."
+    },
+    {
+      "origem": "F3",
+      "destino": "F6",
+      "descricao": "Prontidão operacional depende de schema sem drift."
+    },
+    {
+      "origem": "F4",
+      "destino": "F7",
+      "descricao": "Parecer final exige ausência de ilusão técnica em métricas/docs."
+    }
+  ],
+  "top_bloqueadores": [
+    "TD-001",
+    "TD-002",
+    "TD-003",
+    "TD-009"
+  ],
+  "ordem_recomendada_execucao": [
+    "Resolver RLS (TD-002/TD-009)",
+    "Resolver drift de schema (TD-003)",
+    "Persistir refresh sessions (TD-001)",
+    "Convergir observabilidade/doc (TD-005/TD-010)",
+    "Revalidar fluxos críticos E2E"
+  ],
+  "criterios_go_live": [
+    "build/typecheck/lint/test core passam",
+    "RLS cross-tenant comprovado por teste automatizado",
+    "Schema drift check passa",
+    "Sessão/auth sobrevivem a restart",
+    "Alertas e documentação sem divergência operacional"
+  ]
+}

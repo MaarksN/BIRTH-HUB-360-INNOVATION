@@ -1,0 +1,109 @@
+{
+  "artifacts": [
+    {
+      "path": "artifacts/release/cycle0-flow-summary.json",
+      "sha256": "b6a176275991d74167e90ab3264148642349d297ef471e9cc50366ca7d5bcd7d",
+      "sizeBytes": 163
+    },
+    {
+      "path": "artifacts/release/cycle0-flow-summary.txt",
+      "sha256": "921bb160cd2e4f312a1b3c46d50b4e1cab4a53884f9a1b3cea6cf4567cafdcc9",
+      "sizeBytes": 109
+    },
+    {
+      "path": "artifacts/release/final-data-migration-report.json",
+      "sha256": "bf67b2f88acb54e0afde5d80dcb1cf92f571c54c96fd0d37b9730977186c0a9e",
+      "sizeBytes": 263
+    },
+    {
+      "path": "artifacts/release/production-all-evidence-summary.json",
+      "sha256": "68cc8fbae5ae2c48a00ededd5b0e7844340d553ee8ae78c592fa5c49d650b542",
+      "sizeBytes": 1161
+    },
+    {
+      "path": "artifacts/release/production-all-evidence-summary.txt",
+      "sha256": "611d9284e9e8f901b820217cf32e317e90dde029002570fa34f94bffc7f9f89d",
+      "sizeBytes": 587
+    },
+    {
+      "path": "artifacts/release/production-preflight-summary.json",
+      "sha256": "136e6f9437736afc421738097dd51606bfb4fad6ff5a3e5a420ae83771fefd18",
+      "sizeBytes": 1243
+    },
+    {
+      "path": "artifacts/release/production-preflight-summary.txt",
+      "sha256": "3e434c1b1fe2f70e5d7662af0abb349e34d5f8a5532d8d155206f5e052a74800",
+      "sizeBytes": 88
+    },
+    {
+      "path": "artifacts/release/production-rollback-evidence.json",
+      "sha256": "a5ec68448952327e08bd3ae3ce3ee37e424f4b0d878596bdada957af4b2cec21",
+      "sizeBytes": 1975
+    },
+    {
+      "path": "artifacts/release/production-rollback-evidence.txt",
+      "sha256": "19c945b5826afc0b83b7e4dd2db5e8795c17d8725adcf5001cc92701a54cec35",
+      "sizeBytes": 592
+    },
+    {
+      "path": "artifacts/release/scorecard.json",
+      "sha256": "9d65e694b50266cff2bc600a8ea16b361b33049c063436706fdb43afbeb225f4",
+      "sizeBytes": 2942
+    },
+    {
+      "path": "artifacts/release/scorecard.md",
+      "sha256": "59b4e6cfcba5be4b9f2f1d14a50fd7a04efd10b586dd17c7752bd43718299a2e",
+      "sizeBytes": 2102
+    },
+    {
+      "path": "artifacts/release/smoke-summary.json",
+      "sha256": "e72c057d132951524c93900cc36bf6404a8bd5e1c812d53a1ee1ae544f7ac0c2",
+      "sizeBytes": 705
+    },
+    {
+      "path": "artifacts/release/smoke-summary.txt",
+      "sha256": "96abb87e32d80f112ec97420a955efb0979b445e35244a236e9710d2c95d69a0",
+      "sizeBytes": 269
+    },
+    {
+      "path": "artifacts/release/source-manifest.json",
+      "sha256": "8faeef3dc5b28db1dad56e99f960c7f72153692aaad1995fd70bfa8e47092d3b",
+      "sizeBytes": 244
+    },
+    {
+      "path": "artifacts/release/staging-preflight-summary.json",
+      "sha256": "2a9df845f7638941488514ab36e54f477605f557b5cc32de39fe17b167137872",
+      "sizeBytes": 1237
+    },
+    {
+      "path": "artifacts/release/staging-preflight-summary.txt",
+      "sha256": "6c90cb8df7291a6dfccdba918ff9a7e1441c4b79a892320f22e6c109a585360b",
+      "sizeBytes": 85
+    },
+    {
+      "path": "artifacts/sbom/bom.xml",
+      "sha256": "dc958c59027230628918ceec8894e00a9660d583805820b62fb2f5021fc5ae34",
+      "sizeBytes": 22320
+    },
+    {
+      "path": "artifacts/sbom/sbom.spdx.json",
+      "sha256": "7a31b36264de41e21abb867b7990019281fcef19d89247f2371b8791057bbad2",
+      "sizeBytes": 45074
+    },
+    {
+      "path": "logs/releases/release-1.0.0-2026-04-18T05-25-37.218Z.log",
+      "sha256": "97a086374b6bcd34dc3b08f8a7708da0afefb6a960fb9498ebe4a702e24759e6",
+      "sizeBytes": 1069
+    },
+    {
+      "path": "releases/notes/v1.0.0.md",
+      "sha256": "addae744d20a99c580ed8b37153e70dd32f41dfe5a9f3f3fc67d4b0d20b2a391",
+      "sizeBytes": 676
+    }
+  ],
+  "generatedAt": "2026-04-18T05:25:37.218Z",
+  "logPath": "logs/releases/release-1.0.0-2026-04-18T05-25-37.218Z.log",
+  "releaseVersion": "1.0.0",
+  "semverTag": "v1.0.0",
+  "sourceManifestPath": "artifacts/release/source-manifest.json"
+}

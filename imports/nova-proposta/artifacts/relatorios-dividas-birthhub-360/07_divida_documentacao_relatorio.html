@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Documentação — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Documentação</span>
+    <h1>Dívida de Documentação</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Documentação</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> Runbooks e documentos operacionais usados para resposta a incidente e navegação principal da documentação.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 1</p>
+      <p><strong>Status final da análise:</strong> Achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:09:35.430Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>A auditoria comparou documentos que apontam para runbooks operacionais com a existência real dos arquivos no workspace. O item abaixo registra uma referência quebrada comprovada em documentação central.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Runbook de investigação referenciado não existe</h2>
+      <p><strong>Diagnóstico:</strong> O documento de observabilidade manda seguir um runbook que não está presente no workspace. O índice principal da documentação aponta para outro arquivo. O operador recebe duas referências diferentes para o mesmo momento crítico.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>docs/observability-alerts.md:64 referencia `docs/runbooks/incident-investigation.md` como runbook pós-alerta.</li><li>A verificação de existência com `Test-Path docs/runbooks/incident-investigation.md` retornou `False` no workspace auditado.</li><li>docs/README.md:34-35 aponta `runbooks/critical-incidents.md` como `Incident response` e `Critical incident runbook`.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Durante um alerta real, a equipe pode abrir um caminho morto ou seguir runbooks diferentes. O custo aparece em atraso de triagem e perda de padronização operacional.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Escolher um único arquivo oficial de runbook para incidente crítico.</li><li>Atualizar todos os documentos operacionais para apontarem para o mesmo caminho válido.</li><li>Adicionar checagem de links ou presença de runbooks nos gates de documentação.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um responsável por documentação operacional e resposta a incidente.
+
+Missão
+Consolidar a referência operacional de incidente crítico em um único runbook válido.
+
+Escopo
+Atue somente sobre os documentos e runbooks diretamente envolvidos na referência quebrada.
+
+Arquivos-alvo
+- docs/observability-alerts.md
+- docs/README.md
+- docs/runbooks/critical-incidents.md
+
+Correções obrigatórias
+- Definir qual arquivo será a referência oficial de incidente crítico.
+- Atualizar documentos que hoje apontam para caminhos diferentes.
+- Preservar o conteúdo operacional relevante do runbook escolhido.
+
+Restrições
+- Não deixar aliases quebrados ou caminhos mortos após a correção.
+- Não criar documentação vazia só para satisfazer o link.
+- Não alterar políticas de alerta fora do necessário para alinhar a referência.
+
+Critérios de aceite
+- Todos os documentos centrais apontam para um caminho real e único.
+- O runbook oficial existe e está navegável.
+- A checagem de links passa após a atualização.
+
+Validação
+- pnpm docs:check-links</pre>
+      </details>
+    </article>
+  </section>
+</main>
+</body>
+</html>

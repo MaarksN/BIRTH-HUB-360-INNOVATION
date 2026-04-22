@@ -1,0 +1,6 @@
+{
+  "generatedAt": "2026-04-18T05:25:31Z",
+  "status": "failed",
+  "failedStep": "pnpm build",
+  "logFile": "logs/releases/cycle0-flow-2026-04-18T05-24-47Z.log"
+}

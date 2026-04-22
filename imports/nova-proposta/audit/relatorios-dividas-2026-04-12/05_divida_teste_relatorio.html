@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatorio 05 - Divida de Teste</title>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;line-height:1.5;margin:32px;max-width:1100px}
+    code,pre{font-family:Consolas,monospace} pre{white-space:pre-wrap;background:#f6f8fa;padding:12px;border:1px solid #d0d7de}
+    .item{border:1px solid #d0d7de;border-radius:10px;padding:18px;margin:18px 0} .gravidade{font-weight:700;color:#9a3412}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Relatorio 05 - Divida de Teste</h1>
+    <p><strong>Projeto:</strong> BirthHub 360 Innovation</p>
+    <p><strong>Data:</strong> 2026-04-12</p>
+    <p><strong>Escopo:</strong> Cobertura, confiabilidade da suite e fidelidade dos artefatos de evidencia de testes.</p>
+  </header>
+  <main>
+    <section id="metodo">
+      <h2>Metodo</h2>
+      <p>Foram inspecionados testes de banco e artefatos de cobertura publicados para localizar lacunas entre execucao real da suite e a forma como os resultados sao comunicados ao time.</p>
+    </section>
+    <section id="resultado">
+      <h2>Resultado</h2>
+      <article class="item">
+        <h3>Item 1 - Suite critica de RLS admite skip em vez de garantia executada</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> Um teste central para isolamento multitenant pode ser pulado pela role em uso, deixando uma area critica de regressao sem protecao real no fluxo atual.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>packages/database/test/rls.test.ts:27-31</code> descreve o caminho que pula a validacao quando a role ignora RLS.</li>
+          <li><code>artifacts/coverage/summary.json:74</code> preserva a evidencia textual de que a validacao foi impossibilitada pela role atual.</li>
+        </ul>
+        <p><strong>Impacto:</strong> Um requisito de seguranca e dados sensiveis pode regredir sem que a suite principal impeça o merge ou a promocao.</p>
+        <p><strong>Plano sequencial:</strong> 1. Ajustar fixture de banco. 2. Tornar o teste bloqueante. 3. Publicar motivo de skip como falha de ambiente. 4. Separar smoke de compliance.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Reestruture a suite de RLS para que o isolamento por tenant seja testado de forma obrigatoria com uma role apropriada. Se o ambiente estiver incorreto, trate isso como falha configuracional e nao como skip aceitavel, preservando logs claros para diagnostico da pipeline.</pre>
+        </details>
+      </article>
+      <article class="item">
+        <h3>Item 2 - Evidencia de cobertura publicada nao representa fielmente o resumo bruto</h3>
+        <p class="gravidade">Gravidade: media</p>
+        <p><strong>Diagnostico:</strong> O dashboard humano de cobertura exibe nomes de dominios e filtros trocados, o que distorce a leitura do que realmente foi coberto por pacote.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>docs/evidence/test-coverage-dashboard.md:7-63</code> faz associacoes trocadas entre secoes e comandos filtrados.</li>
+          <li><code>artifacts/coverage/summary.json</code> lista os pacotes reais em ordem diferente e consistente com os nomes de workspace.</li>
+        </ul>
+        <p><strong>Impacto:</strong> Priorizacao de testes e discussoes de qualidade podem se apoiar em um painel derivado incorretamente.</p>
+        <p><strong>Plano sequencial:</strong> 1. Gerar dashboard a partir do JSON. 2. Remover curadoria manual de nomes. 3. Falhar pipeline em caso de desvio entre artefatos.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Automatize a geracao do dashboard de cobertura a partir de artifacts/coverage/summary.json, eliminando a rotulacao manual que hoje troca os pacotes. Garanta que o artefato publicado seja uma representacao fiel da saida bruta e adicione uma verificacao que detecte divergencias.</pre>
+        </details>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

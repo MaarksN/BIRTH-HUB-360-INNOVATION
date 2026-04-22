@@ -1,0 +1,820 @@
+{
+  "checkedAt": "2026-04-02T13:01:29.680Z",
+  "disposableDatabase": true,
+  "issues": [],
+  "observations": [
+    "pg_stat_statements unavailable: \nInvalid `prisma.$queryRawUnsafe()` invocation:\n\n\nRaw query failed. Code: `42P01`. Message: `relation \"pg_stat_statements\" does not exist`",
+    "Unused indexes detected: 190."
+  ],
+  "ok": true,
+  "topSlowQueries": [],
+  "unusedIndexes": [
+    {
+      "index_name": "agent_budget_events_organizationId_createdAt_idx",
+      "table_name": "agent_budget_events"
+    },
+    {
+      "index_name": "agent_budget_events_tenantId_actorId_createdAt_idx",
+      "table_name": "agent_budget_events"
+    },
+    {
+      "index_name": "agent_budget_events_tenantId_agentId_createdAt_idx",
+      "table_name": "agent_budget_events"
+    },
+    {
+      "index_name": "agent_budget_events_tenantId_idx",
+      "table_name": "agent_budget_events"
+    },
+    {
+      "index_name": "agent_budgets_organizationId_updatedAt_idx",
+      "table_name": "agent_budgets"
+    },
+    {
+      "index_name": "agent_budgets_tenantId_agentId_key",
+      "table_name": "agent_budgets"
+    },
+    {
+      "index_name": "agent_budgets_tenantId_idx",
+      "table_name": "agent_budgets"
+    },
+    {
+      "index_name": "agent_executions_organizationId_userId_idx",
+      "table_name": "agent_executions"
+    },
+    {
+      "index_name": "agent_executions_tenantId_agentId_idx",
+      "table_name": "agent_executions"
+    },
+    {
+      "index_name": "agent_executions_tenantId_createdAt_idx",
+      "table_name": "agent_executions"
+    },
+    {
+      "index_name": "agent_executions_tenantId_idx",
+      "table_name": "agent_executions"
+    },
+    {
+      "index_name": "agent_executions_tenantId_status_idx",
+      "table_name": "agent_executions"
+    },
+    {
+      "index_name": "agent_executions_userId_idx",
+      "table_name": "agent_executions"
+    },
+    {
+      "index_name": "agent_feedback_executionId_userId_key",
+      "table_name": "agent_feedback"
+    },
+    {
+      "index_name": "agent_feedback_organizationId_idx",
+      "table_name": "agent_feedback"
+    },
+    {
+      "index_name": "agent_feedback_tenantId_agentId_idx",
+      "table_name": "agent_feedback"
+    },
+    {
+      "index_name": "agent_feedback_tenantId_idx",
+      "table_name": "agent_feedback"
+    },
+    {
+      "index_name": "agent_feedback_tenantId_rating_idx",
+      "table_name": "agent_feedback"
+    },
+    {
+      "index_name": "agent_feedback_userId_idx",
+      "table_name": "agent_feedback"
+    },
+    {
+      "index_name": "agent_handoffs_organizationId_correlation_id_idx",
+      "table_name": "agent_handoffs"
+    },
+    {
+      "index_name": "agent_handoffs_tenantId_idx",
+      "table_name": "agent_handoffs"
+    },
+    {
+      "index_name": "agent_handoffs_tenantId_source_agent_id_target_agent_id_idx",
+      "table_name": "agent_handoffs"
+    },
+    {
+      "index_name": "agent_handoffs_thread_id_idx",
+      "table_name": "agent_handoffs"
+    },
+    {
+      "index_name": "agents_organizationId_idx",
+      "table_name": "agents"
+    },
+    {
+      "index_name": "agents_tenantId_id_idx",
+      "table_name": "agents"
+    },
+    {
+      "index_name": "agents_tenantId_idx",
+      "table_name": "agents"
+    },
+    {
+      "index_name": "agents_tenantId_name_key",
+      "table_name": "agents"
+    },
+    {
+      "index_name": "agents_tenantId_status_idx",
+      "table_name": "agents"
+    },
+    {
+      "index_name": "api_keys_keyHash_key",
+      "table_name": "api_keys"
+    },
+    {
+      "index_name": "api_keys_organizationId_userId_idx",
+      "table_name": "api_keys"
+    },
+    {
+      "index_name": "api_keys_rotatedFromId_idx",
+      "table_name": "api_keys"
+    },
+    {
+      "index_name": "api_keys_tenantId_idx",
+      "table_name": "api_keys"
+    },
+    {
+      "index_name": "api_keys_tenantId_status_idx",
+      "table_name": "api_keys"
+    },
+    {
+      "index_name": "api_keys_userId_idx",
+      "table_name": "api_keys"
+    },
+    {
+      "index_name": "audit_logs_tenantId_actorId_idx",
+      "table_name": "audit_logs"
+    },
+    {
+      "index_name": "audit_logs_tenantId_createdAt_idx",
+      "table_name": "audit_logs"
+    },
+    {
+      "index_name": "audit_logs_tenantId_id_idx",
+      "table_name": "audit_logs"
+    },
+    {
+      "index_name": "audit_logs_tenantId_idx",
+      "table_name": "audit_logs"
+    },
+    {
+      "index_name": "billing_credits_organizationId_createdAt_idx",
+      "table_name": "billing_credits"
+    },
+    {
+      "index_name": "billing_credits_stripe_event_id_key",
+      "table_name": "billing_credits"
+    },
+    {
+      "index_name": "billing_credits_subscriptionId_idx",
+      "table_name": "billing_credits"
+    },
+    {
+      "index_name": "billing_credits_tenantId_idx",
+      "table_name": "billing_credits"
+    },
+    {
+      "index_name": "billing_credits_tenantId_reason_idx",
+      "table_name": "billing_credits"
+    },
+    {
+      "index_name": "billing_events_organizationId_processed_at_idx",
+      "table_name": "billing_events"
+    },
+    {
+      "index_name": "billing_events_status_createdAt_idx",
+      "table_name": "billing_events"
+    },
+    {
+      "index_name": "billing_events_tenantId_idx",
+      "table_name": "billing_events"
+    },
+    {
+      "index_name": "connector_accounts_organizationId_provider_account_key_key",
+      "table_name": "connector_accounts"
+    },
+    {
+      "index_name": "connector_accounts_organizationId_provider_idx",
+      "table_name": "connector_accounts"
+    },
+    {
+      "index_name": "connector_accounts_tenantId_idx",
+      "table_name": "connector_accounts"
+    },
+    {
+      "index_name": "connector_accounts_tenantId_provider_status_idx",
+      "table_name": "connector_accounts"
+    },
+    {
+      "index_name": "connector_credentials_connector_account_id_credential_type_key",
+      "table_name": "connector_credentials"
+    },
+    {
+      "index_name": "connector_credentials_organizationId_createdAt_idx",
+      "table_name": "connector_credentials"
+    },
+    {
+      "index_name": "connector_credentials_tenantId_idx",
+      "table_name": "connector_credentials"
+    },
+    {
+      "index_name": "connector_sync_cursors_connector_account_id_scope_key",
+      "table_name": "connector_sync_cursors"
+    },
+    {
+      "index_name": "connector_sync_cursors_organizationId_scope_idx",
+      "table_name": "connector_sync_cursors"
+    },
+    {
+      "index_name": "connector_sync_cursors_tenantId_idx",
+      "table_name": "connector_sync_cursors"
+    },
+    {
+      "index_name": "conversation_messages_organizationId_createdAt_idx",
+      "table_name": "conversation_messages"
+    },
+    {
+      "index_name": "conversation_messages_tenantId_idx",
+      "table_name": "conversation_messages"
+    },
+    {
+      "index_name": "conversation_messages_thread_id_createdAt_idx",
+      "table_name": "conversation_messages"
+    },
+    {
+      "index_name": "conversation_threads_connector_account_id_idx",
+      "table_name": "conversation_threads"
+    },
+    {
+      "index_name": "conversation_threads_organizationId_correlation_id_idx",
+      "table_name": "conversation_threads"
+    },
+    {
+      "index_name": "conversation_threads_organizationId_createdAt_idx",
+      "table_name": "conversation_threads"
+    },
+    {
+      "index_name": "conversation_threads_tenantId_channel_status_idx",
+      "table_name": "conversation_threads"
+    },
+    {
+      "index_name": "conversation_threads_tenantId_idx",
+      "table_name": "conversation_threads"
+    },
+    {
+      "index_name": "crm_sync_events_organizationId_createdAt_idx",
+      "table_name": "crm_sync_events"
+    },
+    {
+      "index_name": "crm_sync_events_tenantId_idx",
+      "table_name": "crm_sync_events"
+    },
+    {
+      "index_name": "customers_organizationId_idx",
+      "table_name": "customers"
+    },
+    {
+      "index_name": "customers_tenantId_email_key",
+      "table_name": "customers"
+    },
+    {
+      "index_name": "customers_tenantId_id_idx",
+      "table_name": "customers"
+    },
+    {
+      "index_name": "customers_tenantId_idx",
+      "table_name": "customers"
+    },
+    {
+      "index_name": "customers_tenantId_status_idx",
+      "table_name": "customers"
+    },
+    {
+      "index_name": "dataset_exports_createdAt_idx",
+      "table_name": "dataset_exports"
+    },
+    {
+      "index_name": "dataset_exports_organizationId_idx",
+      "table_name": "dataset_exports"
+    },
+    {
+      "index_name": "dataset_exports_tenantId_idx",
+      "table_name": "dataset_exports"
+    },
+    {
+      "index_name": "invites_expiresAt_idx",
+      "table_name": "invites"
+    },
+    {
+      "index_name": "invites_invitedByUserId_idx",
+      "table_name": "invites"
+    },
+    {
+      "index_name": "invites_organizationId_idx",
+      "table_name": "invites"
+    },
+    {
+      "index_name": "invites_tenantId_id_idx",
+      "table_name": "invites"
+    },
+    {
+      "index_name": "invites_tenantId_idx",
+      "table_name": "invites"
+    },
+    {
+      "index_name": "invites_tenantId_status_idx",
+      "table_name": "invites"
+    },
+    {
+      "index_name": "invoices_organizationId_createdAt_idx",
+      "table_name": "invoices"
+    },
+    {
+      "index_name": "invoices_subscriptionId_idx",
+      "table_name": "invoices"
+    },
+    {
+      "index_name": "invoices_tenantId_idx",
+      "table_name": "invoices"
+    },
+    {
+      "index_name": "invoices_tenantId_status_idx",
+      "table_name": "invoices"
+    },
+    {
+      "index_name": "job_signing_secrets_organizationId_key",
+      "table_name": "job_signing_secrets"
+    },
+    {
+      "index_name": "job_signing_secrets_tenantId_key",
+      "table_name": "job_signing_secrets"
+    },
+    {
+      "index_name": "login_alerts_organizationId_idx",
+      "table_name": "login_alerts"
+    },
+    {
+      "index_name": "login_alerts_tenantId_idx",
+      "table_name": "login_alerts"
+    },
+    {
+      "index_name": "login_alerts_tenantId_userId_createdAt_idx",
+      "table_name": "login_alerts"
+    },
+    {
+      "index_name": "members_tenantId_id_idx",
+      "table_name": "members"
+    },
+    {
+      "index_name": "members_tenantId_idx",
+      "table_name": "members"
+    },
+    {
+      "index_name": "members_tenantId_status_idx",
+      "table_name": "members"
+    },
+    {
+      "index_name": "members_tenantId_userId_idx",
+      "table_name": "members"
+    },
+    {
+      "index_name": "mfa_challenges_organizationId_idx",
+      "table_name": "mfa_challenges"
+    },
+    {
+      "index_name": "mfa_challenges_tenantId_idx",
+      "table_name": "mfa_challenges"
+    },
+    {
+      "index_name": "mfa_challenges_tenantId_userId_expiresAt_idx",
+      "table_name": "mfa_challenges"
+    },
+    {
+      "index_name": "mfa_challenges_tokenHash_key",
+      "table_name": "mfa_challenges"
+    },
+    {
+      "index_name": "mfa_recovery_codes_tenantId_idx",
+      "table_name": "mfa_recovery_codes"
+    },
+    {
+      "index_name": "mfa_recovery_codes_userId_codeHash_key",
+      "table_name": "mfa_recovery_codes"
+    },
+    {
+      "index_name": "notifications_organizationId_idx",
+      "table_name": "notifications"
+    },
+    {
+      "index_name": "notifications_tenantId_createdAt_idx",
+      "table_name": "notifications"
+    },
+    {
+      "index_name": "notifications_tenantId_idx",
+      "table_name": "notifications"
+    },
+    {
+      "index_name": "notifications_tenantId_userId_idx",
+      "table_name": "notifications"
+    },
+    {
+      "index_name": "notifications_userId_isRead_idx",
+      "table_name": "notifications"
+    },
+    {
+      "index_name": "organizations_health_score_idx",
+      "table_name": "organizations"
+    },
+    {
+      "index_name": "organizations_hubspot_company_id_idx",
+      "table_name": "organizations"
+    },
+    {
+      "index_name": "organizations_hubspot_company_id_key",
+      "table_name": "organizations"
+    },
+    {
+      "index_name": "organizations_primary_domain_idx",
+      "table_name": "organizations"
+    },
+    {
+      "index_name": "organizations_slug_key",
+      "table_name": "organizations"
+    },
+    {
+      "index_name": "organizations_stripe_customer_id_idx",
+      "table_name": "organizations"
+    },
+    {
+      "index_name": "organizations_tenantId_id_idx",
+      "table_name": "organizations"
+    },
+    {
+      "index_name": "organizations_tenantId_idx",
+      "table_name": "organizations"
+    },
+    {
+      "index_name": "organizations_tenantId_key",
+      "table_name": "organizations"
+    },
+    {
+      "index_name": "output_artifacts_organizationId_createdAt_idx",
+      "table_name": "output_artifacts"
+    },
+    {
+      "index_name": "output_artifacts_tenantId_idx",
+      "table_name": "output_artifacts"
+    },
+    {
+      "index_name": "output_artifacts_tenantId_status_createdAt_idx",
+      "table_name": "output_artifacts"
+    },
+    {
+      "index_name": "output_artifacts_tenantId_type_createdAt_idx",
+      "table_name": "output_artifacts"
+    },
+    {
+      "index_name": "payment_methods_organizationId_is_default_idx",
+      "table_name": "payment_methods"
+    },
+    {
+      "index_name": "payment_methods_tenantId_idx",
+      "table_name": "payment_methods"
+    },
+    {
+      "index_name": "plans_active_idx",
+      "table_name": "plans"
+    },
+    {
+      "index_name": "plans_stripe_price_id_key",
+      "table_name": "plans"
+    },
+    {
+      "index_name": "plans_stripe_product_id_key",
+      "table_name": "plans"
+    },
+    {
+      "index_name": "quota_usage_tenantId_id_idx",
+      "table_name": "quota_usage"
+    },
+    {
+      "index_name": "quota_usage_tenantId_idx",
+      "table_name": "quota_usage"
+    },
+    {
+      "index_name": "quota_usage_tenantId_period_idx",
+      "table_name": "quota_usage"
+    },
+    {
+      "index_name": "quota_usage_tenantId_resourceType_idx",
+      "table_name": "quota_usage"
+    },
+    {
+      "index_name": "quota_usage_tenantId_resourceType_period_key",
+      "table_name": "quota_usage"
+    },
+    {
+      "index_name": "sessions_expiresAt_idx",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "sessions_organizationId_idx",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "sessions_refreshTokenHash_key",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "sessions_replacedBySessionId_idx",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "sessions_revokedAt_idx",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "sessions_tenantId_id_idx",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "sessions_tenantId_idx",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "sessions_tenantId_status_idx",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "sessions_tenantId_userId_idx",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "sessions_token_key",
+      "table_name": "sessions"
+    },
+    {
+      "index_name": "step_results_executionId_stepId_attempt_key",
+      "table_name": "step_results"
+    },
+    {
+      "index_name": "step_results_organizationId_idx",
+      "table_name": "step_results"
+    },
+    {
+      "index_name": "step_results_tenantId_executionId_idx",
+      "table_name": "step_results"
+    },
+    {
+      "index_name": "step_results_tenantId_id_idx",
+      "table_name": "step_results"
+    },
+    {
+      "index_name": "step_results_tenantId_idx",
+      "table_name": "step_results"
+    },
+    {
+      "index_name": "step_results_tenantId_status_idx",
+      "table_name": "step_results"
+    },
+    {
+      "index_name": "step_results_tenantId_stepId_idx",
+      "table_name": "step_results"
+    },
+    {
+      "index_name": "step_results_tenantId_workflowId_idx",
+      "table_name": "step_results"
+    },
+    {
+      "index_name": "subscriptions_organizationId_key",
+      "table_name": "subscriptions"
+    },
+    {
+      "index_name": "subscriptions_stripe_customer_id_idx",
+      "table_name": "subscriptions"
+    },
+    {
+      "index_name": "subscriptions_tenantId_idx",
+      "table_name": "subscriptions"
+    },
+    {
+      "index_name": "subscriptions_tenantId_status_idx",
+      "table_name": "subscriptions"
+    },
+    {
+      "index_name": "tenant_activity_windows_organizationId_windowDays_idx",
+      "table_name": "tenant_activity_windows"
+    },
+    {
+      "index_name": "tenant_activity_windows_tenantId_windowDays_key",
+      "table_name": "tenant_activity_windows"
+    },
+    {
+      "index_name": "usage_records_event_id_key",
+      "table_name": "usage_records"
+    },
+    {
+      "index_name": "usage_records_organizationId_occurred_at_idx",
+      "table_name": "usage_records"
+    },
+    {
+      "index_name": "usage_records_subscriptionId_idx",
+      "table_name": "usage_records"
+    },
+    {
+      "index_name": "usage_records_tenantId_idx",
+      "table_name": "usage_records"
+    },
+    {
+      "index_name": "usage_records_tenantId_metric_idx",
+      "table_name": "usage_records"
+    },
+    {
+      "index_name": "user_preferences_organizationId_userId_key",
+      "table_name": "user_preferences"
+    },
+    {
+      "index_name": "user_preferences_tenantId_idx",
+      "table_name": "user_preferences"
+    },
+    {
+      "index_name": "user_preferences_tenantId_userId_idx",
+      "table_name": "user_preferences"
+    },
+    {
+      "index_name": "webhook_deliveries_endpointId_createdAt_idx",
+      "table_name": "webhook_deliveries"
+    },
+    {
+      "index_name": "webhook_deliveries_organizationId_createdAt_idx",
+      "table_name": "webhook_deliveries"
+    },
+    {
+      "index_name": "webhook_deliveries_tenantId_idx",
+      "table_name": "webhook_deliveries"
+    },
+    {
+      "index_name": "webhook_deliveries_tenantId_topic_createdAt_idx",
+      "table_name": "webhook_deliveries"
+    },
+    {
+      "index_name": "webhook_endpoints_createdByUserId_idx",
+      "table_name": "webhook_endpoints"
+    },
+    {
+      "index_name": "webhook_endpoints_organizationId_createdAt_idx",
+      "table_name": "webhook_endpoints"
+    },
+    {
+      "index_name": "webhook_endpoints_tenantId_idx",
+      "table_name": "webhook_endpoints"
+    },
+    {
+      "index_name": "webhook_endpoints_tenantId_status_idx",
+      "table_name": "webhook_endpoints"
+    },
+    {
+      "index_name": "workflow_executions_organizationId_idx",
+      "table_name": "workflow_executions"
+    },
+    {
+      "index_name": "workflow_executions_tenantId_dedupeHash_idx",
+      "table_name": "workflow_executions"
+    },
+    {
+      "index_name": "workflow_executions_tenantId_id_idx",
+      "table_name": "workflow_executions"
+    },
+    {
+      "index_name": "workflow_executions_tenantId_idx",
+      "table_name": "workflow_executions"
+    },
+    {
+      "index_name": "workflow_executions_tenantId_startedAt_idx",
+      "table_name": "workflow_executions"
+    },
+    {
+      "index_name": "workflow_executions_tenantId_status_idx",
+      "table_name": "workflow_executions"
+    },
+    {
+      "index_name": "workflow_steps_organizationId_idx",
+      "table_name": "workflow_steps"
+    },
+    {
+      "index_name": "workflow_steps_tenantId_id_idx",
+      "table_name": "workflow_steps"
+    },
+    {
+      "index_name": "workflow_steps_tenantId_idx",
+      "table_name": "workflow_steps"
+    },
+    {
+      "index_name": "workflow_steps_tenantId_type_idx",
+      "table_name": "workflow_steps"
+    },
+    {
+      "index_name": "workflow_steps_tenantId_workflowId_idx",
+      "table_name": "workflow_steps"
+    },
+    {
+      "index_name": "workflow_transitions_organizationId_idx",
+      "table_name": "workflow_transitions"
+    },
+    {
+      "index_name": "workflow_transitions_tenantId_id_idx",
+      "table_name": "workflow_transitions"
+    },
+    {
+      "index_name": "workflow_transitions_tenantId_idx",
+      "table_name": "workflow_transitions"
+    },
+    {
+      "index_name": "workflow_transitions_tenantId_sourceStepId_idx",
+      "table_name": "workflow_transitions"
+    },
+    {
+      "index_name": "workflow_transitions_tenantId_targetStepId_idx",
+      "table_name": "workflow_transitions"
+    },
+    {
+      "index_name": "workflow_transitions_tenantId_workflowId_idx",
+      "table_name": "workflow_transitions"
+    },
+    {
+      "index_name": "workflow_transitions_workflowId_sourceStepId_targetStepId_r_key",
+      "table_name": "workflow_transitions"
+    },
+    {
+      "index_name": "workflows_organizationId_idx",
+      "table_name": "workflows"
+    },
+    {
+      "index_name": "workflows_tenantId_id_idx",
+      "table_name": "workflows"
+    },
+    {
+      "index_name": "workflows_tenantId_idx",
+      "table_name": "workflows"
+    },
+    {
+      "index_name": "workflows_tenantId_status_idx",
+      "table_name": "workflows"
+    },
+    {
+      "index_name": "workflows_tenantId_triggerType_idx",
+      "table_name": "workflows"
+    }
+  ],
+  "highWriteTableOptions": [
+    {
+      "relname": "agent_budget_events",
+      "reloptions": [
+        "autovacuum_vacuum_scale_factor=0.02",
+        "autovacuum_analyze_scale_factor=0.01",
+        "autovacuum_vacuum_threshold=50",
+        "autovacuum_analyze_threshold=50"
+      ]
+    },
+    {
+      "relname": "audit_logs",
+      "reloptions": [
+        "autovacuum_vacuum_scale_factor=0.02",
+        "autovacuum_analyze_scale_factor=0.01",
+        "autovacuum_vacuum_threshold=50",
+        "autovacuum_analyze_threshold=50"
+      ]
+    },
+    {
+      "relname": "billing_events",
+      "reloptions": [
+        "autovacuum_vacuum_scale_factor=0.02",
+        "autovacuum_analyze_scale_factor=0.01",
+        "autovacuum_vacuum_threshold=50",
+        "autovacuum_analyze_threshold=50"
+      ]
+    },
+    {
+      "relname": "crm_sync_events",
+      "reloptions": [
+        "autovacuum_vacuum_scale_factor=0.02",
+        "autovacuum_analyze_scale_factor=0.01",
+        "autovacuum_vacuum_threshold=50",
+        "autovacuum_analyze_threshold=50"
+      ]
+    },
+    {
+      "relname": "webhook_deliveries",
+      "reloptions": [
+        "autovacuum_vacuum_scale_factor=0.02",
+        "autovacuum_analyze_scale_factor=0.01",
+        "autovacuum_vacuum_threshold=50",
+        "autovacuum_analyze_threshold=50"
+      ]
+    }
+  ]
+}

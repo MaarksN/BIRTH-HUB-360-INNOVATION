@@ -1,0 +1,52 @@
+{
+  "checkedAt": "2026-04-10T13:37:44.156Z",
+  "mode": "browser-dom-smoke",
+  "requestedTool": "playwright",
+  "sufficient": true,
+  "browserPath": "C:\\Users\\Marks\\AppData\\Local\\ms-playwright\\chromium-1208\\chrome-win64\\chrome.exe",
+  "baseUrl": "http://127.0.0.1:3101",
+  "reusedExistingServer": false,
+  "routes": [
+    "/",
+    "/pricing",
+    "/legal/terms",
+    "/legal/privacy"
+  ],
+  "summary": {
+    "routesScanned": 4,
+    "findings": 0
+  },
+  "routeSummaries": [
+    {
+      "route": "/",
+      "title": "BirthHub 360",
+      "unlabeledControls": 0,
+      "imagesWithoutAlt": 0,
+      "tablesWithoutCaption": 0
+    },
+    {
+      "route": "/pricing",
+      "title": "BirthHub 360",
+      "unlabeledControls": 0,
+      "imagesWithoutAlt": 0,
+      "tablesWithoutCaption": 0
+    },
+    {
+      "route": "/legal/terms",
+      "title": "BirthHub 360",
+      "unlabeledControls": 0,
+      "imagesWithoutAlt": 0,
+      "tablesWithoutCaption": 0
+    },
+    {
+      "route": "/legal/privacy",
+      "title": "BirthHub 360",
+      "unlabeledControls": 0,
+      "imagesWithoutAlt": 0,
+      "tablesWithoutCaption": 0
+    }
+  ],
+  "findings": [],
+  "stdout": "▲ Next.js 16.2.1 (Turbopack)\n- Local:         http://localhost:3101\n- Network:       http://192.168.0.179:3101\n✓ Ready in 1065ms\n- Experiments (use with caution):\n  · sri\n\n GET /pricing 200 in 696ms (next.js: 135ms, proxy.ts: 196ms, application-code: 365ms)\n GET / 200 in 135ms (next.js: 30ms, proxy.ts: 7ms, application-code: 98ms)\n GET /pricing 200 in 75ms (next.js: 3ms, proxy.ts: 5ms, application-code: 66ms)\n GET /legal/terms 200 in 100ms (next.js: 27ms, proxy.ts: 4ms, application-code: 68ms)\n GET /legal/privacy 200 in 101ms (next.js: 29ms, proxy.ts: 5ms, application-code: 67ms)\n",
+  "stderr": "Warning: Custom Cache-Control headers detected for the following routes:\n  - /_next/static/(.*)\n\nSetting a custom Cache-Control header can break Next.js development behavior.\n⨯ ReferenceError: redirect is not defined\n    at HomePage (app\\page.tsx:11:3)\n   9 |\n  10 | export default function HomePage() {\n> 11 |   redirect(\"/login\");\n     |   ^\n  12 | } {\n  digest: '1638656460'\n}\n"
+}

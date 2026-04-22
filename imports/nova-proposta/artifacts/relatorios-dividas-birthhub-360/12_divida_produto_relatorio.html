@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Dívida de Produto — Birth Hub Innovation 360</title>
+  <style>body{margin:0;background:#f7f4ee;color:#1f1a14;font:16px/1.55 Segoe UI,Arial,sans-serif}main{max-width:1100px;margin:0 auto;padding:32px 24px 64px}header,section,article{background:#fff;border:1px solid #d9d0c3;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}header,section,article{padding:20px 24px}header{margin-bottom:20px}section{margin-bottom:20px}#resultado{display:grid;gap:16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7ead6;color:#7a4b12;font-size:.86rem;font-weight:700;text-transform:uppercase}h1,h2{line-height:1.2;margin:0 0 12px}h1{font-size:2rem}h2{font-size:1.25rem}p,ul,ol{margin:0 0 12px}.meta{display:grid;gap:8px;margin-top:16px}.prompt-correcao{margin-top:16px;border:1px solid #d9d0c3;border-radius:12px;background:#f0ebe2;overflow:hidden}.prompt-correcao summary{cursor:pointer;font-weight:700;padding:12px 14px;background:#efe7da}.prompt-correcao pre{margin:0;padding:14px;white-space:pre-wrap;overflow:auto;font:.92rem/1.5 Consolas,Courier New,monospace}#lacunas{border-style:dashed;background:#fffaf3}</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Dívida de Produto</span>
+    <h1>Dívida de Produto</h1>
+    <div class="meta">
+      <p><strong>Categoria auditada:</strong> Dívida de Produto</p>
+      <p><strong>Repositório:</strong> Birth Hub Innovation 360</p>
+      <p><strong>Escopo auditado:</strong> Promessa funcional ativa, flags de capability, documentação operacional de produto e evidência disponível por inspeção estática no workspace.</p>
+      <p><strong>Quantidade de itens comprovados:</strong> 0</p>
+      <p><strong>Status final da análise:</strong> Sem achados comprovados</p>
+      <p><strong>Data/hora da análise:</strong> 2026-04-14T16:11:14.638Z</p>
+    </div>
+  </header>
+  <section id="metodo">
+    <h2>Método</h2>
+    <p>Foram comparados o documento canônico de capabilities ativas, as flags reais do código e o guardrail automático que protege essa convergência. Não houve acesso a staging, produção ou telemetria transacional para comprovar jornadas quebradas em uso real.</p>
+  </section>
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <article class="item">
+      <h2>Sem achados comprovados</h2>
+      <p><strong>Diagnóstico:</strong> Não há dados suficientes para avaliar.</p>
+      <div>
+        <strong>Evidências:</strong>
+        <ul><li>docs/operations/active-product-capabilities.md:37-45 declara as capacidades ativas hoje suportadas pelo produto.</li><li>packages/config/src/product-capabilities.ts:4-15 define as flags padrão que correspondem a clinical, FHIR e privacy self-service.</li><li>scripts/ci/check-active-product-capabilities-alignment.mjs:97-132 já valida alinhamento entre documentação e fonte de capability.</li><li>A auditoria estática não incluiu acesso a staging/produção, rastros atuais de execução nem evidência transacional recente das jornadas de Sales OS, billing, workflows e notifications.</li></ul>
+      </div>
+      <p><strong>O Juro (Impacto):</strong> Sem evidência runtime recente, qualquer afirmação de descompasso entre promessa funcional e implementação vira falso positivo ou omissão. O juro aqui é operar sem prova suficiente sobre a saúde das jornadas ativas.</p>
+      <div>
+        <strong>Plano de Quitação:</strong>
+        <ol><li>Coletar evidência recente das jornadas ativas em ambiente controlado ou produtivo.</li><li>Cruzar smoke tests, e2e, logs de aceitação e resultados de release com a lista de capabilities ativas.</li><li>Só registrar dívida de produto quando houver diferença comprovada entre promessa ativa e comportamento observado.</li></ol>
+      </div>
+      <details class="prompt-correcao">
+        <summary>Prompt de Execução/Correção</summary>
+        <pre>Papel
+Você é um auditor técnico de produto responsável por coletar evidência antes de afirmar dívida funcional.
+
+Missão
+Coletar evidência complementar para provar ou descartar dívida de produto nas jornadas oficialmente ativas.
+
+Escopo
+Atue somente na coleta de evidência para Sales OS, billing, workflows, notifications e privacy self-service, sem propor correção fictícia antes da prova.
+
+Arquivos-alvo
+- docs/operations/active-product-capabilities.md
+- packages/config/src/product-capabilities.ts
+- scripts/ci/check-active-product-capabilities-alignment.mjs
+- tests/e2e/**
+- artifacts/release/**
+
+Correções obrigatórias
+- Levantar quais jornadas ativas precisam de prova de ponta a ponta.
+- Coletar evidência real de execução, aceitação ou falha dessas jornadas.
+- Comparar a evidência coletada com o documento canônico de capabilities ativas.
+
+Restrições
+- Não registrar correção de produto sem descompasso comprovado.
+- Não usar mocks, placeholders ou conclusões de roadmap.
+- Não tratar domínio preservado e desabilitado por default como dívida do caminho principal.
+
+Critérios de aceite
+- Existe evidência objetiva por jornada ativa inspecionada.
+- Qualquer achado futuro de produto fica ligado a prova funcional concreta.
+- A coleta distingue claramente capability ativa de domínio preservado.
+
+Validação
+- pnpm ci:active-product-capabilities
+- pnpm ci:default-e2e-surface-freeze
+- pnpm test:core</pre>
+      </details>
+    </article>
+  </section>
+  <section id="lacunas">
+    <h2>Lacunas de Validação</h2>
+    <ul><li>A auditoria não teve acesso a staging, produção, analytics de uso ou trilhas atuais de aceitação funcional.</li><li>Sem evidência runtime recente, a inspeção estática sozinha não prova nem refuta quebra de jornada ativa.</li></ul>
+  </section>
+</main>
+</body>
+</html>

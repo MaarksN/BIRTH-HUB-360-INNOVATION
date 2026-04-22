@@ -1,0 +1,11 @@
+import type { z } from "zod";
+import { deploymentEnvironmentSchema, nodeEnvSchema } from "./shared.js";
+export type RuntimeEnvironment = NodeJS.ProcessEnv;
+export type NodeEnvironment = z.infer<typeof nodeEnvSchema>;
+export type DeploymentEnvironment = z.infer<typeof deploymentEnvironmentSchema>;
+export declare function getEnvironmentSource(env?: RuntimeEnvironment): RuntimeEnvironment;
+export declare function readEnvironmentValue(key: string, env?: RuntimeEnvironment): string | undefined;
+export declare function readTrimmedEnvironmentValue(key: string, env?: RuntimeEnvironment): string | undefined;
+export declare function resolveNodeEnvironment(env?: RuntimeEnvironment): NodeEnvironment;
+export declare function resolveDeploymentEnvironment(env?: RuntimeEnvironment): DeploymentEnvironment;
+export declare function isProductionEnvironment(env?: RuntimeEnvironment): boolean;

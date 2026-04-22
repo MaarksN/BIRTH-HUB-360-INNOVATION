@@ -1,0 +1,68 @@
+// @ts-expect-error TODO: remover suppressão ampla
+// 
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import { WorkflowStatus } from "@prisma/client";
+
+import { ensureDatabaseAvailableOrSkip } from "./database-availability.js";
+
+const databaseUrl = process.env.DATABASE_URL ?? "";
+const testIfDatabase = databaseUrl ? test : test.skip;
+
+void testIfDatabase("migracao preserva integridade referencial por tenant", async (context) => {
+  const { createPrismaClient } = await import("../src/client.js");
+  const prisma = createPrismaClient({ databaseUrl });
+
+  try {
+    const databaseAvailable = await ensureDatabaseAvailableOrSkip(context, prisma);
+    if (!databaseAvailable) {
+      return;
+    }
+
+    const organizationA = await prisma.organization.create({
+      data: {
+        name: "Migration Tenant A",
+        slug: `migration-a-${Date.now()}`
+      }
+    });
+
+    const organizationB = await prisma.organization.create({
+      data: {
+        name: "Migration Tenant B",
+        slug: `migration-b-${Date.now()}`
+      }
+    });
+
+    const workflowA = await prisma.workflow.create({
+      data: {
+        name: "Workflow A",
+        organizationId: organizationA.id,
+        status: WorkflowStatus.PUBLISHED,
+        tenantId: organizationA.tenantId
+      }
+    });
+
+    const createdUser = await prisma.user.create({
+      data: {
+        email: `cross-tenant-${Date.now()}@birthub.local`,
+        name: "Cross Tenant User"
+      }
+    });
+
+    const membershipB = await prisma.membership.create({
+      data: {
+        organizationId: organizationB.id,
+        role: "MEMBER",
+        tenantId: organizationB.tenantId,
+        userId: createdUser.id
+      }
+    });
+
+    assert.notEqual(workflowA.tenantId, membershipB.tenantId);
+    assert.equal(workflowA.tenantId, organizationA.tenantId);
+    assert.equal(membershipB.tenantId, organizationB.tenantId);
+  } finally {
+    await prisma.$disconnect();
+  }
+});

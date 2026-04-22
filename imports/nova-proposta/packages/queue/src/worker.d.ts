@@ -1,0 +1,11 @@
+import type { Job, JobsOptions, Queue, Worker } from "bullmq";
+import type { DlqJobPayload, JobContext, QueueConfig, QueueProcessor, RuntimeWorkerHandler, SerializedJobOptions } from "./types.js";
+export declare function extractJobContext<DataType, ResultType>(queueName: string, job: Job<DataType, ResultType, string>): JobContext;
+export declare function createRuntimeWorkerProcessor<DataType = unknown, ResultType = unknown>(queueName: string, processor: QueueProcessor<DataType, ResultType>): RuntimeWorkerHandler<DataType, ResultType>;
+export declare function resolveConfiguredAttempts(job: Job<unknown, unknown, string>): number;
+export declare function isFinalAttempt(job: Job<unknown, unknown, string>): boolean;
+export declare function toSerializedJobOptions(job: Job<unknown, unknown, string>): SerializedJobOptions;
+export declare function buildDlqPayload<DataType>(queueName: string, job: Job<DataType, unknown, string>, error: Error, context: JobContext): DlqJobPayload<DataType>;
+export declare function forwardToDlq<DataType>(queueName: string, dlqQueue: Queue<DlqJobPayload<DataType>, void, string>, job: Job<DataType, unknown, string>, error: Error): Promise<void>;
+export declare function registerRuntimeWorker<DataType = unknown, ResultType = unknown>(worker: Worker<DataType, ResultType, string>, queueConfig: QueueConfig, dlqQueue: Queue<DlqJobPayload<DataType>, void, string>): void;
+export declare function mergeQueueJobOptions(queueConfig: QueueConfig, input?: JobsOptions): JobsOptions;

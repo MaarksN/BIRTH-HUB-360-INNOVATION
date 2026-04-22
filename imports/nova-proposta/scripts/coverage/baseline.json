@@ -1,0 +1,86 @@
+{
+  "surfaces": [
+    {
+      "id": "api",
+      "label": "@birthub/api",
+      "pnpmArgs": ["--filter", "@birthub/api", "test"],
+      "include": ["apps/api/src/**/*.ts"],
+      "exclude": ["apps/api/tests/**/*.ts", "apps/api/test/**/*.ts"],
+      "thresholds": {
+        "branches": 68,
+        "functions": 51,
+        "lines": 45,
+        "statements": 45
+      }
+    },
+    {
+      "id": "web",
+      "label": "@birthub/web",
+      "pnpmArgs": ["--filter", "@birthub/web", "test"],
+      "include": ["apps/web/**/*.ts", "apps/web/**/*.tsx"],
+      "exclude": ["apps/web/tests/**/*.ts", "apps/web/tests/**/*.tsx", "apps/web/.next/**"],
+      "thresholds": {
+        "branches": 58,
+        "functions": 50,
+        "lines": 13,
+        "statements": 13
+      }
+    },
+    {
+      "id": "worker",
+      "label": "@birthub/worker",
+      "pnpmArgs": ["--filter", "@birthub/worker", "test"],
+      "include": ["apps/worker/src/**/*.ts"],
+      "exclude": ["apps/worker/src/**/*.test.ts", "apps/worker/test/**/*.ts"],
+      "thresholds": {
+        "branches": 70,
+        "functions": 53,
+        "lines": 39,
+        "statements": 39
+      }
+    },
+    {
+      "id": "database",
+      "label": "@birthub/database",
+      "pnpmArgs": ["--filter", "@birthub/database", "test"],
+      "include": ["packages/database/src/**/*.ts"],
+      "exclude": ["packages/database/test/**/*.ts", "packages/database/scripts/**/*.ts"],
+      "thresholds": {
+        "branches": 70,
+        "functions": 85,
+        "lines": 79,
+        "statements": 79
+      }
+    },
+    {
+      "id": "auth",
+      "label": "@birthub/auth",
+      "pnpmArgs": ["--filter", "@birthub/auth", "test"],
+      "include": ["packages/auth/**/*.ts"],
+      "exclude": [
+        "packages/auth/src/__tests__/**/*.ts",
+        "packages/auth/dist/**/*.ts",
+        "packages/auth/node_modules/**/*.ts"
+      ],
+      "thresholds": {
+        "branches": 60,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
+    {
+      "id": "agents-core",
+      "label": "@birthub/agents-core",
+      "pnpmArgs": ["--filter", "@birthub/agents-core", "test"],
+      "include": ["packages/agents-core/src/**/*.ts"],
+      "exclude": ["packages/agents-core/src/**/*.test.ts", "packages/agents-core/docs/**"],
+      "thresholds": {
+        "branches": 43,
+        "functions": 34,
+        "lines": 11,
+        "statements": 11
+      }
+    }
+  ]
+}

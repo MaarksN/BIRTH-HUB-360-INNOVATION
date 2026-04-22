@@ -1,0 +1,1040 @@
+{
+  "generated_at": "2026-04-18T05:29:50.270621Z",
+  "commands": [
+    {
+      "workflow_file": ".github/workflows/agents-conformity.yml",
+      "workflow": "Agent Packs Conformity",
+      "job_id": "validate-agent-packs",
+      "job_name": "validate-agent-packs",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "corepack pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/agents-conformity.yml",
+      "workflow": "Agent Packs Conformity",
+      "job_id": "validate-agent-packs",
+      "job_name": "validate-agent-packs",
+      "step": "Validate generated collection",
+      "kind": "run",
+      "command": "corepack pnpm --filter @birthub/agent-packs validate"
+    },
+    {
+      "workflow_file": ".github/workflows/agents-conformity.yml",
+      "workflow": "Agent Packs Conformity",
+      "job_id": "validate-agent-packs",
+      "job_name": "validate-agent-packs",
+      "step": "Test generated collection",
+      "kind": "run",
+      "command": "corepack pnpm --filter @birthub/agent-packs test"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "resolve-release-source",
+      "job_name": "resolve-release-source",
+      "step": "Resolve immutable release source",
+      "kind": "run",
+      "command": "set -euo pipefail\n\nevent_name=\"${GITHUB_EVENT_NAME}\"\nsource_event=\"${event_name}\"\n\nif [[ \"${event_name}\" == \"workflow_run\" ]]; then\n  if [[ \"${{ github.event.workflow_run.head_branch }}\" != \"main\" ]]; then\n    echo \"::error title=Invalid release branch::workflow_run source must come from main.\" >&2\n    exit 1\n  fi\n\n  if [[ \"${{ github.event.workflow_run.head_repository.full_name }}\" != \"${{ github.repository }}\" ]]; then\n    echo \"::error title=Invalid release source::workflow_run source repository must match the current repository.\" >&2\n    exit 1\n  fi\n\n  source_sha=\"${{ github.event.workflow_run.head_sha }}\"\nelif [[ \"${event_name}\" == \"workflow_dispatch\" ]]; then\n  if [[ \"${GITHUB_REF}\" != \"refs/heads/main\" ]]; then\n    echo \"::error title=Invalid release branch::workflow_dispatch must run from main.\" >&2\n    exit 1\n  fi\n\n  source_sha=\"${GITHUB_SHA}\"\nelse\n  echo \"::error title=Unsupported release event::Only workflow_run and workflow_dispatch are supported.\" >&2\n  exit 1\nfi\n\nif ! [[ \"${source_sha}\" =~ ^[0-9a-f]{40}$ ]]; then\n  echo \"::error title=Invalid release SHA::Resolved release source is not a full commit SHA.\" >&2\n  exit 1\nfi\n\necho \"source_event=${source_event}\" >> \"$GITHUB_OUTPUT\"\necho \"source_ref=${source_sha}\" >> \"$GITHUB_OUTPUT\"\necho \"source_sha=${source_sha}\" >> \"$GITHUB_OUTPUT\""
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "staging-preflight",
+      "job_name": "staging-preflight",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "staging-preflight",
+      "job_name": "staging-preflight",
+      "step": "Mask configured secrets",
+      "kind": "run",
+      "command": "set -euo pipefail\nfor key in AUTH_MFA_ENCRYPTION_KEY DATABASE_URL JOB_HMAC_GLOBAL_SECRET REDIS_URL RENDER_STAGING_DEPLOY_HOOK_URL SENTRY_DSN SESSION_SECRET STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET; do\n  value=\"${!key:-}\"\n  if [[ -n \"${value}\" ]]; then\n    echo \"::add-mask::${value}\"\n  fi\ndone"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "staging-preflight",
+      "job_name": "staging-preflight",
+      "step": "Validate required staging configuration",
+      "kind": "run",
+      "command": "set -euo pipefail\n\nrequired_secrets=(\n  RENDER_STAGING_DEPLOY_HOOK_URL\n  DATABASE_URL\n  REDIS_URL\n  SESSION_SECRET\n  JOB_HMAC_GLOBAL_SECRET\n  AUTH_MFA_ENCRYPTION_KEY\n  STRIPE_SECRET_KEY\n  STRIPE_WEBHOOK_SECRET\n  SENTRY_DSN\n)\n\nrequired_vars=(\n  API_CORS_ORIGINS\n  WEB_BASE_URL\n  NEXT_PUBLIC_API_URL\n  NEXT_PUBLIC_APP_URL\n  NEXT_PUBLIC_SENTRY_DSN\n  NEXT_PUBLIC_CSP_REPORT_ONLY\n  REQUIRE_SECURE_COOKIES\n  STRIPE_SUCCESS_URL\n  STRIPE_CANCEL_URL\n  BILLING_EXPORT_STORAGE_MODE\n)\n\nmissing=()\n\nfor key in \"${required_secrets[@]}\"; do\n  if [[ -z \"${!key:-}\" ]]; then\n    missing+=(\"${key} (secret)\")\n  fi\ndone\n\nfor key in \"${required_vars[@]}\"; do\n  if [[ -z \"${!key:-}\" ]]; then\n    missing+=(\"${key} (variable)\")\n  fi\ndone\n\nif (( ${#missing[@]} > 0 )); then\n  printf 'Missing required staging configuration:\\n' >&2\n  printf ' - %s\\n' \"${missing[@]}\" >&2\n  echo \"::error title=Missing staging configuration::Configure missing keys in Environment staging (Secrets/Variables).\" >&2\n  exit 1\nfi\n\n\nif [[ \"${BILLING_EXPORT_STORAGE_MODE}\" != \"local\" && \"${BILLING_EXPORT_STORAGE_MODE}\" != \"s3\" ]]; then\n  echo \"::error title=Invalid variable::BILLING_EXPORT_STORAGE_MODE must be local or s3.\" >&2\n  exit 1\nfi\n\nif [[ \"${BILLING_EXPORT_STORAGE_MODE}\" == \"s3\" && -z \"${BILLING_EXPORT_S3_BUCKET:-}\" ]]; then\n  echo \"::error title=Missing variable::BILLING_EXPORT_S3_BUCKET must be set when BILLING_EXPORT_STORAGE_MODE=s3.\" >&2\n  exit 1\nfi\n\n\nif [[ \"${NEXT_PUBLIC_CSP_REPORT_ONLY}\" != \"false\" ]]; then\n  echo \"::error title=Invalid staging variable::NEXT_PUBLIC_CSP_REPORT_ONLY must be set to false in Environment staging variables.\" >&2\n  exit 1\nfi\n\nif [[ \"${REQUIRE_SECURE_COOKIES}\" != \"true\" ]]; then\n  echo \"::error title=Invalid staging variable::REQUIRE_SECURE_COOKIES must be set to true in Environment staging variables.\" >&2\n  exit 1\nfi"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "staging-preflight",
+      "job_name": "staging-preflight",
+      "step": "Run staging preflight",
+      "kind": "run",
+      "command": "pnpm release:preflight:staging"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "release-sbom",
+      "job_name": "release-sbom",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "release-sbom",
+      "job_name": "release-sbom",
+      "step": "Generate CycloneDX SBOM",
+      "kind": "run",
+      "command": "pnpm release:sbom"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "release-sbom",
+      "job_name": "release-sbom",
+      "step": "Materialize release bundle manifests",
+      "kind": "run",
+      "command": "set -euo pipefail\npnpm release:materialize -- \\\n  --tag=v1.0.0 \\\n  --source-event=\"${{ needs.resolve-release-source.outputs.source_event }}\" \\\n  --source-ref=\"${{ needs.resolve-release-source.outputs.source_ref }}\" \\\n  --source-sha=\"${{ needs.resolve-release-source.outputs.source_sha }}\" \\\n  --workflow=\"${{ github.workflow }}\" \\\n  --run-id=\"${{ github.run_id }}\""
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "production-preflight",
+      "job_name": "production-preflight",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "production-preflight",
+      "job_name": "production-preflight",
+      "step": "Mask configured secrets",
+      "kind": "run",
+      "command": "set -euo pipefail\nfor key in AUTH_MFA_ENCRYPTION_KEY DATABASE_URL JOB_HMAC_GLOBAL_SECRET REDIS_URL RENDER_PRODUCTION_DEPLOY_HOOK_URL SENTRY_DSN SESSION_SECRET STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET; do\n  value=\"${!key:-}\"\n  if [[ -n \"${value}\" ]]; then\n    echo \"::add-mask::${value}\"\n  fi\ndone"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "production-preflight",
+      "job_name": "production-preflight",
+      "step": "Validate required production configuration",
+      "kind": "run",
+      "command": "set -euo pipefail\n\nrequired_secrets=(\n  RENDER_PRODUCTION_DEPLOY_HOOK_URL\n  DATABASE_URL\n  REDIS_URL\n  SESSION_SECRET\n  JOB_HMAC_GLOBAL_SECRET\n  AUTH_MFA_ENCRYPTION_KEY\n  STRIPE_SECRET_KEY\n  STRIPE_WEBHOOK_SECRET\n  SENTRY_DSN\n)\n\nrequired_vars=(\n  API_CORS_ORIGINS\n  WEB_BASE_URL\n  NEXT_PUBLIC_API_URL\n  NEXT_PUBLIC_APP_URL\n  NEXT_PUBLIC_SENTRY_DSN\n  NEXT_PUBLIC_CSP_REPORT_ONLY\n  REQUIRE_SECURE_COOKIES\n  STRIPE_SUCCESS_URL\n  STRIPE_CANCEL_URL\n  BILLING_EXPORT_STORAGE_MODE\n)\n\nmissing=()\n\nfor key in \"${required_secrets[@]}\"; do\n  if [[ -z \"${!key:-}\" ]]; then\n    missing+=(\"${key} (secret)\")\n  fi\ndone\n\nfor key in \"${required_vars[@]}\"; do\n  if [[ -z \"${!key:-}\" ]]; then\n    missing+=(\"${key} (variable)\")\n  fi\ndone\n\nif (( ${#missing[@]} > 0 )); then\n  printf 'Missing required production configuration:\\n' >&2\n  printf ' - %s\\n' \"${missing[@]}\" >&2\n  echo \"::error title=Missing production configuration::Configure missing keys in Environment production (Secrets/Variables).\" >&2\n  exit 1\nfi\n\nif [[ \"${BILLING_EXPORT_STORAGE_MODE}\" != \"local\" && \"${BILLING_EXPORT_STORAGE_MODE}\" != \"s3\" ]]; then\n  echo \"::error title=Invalid variable::BILLING_EXPORT_STORAGE_MODE must be local or s3.\" >&2\n  exit 1\nfi\n\nif [[ \"${BILLING_EXPORT_STORAGE_MODE}\" == \"s3\" && -z \"${BILLING_EXPORT_S3_BUCKET:-}\" ]]; then\n  echo \"::error title=Missing variable::BILLING_EXPORT_S3_BUCKET must be set when BILLING_EXPORT_STORAGE_MODE=s3.\" >&2\n  exit 1\nfi\n\nif [[ \"${NEXT_PUBLIC_CSP_REPORT_ONLY}\" != \"false\" ]]; then\n  echo \"::error title=Invalid production variable::NEXT_PUBLIC_CSP_REPORT_ONLY must be set to false in Environment production variables.\" >&2\n  exit 1\nfi\n\nif [[ \"${REQUIRE_SECURE_COOKIES}\" != \"true\" ]]; then\n  echo \"::error title=Invalid production variable::REQUIRE_SECURE_COOKIES must be set to true in Environment production variables.\" >&2\n  exit 1\nfi"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "production-preflight",
+      "job_name": "production-preflight",
+      "step": "Run production preflight",
+      "kind": "run",
+      "command": "pnpm release:preflight:production"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "build-staging-images",
+      "job_name": "build-staging-images",
+      "step": "Compute image refs",
+      "kind": "run",
+      "command": "set -euo pipefail\nSHORT_SHA=\"${{ needs.resolve-release-source.outputs.source_sha }}\"\nSHORT_SHA=\"${SHORT_SHA:0:12}\"\nREGISTRY=\"${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPOSITORY }}\"\necho \"api_image=${REGISTRY}/birthub-api:${SHORT_SHA}\" >> \"$GITHUB_OUTPUT\"\necho \"web_image=${REGISTRY}/birthub-web:${SHORT_SHA}\" >> \"$GITHUB_OUTPUT\"\necho \"worker_image=${REGISTRY}/birthub-worker:${SHORT_SHA}\" >> \"$GITHUB_OUTPUT\""
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "build-staging-images",
+      "job_name": "build-staging-images",
+      "step": "Configure Artifact Registry auth",
+      "kind": "run",
+      "command": "gcloud auth configure-docker \"${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev\" --quiet"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "build-staging-images",
+      "job_name": "build-staging-images",
+      "step": "Build and push API image",
+      "kind": "run",
+      "command": "docker build -f apps/api/Dockerfile -t \"${{ steps.refs.outputs.api_image }}\" .\ndocker push \"${{ steps.refs.outputs.api_image }}\""
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "build-staging-images",
+      "job_name": "build-staging-images",
+      "step": "Build and push Web image",
+      "kind": "run",
+      "command": "docker build -f apps/web/Dockerfile -t \"${{ steps.refs.outputs.web_image }}\" .\ndocker push \"${{ steps.refs.outputs.web_image }}\""
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "build-staging-images",
+      "job_name": "build-staging-images",
+      "step": "Build and push Worker image",
+      "kind": "run",
+      "command": "docker build -f apps/worker/Dockerfile -t \"${{ steps.refs.outputs.worker_image }}\" .\ndocker push \"${{ steps.refs.outputs.worker_image }}\""
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "deploy-staging",
+      "job_name": "deploy-staging",
+      "step": "Deploy staging revisions",
+      "kind": "run",
+      "command": "set -euo pipefail\nREGION=\"${{ vars.CLOUD_RUN_REGION }}\"\nmkdir -p artifacts/release\n: > artifacts/release/staging-rollout.tsv\n\nwhile IFS='|' read -r component service image; do\n  before_json=\"artifacts/release/${component}-before.json\"\n  after_json=\"artifacts/release/${component}-after.json\"\n\n  if ! gcloud run services describe \"$service\" --region \"$REGION\" --format=json > \"$before_json\" 2>/dev/null; then\n    echo '{}' > \"$before_json\"\n  fi\n\n  previous_revision=$(node -e \"const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const traffic=(data.status&&data.status.traffic)||[]; const active=traffic.find((item)=>Number(item.percent||0)>0); process.stdout.write(active?.revisionName||'');\" \"$before_json\")\n\n  gcloud run deploy \"$service\" --image \"$image\" --region \"$REGION\" --platform managed --tag candidate --no-traffic --quiet\n  gcloud run services describe \"$service\" --region \"$REGION\" --format=json > \"$after_json\"\n\n  candidate_revision=$(node -e \"const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(data.status?.latestCreatedRevisionName||'');\" \"$after_json\")\n  candidate_url=$(node -e \"const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const traffic=(data.status&&data.status.traffic)||[]; const entry=traffic.find((item)=>item.tag==='candidate'); process.stdout.write(entry?.url||'');\" \"$after_json\")\n\n  gcloud run services update-traffic \"$service\" --region \"$REGION\" --to-revisions \"${candidate_revision}=100\" --quiet\n  printf '%s\\t%s\\t%s\\t%s\\t%s\\n' \"$component\" \"$service\" \"$previous_revision\" \"$candidate_revision\" \"$candidate_url\" >> artifacts/release/staging-rollout.tsv\ndone <<EOF\napi|${{ vars.CLOUD_RUN_API_SERVICE }}|${{ needs.build-staging-images.outputs.api_image }}\nweb|${{ vars.CLOUD_RUN_WEB_SERVICE }}|${{ needs.build-staging-images.outputs.web_image }}\nworker|${{ vars.CLOUD_RUN_WORKER_SERVICE }}|${{ needs.build-staging-images.outputs.worker_image }}\nEOF\n\nnode <<'NODE'\nconst fs = require('fs');\nconst path = require('path');\nconst file = path.join(process.cwd(), 'artifacts', 'release', 'staging-rollout.tsv');\nconst lines = fs.readFileSync(file, 'utf8').trim().split(/\\r?\\n/).filter(Boolean);\nconst services = Object.fromEntries(lines.map((line) => {\n  const [component, service, previousRevision, candidateRevision, candidateUrl] = line.split('\\t');\n  return [component, { service, previousRevision: previousRevision || null, candidateRevision, candidateUrl: candidateUrl || null }];\n}));\nfs.writeFileSync(\n  path.join(process.cwd(), 'artifacts', 'release', 'staging-rollout.json'),\n  JSON.stringify({ environment: 'staging', generatedAt: new Date().toISOString(), region: '${{ vars.CLOUD_RUN_REGION }}', services }, null, 2) + '\\n',\n  'utf8'\n);\nNODE"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "backup-health-gate",
+      "job_name": "backup-health-gate",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "backup-health-gate",
+      "job_name": "backup-health-gate",
+      "step": "Run backup health gate",
+      "kind": "run",
+      "command": "pnpm ops:backup:health"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "release-smoke-gate",
+      "job_name": "release-smoke-gate",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "release-smoke-gate",
+      "job_name": "release-smoke-gate",
+      "step": "Run release smoke gate",
+      "kind": "run",
+      "command": "pnpm release:smoke"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "release-e2e-gate",
+      "job_name": "release-e2e-gate",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "release-e2e-gate",
+      "job_name": "release-e2e-gate",
+      "step": "Run release E2E gate",
+      "kind": "run",
+      "command": "pnpm test:e2e:release"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "rollback-rehearsal-evidence-gate",
+      "job_name": "rollback-rehearsal-evidence-gate",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "rollback-rehearsal-evidence-gate",
+      "job_name": "rollback-rehearsal-evidence-gate",
+      "step": "Materialize rollback rehearsal evidence",
+      "kind": "run",
+      "command": "pnpm release:rollback:evidence:auto -- --target=production"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "dr-readiness-gate",
+      "job_name": "dr-readiness-gate",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "dr-readiness-gate",
+      "job_name": "dr-readiness-gate",
+      "step": "Rebuild backup and DR readiness evidence",
+      "kind": "run",
+      "command": "set -euo pipefail\npnpm ops:backup:health\npnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario=\"automated release readiness rehearsal\"\npnpm ops:dr:report"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "deploy-production",
+      "job_name": "deploy-production",
+      "step": "Guard production deployment branch",
+      "kind": "run",
+      "command": "set -euo pipefail\nif [[ \"${GITHUB_REF}\" != \"refs/heads/main\" ]]; then\n  echo \"::error title=Invalid branch::Production deploy can only run from main.\" >&2\n  exit 1\nfi"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "deploy-production",
+      "job_name": "deploy-production",
+      "step": "Mask deploy hook",
+      "kind": "run",
+      "command": "set -euo pipefail\nif [[ -n \"${RENDER_PRODUCTION_DEPLOY_HOOK_URL:-}\" ]]; then\n  echo \"::add-mask::${RENDER_PRODUCTION_DEPLOY_HOOK_URL}\"\nfi"
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "deploy-production",
+      "job_name": "deploy-production",
+      "step": "Trigger Render deploy hook (production)",
+      "kind": "run",
+      "command": "set -euo pipefail\n\nif [[ -z \"${RENDER_PRODUCTION_DEPLOY_HOOK_URL:-}\" ]]; then\n  echo \"::error title=Missing secret::RENDER_PRODUCTION_DEPLOY_HOOK_URL is not configured in Environment production secrets.\" >&2\n  exit 1\nfi\n\nif ! [[ \"${RENDER_PRODUCTION_DEPLOY_HOOK_URL}\" =~ ^https://[^[:space:]]+$ ]]; then\n  echo \"::error title=Invalid secret::RENDER_PRODUCTION_DEPLOY_HOOK_URL must be a valid HTTPS URL.\" >&2\n  exit 1\nfi\n\ncurl --fail --show-error --silent --retry 3 --retry-delay 5 --request POST \"${RENDER_PRODUCTION_DEPLOY_HOOK_URL}\""
+    },
+    {
+      "workflow_file": ".github/workflows/cd.yml",
+      "workflow": "CD",
+      "job_id": "deploy-production",
+      "job_name": "deploy-production",
+      "step": "Generate deploy manifest",
+      "kind": "run",
+      "command": "mkdir -p artifacts/release\ncat > artifacts/release/deploy-manifest.json <<EOF\n{\n  \"status\": \"deployed\",\n  \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\n  \"sourceEvent\": \"${{ needs.resolve-release-source.outputs.source_event }}\",\n  \"sourceSha\": \"${{ needs.resolve-release-source.outputs.source_sha }}\"\n}\nEOF"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "branch-name",
+      "job_name": "branch-name",
+      "step": "reusable-input-command",
+      "kind": "reusable_command",
+      "command": "pnpm branch:check"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "commit-messages",
+      "job_name": "commitlint",
+      "step": "reusable-input-command",
+      "kind": "reusable_command",
+      "command": "pnpm ci:commitlint"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-integrity",
+      "job_name": "lockfile-integrity",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-integrity",
+      "job_name": "lockfile-integrity",
+      "step": "Enforce agent surface freeze",
+      "kind": "run",
+      "command": "node scripts/ci/check-agent-surface-freeze.mjs"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-integrity",
+      "job_name": "lockfile-integrity",
+      "step": "Enforce legacy DB surface freeze",
+      "kind": "run",
+      "command": "node scripts/ci/check-legacy-db-surface-freeze.mjs"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-integrity",
+      "job_name": "lockfile-integrity",
+      "step": "Enforce legacy runtime surface freeze",
+      "kind": "run",
+      "command": "node scripts/ci/check-legacy-runtime-surface-freeze.mjs"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-integrity",
+      "job_name": "lockfile-integrity",
+      "step": "Enforce active product capability alignment",
+      "kind": "run",
+      "command": "pnpm ci:active-product-capabilities"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-integrity",
+      "job_name": "lockfile-integrity",
+      "step": "Enforce default e2e surface freeze",
+      "kind": "run",
+      "command": "pnpm ci:default-e2e-surface-freeze"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-integrity",
+      "job_name": "lockfile-integrity",
+      "step": "Enforce web inline style freeze",
+      "kind": "run",
+      "command": "node scripts/ci/check-web-inline-style-freeze.mjs"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-integrity",
+      "job_name": "lockfile-integrity",
+      "step": "Enforce lockfile governance",
+      "kind": "run",
+      "command": "pnpm ci:lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-corruption-simulation",
+      "job_name": "lockfile-corruption-simulation",
+      "step": "Corrupt lockfile fixture",
+      "kind": "run",
+      "command": "set -euo pipefail\ncp pnpm-lock.yaml pnpm-lock.yaml.bak\nprintf '\\n__corrupted_lockfile_marker: [\\n' >> pnpm-lock.yaml"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-corruption-simulation",
+      "job_name": "lockfile-corruption-simulation",
+      "step": "Assert frozen install fails on corrupted lockfile",
+      "kind": "run",
+      "command": "set +e\npnpm install --frozen-lockfile > lockfile-corruption.log 2>&1\nstatus=$?\nset -e\n\nif [[ \"${status}\" -eq 0 ]]; then\n  echo \"::error title=Lockfile corruption simulation failed::pnpm install unexpectedly succeeded.\"\n  cat lockfile-corruption.log\n  exit 1\nfi\n\nif ! grep -Eiq \"ERR_PNPM|lockfile|yaml|parse\" lockfile-corruption.log; then\n  echo \"::warning::Install failed as expected, but lockfile-specific markers were not found in output.\"\nfi"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "lockfile-corruption-simulation",
+      "job_name": "lockfile-corruption-simulation",
+      "step": "Restore lockfile",
+      "kind": "run",
+      "command": "mv pnpm-lock.yaml.bak pnpm-lock.yaml"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "inline-credentials",
+      "job_name": "inline-credentials",
+      "step": "reusable-input-command",
+      "kind": "reusable_command",
+      "command": "pnpm security:inline-credentials"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "documentation-links",
+      "job_name": "documentation-links",
+      "step": "reusable-input-command",
+      "kind": "reusable_command",
+      "command": "pnpm docs:check-links"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "repo-hygiene",
+      "job_name": "repo-hygiene",
+      "step": "reusable-input-command",
+      "kind": "reusable_command",
+      "command": "pnpm hygiene:check"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "security-guardrails",
+      "job_name": "security-guardrails",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "security-guardrails",
+      "job_name": "security-guardrails",
+      "step": "Generate Prisma client",
+      "kind": "run",
+      "command": "pnpm db:generate"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "security-guardrails",
+      "job_name": "security-guardrails",
+      "step": "Enforce security guardrails",
+      "kind": "run",
+      "command": "pnpm ci:security-guardrails"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "platform",
+      "job_name": "platform (${{ matrix.task }})",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "platform",
+      "job_name": "platform (${{ matrix.task }})",
+      "step": "Generate Prisma client",
+      "kind": "run",
+      "command": "pnpm db:generate"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "platform",
+      "job_name": "platform (${{ matrix.task }})",
+      "step": "Bootstrap CI database",
+      "kind": "run",
+      "command": "pnpm db:bootstrap:ci"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "platform",
+      "job_name": "platform (${{ matrix.task }})",
+      "step": "Run ${{ matrix.task }}",
+      "kind": "run",
+      "command": "pnpm ci:task ${{ matrix.task }}"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "satellites",
+      "job_name": "satellites",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "satellites",
+      "job_name": "satellites",
+      "step": "Install Python test dependencies",
+      "kind": "run",
+      "command": "python -m pip install --upgrade pip\npython -m pip install -r requirements-test.txt -r apps/webhook-receiver/requirements.txt"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "satellites",
+      "job_name": "satellites",
+      "step": "Run satellites lane",
+      "kind": "run",
+      "command": "pnpm ci:task satellites"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "workflow-suite",
+      "job_name": "workflow-suite",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "workflow-suite",
+      "job_name": "workflow-suite",
+      "step": "Generate Prisma client",
+      "kind": "run",
+      "command": "pnpm db:generate"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "workflow-suite",
+      "job_name": "workflow-suite",
+      "step": "Bootstrap CI database",
+      "kind": "run",
+      "command": "pnpm db:bootstrap:ci"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "workflow-suite",
+      "job_name": "workflow-suite",
+      "step": "Run workflow suite",
+      "kind": "run",
+      "command": "pnpm ci:task workflow-suite"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "integration-db",
+      "job_name": "integration-db",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "integration-db",
+      "job_name": "integration-db",
+      "step": "Generate Prisma client",
+      "kind": "run",
+      "command": "pnpm db:generate"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "integration-db",
+      "job_name": "integration-db",
+      "step": "Run integration lane with real database",
+      "kind": "run",
+      "command": "pnpm test:integration"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "coverage-quality",
+      "job_name": "coverage-quality",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "coverage-quality",
+      "job_name": "coverage-quality",
+      "step": "Install Python coverage dependencies",
+      "kind": "run",
+      "command": "python -m pip install --upgrade pip\npython -m pip install -r requirements-test.txt -r apps/webhook-receiver/requirements.txt"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "coverage-quality",
+      "job_name": "coverage-quality",
+      "step": "Generate Prisma client",
+      "kind": "run",
+      "command": "pnpm db:generate"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "coverage-quality",
+      "job_name": "coverage-quality",
+      "step": "Bootstrap coverage database",
+      "kind": "run",
+      "command": "pnpm db:bootstrap:ci"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "coverage-quality",
+      "job_name": "coverage-quality",
+      "step": "Enforce TypeScript coverage baseline",
+      "kind": "run",
+      "command": "pnpm coverage:check"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "coverage-quality",
+      "job_name": "coverage-quality",
+      "step": "Enforce Python coverage baseline",
+      "kind": "run",
+      "command": "pnpm test:python:coverage"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "coverage-quality",
+      "job_name": "coverage-quality",
+      "step": "Detect dead code",
+      "kind": "run",
+      "command": "pnpm quality:dead-code"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "mutation-testing",
+      "job_name": "mutation-testing",
+      "step": "reusable-input-command",
+      "kind": "reusable_command",
+      "command": "pnpm test:mutation"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "pack-tests",
+      "job_name": "pack-tests",
+      "step": "reusable-input-command",
+      "kind": "reusable_command",
+      "command": "pnpm ci:task pack-tests"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "governance-gates",
+      "job_name": "governance-gates",
+      "step": "reusable-input-command",
+      "kind": "reusable_command",
+      "command": "pnpm monorepo:doctor && RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard && pnpm audit:ownership"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "e2e-release",
+      "job_name": "e2e-release",
+      "step": "reusable-input-command",
+      "kind": "reusable_command",
+      "command": "pnpm test:e2e:release"
+    },
+    {
+      "workflow_file": ".github/workflows/ci.yml",
+      "workflow": "CI",
+      "job_id": "ci",
+      "job_name": "ci",
+      "step": "Done",
+      "kind": "run",
+      "command": "echo \"All required checks passed.\""
+    },
+    {
+      "workflow_file": ".github/workflows/dependabot-auto-merge.yml",
+      "workflow": "Dependabot Security Auto-Merge",
+      "job_id": "auto-merge",
+      "job_name": "auto-merge",
+      "step": "Enable auto-merge for security patches",
+      "kind": "run",
+      "command": "gh pr merge --auto --squash \"$PR_URL\""
+    },
+    {
+      "workflow_file": ".github/workflows/f4-script-compliance.yml",
+      "workflow": "F4 Script Compliance",
+      "job_id": "workspace-compliance",
+      "job_name": "workspace-compliance",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/f4-script-compliance.yml",
+      "workflow": "F4 Script Compliance",
+      "job_id": "workspace-compliance",
+      "job_name": "workspace-compliance",
+      "step": "Run workspace audit",
+      "kind": "run",
+      "command": "pnpm workspace:audit"
+    },
+    {
+      "workflow_file": ".github/workflows/materialize-doc-only.yml",
+      "workflow": "Materialize Doc-Only Controls",
+      "job_id": "materialize-doc-only",
+      "job_name": "materialize-doc-only",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/materialize-doc-only.yml",
+      "workflow": "Materialize Doc-Only Controls",
+      "job_id": "materialize-doc-only",
+      "job_name": "materialize-doc-only",
+      "step": "Run technical materialization controls",
+      "kind": "run",
+      "command": "pnpm audit:materialize:all"
+    },
+    {
+      "workflow_file": ".github/workflows/release-rehearsal.yml",
+      "workflow": "Release Rehearsal",
+      "job_id": "cycle0-rehearsal",
+      "job_name": "cycle0-rehearsal",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/release-rehearsal.yml",
+      "workflow": "Release Rehearsal",
+      "job_id": "cycle0-rehearsal",
+      "job_name": "cycle0-rehearsal",
+      "step": "Run recurring release rehearsal",
+      "kind": "run",
+      "command": "pnpm release:verify:cycle0"
+    },
+    {
+      "workflow_file": ".github/workflows/release-rehearsal.yml",
+      "workflow": "Release Rehearsal",
+      "job_id": "cycle0-rehearsal",
+      "job_name": "cycle0-rehearsal",
+      "step": "Rebuild backup and DR readiness evidence",
+      "kind": "run",
+      "command": "set -euo pipefail\npnpm ops:backup:health\npnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario=\"scheduled release rehearsal\"\npnpm ops:dr:report"
+    },
+    {
+      "workflow_file": ".github/workflows/repository-health.yml",
+      "workflow": "Repository Health",
+      "job_id": "repository-health",
+      "job_name": "repository-health",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/repository-health.yml",
+      "workflow": "Repository Health",
+      "job_id": "repository-health",
+      "job_name": "repository-health",
+      "step": "Clean stale untracked artifacts",
+      "kind": "run",
+      "command": "pnpm artifacts:clean -- --apply"
+    },
+    {
+      "workflow_file": ".github/workflows/repository-health.yml",
+      "workflow": "Repository Health",
+      "job_id": "repository-health",
+      "job_name": "repository-health",
+      "step": "Generate repository health report",
+      "kind": "run",
+      "command": "pnpm monorepo:doctor"
+    },
+    {
+      "workflow_file": ".github/workflows/reusable-node-check.yml",
+      "workflow": "Reusable Node Check",
+      "job_id": "run",
+      "job_name": "run",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/reusable-node-check.yml",
+      "workflow": "Reusable Node Check",
+      "job_id": "run",
+      "job_name": "run",
+      "step": "Install Playwright browsers",
+      "kind": "run",
+      "command": "pnpm exec playwright install --with-deps chromium"
+    },
+    {
+      "workflow_file": ".github/workflows/reusable-node-check.yml",
+      "workflow": "Reusable Node Check",
+      "job_id": "run",
+      "job_name": "run",
+      "step": "Prisma diagnostics",
+      "kind": "run",
+      "command": "node -e \"const pkg=require('./packages/database/package.json'); console.log('prisma(dev):', pkg.devDependencies?.prisma ?? 'missing'); console.log('@prisma/client(dep):', pkg.dependencies?.['@prisma/client'] ?? 'missing');\"\npnpm ls @prisma/client\npnpm ls prisma\ncat packages/database/prisma/schema.prisma | grep -A 5 datasource || true\nsha256sum packages/database/prisma/schema.prisma || true"
+    },
+    {
+      "workflow_file": ".github/workflows/reusable-node-check.yml",
+      "workflow": "Reusable Node Check",
+      "job_id": "run",
+      "job_name": "run",
+      "step": "Run command",
+      "kind": "run",
+      "command": "case \"$WORKFLOW_COMMAND\" in\n  \"pnpm branch:check\")\n    pnpm branch:check\n    ;;\n  \"pnpm ci:commitlint\")\n    pnpm ci:commitlint\n    ;;\n  \"pnpm security:inline-credentials\")\n    pnpm security:inline-credentials\n    ;;\n  \"pnpm docs:check-links\")\n    pnpm docs:check-links\n    ;;\n  \"pnpm hygiene:check\")\n    pnpm hygiene:check\n    ;;\n  \"pnpm ci:task pack-tests\")\n    pnpm ci:task pack-tests\n    ;;\n  \"pnpm monorepo:doctor && RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard && pnpm audit:ownership\")\n    pnpm monorepo:doctor\n    RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard\n    pnpm audit:ownership\n    ;;\n  \"pnpm test:e2e:release\")\n    pnpm test:e2e:release\n    ;;\n  *)\n    echo \"Unsupported workflow command: $WORKFLOW_COMMAND\" >&2\n    exit 1\n    ;;\nesac"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "dependency-audit",
+      "job_name": "npm audit (high+)",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "dependency-audit",
+      "job_name": "npm audit (high+)",
+      "step": "Audit dependencies",
+      "kind": "run",
+      "command": "pnpm audit --audit-level=high"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "python-security",
+      "job_name": "python-security",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "python-security",
+      "job_name": "python-security",
+      "step": "Install Python dependencies",
+      "kind": "run",
+      "command": "set -euo pipefail\npython -m pip install --upgrade pip\npython -m pip install -r requirements-test.txt bandit pip-audit \"safety>=3.7.0\""
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "python-security",
+      "job_name": "python-security",
+      "step": "Enforce Python workflow hard-fail policy",
+      "kind": "run",
+      "command": "python scripts/ci/check-python-workflow-hard-fail.py"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "python-security",
+      "job_name": "python-security",
+      "step": "Run Bandit",
+      "kind": "run",
+      "command": "python -m bandit -q -r agents apps/webhook-receiver -x \"*/tests/*\" -lll"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "python-security",
+      "job_name": "python-security",
+      "step": "Run pip-audit",
+      "kind": "run",
+      "command": "python -m pip_audit -r requirements-test.txt --ignore-vuln CVE-2026-4539"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "python-security",
+      "job_name": "python-security",
+      "step": "Run Safety",
+      "kind": "run",
+      "command": "python -m safety check --full-report -r requirements-test.txt"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "rbac-suite",
+      "job_name": "RBAC suite",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "rbac-suite",
+      "job_name": "RBAC suite",
+      "step": "Generate Prisma client",
+      "kind": "run",
+      "command": "pnpm db:generate"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "rbac-suite",
+      "job_name": "RBAC suite",
+      "step": "Run RBAC tests",
+      "kind": "run",
+      "command": "pnpm test:rbac"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "zap-baseline",
+      "job_name": "OWASP ZAP baseline",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "zap-baseline",
+      "job_name": "OWASP ZAP baseline",
+      "step": "Build canonical web target",
+      "kind": "run",
+      "command": "pnpm --filter @birthub/web build"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "zap-baseline",
+      "job_name": "OWASP ZAP baseline",
+      "step": "Start canonical web target",
+      "kind": "run",
+      "command": "set -euo pipefail\nmkdir -p artifacts/security/zap\npnpm --filter @birthub/web start > artifacts/security/zap/web-server.log 2>&1 &\necho \"$!\" > artifacts/security/zap/web-server.pid"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "zap-baseline",
+      "job_name": "OWASP ZAP baseline",
+      "step": "Wait for canonical web target",
+      "kind": "run",
+      "command": "set -euo pipefail\ntarget_url=\"http://127.0.0.1:3001/login\"\nfor attempt in {1..60}; do\n  if curl --silent --show-error --fail \"$target_url\" > /dev/null; then\n    exit 0\n  fi\n  sleep 2\ndone\necho \"Canonical web target did not become ready for ZAP baseline.\" >&2\nexit 1"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "zap-baseline",
+      "job_name": "OWASP ZAP baseline",
+      "step": "ZAP baseline scan",
+      "kind": "run",
+      "command": "set -euo pipefail\nmkdir -p artifacts/security/zap\ndocker run --rm --network host \\\n  -v \"${PWD}/artifacts/security/zap:/zap/wrk\" \\\n  ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \\\n  -t http://127.0.0.1:3001/login \\\n  -J zap-report.json \\\n  -r zap-report.html \\\n  -w zap-report.md \\\n  -a"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "zap-baseline",
+      "job_name": "OWASP ZAP baseline",
+      "step": "Stop canonical web target",
+      "kind": "run",
+      "command": "set -euo pipefail\nif [[ -f artifacts/security/zap/web-server.pid ]]; then\n  pid=\"$(cat artifacts/security/zap/web-server.pid)\"\n  kill \"$pid\" 2>/dev/null || true\nfi"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "security-report",
+      "job_name": "security coverage report",
+      "step": "Install dependencies",
+      "kind": "run",
+      "command": "pnpm install --frozen-lockfile"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "security-report",
+      "job_name": "security coverage report",
+      "step": "Verify auth guards",
+      "kind": "run",
+      "command": "pnpm security:guards"
+    },
+    {
+      "workflow_file": ".github/workflows/security-scan.yml",
+      "workflow": "Security Scan",
+      "job_id": "security-report",
+      "job_name": "security coverage report",
+      "step": "Generate security report",
+      "kind": "run",
+      "command": "pnpm security:report"
+    }
+  ]
+}

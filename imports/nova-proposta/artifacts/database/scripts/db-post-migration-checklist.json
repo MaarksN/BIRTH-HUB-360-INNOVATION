@@ -1,0 +1,80 @@
+{
+  "error": {
+    "message": "run check-raw-query-joins.ts failed with exit code 1.",
+    "name": "Error"
+  },
+  "finishedAt": "2026-04-19T19:18:42.084Z",
+  "runId": "db-post-migration-checklist-2026-04-19T19-18-37-257Z",
+  "script": "db-post-migration-checklist",
+  "startedAt": "2026-04-19T19:18:37.257Z",
+  "status": "failed",
+  "steps": [
+    {
+      "critical": true,
+      "durationMs": 603,
+      "finishedAt": "2026-04-19T19:18:37.860Z",
+      "name": "run check-migration-governance.ts",
+      "startedAt": "2026-04-19T19:18:37.257Z",
+      "status": "success",
+      "type": "check",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\packages\\database\\scripts\\check-migration-governance.ts",
+      "script": "check-migration-governance.ts"
+    },
+    {
+      "critical": true,
+      "durationMs": 812,
+      "finishedAt": "2026-04-19T19:18:38.672Z",
+      "name": "run compare-migration-state.ts",
+      "startedAt": "2026-04-19T19:18:37.860Z",
+      "status": "success",
+      "type": "check",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\packages\\database\\scripts\\compare-migration-state.ts",
+      "script": "compare-migration-state.ts"
+    },
+    {
+      "critical": true,
+      "durationMs": 606,
+      "finishedAt": "2026-04-19T19:18:39.278Z",
+      "name": "run check-schema-drift.ts",
+      "startedAt": "2026-04-19T19:18:38.672Z",
+      "status": "success",
+      "type": "check",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\packages\\database\\scripts\\check-schema-drift.ts",
+      "script": "check-schema-drift.ts"
+    },
+    {
+      "critical": true,
+      "durationMs": 1054,
+      "finishedAt": "2026-04-19T19:18:40.332Z",
+      "name": "run check-tenancy-controls.ts",
+      "startedAt": "2026-04-19T19:18:39.278Z",
+      "status": "success",
+      "type": "check",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\packages\\database\\scripts\\check-tenancy-controls.ts",
+      "script": "check-tenancy-controls.ts"
+    },
+    {
+      "critical": true,
+      "durationMs": 855,
+      "finishedAt": "2026-04-19T19:18:41.187Z",
+      "name": "run check-fk-indexes.ts",
+      "startedAt": "2026-04-19T19:18:40.332Z",
+      "status": "success",
+      "type": "check",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\packages\\database\\scripts\\check-fk-indexes.ts",
+      "script": "check-fk-indexes.ts"
+    },
+    {
+      "critical": true,
+      "durationMs": 897,
+      "finishedAt": "2026-04-19T19:18:42.084Z",
+      "name": "run check-raw-query-joins.ts",
+      "startedAt": "2026-04-19T19:18:41.187Z",
+      "status": "failed",
+      "type": "check",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\packages\\database\\scripts\\check-raw-query-joins.ts",
+      "exitCode": 1,
+      "script": "check-raw-query-joins.ts"
+    }
+  ]
+}

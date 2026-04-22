@@ -1,0 +1,26 @@
+{
+  "backup": {
+    "directory": "C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\artifacts\\backups",
+    "exists": true,
+    "latest": null
+  },
+  "checkedAt": "2026-04-19T03:00:24.275Z",
+  "directories": {
+    "backupsDir": "C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\artifacts\\backups",
+    "walDir": null
+  },
+  "issues": [
+    "No backup files found in C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\artifacts\\backups."
+  ],
+  "ok": false,
+  "status": "fail",
+  "thresholds": {
+    "maxBackupAgeMinutes": 1440,
+    "maxWalLagMinutes": 5
+  },
+  "wal": {
+    "directory": null,
+    "exists": false,
+    "latest": null
+  }
+}

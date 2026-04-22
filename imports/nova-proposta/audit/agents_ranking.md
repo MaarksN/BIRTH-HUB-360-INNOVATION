@@ -1,0 +1,25 @@
+# Ranking de Agentes
+
+## Top 10 Melhores Agentes
+1. **boardprep-ai** - Score: 87 (⚫ FAKE)
+2. **brand-guardian** - Score: 87 (⚫ FAKE)
+3. **budget-fluid** - Score: 87 (⚫ FAKE)
+4. **capital-allocator** - Score: 87 (⚫ FAKE)
+5. **churn-deflector** - Score: 87 (⚫ FAKE)
+6. **competitor-xray** - Score: 87 (⚫ FAKE)
+7. **crisis-navigator** - Score: 87 (⚫ FAKE)
+8. **culture-pulse** - Score: 87 (⚫ FAKE)
+9. **expansion-mapper** - Score: 87 (⚫ FAKE)
+10. **market-sentinel** - Score: 87 (⚫ FAKE)
+
+## Top 10 Mais Críticos (Piores)
+1. **analyzerSkill** - Score: 15 (🔴 FRÁGIL)
+2. **generatorSkill** - Score: 15 (🔴 FRÁGIL)
+3. **monitorSkill** - Score: 15 (🔴 FRÁGIL)
+4. **orchestratorSkill** - Score: 15 (🔴 FRÁGIL)
+5. **reporterSkill** - Score: 15 (🔴 FRÁGIL)
+6. **ceo-pack** - Score: 25 (⚫ FAKE)
+7. **cfo-pack** - Score: 25 (⚫ FAKE)
+8. **cmo-pack** - Score: 25 (⚫ FAKE)
+9. **coo-pack** - Score: 25 (⚫ FAKE)
+10. **cro-pack** - Score: 25 (⚫ FAKE)

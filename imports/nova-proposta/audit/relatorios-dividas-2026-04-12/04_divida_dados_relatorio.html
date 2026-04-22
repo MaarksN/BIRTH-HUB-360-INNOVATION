@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatorio 04 - Divida de Dados</title>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;line-height:1.5;margin:32px;max-width:1100px}
+    code,pre{font-family:Consolas,monospace} pre{white-space:pre-wrap;background:#f6f8fa;padding:12px;border:1px solid #d0d7de}
+    .item{border:1px solid #d0d7de;border-radius:10px;padding:18px;margin:18px 0} .gravidade{font-weight:700;color:#9a3412}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Relatorio 04 - Divida de Dados</h1>
+    <p><strong>Projeto:</strong> BirthHub 360 Innovation</p>
+    <p><strong>Data:</strong> 2026-04-12</p>
+    <p><strong>Escopo:</strong> Integridade, isolamento por tenant e confiabilidade das validacoes relacionadas a dados.</p>
+  </header>
+  <main>
+    <section id="metodo">
+      <h2>Metodo</h2>
+      <p>Foram confrontados artefatos de governanca de banco com testes de RLS e mensagens de execucao presentes no resumo de cobertura para distinguir o que esta teoricamente configurado do que esta efetivamente provado em validacao corrente.</p>
+    </section>
+    <section id="resultado">
+      <h2>Resultado</h2>
+      <article class="item">
+        <h3>Item 1 - Isolamento por tenant depende de um caminho de validacao que hoje pode ser pulado</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> Embora os relatorios estaticos de banco estejam positivos, a validacao de isolamento clinico por tenant nao fica comprovada quando a role ativa ignora RLS, o que cria uma lacuna entre conformidade declarada e evidencia executada.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>artifacts/database/f8/fk-index-report.txt</code>, <code>referential-integrity-report.txt</code>, <code>migration-governance-report.txt</code> e <code>tenant-isolation-report.txt</code> registram estado positivo estatico.</li>
+          <li><code>packages/database/test/rls.test.ts:27-31</code> preve skip quando a role atual ignora RLS ou possui <code>BYPASSRLS</code>.</li>
+          <li><code>packages/database/test/rls.test.ts:74</code> exige zero linhas para provar isolamento.</li>
+          <li><code>artifacts/coverage/summary.json:74</code> contem mensagens de skip afirmando que a role atual ignora RLS e impossibilita validar isolamento por tenant.</li>
+        </ul>
+        <p><strong>Impacto:</strong> O projeto pode carregar uma confianca excessiva na segregacao de dados sem possuir evidencia executavel robusta no fluxo padrao de validacao.</p>
+        <p><strong>Plano sequencial:</strong> 1. Prover role de teste sem bypass. 2. Tornar o teste de isolamento obrigatorio em CI apropriada. 3. Separar claramente evidencias estaticas e dinamicas. 4. Rejeitar publicacao de relatorio quando isolamento nao puder ser provado.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Fortaleça a validacao de isolamento por tenant para que packages/database/test/rls.test.ts execute com uma role que nao ignore RLS e produza evidencia positiva real, em vez de apenas aceitar skip. Mantenha os relatorios estaticos existentes, mas adicione uma camada dinamica obrigatoria que falhe quando a prova de isolamento nao puder ser realizada.</pre>
+        </details>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

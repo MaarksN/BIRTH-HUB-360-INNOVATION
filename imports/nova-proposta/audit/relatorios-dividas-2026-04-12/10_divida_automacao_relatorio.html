@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatorio 10 - Divida de Automacao</title>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;line-height:1.5;margin:32px;max-width:1100px}
+    code,pre{font-family:Consolas,monospace} pre{white-space:pre-wrap;background:#f6f8fa;padding:12px;border:1px solid #d0d7de}
+    .item{border:1px solid #d0d7de;border-radius:10px;padding:18px;margin:18px 0} .gravidade{font-weight:700;color:#9a3412}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Relatorio 10 - Divida de Automacao</h1>
+    <p><strong>Projeto:</strong> BirthHub 360 Innovation</p>
+    <p><strong>Data:</strong> 2026-04-12</p>
+    <p><strong>Escopo:</strong> Automacoes de operacao, release e coleta de evidencias recorrentes.</p>
+  </header>
+  <main>
+    <section id="metodo">
+      <h2>Metodo</h2>
+      <p>Foram analisados scripts e workflows relacionados a rollback, disaster recovery e release bundle para verificar o quanto os processos criticos dependem de acao manual versus geracao automatica de evidencia.</p>
+    </section>
+    <section id="resultado">
+      <h2>Resultado</h2>
+      <article class="item">
+        <h3>Item 1 - Evidencias de rollback e DR ainda dependem de operador humano</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> O fluxo atual valida ou registra evidencias informadas manualmente, em vez de produzir uma trilha automatica e repetivel dos ensaios operacionais mais sensiveis.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>package.json:111</code> expoe <code>ops:dr:record</code> como script dedicado.</li>
+          <li><code>docs/runbooks/disaster-recovery.md:33</code> documenta execucao manual desse comando.</li>
+          <li><code>.github/workflows/cd.yml:20</code> define a entrada manual <code>rollback_rehearsal_evidence</code>.</li>
+          <li><code>.github/workflows/cd.yml:780</code> valida a evidencia fornecida, mas nao a gera.</li>
+        </ul>
+        <p><strong>Impacto:</strong> A confianca operacional depende mais de disciplina humana do que de uma esteira reprodutivel, auditavel e continuamente exercitada.</p>
+        <p><strong>Plano sequencial:</strong> 1. Automatizar coleta de evidencias. 2. Agendar ensaios recorrentes quando cabivel. 3. Publicar artefatos padronizados. 4. Manter gate de release baseado em prova automatica.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Transforme o registro de evidencias de rollback e disaster recovery em um fluxo automatizado e reprodutivel. Em vez de depender de texto informado manualmente no workflow, gere artefatos padronizados a partir da execucao real do ensaio, publique-os na pipeline e use essa saida como criterio verificavel para promocao.</pre>
+        </details>
+      </article>
+      <article class="item">
+        <h3>Item 2 - Bundle de release e verificacao de ciclo permanecem acoplados a execucao manual</h3>
+        <p class="gravidade">Gravidade: media</p>
+        <p><strong>Diagnostico:</strong> O fluxo de release bundle esta documentado e roteirizado, mas sua validacao ainda aparece ancorada em execucao manual por shell e nao em automacao recorrente dedicada.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>package.json:169</code> expoe <code>release:bundle</code>.</li>
+          <li><code>docs/release/reproducible-build.md:9</code> e <code>:16</code> descrevem a geracao manual de bundle, SBOM, checksums e catalogo.</li>
+          <li><code>scripts/release/verify-cycle0-flow.sh:36</code> invoca <code>pnpm release:bundle</code> como parte de uma verificacao shell manual.</li>
+          <li>Entre os workflows inspecionados, nao foi localizado um agendamento dedicado para exercitar periodicamente esse caminho.</li>
+        </ul>
+        <p><strong>Impacto:</strong> A automacao existe parcialmente, mas a confiabilidade do processo de release continua dependente de repeticao manual e disciplina de operador.</p>
+        <p><strong>Plano sequencial:</strong> 1. Promover o bundle a etapa padrao de pipeline. 2. Publicar artefatos automaticamente. 3. Agendar verificacao recorrente. 4. Eliminar passos shell manuais onde possivel.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Integre release:bundle e a verificacao de reproducibilidade a uma pipeline automatizada de rotina, com publicacao de artefatos e relatorio padronizado. Reduza a dependencia de execucao manual via scripts shell e adicione um fluxo recorrente que detecte deriva antes do momento de release.</pre>
+        </details>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

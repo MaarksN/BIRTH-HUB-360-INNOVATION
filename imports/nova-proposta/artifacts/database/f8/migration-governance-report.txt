@@ -1,0 +1,18 @@
+Migration governance check: PASS
+PASS 20260313000100_cycle1_foundation :: risks=none :: findings=0
+PASS 20260313000200_cycle2_multitenancy :: risks=set_not_null,alter_column_type,bulk_update :: findings=0
+PASS 20260313000200_cycle3_security_foundation :: risks=none :: findings=0
+PASS 20260313000300_cycle6_workflows_orchestration :: risks=alter_column_type :: findings=0
+PASS 20260313000300_cycle7_billing_foundation :: risks=drop_column,set_not_null,alter_column_type,bulk_update :: findings=0
+PASS 20260313000400_cycle9_engagement :: risks=none :: findings=0
+PASS 20260315000100_cycle7_billing_credits_exports :: risks=none :: findings=0
+PASS 20260315000200_cycle8_durable_budget_outputs :: risks=none :: findings=0
+PASS 20260316000100_cycle10_connectors_handoffs :: risks=none :: findings=0
+PASS 20260317000100_cycle11_billing_webhook_audit :: risks=set_not_null,bulk_update :: findings=0
+PASS 20260322000100_cycle8_data_resilience_controls :: risks=none :: findings=0
+PASS 20260331000100_cycle12_rls_policy_alignment :: risks=none :: findings=0
+PASS 20260402000100_cycle12_ci_schema_alignment :: risks=none :: findings=0
+PASS 20260407000300_phase1_lgpd_user_preferences :: risks=none :: findings=0
+PASS 20260408000100_phase1_user_preference_locale :: risks=none :: findings=0
+PASS 20260410000100_phase1_workflow_revision_rls :: risks=none :: findings=0
+PASS 20260419000100_phase1_schema_drift_reconciliation :: risks=drop_column :: findings=0

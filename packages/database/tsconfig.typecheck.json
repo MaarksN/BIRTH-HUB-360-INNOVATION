@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "../config" },
+    { "path": "../logger" },
+    { "path": "./tsconfig.json" }
+  ],
+  "compilerOptions": {
+    "noEmit": true
+  }
+}

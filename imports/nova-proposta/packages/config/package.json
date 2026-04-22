@@ -1,0 +1,32 @@
+{
+  "name": "@birthub/config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./web": "./dist/web.js",
+    "./shared": "./dist/shared.js",
+    "./environment": "./dist/environment.js"
+  },
+  "scripts": {
+    "build": "tsc -b tsconfig.json --force",
+    "lint": "eslint .",
+    "test": "node --import tsx --test src*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "dist"
+  ]
+}

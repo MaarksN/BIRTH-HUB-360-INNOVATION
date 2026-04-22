@@ -1,0 +1,1 @@
+Migration state comparison skipped because less than two environment URLs were configured.

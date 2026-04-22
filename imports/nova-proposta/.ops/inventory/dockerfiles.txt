@@ -1,0 +1,9 @@
+{"path":"apps/api/Dockerfile","from":[{"image":"node:24.14.0-alpine","stage":"base"},{"image":"base","stage":"build"},{"image":"node:24.14.0-alpine","stage":"runner"}],"cmd":["[\"pnpm\", \"start\"]"],"entrypoint":[],"expose":["3000"]}
+{"path":"apps/web/Dockerfile","from":[{"image":"node:24.14.0-alpine","stage":"base"},{"image":"base","stage":"build"},{"image":"node:24.14.0-alpine","stage":"runner"}],"cmd":["[\"node\", \"server.js\"]"],"entrypoint":[],"expose":["3001"]}
+{"path":"apps/worker/Dockerfile","from":[{"image":"node:24.14.0-alpine","stage":"base"},{"image":"base","stage":"build"},{"image":"node:24.14.0-alpine","stage":"runner"}],"cmd":["[\"pnpm\", \"start\"]"],"entrypoint":[],"expose":["3002"]}
+{"path":"artifacts/audit/files_analysis/apps/api/Dockerfile.md","from":[],"cmd":[],"entrypoint":[],"expose":[]}
+{"path":"artifacts/audit/files_analysis/apps/web/Dockerfile.md","from":[],"cmd":[],"entrypoint":[],"expose":[]}
+{"path":"artifacts/audit/files_analysis/apps/worker/Dockerfile.md","from":[],"cmd":[],"entrypoint":[],"expose":[]}
+{"path":"docker-compose.prod.yml","from":[],"cmd":[],"entrypoint":[],"expose":[]}
+{"path":"docker-compose.yml","from":[],"cmd":[],"entrypoint":[],"expose":[]}
+{"path":"infra/monitoring/docker-compose.monitoring.yml","from":[],"cmd":[],"entrypoint":[],"expose":[]}

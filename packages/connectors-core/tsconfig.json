@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "rootDir": "../..",
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src",
+    "../integrations/src/adapters/hubspot-crm-adapter.ts",
+    "../integrations/src/adapters/omie-erp-adapter.ts",
+    "../integrations/src/adapters/slack-message-adapter.ts",
+    "../integrations/src/adapters/stripe-payment-adapter.ts",
+    "../integrations/src/adapters/zenvia-message-adapter.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}

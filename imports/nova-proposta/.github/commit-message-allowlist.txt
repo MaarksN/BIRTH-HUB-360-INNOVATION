@@ -1,0 +1,14 @@
+# Temporary legacy exceptions.
+# Format: <sha> <optional note>
+6948a3f bootstrap commit before conventional-commit enforcement
+512dde4000634bc12b03c9162ea57935f03c5525 legacy baseline commit before branch policy hardening
+f628a7ade8ca37624052039b78a4f9efd4eef131 legacy baseline commit before branch policy hardening
+116d26eab493d21e41a9567e6838ea19856cf2b2 legacy baseline commit before branch policy hardening
+b6739c2f25740a81468ef72da17b71ad01d95d86 legacy commit from codex/conduct-secrets-audit-process before conventional-commit enforcement
+6e3776cd8e3f2d4b023cfeec8840672a2f6426d6 legacy commit from codex/conduct-secrets-audit-process before conventional-commit enforcement
+d0f6812f66b72e8bc8b4101931e570e1b45bedd8 temporary main commit with non-conventional message while unblocking CI
+11ab2f14ecd2ebd363f5cdecbf68aa9281a698b3 temporary main commit with non-conventional message while unblocking CI
+2bf08e67329e55063dc5630427ce82a6dae01a48 temporary main commit with non-conventional message while unblocking CI
+dbfeb3a46b8d9b08040ecd2219721533e10c3dba temporary main commit with non-conventional message while unblocking CI
+6c731240fd66f5d9973851fa600055515ce8bf21 temporary main commit with non-conventional message while unblocking CI
+3d135fa4711e8c626a7318db708f6e532a94a5e8 temporary main commit with non-conventional message while unblocking CI

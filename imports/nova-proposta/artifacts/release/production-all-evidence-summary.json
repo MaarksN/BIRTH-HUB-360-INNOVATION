@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-04-11T16:46:17.071Z",
+  "checks": [
+    {
+      "detail": "json ok=true",
+      "ok": true,
+      "path": "artifacts/release/production-preflight-summary.json"
+    },
+    {
+      "detail": "json ok=true",
+      "ok": true,
+      "path": "artifacts/release/smoke-summary.json"
+    },
+    {
+      "detail": "json ok=true",
+      "ok": true,
+      "path": "artifacts/release/production-rollback-evidence.json"
+    },
+    {
+      "detail": "present",
+      "ok": true,
+      "path": "artifacts/release/checksums-manifest.sha256"
+    },
+    {
+      "detail": "present",
+      "ok": true,
+      "path": "artifacts/release/release-artifact-catalog.json"
+    },
+    {
+      "detail": "present",
+      "ok": true,
+      "path": "artifacts/sbom/bom.xml"
+    },
+    {
+      "detail": "present",
+      "ok": true,
+      "path": "artifacts/sbom/sbom.spdx.json"
+    },
+    {
+      "detail": "present",
+      "ok": true,
+      "path": "releases/manifests/release_artifact_catalog.md"
+    },
+    {
+      "detail": "present",
+      "ok": true,
+      "path": "releases/notes/v1.0.0.md"
+    }
+  ],
+  "ok": true,
+  "stage": "all",
+  "target": "production"
+}

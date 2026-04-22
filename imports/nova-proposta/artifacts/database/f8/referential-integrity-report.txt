@@ -1,0 +1,2 @@
+Referential integrity check: PASS
+All foreign key constraints are validated.

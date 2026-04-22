@@ -1,0 +1,18 @@
+{
+  "cycle": 2,
+  "blockers": [
+    {
+      "id": "GATE_FAIL_PHASE1_SNAPSHOT_DRIFT",
+      "severity": "P0",
+      "status": "open",
+      "source": "JULES",
+      "detected_at": "2026-04-18T14:41:00Z",
+      "message": "Validação inicial do Ciclo 1 falhou porque o snapshot obrigatório estava desatualizado em relação ao HEAD real do workspace.",
+      "evidence": [
+        ".ops/reports/phase1-report.md",
+        ".ops/evidence/cycle1/README.md",
+        ".ops/snapshots/snapshot.json"
+      ]
+    }
+  ]
+}

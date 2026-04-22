@@ -1,0 +1,1589 @@
+{
+  "env_files_on_disk": [
+    ".env",
+    ".env.example",
+    ".env.vps.example",
+    "artifacts/audit/files_analysis/_root/.env.example.md",
+    "artifacts/audit/files_analysis/_root/.env.production.mock.md",
+    "artifacts/audit/files_analysis/_root/.env.staging.mock.md",
+    "artifacts/audit/files_analysis/_root/.env.vps.example.md",
+    "artifacts/audit/files_analysis/ops/env/.env.production.sealed.example.md",
+    "artifacts/audit/files_analysis/ops/env/.env.staging.sealed.example.md",
+    "artifacts/audit/files_analysis/ops/release/sealed/.env.production.sealed.md",
+    "artifacts/audit/files_analysis/ops/release/sealed/.env.staging.sealed.md",
+    "ops/env/.env.production.sealed.example",
+    "ops/env/.env.staging.sealed.example",
+    "ops/release/sealed/.env.production.sealed",
+    "ops/release/sealed/.env.staging.sealed",
+    "scripts/release/.env.production.template",
+    "scripts/release/.env.staging.template"
+  ],
+  "documented_variables": [
+    "AGENT_CIRCUIT_BREAKER_COOLDOWN_MS",
+    "AGENT_CIRCUIT_BREAKER_FAILURES",
+    "AGENT_DEFAULT_TOOL_COST_BRL",
+    "AGENT_EXECUTION_TIMEOUT_MS",
+    "AGENT_MAX_COST_BRL",
+    "AGENT_MAX_PLAN_STEPS",
+    "AGENT_TOOL_RETRY_ATTEMPTS",
+    "API_AUTH_COOKIE_NAME",
+    "API_AUTH_REFRESH_COOKIE_NAME",
+    "API_AUTH_ROTATION_GRACE_HOURS",
+    "API_AUTH_SESSION_TTL_HOURS",
+    "API_AUTH_TOKEN_TTL_MINUTES",
+    "API_CORS_ORIGINS",
+    "API_CSRF_COOKIE_NAME",
+    "API_CSRF_HEADER_NAME",
+    "API_DOMAIN",
+    "API_HANDLER_TIMEOUT_MS",
+    "API_JSON_BODY_LIMIT",
+    "API_KEY_PREFIX",
+    "API_KEY_RATE_LIMIT_MAX",
+    "API_LOGIN_RATE_LIMIT_MAX",
+    "API_LOGIN_RATE_LIMIT_WINDOW_MS",
+    "API_PORT",
+    "API_RATE_LIMIT_MAX",
+    "API_RATE_LIMIT_WINDOW_MS",
+    "API_WEBHOOK_RATE_LIMIT_MAX",
+    "API_WEBHOOK_RATE_LIMIT_TENANT_MULTIPLIER",
+    "API_WEBHOOK_RATE_LIMIT_WINDOW_MS",
+    "APP_DOMAIN",
+    "AUTH_BCRYPT_SALT_ROUNDS",
+    "AUTH_MFA_CHALLENGE_TTL_SECONDS",
+    "AUTH_MFA_CLOCK_SKEW_WINDOWS",
+    "AUTH_MFA_ENCRYPTION_KEY",
+    "AUTH_MFA_ISSUER",
+    "BILLING_EXPORT_LOCAL_DIR",
+    "BILLING_EXPORT_S3_BUCKET",
+    "BILLING_EXPORT_S3_ENDPOINT",
+    "BILLING_EXPORT_S3_PREFIX",
+    "BILLING_EXPORT_S3_REGION",
+    "BILLING_EXPORT_STORAGE_MODE",
+    "BILLING_GRACE_PERIOD_DAYS",
+    "BILLING_STATUS_CACHE_TTL_SECONDS",
+    "BIRTHUB_ENABLE_CLINICAL_WORKSPACE",
+    "BIRTHUB_ENABLE_FHIR_FACADE",
+    "BIRTHUB_ENABLE_PRIVACY_ADVANCED",
+    "BIRTHUB_ENABLE_PRIVACY_SELF_SERVICE",
+    "CADDY_EMAIL",
+    "CSP_REPORT_URI",
+    "DATABASE_CONNECTION_LIMIT",
+    "DATABASE_URL",
+    "DATASET_EXPORT_UPLOAD_TOKEN",
+    "DATASET_EXPORT_UPLOAD_URL",
+    "DEPLOYMENT_ENVIRONMENT",
+    "DIRECT_DATABASE_URL",
+    "EMAIL_FROM_ADDRESS",
+    "EXTERNAL_HEALTHCHECK_URLS",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "GOOGLE_REDIRECT_URI",
+    "HUBSPOT_ACCESS_TOKEN",
+    "HUBSPOT_BASE_URL",
+    "HUBSPOT_CLIENT_ID",
+    "HUBSPOT_CLIENT_SECRET",
+    "HUBSPOT_REDIRECT_URI",
+    "JOB_HMAC_GLOBAL_SECRET",
+    "LOG_LEVEL",
+    "MICROSOFT_CLIENT_ID",
+    "MICROSOFT_CLIENT_SECRET",
+    "MICROSOFT_REDIRECT_URI",
+    "NEXTAUTH_SECRET",
+    "NEXT_PUBLIC_API_URL",
+    "NEXT_PUBLIC_APP_URL",
+    "NEXT_PUBLIC_CSP_REPORT_ONLY",
+    "NEXT_PUBLIC_ENABLE_CLINICAL_WORKSPACE",
+    "NEXT_PUBLIC_ENABLE_FHIR_FACADE",
+    "NEXT_PUBLIC_ENABLE_PRIVACY_ADVANCED",
+    "NEXT_PUBLIC_ENABLE_PRIVACY_SELF_SERVICE",
+    "NEXT_PUBLIC_ENVIRONMENT",
+    "NEXT_PUBLIC_POSTHOG_HOST",
+    "NEXT_PUBLIC_POSTHOG_KEY",
+    "NEXT_PUBLIC_SENTRY_DSN",
+    "NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE",
+    "NODE_ENV",
+    "OTEL_EXPORTER_OTLP_ENDPOINT",
+    "OTEL_SERVICE_NAME",
+    "QUEUE_BACKPRESSURE_THRESHOLD",
+    "QUEUE_NAME",
+    "REDIS_URL",
+    "RENDER_PRODUCTION_DEPLOY_HOOK_URL",
+    "RENDER_STAGING_DEPLOY_HOOK_URL",
+    "REQUIRE_SECURE_COOKIES",
+    "SENDGRID_API_KEY",
+    "SENTRY_AUTH_TOKEN",
+    "SENTRY_DSN",
+    "SENTRY_ENVIRONMENT",
+    "SESSION_SECRET",
+    "STRIPE_CANCEL_URL",
+    "STRIPE_DECLINE_BAN_THRESHOLD",
+    "STRIPE_PORTAL_RETURN_URL",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_SUCCESS_URL",
+    "STRIPE_TEMP_BAN_SECONDS",
+    "STRIPE_WEBHOOK_SECRET",
+    "TENANT_QUEUE_RATE_LIMIT_MAX",
+    "TENANT_QUEUE_RATE_LIMIT_WINDOW_SECONDS",
+    "UPTIMEROBOT_API_TOKEN",
+    "WEBHOOK_TIMEOUT_MS",
+    "WEB_BASE_URL",
+    "WEB_PORT",
+    "WORKER_CONCURRENCY"
+  ],
+  "referenced_variables": [
+    "ALLOW_DESTRUCTIVE_DB_VALIDATION",
+    "ALLOW_DESTRUCTIVE_SEED",
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_MODEL",
+    "API_HEALTH_URL",
+    "API_PORT",
+    "API_URL",
+    "APPDATA",
+    "BIRTHHUB_HTML_PATH",
+    "BIRTHUB_DISABLE_VOICE_ENGINE_AUTOSTART",
+    "BIRTHUB_ENABLE_CLINICAL_WORKSPACE",
+    "BIRTHUB_ENABLE_DB_TESTS",
+    "BIRTHUB_ENABLE_FHIR_FACADE",
+    "BIRTHUB_ENABLE_PRIVACY_ADVANCED",
+    "BIRTHUB_REQUIRE_RLS_TESTS",
+    "C",
+    "CI",
+    "COMMIT_CHECK_BASE",
+    "COREPACK_HOME",
+    "CSP_REPORT_URI",
+    "DAST_TARGET_STRATEGY",
+    "DAST_TARGET_URL",
+    "DATABASE_CONNECTION_LIMIT",
+    "DATABASE_URL",
+    "DATABASE_URL_DEV",
+    "DATABASE_URL_PROD",
+    "DATABASE_URL_STAGING",
+    "DATASET_EXPORT_UPLOAD_TOKEN",
+    "DATASET_EXPORT_UPLOAD_URL",
+    "DB_APP_PASSWORD",
+    "DB_APP_ROLE",
+    "DB_SLOW_QUERY_MS",
+    "DEEPGRAM_API_KEY",
+    "DOC_LINKS_BASE",
+    "E2E_ENABLE_CLINICAL_WORKSPACE",
+    "E2E_ENABLE_FHIR_FACADE",
+    "E2E_ENABLE_PRIVACY_ADVANCED",
+    "GEMINI_API_KEY",
+    "GEMINI_MODEL",
+    "GITHUB_BASE_REF",
+    "GITHUB_EVENT_NAME",
+    "GITHUB_EVENT_PATH",
+    "GITHUB_HEAD_REF",
+    "GITHUB_REF",
+    "GITHUB_REF_NAME",
+    "LEGACY_AUTH_SAMPLE_PASSWORD",
+    "LOCALAPPDATA",
+    "LOCKFILE_SECURITY_LABEL",
+    "LOG_LEVEL",
+    "LOG_SAMPLE_RATE",
+    "MUTATION_INCLUDE_API_AUTH",
+    "NEXT_PUBLIC_API_URL",
+    "NEXT_PUBLIC_APP_URL",
+    "NEXT_PUBLIC_CSP_REPORT_ONLY",
+    "NEXT_PUBLIC_ENABLE_CLINICAL_WORKSPACE",
+    "NEXT_PUBLIC_ENABLE_FHIR_FACADE",
+    "NEXT_PUBLIC_ENABLE_PRIVACY_ADVANCED",
+    "NEXT_PUBLIC_ENVIRONMENT",
+    "NEXT_PUBLIC_POSTHOG_HOST",
+    "NEXT_PUBLIC_POSTHOG_KEY",
+    "NEXT_RUNTIME",
+    "NODE_ENV",
+    "NODE_OPTIONS",
+    "OPENAI_API_KEY",
+    "OPENAI_MODEL",
+    "OTEL_EXPORTER_OTLP_ENDPOINT",
+    "OTEL_SERVICE_NAME",
+    "OVERLOAD_CHUNK_SIZE",
+    "OVERLOAD_JOBS",
+    "OVERLOAD_MAX_WAIT_MS",
+    "OVERLOAD_POLL_INTERVAL_MS",
+    "P",
+    "PATH",
+    "PORT",
+    "PRISMA_QUERY_TIMEOUT_MIGRATION_MS",
+    "PRISMA_QUERY_TIMEOUT_MS",
+    "PRISMA_QUERY_TIMEOUT_REPORT_MS",
+    "QUEUE_NAME",
+    "REDIS_URL",
+    "RELEASE_SCORECARD_MIN_SCORE",
+    "REPO_HYGIENE_BASE",
+    "REQUIRE_DAST",
+    "RUNTIME_TEST_AGENT_ID",
+    "RUNTIME_TEST_EXECUTION_ID",
+    "RUNTIME_TEST_ORGANIZATION_ID",
+    "RUNTIME_TEST_TENANT_ID",
+    "RUNTIME_TEST_USER_ID",
+    "SEED_PROFILE",
+    "SENDGRID_API_KEY",
+    "SENDGRID_FROM_EMAIL",
+    "SHADOW_DATABASE_URL",
+    "SKIP_WEB_SERVER",
+    "SOURCE_DATE_EPOCH",
+    "TEST_DATABASE_URL",
+    "TWILIO_AUTH_TOKEN",
+    "USERPROFILE",
+    "WEB_BASE_URL",
+    "WEB_PORT",
+    "WORKFLOW_TEST_EXECUTION_ID",
+    "WORKFLOW_TEST_STEP_KEY",
+    "WORKFLOW_TEST_WORKFLOW_ID",
+    "ZAP_TARGET_URL",
+    "__STRYKER_ACTIVE_MUTANT__"
+  ],
+  "used_not_documented": [
+    "ALLOW_DESTRUCTIVE_DB_VALIDATION",
+    "ALLOW_DESTRUCTIVE_SEED",
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_MODEL",
+    "API_HEALTH_URL",
+    "API_URL",
+    "APPDATA",
+    "BIRTHHUB_HTML_PATH",
+    "BIRTHUB_DISABLE_VOICE_ENGINE_AUTOSTART",
+    "BIRTHUB_ENABLE_DB_TESTS",
+    "BIRTHUB_REQUIRE_RLS_TESTS",
+    "C",
+    "CI",
+    "COMMIT_CHECK_BASE",
+    "COREPACK_HOME",
+    "DAST_TARGET_STRATEGY",
+    "DAST_TARGET_URL",
+    "DATABASE_URL_DEV",
+    "DATABASE_URL_PROD",
+    "DATABASE_URL_STAGING",
+    "DB_APP_PASSWORD",
+    "DB_APP_ROLE",
+    "DB_SLOW_QUERY_MS",
+    "DEEPGRAM_API_KEY",
+    "DOC_LINKS_BASE",
+    "E2E_ENABLE_CLINICAL_WORKSPACE",
+    "E2E_ENABLE_FHIR_FACADE",
+    "E2E_ENABLE_PRIVACY_ADVANCED",
+    "GEMINI_API_KEY",
+    "GEMINI_MODEL",
+    "GITHUB_BASE_REF",
+    "GITHUB_EVENT_NAME",
+    "GITHUB_EVENT_PATH",
+    "GITHUB_HEAD_REF",
+    "GITHUB_REF",
+    "GITHUB_REF_NAME",
+    "LEGACY_AUTH_SAMPLE_PASSWORD",
+    "LOCALAPPDATA",
+    "LOCKFILE_SECURITY_LABEL",
+    "LOG_SAMPLE_RATE",
+    "MUTATION_INCLUDE_API_AUTH",
+    "NEXT_RUNTIME",
+    "NODE_OPTIONS",
+    "OPENAI_API_KEY",
+    "OPENAI_MODEL",
+    "OVERLOAD_CHUNK_SIZE",
+    "OVERLOAD_JOBS",
+    "OVERLOAD_MAX_WAIT_MS",
+    "OVERLOAD_POLL_INTERVAL_MS",
+    "P",
+    "PATH",
+    "PORT",
+    "PRISMA_QUERY_TIMEOUT_MIGRATION_MS",
+    "PRISMA_QUERY_TIMEOUT_MS",
+    "PRISMA_QUERY_TIMEOUT_REPORT_MS",
+    "RELEASE_SCORECARD_MIN_SCORE",
+    "REPO_HYGIENE_BASE",
+    "REQUIRE_DAST",
+    "RUNTIME_TEST_AGENT_ID",
+    "RUNTIME_TEST_EXECUTION_ID",
+    "RUNTIME_TEST_ORGANIZATION_ID",
+    "RUNTIME_TEST_TENANT_ID",
+    "RUNTIME_TEST_USER_ID",
+    "SEED_PROFILE",
+    "SENDGRID_FROM_EMAIL",
+    "SHADOW_DATABASE_URL",
+    "SKIP_WEB_SERVER",
+    "SOURCE_DATE_EPOCH",
+    "TEST_DATABASE_URL",
+    "TWILIO_AUTH_TOKEN",
+    "USERPROFILE",
+    "WORKFLOW_TEST_EXECUTION_ID",
+    "WORKFLOW_TEST_STEP_KEY",
+    "WORKFLOW_TEST_WORKFLOW_ID",
+    "ZAP_TARGET_URL",
+    "__STRYKER_ACTIVE_MUTANT__"
+  ],
+  "documented_not_used": [
+    "AGENT_CIRCUIT_BREAKER_COOLDOWN_MS",
+    "AGENT_CIRCUIT_BREAKER_FAILURES",
+    "AGENT_DEFAULT_TOOL_COST_BRL",
+    "AGENT_EXECUTION_TIMEOUT_MS",
+    "AGENT_MAX_COST_BRL",
+    "AGENT_MAX_PLAN_STEPS",
+    "AGENT_TOOL_RETRY_ATTEMPTS",
+    "API_AUTH_COOKIE_NAME",
+    "API_AUTH_REFRESH_COOKIE_NAME",
+    "API_AUTH_ROTATION_GRACE_HOURS",
+    "API_AUTH_SESSION_TTL_HOURS",
+    "API_AUTH_TOKEN_TTL_MINUTES",
+    "API_CORS_ORIGINS",
+    "API_CSRF_COOKIE_NAME",
+    "API_CSRF_HEADER_NAME",
+    "API_DOMAIN",
+    "API_HANDLER_TIMEOUT_MS",
+    "API_JSON_BODY_LIMIT",
+    "API_KEY_PREFIX",
+    "API_KEY_RATE_LIMIT_MAX",
+    "API_LOGIN_RATE_LIMIT_MAX",
+    "API_LOGIN_RATE_LIMIT_WINDOW_MS",
+    "API_RATE_LIMIT_MAX",
+    "API_RATE_LIMIT_WINDOW_MS",
+    "API_WEBHOOK_RATE_LIMIT_MAX",
+    "API_WEBHOOK_RATE_LIMIT_TENANT_MULTIPLIER",
+    "API_WEBHOOK_RATE_LIMIT_WINDOW_MS",
+    "APP_DOMAIN",
+    "AUTH_BCRYPT_SALT_ROUNDS",
+    "AUTH_MFA_CHALLENGE_TTL_SECONDS",
+    "AUTH_MFA_CLOCK_SKEW_WINDOWS",
+    "AUTH_MFA_ENCRYPTION_KEY",
+    "AUTH_MFA_ISSUER",
+    "BILLING_EXPORT_LOCAL_DIR",
+    "BILLING_EXPORT_S3_BUCKET",
+    "BILLING_EXPORT_S3_ENDPOINT",
+    "BILLING_EXPORT_S3_PREFIX",
+    "BILLING_EXPORT_S3_REGION",
+    "BILLING_EXPORT_STORAGE_MODE",
+    "BILLING_GRACE_PERIOD_DAYS",
+    "BILLING_STATUS_CACHE_TTL_SECONDS",
+    "BIRTHUB_ENABLE_PRIVACY_SELF_SERVICE",
+    "CADDY_EMAIL",
+    "DEPLOYMENT_ENVIRONMENT",
+    "DIRECT_DATABASE_URL",
+    "EMAIL_FROM_ADDRESS",
+    "EXTERNAL_HEALTHCHECK_URLS",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "GOOGLE_REDIRECT_URI",
+    "HUBSPOT_ACCESS_TOKEN",
+    "HUBSPOT_BASE_URL",
+    "HUBSPOT_CLIENT_ID",
+    "HUBSPOT_CLIENT_SECRET",
+    "HUBSPOT_REDIRECT_URI",
+    "JOB_HMAC_GLOBAL_SECRET",
+    "MICROSOFT_CLIENT_ID",
+    "MICROSOFT_CLIENT_SECRET",
+    "MICROSOFT_REDIRECT_URI",
+    "NEXTAUTH_SECRET",
+    "NEXT_PUBLIC_ENABLE_PRIVACY_SELF_SERVICE",
+    "NEXT_PUBLIC_SENTRY_DSN",
+    "NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE",
+    "QUEUE_BACKPRESSURE_THRESHOLD",
+    "RENDER_PRODUCTION_DEPLOY_HOOK_URL",
+    "RENDER_STAGING_DEPLOY_HOOK_URL",
+    "REQUIRE_SECURE_COOKIES",
+    "SENTRY_AUTH_TOKEN",
+    "SENTRY_DSN",
+    "SENTRY_ENVIRONMENT",
+    "SESSION_SECRET",
+    "STRIPE_CANCEL_URL",
+    "STRIPE_DECLINE_BAN_THRESHOLD",
+    "STRIPE_PORTAL_RETURN_URL",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_SUCCESS_URL",
+    "STRIPE_TEMP_BAN_SECONDS",
+    "STRIPE_WEBHOOK_SECRET",
+    "TENANT_QUEUE_RATE_LIMIT_MAX",
+    "TENANT_QUEUE_RATE_LIMIT_WINDOW_SECONDS",
+    "UPTIMEROBOT_API_TOKEN",
+    "WEBHOOK_TIMEOUT_MS",
+    "WORKER_CONCURRENCY"
+  ],
+  "tracked_env_with_potential_real_values": [
+    {
+      "file": ".env.example",
+      "key": "API_KEY_RATE_LIMIT_MAX",
+      "value_preview": "600"
+    },
+    {
+      "file": ".env.example",
+      "key": "API_AUTH_COOKIE_NAME",
+      "value_preview": "bh360_session"
+    },
+    {
+      "file": ".env.example",
+      "key": "API_AUTH_REFRESH_COOKIE_NAME",
+      "value_preview": "bh360_refresh"
+    },
+    {
+      "file": ".env.example",
+      "key": "API_AUTH_SESSION_TTL_HOURS",
+      "value_preview": "24"
+    },
+    {
+      "file": ".env.example",
+      "key": "API_AUTH_TOKEN_TTL_MINUTES",
+      "value_preview": "15"
+    },
+    {
+      "file": ".env.example",
+      "key": "API_AUTH_ROTATION_GRACE_HOURS",
+      "value_preview": "24"
+    },
+    {
+      "file": ".env.example",
+      "key": "API_KEY_PREFIX",
+      "value_preview": "bh360_live"
+    },
+    {
+      "file": ".env.example",
+      "key": "SESSION_SECRET",
+      "value_preview": "replace-me-in-production"
+    },
+    {
+      "file": ".env.example",
+      "key": "AUTH_MFA_ISSUER",
+      "value_preview": "BirthHub360"
+    },
+    {
+      "file": ".env.example",
+      "key": "AUTH_MFA_ENCRYPTION_KEY",
+      "value_preview": "replace-me-in-production"
+    },
+    {
+      "file": ".env.example",
+      "key": "AUTH_MFA_CLOCK_SKEW_WINDOWS",
+      "value_preview": "1"
+    },
+    {
+      "file": ".env.example",
+      "key": "AUTH_MFA_CHALLENGE_TTL_SECONDS",
+      "value_preview": "300"
+    },
+    {
+      "file": ".env.example",
+      "key": "JOB_HMAC_GLOBAL_SECRET",
+      "value_preview": "replace-me-in-production"
+    },
+    {
+      "file": ".env.example",
+      "key": "STRIPE_SECRET_KEY",
+      "value_preview": "sk_test_replace"
+    },
+    {
+      "file": ".env.example",
+      "key": "STRIPE_WEBHOOK_SECRET",
+      "value_preview": "whsec_replace"
+    },
+    {
+      "file": ".env.example",
+      "key": "STRIPE_DECLINE_BAN_THRESHOLD",
+      "value_preview": "5"
+    },
+    {
+      "file": ".env.example",
+      "key": "STRIPE_TEMP_BAN_SECONDS",
+      "value_preview": "900"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "API_KEY_PREFIX",
+      "value_preview": "bh360_live"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "AUTH_BCRYPT_SALT_ROUNDS",
+      "value_preview": "12"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "AUTH_MFA_ISSUER",
+      "value_preview": "BirthHub360"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "NEXTAUTH_SECRET",
+      "value_preview": "replace-with-64-char-hex"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "SESSION_SECRET",
+      "value_preview": "replace-with-64-char-hex"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "AUTH_MFA_ENCRYPTION_KEY",
+      "value_preview": "replace-with-64-char-hex"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "JOB_HMAC_GLOBAL_SECRET",
+      "value_preview": "replace-with-64-char-hex"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "STRIPE_SECRET_KEY",
+      "value_preview": "sk_live_replace_with_rea"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "STRIPE_WEBHOOK_SECRET",
+      "value_preview": "whsec_replace_with_real_"
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "STRIPE_SUCCESS_URL",
+      "value_preview": "https://app.birthhub360."
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "STRIPE_CANCEL_URL",
+      "value_preview": "https://app.birthhub360."
+    },
+    {
+      "file": ".env.vps.example",
+      "key": "STRIPE_PORTAL_RETURN_URL",
+      "value_preview": "https://app.birthhub360."
+    },
+    {
+      "file": "ops/env/.env.production.sealed.example",
+      "key": "DATABASE_URL",
+      "value_preview": "postgresql://sealed_user"
+    },
+    {
+      "file": "ops/env/.env.production.sealed.example",
+      "key": "REDIS_URL",
+      "value_preview": "rediss://sealed_user:sea"
+    },
+    {
+      "file": "ops/env/.env.production.sealed.example",
+      "key": "SESSION_SECRET",
+      "value_preview": "sealed_production_sessio"
+    },
+    {
+      "file": "ops/env/.env.production.sealed.example",
+      "key": "AUTH_MFA_ENCRYPTION_KEY",
+      "value_preview": "sealed_production_mfa_en"
+    },
+    {
+      "file": "ops/env/.env.production.sealed.example",
+      "key": "JOB_HMAC_GLOBAL_SECRET",
+      "value_preview": "sealed_production_job_hm"
+    },
+    {
+      "file": "ops/env/.env.production.sealed.example",
+      "key": "STRIPE_SECRET_KEY",
+      "value_preview": "sk_live_sealed_productio"
+    },
+    {
+      "file": "ops/env/.env.production.sealed.example",
+      "key": "STRIPE_WEBHOOK_SECRET",
+      "value_preview": "whsec_sealed_production_"
+    },
+    {
+      "file": "ops/env/.env.production.sealed.example",
+      "key": "STRIPE_SUCCESS_URL",
+      "value_preview": "https://app.birthhub360."
+    },
+    {
+      "file": "ops/env/.env.production.sealed.example",
+      "key": "STRIPE_CANCEL_URL",
+      "value_preview": "https://app.birthhub360."
+    },
+    {
+      "file": "ops/env/.env.staging.sealed.example",
+      "key": "DATABASE_URL",
+      "value_preview": "postgresql://sealed_user"
+    },
+    {
+      "file": "ops/env/.env.staging.sealed.example",
+      "key": "REDIS_URL",
+      "value_preview": "rediss://sealed_user:sea"
+    },
+    {
+      "file": "ops/env/.env.staging.sealed.example",
+      "key": "SESSION_SECRET",
+      "value_preview": "sealed_staging_session_s"
+    },
+    {
+      "file": "ops/env/.env.staging.sealed.example",
+      "key": "AUTH_MFA_ENCRYPTION_KEY",
+      "value_preview": "sealed_staging_mfa_encry"
+    },
+    {
+      "file": "ops/env/.env.staging.sealed.example",
+      "key": "JOB_HMAC_GLOBAL_SECRET",
+      "value_preview": "sealed_staging_job_hmac_"
+    },
+    {
+      "file": "ops/env/.env.staging.sealed.example",
+      "key": "STRIPE_SECRET_KEY",
+      "value_preview": "sk_test_sealed_staging_9"
+    },
+    {
+      "file": "ops/env/.env.staging.sealed.example",
+      "key": "STRIPE_WEBHOOK_SECRET",
+      "value_preview": "whsec_sealed_staging_3Nw"
+    },
+    {
+      "file": "ops/env/.env.staging.sealed.example",
+      "key": "STRIPE_SUCCESS_URL",
+      "value_preview": "https://staging.app.birt"
+    },
+    {
+      "file": "ops/env/.env.staging.sealed.example",
+      "key": "STRIPE_CANCEL_URL",
+      "value_preview": "https://staging.app.birt"
+    },
+    {
+      "file": "ops/release/sealed/.env.production.sealed",
+      "key": "AUTH_MFA_ENCRYPTION_KEY",
+      "value_preview": "prod-mfa-key-2026-03-24"
+    },
+    {
+      "file": "ops/release/sealed/.env.production.sealed",
+      "key": "JOB_HMAC_GLOBAL_SECRET",
+      "value_preview": "prod-job-hmac-2026-03-24"
+    },
+    {
+      "file": "ops/release/sealed/.env.production.sealed",
+      "key": "REDIS_URL",
+      "value_preview": "rediss://prod-redis.birt"
+    },
+    {
+      "file": "ops/release/sealed/.env.production.sealed",
+      "key": "SESSION_SECRET",
+      "value_preview": "prod-session-secret-2026"
+    },
+    {
+      "file": "ops/release/sealed/.env.production.sealed",
+      "key": "STRIPE_CANCEL_URL",
+      "value_preview": "https://app.birthhub360."
+    },
+    {
+      "file": "ops/release/sealed/.env.production.sealed",
+      "key": "STRIPE_SUCCESS_URL",
+      "value_preview": "https://app.birthhub360."
+    },
+    {
+      "file": "ops/release/sealed/.env.staging.sealed",
+      "key": "AUTH_MFA_ENCRYPTION_KEY",
+      "value_preview": "staging-mfa-key-2026-03-"
+    },
+    {
+      "file": "ops/release/sealed/.env.staging.sealed",
+      "key": "JOB_HMAC_GLOBAL_SECRET",
+      "value_preview": "staging-job-hmac-2026-03"
+    },
+    {
+      "file": "ops/release/sealed/.env.staging.sealed",
+      "key": "REDIS_URL",
+      "value_preview": "rediss://staging-redis.b"
+    },
+    {
+      "file": "ops/release/sealed/.env.staging.sealed",
+      "key": "SESSION_SECRET",
+      "value_preview": "staging-session-secret-2"
+    },
+    {
+      "file": "ops/release/sealed/.env.staging.sealed",
+      "key": "STRIPE_CANCEL_URL",
+      "value_preview": "https://staging.birthhub"
+    },
+    {
+      "file": "ops/release/sealed/.env.staging.sealed",
+      "key": "STRIPE_SUCCESS_URL",
+      "value_preview": "https://staging.birthhub"
+    }
+  ],
+  "inline_secret_hits": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": ".github/workflows/security-scan.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/security-scan.yml",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": ".github/workflows/security-scan.yml",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "apps/api/src/lib/database-availability.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/api/test/tenant-cache.hit-miss.test.js",
+      "match": "postgresql://cache-test"
+    },
+    {
+      "file": "apps/api/test/tenant-cache.hit-miss.test.ts",
+      "match": "postgresql://cache-test"
+    },
+    {
+      "file": "apps/api/tests/billing.cache.test.js",
+      "match": "redis://unit-test:6379"
+    },
+    {
+      "file": "apps/api/tests/billing.cache.test.ts",
+      "match": "redis://unit-test:6379"
+    },
+    {
+      "file": "apps/api/tests/database-availability.test.js",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/api/tests/database-availability.test.js",
+      "match": "postgresql://birthub:secret@db.example.c"
+    },
+    {
+      "file": "apps/api/tests/database-availability.test.js",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/api/tests/database-availability.test.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/api/tests/database-availability.test.ts",
+      "match": "postgresql://birthub:secret@db.example.c"
+    },
+    {
+      "file": "apps/api/tests/database-availability.test.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/api/tests/environment-runtime.test.js",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/api/tests/environment-runtime.test.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/api/tests/test-config.js",
+      "match": "whsec_birthub360"
+    },
+    {
+      "file": "apps/api/tests/test-config.js",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/api/tests/test-config.js",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "apps/api/tests/test-config.ts",
+      "match": "whsec_birthub360"
+    },
+    {
+      "file": "apps/api/tests/test-config.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/api/tests/test-config.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "apps/voice-engine/src/server.test.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "apps/voice-engine/src/server.test.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "apps/webhook-receiver/main.py",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "apps/worker/src/agents/runtime.db-integration.test.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "apps/worker/test/outbound.webhooks.test.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "apps/worker/test/outbound.webhooks.test.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-05/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-05/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-06/01-raw-evidence.json",
+      "match": "postgresql://api_worker:********@127.0.0"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-06/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-06/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-07/01-raw-evidence.json",
+      "match": "postgresql://REDACTED:postgres@127.0.0.1"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-07/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-07/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-08/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-08/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-09/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-09/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-10/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/.auditor-prime/2026-04-10/01-raw-evidence.json",
+      "match": "redis://localhost:6379\\"
+    },
+    {
+      "file": "audit/autofix/snapshots/packages/queue/src/index.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "audit/github-actions/inventory.json",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "sk_live_replace_with_real_value"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "sk_live_prod_masked_20260324"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "sk_live_staging_masked_20260324"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "sk_live_sealed_production_8Lm4Qx9Vz2Kp7T"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "sk_live_sealed_production_8Lm4Qx9Vz2Kp7T"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "sk_live_prod_masked_20260324"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "sk_live_staging_masked_20260324"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "sk_live_birthhub360"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "sk_live_birthhub360"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_replace"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_replace_with_real_value"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_birthub360"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_prod_masked_20260324"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_staging_masked_20260324"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_sealed_production_4Rt8mP2qX7nV5kL1"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_sealed_staging_3Nw7kL2pQ8rT5vY1mD4"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_sealed_production_4Rt8mP2qX7nV5kL1"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_sealed_staging_3Nw7kL2pQ8rT5vY1mD4"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_prod_masked_20260324"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_staging_masked_20260324"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_replace"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_staging_birthhub360"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_live_birthhub360"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_staging_birthhub360"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "whsec_birthub360"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://birthub:secret@db.example.c"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://birthhub:use-a-real-passwor"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://birthhub:use-a-real-passwor"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://prod_user:prod_password@pro"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://staging_user:staging_passwo"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://sealed_user:sealed_password"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://sealed_user:sealed_password"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgres://user:pass@host/db"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@h"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://sealed_user:sealed_password"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://sealed_user:sealed_password"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://prod_user:prod_password@pro"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://staging_user:staging_passwo"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@d"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:${encodeURICompone"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "rediss://default:use-a-real-password@red"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "rediss://sealed_user:sealed_password@pro"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "rediss://sealed_user:sealed_password@sta"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "rediss://sealed_user:sealed_password@pro"
+    },
+    {
+      "file": "audit/repo-doctor/20260417_224259/findings.json",
+      "match": "rediss://sealed_user:sealed_password@sta"
+    },
+    {
+      "file": "ci-local.ps1",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "ci-local.ps1",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "infra/monitoring/docker-compose.monitoring.yml",
+      "match": "postgresql://postgres:postgrespassword@h"
+    },
+    {
+      "file": "infra/monitoring/docker-compose.monitoring.yml",
+      "match": "redis://host.docker.internal:6379"
+    },
+    {
+      "file": "packages/config/src/api.config.test.ts",
+      "match": "sk_live_birthhub360"
+    },
+    {
+      "file": "packages/config/src/api.config.test.ts",
+      "match": "sk_live_birthhub360"
+    },
+    {
+      "file": "packages/config/src/api.config.test.ts",
+      "match": "whsec_replace"
+    },
+    {
+      "file": "packages/config/src/api.config.test.ts",
+      "match": "whsec_staging_birthhub360"
+    },
+    {
+      "file": "packages/config/src/api.config.test.ts",
+      "match": "whsec_live_birthhub360"
+    },
+    {
+      "file": "packages/config/src/api.config.test.ts",
+      "match": "whsec_staging_birthhub360"
+    },
+    {
+      "file": "packages/config/src/api.config.test.ts",
+      "match": "postgresql://postgres:postgrespassword@d"
+    },
+    {
+      "file": "packages/config/src/api.config.test.ts",
+      "match": "rediss://cache.birthhub360.com:6379"
+    },
+    {
+      "file": "packages/config/src/api.config.ts",
+      "match": "whsec_birthub360"
+    },
+    {
+      "file": "packages/config/src/environment.test.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "packages/config/src/environment.test.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "packages/config/src/worker.config.test.ts",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "packages/config/src/worker.config.test.ts",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "packages/config/src/worker.config.test.ts",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "packages/config/src/worker.config.test.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "packages/config/src/worker.config.test.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "packages/config/src/worker.config.test.ts",
+      "match": "rediss://localhost:6379"
+    },
+    {
+      "file": "packages/database/prisma.config.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "packages/database/src/client.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "packages/database/test/client.test.ts",
+      "match": "postgresql://user:pass@db.birthhub.local"
+    },
+    {
+      "file": "packages/database/test/client.test.ts",
+      "match": "postgresql://user:pass@db.birthhub.local"
+    },
+    {
+      "file": "packages/database/test/client.test.ts",
+      "match": "postgresql://user:pass@db.birthhub.local"
+    },
+    {
+      "file": "packages/database/test/client.test.ts",
+      "match": "postgresql://user:pass@db.birthhub.local"
+    },
+    {
+      "file": "packages/database/test/client.test.ts",
+      "match": "postgresql://user:pass@db.birthhub.local"
+    },
+    {
+      "file": "packages/database/test/database-script-pipelines.test.ts",
+      "match": "postgresql://localhost:5432/birthub_vali"
+    },
+    {
+      "file": "packages/database/test/schema-drift-environment.test.ts",
+      "match": "postgresql://db.example/birthub"
+    },
+    {
+      "file": "packages/database/test/schema-drift-environment.test.ts",
+      "match": "postgresql://shadow.example/birthub"
+    },
+    {
+      "file": "packages/database/test/schema-drift-environment.test.ts",
+      "match": "postgresql://db.example/birthub"
+    },
+    {
+      "file": "packages/database/test/schema-drift-environment.test.ts",
+      "match": "postgresql://shadow.example/birthub"
+    },
+    {
+      "file": "packages/queue/load-test/bullmq-load-test.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "packages/queue/src/runtime.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "packages/testing/src/test-db.test.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "packages/testing/src/test-db.test.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "packages/testing/src/test-db.test.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "packages/testing/src/test-db.ts",
+      "match": "postgresql://postgres:postgres@localhost"
+    },
+    {
+      "file": "scripts/audit/prime-refresh-evidence.mjs",
+      "match": "postgresql://postgres:${encodeURICompone"
+    },
+    {
+      "file": "scripts/ci/full.mjs",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "scripts/ci/full.mjs",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "scripts/ci/local-ci.sh",
+      "match": "postgresql://postgres:postgrespassword@l"
+    },
+    {
+      "file": "scripts/ci/local-ci.sh",
+      "match": "redis://localhost:6379}"
+    },
+    {
+      "file": "scripts/load-tests/worker-overload.ts",
+      "match": "redis://localhost:6379"
+    },
+    {
+      "file": "scripts/reset-local.sh",
+      "match": "postgresql://postgres:postgrespassword@l"
+    }
+  ],
+  "gitignore_env_policy": ".env\n.env.local\n.env.vps"
+}

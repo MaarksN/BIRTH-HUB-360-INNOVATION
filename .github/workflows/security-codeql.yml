@@ -1,0 +1,68 @@
+name: Security CodeQL
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          build-mode: none
+          languages: javascript-typescript
+          queries: security-extended,security-and-quality
+
+      - name: Analyze with CodeQL
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:javascript-typescript"
+          output: reports/codeql
+          upload: false
+
+      - name: Resolve CodeQL SARIF
+        id: resolve-sarif
+        shell: bash
+        run: |
+          sarif_file="$(find reports/codeql -type f -name '*.sarif' | head -n 1)"
+          if [ -z "$sarif_file" ]; then
+            echo "CodeQL did not produce a SARIF file." >&2
+            exit 1
+          fi
+          echo "sarif_file=$sarif_file" >> "$GITHUB_OUTPUT"
+
+      - name: Upload CodeQL SARIF
+        if: always() && steps.resolve-sarif.outputs.sarif_file != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          category: "/language:javascript-typescript"
+          sarif_file: ${{ steps.resolve-sarif.outputs.sarif_file }}
+
+      - name: Fail on critical CodeQL findings
+        run: >
+          node scripts/ci/assert-sarif-threshold.mjs
+          --tool codeql
+          --input reports/codeql
+          --security-severity 9

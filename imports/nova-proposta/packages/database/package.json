@@ -1,0 +1,63 @@
+{
+  "name": "@birthub/database",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./client": "./dist/client.js",
+    "./repositories": "./dist/repositories/index.js"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "scripts": {
+    "prebuild": "pnpm run db:generate",
+    "build": "tsc -b tsconfig.json --force",
+    "db:bootstrap:ci": "node --import tsx scripts/bootstrap-ci.ts",
+    "db:generate": "node scripts/prisma-runtime-compat.mjs && prisma generate --schema prisma/schema.prisma",
+    "db:migrate:deploy": "node --import tsx scripts/migrate-deploy-safe.ts",
+    "db:migrate:dev": "prisma migrate dev --schema prisma/schema.prisma --name cycle2_multitenancy",
+    "db:reset": "prisma migrate reset --schema prisma/schema.prisma --force",
+    "db:seed": "prisma db seed --schema prisma/schema.prisma",
+    "db:seed:destructive": "node --import tsx prisma/seed.ts --profile=destructive --mode=destructive",
+    "db:seed:safe": "node --import tsx prisma/seed.ts --profile=safe",
+    "lint": "eslint .",
+    "test": "node --import tsx --test src*.test.ts test*.test.ts",
+    "test:isolation": "node --import tsx --test test/database-availability.test.ts test/rls.test.ts test/maternal-domain.rls.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "db:check:all": "node --import tsx scripts/post-migration-checklist.ts",
+    "db:check:drift": "node --import tsx scripts/check-schema-drift.ts",
+    "db:check:fk": "node --import tsx scripts/check-fk-indexes.ts",
+    "db:check:governance": "node --import tsx scripts/check-migration-governance.ts",
+    "db:check:joins": "node --import tsx scripts/check-raw-query-joins.ts",
+    "db:check:performance": "node --import tsx scripts/analyze-performance.ts",
+    "db:check:ri": "node --import tsx scripts/check-referential-integrity.ts",
+    "db:check:tenancy": "node --import tsx scripts/check-tenancy-controls.ts",
+    "db:compare:envs": "node --import tsx scripts/compare-migration-state.ts",
+    "db:seed:ci": "node --import tsx prisma/seed.ts --profile=ci",
+    "db:seed:smoke": "node --import tsx prisma/seed.ts --profile=smoke",
+    "db:seed:staging": "node --import tsx prisma/seed.ts --profile=staging",
+    "db:validate:pr": "node --import tsx scripts/validate-migrations-on-test-db.ts",
+    "db:provision:app-role": "node --import tsx scripts/provision-rls-runtime-role.ts",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@birthub/config": "workspace:^",
+    "@birthub/logger": "workspace:^",
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "6.19.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "prisma": "6.19.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest-mock-extended": "^4.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

@@ -1,0 +1,1746 @@
+{
+  "generatedAt": "2026-04-09T18:38:35.320Z",
+  "latestPrimeReport": {
+    "absolutePath": "C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\audit\\.auditor-prime\\2026-04-09\\03-scored-report.json",
+    "dateOnly": "2026-04-09",
+    "relativePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json"
+  },
+  "policy": {
+    "bareIdsAllowedInNewReferences": false,
+    "namespaces": {
+      "auditorPrime": "APR",
+      "master": "MASTER",
+      "program": "PROGRAM"
+    }
+  },
+  "sources": [
+    {
+      "label": "Technical Debt Program",
+      "namespace": "PROGRAM",
+      "sourcePath": "docs/technical-debt/tracker.json",
+      "count": 7,
+      "firstId": "TD-001",
+      "lastId": "TD-007"
+    },
+    {
+      "label": "Relatorio Master",
+      "namespace": "MASTER",
+      "sourcePath": "audit/divida_tecnica.json",
+      "count": 10,
+      "firstId": "TD-001",
+      "lastId": "TD-010"
+    },
+    {
+      "label": "Auditor Prime",
+      "namespace": "APR",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "count": 100,
+      "firstId": "TD-001",
+      "lastId": "TD-100"
+    }
+  ],
+  "collisions": [
+    {
+      "bareId": "TD-001",
+      "namespaces": [
+        "PROGRAM-TD-001",
+        "MASTER-TD-001",
+        "APR-TD-001"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (PROGRAM-TD-001, MASTER-TD-001, APR-TD-001). O bare ID TD-001 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "PROGRAM-TD-001",
+          "domain": "documentation",
+          "source": "Technical Debt Program",
+          "sourcePath": "docs/technical-debt/tracker.json",
+          "title": "Root documentation entrypoints drifted from the real repo structure"
+        },
+        {
+          "canonicalId": "MASTER-TD-001",
+          "domain": "Autenticação / Autorização",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Sessão de refresh token em memória (perde em restart)"
+        },
+        {
+          "canonicalId": "APR-TD-001",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Complexidade acima do limiar em DashboardHomePage"
+        }
+      ]
+    },
+    {
+      "bareId": "TD-002",
+      "namespaces": [
+        "PROGRAM-TD-002",
+        "MASTER-TD-002",
+        "APR-TD-002"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (PROGRAM-TD-002, MASTER-TD-002, APR-TD-002). O bare ID TD-002 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "PROGRAM-TD-002",
+          "domain": "operations",
+          "source": "Technical Debt Program",
+          "sourcePath": "docs/technical-debt/tracker.json",
+          "title": "Operational runbooks were fragmented and missing rollback and disaster recovery playbooks"
+        },
+        {
+          "canonicalId": "MASTER-TD-002",
+          "domain": "Banco de Dados",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Teste de RLS falhando com banco real"
+        },
+        {
+          "canonicalId": "APR-TD-002",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Complexidade acima do limiar em GlobalSearch"
+        }
+      ]
+    },
+    {
+      "bareId": "TD-003",
+      "namespaces": [
+        "PROGRAM-TD-003",
+        "MASTER-TD-003",
+        "APR-TD-003"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (PROGRAM-TD-003, MASTER-TD-003, APR-TD-003). O bare ID TD-003 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "PROGRAM-TD-003",
+          "domain": "tooling",
+          "source": "Technical Debt Program",
+          "sourcePath": "docs/technical-debt/tracker.json",
+          "title": "Documentation governance lacked automated link validation and reproducible dependency graph generation"
+        },
+        {
+          "canonicalId": "MASTER-TD-003",
+          "domain": "Banco de Dados",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Drift de schema detectado após migrate deploy"
+        },
+        {
+          "canonicalId": "APR-TD-003",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Complexidade acima do limiar em main"
+        }
+      ]
+    },
+    {
+      "bareId": "TD-004",
+      "namespaces": [
+        "PROGRAM-TD-004",
+        "MASTER-TD-004",
+        "APR-TD-004"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (PROGRAM-TD-004, MASTER-TD-004, APR-TD-004). O bare ID TD-004 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "PROGRAM-TD-004",
+          "domain": "governance",
+          "source": "Technical Debt Program",
+          "sourcePath": "docs/technical-debt/tracker.json",
+          "title": "Technical debt reporting had no single tracker, dashboard, or executive summary"
+        },
+        {
+          "canonicalId": "MASTER-TD-004",
+          "domain": "Testes",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Dependência de banco torna suíte core instável em ambiente sem serviços"
+        },
+        {
+          "canonicalId": "APR-TD-004",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Complexidade acima do limiar em Navbar"
+        }
+      ]
+    },
+    {
+      "bareId": "TD-005",
+      "namespaces": [
+        "PROGRAM-TD-005",
+        "MASTER-TD-005",
+        "APR-TD-005"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (PROGRAM-TD-005, MASTER-TD-005, APR-TD-005). O bare ID TD-005 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "PROGRAM-TD-005",
+          "domain": "api",
+          "source": "Technical Debt Program",
+          "sourcePath": "docs/technical-debt/tracker.json",
+          "title": "OpenAPI coverage is still partial for the full apps/api surface"
+        },
+        {
+          "canonicalId": "MASTER-TD-005",
+          "domain": "DevOps / Observabilidade",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Threshold de DLQ diverge entre documento e regra operacional"
+        },
+        {
+          "canonicalId": "APR-TD-005",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Complexidade acima do limiar em SalesOsShell"
+        }
+      ]
+    },
+    {
+      "bareId": "TD-006",
+      "namespaces": [
+        "PROGRAM-TD-006",
+        "MASTER-TD-006",
+        "APR-TD-006"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (PROGRAM-TD-006, MASTER-TD-006, APR-TD-006). O bare ID TD-006 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "PROGRAM-TD-006",
+          "domain": "architecture",
+          "source": "Technical Debt Program",
+          "sourcePath": "docs/technical-debt/tracker.json",
+          "title": "Legacy compatibility surfaces remain operational and increase documentation drift risk"
+        },
+        {
+          "canonicalId": "MASTER-TD-006",
+          "domain": "DevOps / Entrega",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Setup local não verifica readiness antes de migrar/seed"
+        },
+        {
+          "canonicalId": "APR-TD-006",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Complexidade acima do limiar em usePatientDetailModel"
+        }
+      ]
+    },
+    {
+      "bareId": "TD-007",
+      "namespaces": [
+        "PROGRAM-TD-007",
+        "MASTER-TD-007",
+        "APR-TD-007"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (PROGRAM-TD-007, MASTER-TD-007, APR-TD-007). O bare ID TD-007 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "PROGRAM-TD-007",
+          "domain": "enablement",
+          "source": "Technical Debt Program",
+          "sourcePath": "docs/technical-debt/tracker.json",
+          "title": "Knowledge transfer recordings and owner sign-off still depend on scheduled human sessions"
+        },
+        {
+          "canonicalId": "MASTER-TD-007",
+          "domain": "Arquitetura",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Infra Terraform ainda no nível baseline"
+        },
+        {
+          "canonicalId": "APR-TD-007",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Superfície legacy ainda versionada ao lado do core canônico"
+        }
+      ]
+    },
+    {
+      "bareId": "TD-008",
+      "namespaces": [
+        "MASTER-TD-008",
+        "APR-TD-008"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (MASTER-TD-008, APR-TD-008). O bare ID TD-008 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "MASTER-TD-008",
+          "domain": "DevOps / Entrega",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Fluxo de deploy depende de evidência manual de rollback"
+        },
+        {
+          "canonicalId": "APR-TD-008",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Arquivo grande demais para o boundary atual (1287 linhas)"
+        }
+      ]
+    },
+    {
+      "bareId": "TD-009",
+      "namespaces": [
+        "MASTER-TD-009",
+        "APR-TD-009"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (MASTER-TD-009, APR-TD-009). O bare ID TD-009 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "MASTER-TD-009",
+          "domain": "Segurança",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Contradição operacional em isolamento RLS"
+        },
+        {
+          "canonicalId": "APR-TD-009",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Arquivo grande demais para o boundary atual (2345 linhas)"
+        }
+      ]
+    },
+    {
+      "bareId": "TD-010",
+      "namespaces": [
+        "MASTER-TD-010",
+        "APR-TD-010"
+      ],
+      "recommendation": "Usar somente IDs qualificados por namespace (MASTER-TD-010, APR-TD-010). O bare ID TD-010 fica proibido em novos docs, PRs e runbooks.",
+      "sources": [
+        {
+          "canonicalId": "MASTER-TD-010",
+          "domain": "Produto / Operação",
+          "source": "Relatorio Master",
+          "sourcePath": "audit/divida_tecnica.json",
+          "title": "Documentação de alerta indica limite diferente do alerta efetivo"
+        },
+        {
+          "canonicalId": "APR-TD-010",
+          "domain": "Dimensão 1 — Saúde Arquitetural",
+          "source": "Auditor Prime",
+          "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+          "title": "Arquivo grande demais para o boundary atual (6945 linhas)"
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "canonicalId": "PROGRAM-TD-001",
+      "domain": "documentation",
+      "legacyId": "TD-001",
+      "owner": "Platform Enablement",
+      "priority": "P1",
+      "residualRisk": "low",
+      "source": "program",
+      "sourcePath": "docs/technical-debt/tracker.json",
+      "status": "closed",
+      "title": "Root documentation entrypoints drifted from the real repo structure"
+    },
+    {
+      "canonicalId": "PROGRAM-TD-002",
+      "domain": "operations",
+      "legacyId": "TD-002",
+      "owner": "Platform Engineering",
+      "priority": "P1",
+      "residualRisk": "low",
+      "source": "program",
+      "sourcePath": "docs/technical-debt/tracker.json",
+      "status": "closed",
+      "title": "Operational runbooks were fragmented and missing rollback and disaster recovery playbooks"
+    },
+    {
+      "canonicalId": "PROGRAM-TD-003",
+      "domain": "tooling",
+      "legacyId": "TD-003",
+      "owner": "Developer Experience",
+      "priority": "P1",
+      "residualRisk": "low",
+      "source": "program",
+      "sourcePath": "docs/technical-debt/tracker.json",
+      "status": "closed",
+      "title": "Documentation governance lacked automated link validation and reproducible dependency graph generation"
+    },
+    {
+      "canonicalId": "PROGRAM-TD-004",
+      "domain": "governance",
+      "legacyId": "TD-004",
+      "owner": "Engineering Management",
+      "priority": "P1",
+      "residualRisk": "low",
+      "source": "program",
+      "sourcePath": "docs/technical-debt/tracker.json",
+      "status": "closed",
+      "title": "Technical debt reporting had no single tracker, dashboard, or executive summary"
+    },
+    {
+      "canonicalId": "PROGRAM-TD-005",
+      "domain": "api",
+      "legacyId": "TD-005",
+      "owner": "API Core",
+      "priority": "P1",
+      "residualRisk": "high",
+      "source": "program",
+      "sourcePath": "docs/technical-debt/tracker.json",
+      "status": "open",
+      "title": "OpenAPI coverage is still partial for the full apps/api surface"
+    },
+    {
+      "canonicalId": "PROGRAM-TD-006",
+      "domain": "architecture",
+      "legacyId": "TD-006",
+      "owner": "Architecture Council",
+      "priority": "P2",
+      "residualRisk": "medium",
+      "source": "program",
+      "sourcePath": "docs/technical-debt/tracker.json",
+      "status": "open",
+      "title": "Legacy compatibility surfaces remain operational and increase documentation drift risk"
+    },
+    {
+      "canonicalId": "PROGRAM-TD-007",
+      "domain": "enablement",
+      "legacyId": "TD-007",
+      "owner": "Engineering Managers",
+      "priority": "P2",
+      "residualRisk": "medium",
+      "source": "program",
+      "sourcePath": "docs/technical-debt/tracker.json",
+      "status": "in-progress",
+      "title": "Knowledge transfer recordings and owner sign-off still depend on scheduled human sessions"
+    },
+    {
+      "canonicalId": "MASTER-TD-001",
+      "domain": "Autenticação / Autorização",
+      "legacyId": "TD-001",
+      "owner": null,
+      "priority": "Crítico",
+      "residualRisk": "BLOQUEADOR_DE_PRODUCAO",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Parcial",
+      "title": "Sessão de refresh token em memória (perde em restart)"
+    },
+    {
+      "canonicalId": "MASTER-TD-002",
+      "domain": "Banco de Dados",
+      "legacyId": "TD-002",
+      "owner": null,
+      "priority": "Crítico",
+      "residualRisk": "BLOQUEADOR_DE_PRODUCAO",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Quebrado",
+      "title": "Teste de RLS falhando com banco real"
+    },
+    {
+      "canonicalId": "MASTER-TD-003",
+      "domain": "Banco de Dados",
+      "legacyId": "TD-003",
+      "owner": null,
+      "priority": "Alto",
+      "residualRisk": "BLOQUEADOR_DE_PRODUCAO",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Quebrado",
+      "title": "Drift de schema detectado após migrate deploy"
+    },
+    {
+      "canonicalId": "MASTER-TD-004",
+      "domain": "Testes",
+      "legacyId": "TD-004",
+      "owner": null,
+      "priority": "Alto",
+      "residualRisk": "REAL",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Parcial",
+      "title": "Dependência de banco torna suíte core instável em ambiente sem serviços"
+    },
+    {
+      "canonicalId": "MASTER-TD-005",
+      "domain": "DevOps / Observabilidade",
+      "legacyId": "TD-005",
+      "owner": null,
+      "priority": "Alto",
+      "residualRisk": "PARCIAL_REAL",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Parcial",
+      "title": "Threshold de DLQ diverge entre documento e regra operacional"
+    },
+    {
+      "canonicalId": "MASTER-TD-006",
+      "domain": "DevOps / Entrega",
+      "legacyId": "TD-006",
+      "owner": null,
+      "priority": "Médio",
+      "residualRisk": "PARCIAL_REAL",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Parcial",
+      "title": "Setup local não verifica readiness antes de migrar/seed"
+    },
+    {
+      "canonicalId": "MASTER-TD-007",
+      "domain": "Arquitetura",
+      "legacyId": "TD-007",
+      "owner": null,
+      "priority": "Médio",
+      "residualRisk": "PARCIAL_REAL",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Parcial",
+      "title": "Infra Terraform ainda no nível baseline"
+    },
+    {
+      "canonicalId": "MASTER-TD-008",
+      "domain": "DevOps / Entrega",
+      "legacyId": "TD-008",
+      "owner": null,
+      "priority": "Médio",
+      "residualRisk": "PARCIAL_REAL",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Parcial",
+      "title": "Fluxo de deploy depende de evidência manual de rollback"
+    },
+    {
+      "canonicalId": "MASTER-TD-009",
+      "domain": "Segurança",
+      "legacyId": "TD-009",
+      "owner": null,
+      "priority": "Crítico",
+      "residualRisk": "BLOQUEADOR_DE_PRODUCAO",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Parcial",
+      "title": "Contradição operacional em isolamento RLS"
+    },
+    {
+      "canonicalId": "MASTER-TD-010",
+      "domain": "Produto / Operação",
+      "legacyId": "TD-010",
+      "owner": null,
+      "priority": "Médio",
+      "residualRisk": "ILUSAO_TECNICA",
+      "source": "master",
+      "sourcePath": "audit/divida_tecnica.json",
+      "status": "Parcial",
+      "title": "Documentação de alerta indica limite diferente do alerta efetivo"
+    },
+    {
+      "canonicalId": "APR-TD-001",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-001",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Complexidade acima do limiar em DashboardHomePage"
+    },
+    {
+      "canonicalId": "APR-TD-002",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-002",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Complexidade acima do limiar em GlobalSearch"
+    },
+    {
+      "canonicalId": "APR-TD-003",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-003",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Complexidade acima do limiar em main"
+    },
+    {
+      "canonicalId": "APR-TD-004",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-004",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Complexidade acima do limiar em Navbar"
+    },
+    {
+      "canonicalId": "APR-TD-005",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-005",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Complexidade acima do limiar em SalesOsShell"
+    },
+    {
+      "canonicalId": "APR-TD-006",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-006",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Complexidade acima do limiar em usePatientDetailModel"
+    },
+    {
+      "canonicalId": "APR-TD-007",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-007",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Superfície legacy ainda versionada ao lado do core canônico"
+    },
+    {
+      "canonicalId": "APR-TD-008",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-008",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Arquivo grande demais para o boundary atual (1287 linhas)"
+    },
+    {
+      "canonicalId": "APR-TD-009",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-009",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Arquivo grande demais para o boundary atual (2345 linhas)"
+    },
+    {
+      "canonicalId": "APR-TD-010",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-010",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Arquivo grande demais para o boundary atual (6945 linhas)"
+    },
+    {
+      "canonicalId": "APR-TD-011",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-011",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Arquivo grande demais para o boundary atual (976 linhas)"
+    },
+    {
+      "canonicalId": "APR-TD-012",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-012",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: docs/architecture/c4-context.md] Diagrama C4 versionado do core"
+    },
+    {
+      "canonicalId": "APR-TD-013",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-013",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: docs/architecture/dependency-boundaries.md] Matriz explícita de dependências permitidas (complementar 2)"
+    },
+    {
+      "canonicalId": "APR-TD-014",
+      "domain": "Dimensão 1 — Saúde Arquitetural",
+      "legacyId": "TD-014",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: docs/architecture/c4-context.md] Diagrama C4 versionado do core (complementar 3)"
+    },
+    {
+      "canonicalId": "APR-TD-015",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-015",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Acesso direto a process.env fora da camada de configuração"
+    },
+    {
+      "canonicalId": "APR-TD-016",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-016",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Acesso direto a process.env fora da camada de configuração"
+    },
+    {
+      "canonicalId": "APR-TD-017",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-017",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Acesso direto a process.env fora da camada de configuração"
+    },
+    {
+      "canonicalId": "APR-TD-018",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-018",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Acesso direto a process.env fora da camada de configuração"
+    },
+    {
+      "canonicalId": "APR-TD-019",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-019",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Acesso direto a process.env fora da camada de configuração"
+    },
+    {
+      "canonicalId": "APR-TD-020",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-020",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Uso recorrente de any em agent.ts"
+    },
+    {
+      "canonicalId": "APR-TD-021",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-021",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Uso recorrente de any em encryption.ts"
+    },
+    {
+      "canonicalId": "APR-TD-022",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-022",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Uso recorrente de any em index.ts"
+    },
+    {
+      "canonicalId": "APR-TD-023",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-023",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Uso recorrente de any em main.js"
+    },
+    {
+      "canonicalId": "APR-TD-024",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-024",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Uso recorrente de any em pack-installer.service.ts"
+    },
+    {
+      "canonicalId": "APR-TD-025",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-025",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Uso recorrente de any em signatures.ts"
+    },
+    {
+      "canonicalId": "APR-TD-026",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-026",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Logging ad-hoc com console.* em runtime"
+    },
+    {
+      "canonicalId": "APR-TD-027",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-027",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Logging ad-hoc com console.* em runtime"
+    },
+    {
+      "canonicalId": "APR-TD-028",
+      "domain": "Dimensão 2 — Qualidade de Código",
+      "legacyId": "TD-028",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Logging ad-hoc com console.* em runtime"
+    },
+    {
+      "canonicalId": "APR-TD-029",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-029",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Uso de raw query insegura no acesso a dados"
+    },
+    {
+      "canonicalId": "APR-TD-030",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-030",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Chamada externa sem timeout ou abort path explícito"
+    },
+    {
+      "canonicalId": "APR-TD-031",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-031",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Configuração sensível dispersa em módulo crítico"
+    },
+    {
+      "canonicalId": "APR-TD-032",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-032",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Configuração sensível dispersa em módulo crítico"
+    },
+    {
+      "canonicalId": "APR-TD-033",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-033",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Semgrep WARNING em prime-collect.mjs"
+    },
+    {
+      "canonicalId": "APR-TD-034",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-034",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Semgrep INFO em service.yaml"
+    },
+    {
+      "canonicalId": "APR-TD-035",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-035",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Semgrep INFO em shared-prime.mjs"
+    },
+    {
+      "canonicalId": "APR-TD-036",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-036",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Semgrep INFO em shared-prime.mjs"
+    },
+    {
+      "canonicalId": "APR-TD-037",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-037",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Semgrep INFO em shared-prime.mjs"
+    },
+    {
+      "canonicalId": "APR-TD-038",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-038",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: semgrep --json] Linha de base SAST fresca para o HEAD atual"
+    },
+    {
+      "canonicalId": "APR-TD-039",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-039",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: DAST/ZAP report] Cobertura dinâmica de SSRF/XSS/autenticação (complementar 2)"
+    },
+    {
+      "canonicalId": "APR-TD-040",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-040",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: semgrep --json] Linha de base SAST fresca para o HEAD atual (complementar 3)"
+    },
+    {
+      "canonicalId": "APR-TD-041",
+      "domain": "Dimensão 3 — Segurança",
+      "legacyId": "TD-041",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: DAST/ZAP report] Cobertura dinâmica de SSRF/XSS/autenticação (complementar 4)"
+    },
+    {
+      "canonicalId": "APR-TD-042",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-042",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Observabilidade inconsistente por uso de console em runtime"
+    },
+    {
+      "canonicalId": "APR-TD-043",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-043",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Observabilidade inconsistente por uso de console em runtime"
+    },
+    {
+      "canonicalId": "APR-TD-044",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-044",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Cobertura estrutural baixa em apps/web"
+    },
+    {
+      "canonicalId": "APR-TD-045",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-045",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Cobertura estrutural baixa em apps/worker"
+    },
+    {
+      "canonicalId": "APR-TD-046",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-046",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Módulo volumoso sem teste relacionado direto"
+    },
+    {
+      "canonicalId": "APR-TD-047",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-047",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Módulo volumoso sem teste relacionado direto"
+    },
+    {
+      "canonicalId": "APR-TD-048",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-048",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Módulo volumoso sem teste relacionado direto"
+    },
+    {
+      "canonicalId": "APR-TD-049",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-049",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Módulo volumoso sem teste relacionado direto"
+    },
+    {
+      "canonicalId": "APR-TD-050",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-050",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: cobertura por módulo] Cobertura quantitativa por camada"
+    },
+    {
+      "canonicalId": "APR-TD-051",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-051",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: SLO dashboards vivos] SLO/SLA com erro budget operacional (complementar 2)"
+    },
+    {
+      "canonicalId": "APR-TD-052",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-052",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: cobertura por módulo] Cobertura quantitativa por camada (complementar 3)"
+    },
+    {
+      "canonicalId": "APR-TD-053",
+      "domain": "Dimensão 4 — Cobertura de Testes e Observabilidade",
+      "legacyId": "TD-053",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: SLO dashboards vivos] SLO/SLA com erro budget operacional (complementar 4)"
+    },
+    {
+      "canonicalId": "APR-TD-054",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-054",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Consulta findMany sem paginação explícita"
+    },
+    {
+      "canonicalId": "APR-TD-055",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-055",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Consulta findMany sem paginação explícita"
+    },
+    {
+      "canonicalId": "APR-TD-056",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-056",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Consulta findMany sem paginação explícita"
+    },
+    {
+      "canonicalId": "APR-TD-057",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-057",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Consulta findMany sem paginação explícita"
+    },
+    {
+      "canonicalId": "APR-TD-058",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-058",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Await serial em loop de runtime"
+    },
+    {
+      "canonicalId": "APR-TD-059",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-059",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Await serial em loop de runtime"
+    },
+    {
+      "canonicalId": "APR-TD-060",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-060",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Await serial em loop de runtime"
+    },
+    {
+      "canonicalId": "APR-TD-061",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-061",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Await serial em loop de runtime"
+    },
+    {
+      "canonicalId": "APR-TD-062",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-062",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Integração externa sem deadline operacional explícito"
+    },
+    {
+      "canonicalId": "APR-TD-063",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-063",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Bundle web fresco acima de 2 MiB (2443.96 KiB)"
+    },
+    {
+      "canonicalId": "APR-TD-064",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-064",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Página/estado web com complexidade alta (34)"
+    },
+    {
+      "canonicalId": "APR-TD-065",
+      "domain": "Dimensão 5 — Performance e Escalabilidade",
+      "legacyId": "TD-065",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Página/estado web com complexidade alta (44)"
+    },
+    {
+      "canonicalId": "APR-TD-066",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-066",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Histórico recente contém mensagens de commit placeholder"
+    },
+    {
+      "canonicalId": "APR-TD-067",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-067",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Dockerfile sem evidência de multi-stage build"
+    },
+    {
+      "canonicalId": "APR-TD-068",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-068",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Dockerfile sem evidência de multi-stage build"
+    },
+    {
+      "canonicalId": "APR-TD-069",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-069",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Dockerfile sem evidência de multi-stage build"
+    },
+    {
+      "canonicalId": "APR-TD-070",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-070",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Diretório Kubernetes existe sem manifests ativos"
+    },
+    {
+      "canonicalId": "APR-TD-071",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-071",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: inventário de ambientes] Paridade real dev/staging/prod"
+    },
+    {
+      "canonicalId": "APR-TD-072",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-072",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: lead time por PR] Métrica DORA completa de mudança (complementar 2)"
+    },
+    {
+      "canonicalId": "APR-TD-073",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-073",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: inventário de ambientes] Paridade real dev/staging/prod (complementar 3)"
+    },
+    {
+      "canonicalId": "APR-TD-074",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-074",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: lead time por PR] Métrica DORA completa de mudança (complementar 4)"
+    },
+    {
+      "canonicalId": "APR-TD-075",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-075",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: inventário de ambientes] Paridade real dev/staging/prod (complementar 5)"
+    },
+    {
+      "canonicalId": "APR-TD-076",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-076",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: lead time por PR] Métrica DORA completa de mudança (complementar 6)"
+    },
+    {
+      "canonicalId": "APR-TD-077",
+      "domain": "Dimensão 6 — Infraestrutura e DevOps",
+      "legacyId": "TD-077",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 1",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: inventário de ambientes] Paridade real dev/staging/prod (complementar 7)"
+    },
+    {
+      "canonicalId": "APR-TD-078",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-078",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Rota sem estados auxiliares dedicados (loading.tsx + error.tsx)"
+    },
+    {
+      "canonicalId": "APR-TD-079",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-079",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Rota sem estados auxiliares dedicados (loading.tsx + error.tsx)"
+    },
+    {
+      "canonicalId": "APR-TD-080",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-080",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Rota sem estados auxiliares dedicados (loading.tsx + error.tsx)"
+    },
+    {
+      "canonicalId": "APR-TD-081",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-081",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Strings de interface hardcoded em superfície web"
+    },
+    {
+      "canonicalId": "APR-TD-082",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-082",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Strings de interface hardcoded em superfície web"
+    },
+    {
+      "canonicalId": "APR-TD-083",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-083",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Strings de interface hardcoded em superfície web"
+    },
+    {
+      "canonicalId": "APR-TD-084",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-084",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Strings de interface hardcoded em superfície web"
+    },
+    {
+      "canonicalId": "APR-TD-085",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-085",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Strings de interface hardcoded em superfície web"
+    },
+    {
+      "canonicalId": "APR-TD-086",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-086",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Strings de interface hardcoded em superfície web"
+    },
+    {
+      "canonicalId": "APR-TD-087",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-087",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: auditoria a11y automatizada] Conformidade WCAG do frontend"
+    },
+    {
+      "canonicalId": "APR-TD-088",
+      "domain": "Dimensão 7 — Dívida de Produto e UX Técnica",
+      "legacyId": "TD-088",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 2",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: baseline de cross-browser] Compatibilidade real entre navegadores (complementar 2)"
+    },
+    {
+      "canonicalId": "APR-TD-089",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-089",
+      "owner": null,
+      "priority": "ALTO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "ALTO",
+      "title": "Drill de disaster recovery não registrado no ciclo atual"
+    },
+    {
+      "canonicalId": "APR-TD-090",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-090",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "Playbook explícito de on-call não encontrado"
+    },
+    {
+      "canonicalId": "APR-TD-091",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-091",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: SLA versionado] Compromissos operacionais por tenant"
+    },
+    {
+      "canonicalId": "APR-TD-092",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-092",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: evidência de DR drill] Exercício periódico de disaster recovery (complementar 2)"
+    },
+    {
+      "canonicalId": "APR-TD-093",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-093",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: SLA versionado] Compromissos operacionais por tenant (complementar 3)"
+    },
+    {
+      "canonicalId": "APR-TD-094",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-094",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: evidência de DR drill] Exercício periódico de disaster recovery (complementar 4)"
+    },
+    {
+      "canonicalId": "APR-TD-095",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-095",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: SLA versionado] Compromissos operacionais por tenant (complementar 5)"
+    },
+    {
+      "canonicalId": "APR-TD-096",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-096",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: evidência de DR drill] Exercício periódico de disaster recovery (complementar 6)"
+    },
+    {
+      "canonicalId": "APR-TD-097",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-097",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: SLA versionado] Compromissos operacionais por tenant (complementar 7)"
+    },
+    {
+      "canonicalId": "APR-TD-098",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-098",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: evidência de DR drill] Exercício periódico de disaster recovery (complementar 8)"
+    },
+    {
+      "canonicalId": "APR-TD-099",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-099",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: SLA versionado] Compromissos operacionais por tenant (complementar 9)"
+    },
+    {
+      "canonicalId": "APR-TD-100",
+      "domain": "Dimensão 8 — Maturidade Operacional e Multi-tenancy",
+      "legacyId": "TD-100",
+      "owner": null,
+      "priority": "MÉDIO",
+      "residualRisk": "Fase 3",
+      "source": "auditor_prime",
+      "sourcePath": "audit/.auditor-prime/2026-04-09/03-scored-report.json",
+      "status": "MÉDIO",
+      "title": "[DADOS INSUFICIENTES — REQUER: evidência de DR drill] Exercício periódico de disaster recovery (complementar 10)"
+    }
+  ]
+}

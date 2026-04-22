@@ -1,0 +1,82 @@
+{
+  "gates": [
+    {
+      "detail": "Workspace contract matches the canonical core lane",
+      "evidence": [
+        "scripts/ci/workspace-audit.mjs"
+      ],
+      "name": "Workspace audit",
+      "pass": true
+    },
+    {
+      "detail": "No critical findings in the canonical go-live scope",
+      "evidence": [
+        "scripts/ci/monorepo-doctor.mjs"
+      ],
+      "name": "Monorepo doctor",
+      "pass": true
+    },
+    {
+      "detail": "Report present",
+      "evidence": [
+        "docs/security/security-coverage-report.md"
+      ],
+      "name": "Security baseline report",
+      "pass": true
+    },
+    {
+      "detail": "Prisma lock present",
+      "evidence": [
+        "packages/database/prisma/migrations/migration_lock.toml"
+      ],
+      "name": "Schema migration lock",
+      "pass": true
+    },
+    {
+      "detail": "SLO documentation present",
+      "evidence": [
+        "docs/OBSERVABILIDADE_E_SLOS.md"
+      ],
+      "name": "SLO baseline",
+      "pass": true
+    },
+    {
+      "detail": "Score 60.85% vs threshold 60 on 470 mutants",
+      "evidence": [
+        "artifacts/quality/mutation-summary.json",
+        "docs/evidence/mutation-report.md"
+      ],
+      "name": "Mutation lane",
+      "pass": true
+    },
+    {
+      "detail": "Current=42, regressions=0",
+      "evidence": [
+        "artifacts/quality/dead-code/knip-report.json",
+        "docs/evidence/dead-code-report.md",
+        "artifacts/quality/knip-baseline.json"
+      ],
+      "name": "Dead code regression",
+      "pass": true
+    },
+    {
+      "detail": "Rollback rehearsal evidence derived from preflight, smoke, source manifest and release bundle artifacts.",
+      "evidence": [
+        "artifacts/release/production-rollback-evidence.json"
+      ],
+      "name": "Rollback evidence",
+      "pass": true
+    },
+    {
+      "detail": "Score 100 meets minimum 100",
+      "evidence": [],
+      "name": "Score threshold",
+      "pass": true
+    }
+  ],
+  "generatedAt": "2026-04-19T14:26:41.186Z",
+  "minimumScore": 100,
+  "passedGates": 8,
+  "score": 100,
+  "totalGates": 8
+}

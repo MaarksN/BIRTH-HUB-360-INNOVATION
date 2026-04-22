@@ -1,0 +1,13 @@
+Target: production
+Checked at: 2026-04-19T03:45:11.535Z
+Mode: automated_release_rehearsal
+PASS artifacts/release/production-preflight-summary.json (json ok=true)
+PASS artifacts/release/smoke-summary.json (json ok=true)
+PASS artifacts/release/source-manifest.json (source manifest bound to workflow_dispatch/1616de68c7ac3d923c817be2ca6fd80e82e887a9)
+PASS artifacts/release/checksums-manifest.sha256 (present)
+PASS artifacts/release/release-artifact-catalog.json (present)
+PASS artifacts/sbom/bom.xml (present)
+PASS artifacts/sbom/sbom.spdx.json (present)
+PASS releases/manifests/release_artifact_catalog.md (present)
+PASS releases/notes/v1.0.0.md (present)
+Status: PASS

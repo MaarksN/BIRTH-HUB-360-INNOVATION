@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:680662f8-d3c6-ca2b-5c49-00cfc4b9e47c" version="1">
+  <metadata>
+    <timestamp>2026-04-19T00:42:33.396Z</timestamp>
+    <tools>
+      <tool>
+        <vendor>BirthHub</vendor>
+        <name>release-sbom-generator</name>
+        <version>1.0.0</version>
+      </tool>
+    </tools>
+    <component type="application" bom-ref="pkg:npm/birthub-360@1.0.0">
+      <name>birthub-360</name>
+      <version>1.0.0</version>
+      <purl>pkg:npm/birthub-360@1.0.0</purl>
+    </component>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="pkg:npm/%40aws-sdk%2Fclient-s3@3.1032.0">
+      <name>@aws-sdk/client-s3</name>
+      <version>3.1032.0</version>
+      <purl>pkg:npm/%40aws-sdk%2Fclient-s3@3.1032.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fagents-core@link%3A..%2F..%2Fpackages%2Fagents-core">
+      <name>@birthub/agents-core</name>
+      <version>link:../../packages/agents-core</version>
+      <purl>pkg:npm/%40birthub%2Fagents-core@link%3A..%2F..%2Fpackages%2Fagents-core</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fagents-core@link%3A..%2Fagents-core">
+      <name>@birthub/agents-core</name>
+      <version>link:../agents-core</version>
+      <purl>pkg:npm/%40birthub%2Fagents-core@link%3A..%2Fagents-core</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fagents-core@link%3Apackages%2Fagents-core">
+      <name>@birthub/agents-core</name>
+      <version>link:packages/agents-core</version>
+      <purl>pkg:npm/%40birthub%2Fagents-core@link%3Apackages%2Fagents-core</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fconfig@link%3A..%2F..%2Fpackages%2Fconfig">
+      <name>@birthub/config</name>
+      <version>link:../../packages/config</version>
+      <purl>pkg:npm/%40birthub%2Fconfig@link%3A..%2F..%2Fpackages%2Fconfig</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fconfig@link%3A..%2Fconfig">
+      <name>@birthub/config</name>
+      <version>link:../config</version>
+      <purl>pkg:npm/%40birthub%2Fconfig@link%3A..%2Fconfig</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fconfig@link%3Apackages%2Fconfig">
+      <name>@birthub/config</name>
+      <version>link:packages/config</version>
+      <purl>pkg:npm/%40birthub%2Fconfig@link%3Apackages%2Fconfig</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fdatabase@link%3A..%2F..%2Fpackages%2Fdatabase">
+      <name>@birthub/database</name>
+      <version>link:../../packages/database</version>
+      <purl>pkg:npm/%40birthub%2Fdatabase@link%3A..%2F..%2Fpackages%2Fdatabase</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fdatabase@link%3A..%2Fdatabase">
+      <name>@birthub/database</name>
+      <version>link:../database</version>
+      <purl>pkg:npm/%40birthub%2Fdatabase@link%3A..%2Fdatabase</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fdatabase@link%3Apackages%2Fdatabase">
+      <name>@birthub/database</name>
+      <version>link:packages/database</version>
+      <purl>pkg:npm/%40birthub%2Fdatabase@link%3Apackages%2Fdatabase</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fintegrations@link%3A..%2Fintegrations">
+      <name>@birthub/integrations</name>
+      <version>link:../integrations</version>
+      <purl>pkg:npm/%40birthub%2Fintegrations@link%3A..%2Fintegrations</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Flogger@link%3A..%2F..%2Fpackages%2Flogger">
+      <name>@birthub/logger</name>
+      <version>link:../../packages/logger</version>
+      <purl>pkg:npm/%40birthub%2Flogger@link%3A..%2F..%2Fpackages%2Flogger</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Flogger@link%3A..%2Flogger">
+      <name>@birthub/logger</name>
+      <version>link:../logger</version>
+      <purl>pkg:npm/%40birthub%2Flogger@link%3A..%2Flogger</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Flogger@link%3Apackages%2Flogger">
+      <name>@birthub/logger</name>
+      <version>link:packages/logger</version>
+      <purl>pkg:npm/%40birthub%2Flogger@link%3Apackages%2Flogger</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fqueue@link%3A..%2F..%2Fpackages%2Fqueue">
+      <name>@birthub/queue</name>
+      <version>link:../../packages/queue</version>
+      <purl>pkg:npm/%40birthub%2Fqueue@link%3A..%2F..%2Fpackages%2Fqueue</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fshared-types@link%3A..%2Fshared-types">
+      <name>@birthub/shared-types</name>
+      <version>link:../shared-types</version>
+      <purl>pkg:npm/%40birthub%2Fshared-types@link%3A..%2Fshared-types</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Ftesting@link%3A..%2F..%2Fpackages%2Ftesting">
+      <name>@birthub/testing</name>
+      <version>link:../../packages/testing</version>
+      <purl>pkg:npm/%40birthub%2Ftesting@link%3A..%2F..%2Fpackages%2Ftesting</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Futils@link%3A..%2F..%2Fpackages%2Futils">
+      <name>@birthub/utils</name>
+      <version>link:../../packages/utils</version>
+      <purl>pkg:npm/%40birthub%2Futils@link%3A..%2F..%2Fpackages%2Futils</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Futils@link%3A..%2Futils">
+      <name>@birthub/utils</name>
+      <version>link:../utils</version>
+      <purl>pkg:npm/%40birthub%2Futils@link%3A..%2Futils</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40birthub%2Fworkflows-core@link%3A..%2F..%2Fpackages%2Fworkflows-core">
+      <name>@birthub/workflows-core</name>
+      <version>link:../../packages/workflows-core</version>
+      <purl>pkg:npm/%40birthub%2Fworkflows-core@link%3A..%2F..%2Fpackages%2Fworkflows-core</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40commitlint%2Fcli@20.5.0">
+      <name>@commitlint/cli</name>
+      <version>20.5.0</version>
+      <purl>pkg:npm/%40commitlint%2Fcli@20.5.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40commitlint%2Fconfig-conventional@20.5.0">
+      <name>@commitlint/config-conventional</name>
+      <version>20.5.0</version>
+      <purl>pkg:npm/%40commitlint%2Fconfig-conventional@20.5.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40deepgram%2Fsdk@5.0.0">
+      <name>@deepgram/sdk</name>
+      <version>5.0.0</version>
+      <purl>pkg:npm/%40deepgram%2Fsdk@5.0.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40eslint%2Fjs@10.0.1">
+      <name>@eslint/js</name>
+      <version>10.0.1</version>
+      <purl>pkg:npm/%40eslint%2Fjs@10.0.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40google%2Fgenerative-ai@0.24.1">
+      <name>@google/generative-ai</name>
+      <version>0.24.1</version>
+      <purl>pkg:npm/%40google%2Fgenerative-ai@0.24.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40hubspot%2Fapi-client@13.5.0">
+      <name>@hubspot/api-client</name>
+      <version>13.5.0</version>
+      <purl>pkg:npm/%40hubspot%2Fapi-client@13.5.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40opentelemetry%2Fapi@1.9.1">
+      <name>@opentelemetry/api</name>
+      <version>1.9.1</version>
+      <purl>pkg:npm/%40opentelemetry%2Fapi@1.9.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40opentelemetry%2Fauto-instrumentations-node@0.71.0">
+      <name>@opentelemetry/auto-instrumentations-node</name>
+      <version>0.71.0</version>
+      <purl>pkg:npm/%40opentelemetry%2Fauto-instrumentations-node@0.71.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40opentelemetry%2Fexporter-trace-otlp-http@0.214.0">
+      <name>@opentelemetry/exporter-trace-otlp-http</name>
+      <version>0.214.0</version>
+      <purl>pkg:npm/%40opentelemetry%2Fexporter-trace-otlp-http@0.214.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40opentelemetry%2Fresources@2.7.0">
+      <name>@opentelemetry/resources</name>
+      <version>2.7.0</version>
+      <purl>pkg:npm/%40opentelemetry%2Fresources@2.7.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40opentelemetry%2Fsdk-node@0.214.0">
+      <name>@opentelemetry/sdk-node</name>
+      <version>0.214.0</version>
+      <purl>pkg:npm/%40opentelemetry%2Fsdk-node@0.214.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40opentelemetry%2Fsdk-trace-node@2.7.0">
+      <name>@opentelemetry/sdk-trace-node</name>
+      <version>2.7.0</version>
+      <purl>pkg:npm/%40opentelemetry%2Fsdk-trace-node@2.7.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40playwright%2Ftest@1.59.1">
+      <name>@playwright/test</name>
+      <version>1.59.1</version>
+      <purl>pkg:npm/%40playwright%2Ftest@1.59.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40prisma%2Fadapter-pg@7.7.0">
+      <name>@prisma/adapter-pg</name>
+      <version>7.7.0</version>
+      <purl>pkg:npm/%40prisma%2Fadapter-pg@7.7.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40prisma%2Fclient@6.19.3">
+      <name>@prisma/client</name>
+      <version>6.19.3</version>
+      <purl>pkg:npm/%40prisma%2Fclient@6.19.3</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40prisma%2Finstrumentation@7.7.0">
+      <name>@prisma/instrumentation</name>
+      <version>7.7.0</version>
+      <purl>pkg:npm/%40prisma%2Finstrumentation@7.7.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40sentry%2Fnextjs@10.49.0">
+      <name>@sentry/nextjs</name>
+      <version>10.49.0</version>
+      <purl>pkg:npm/%40sentry%2Fnextjs@10.49.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40sentry%2Fnode@10.49.0">
+      <name>@sentry/node</name>
+      <version>10.49.0</version>
+      <purl>pkg:npm/%40sentry%2Fnode@10.49.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40stryker-mutator%2Fapi@9.6.1">
+      <name>@stryker-mutator/api</name>
+      <version>9.6.1</version>
+      <purl>pkg:npm/%40stryker-mutator%2Fapi@9.6.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40stryker-mutator%2Fcore@9.6.1">
+      <name>@stryker-mutator/core</name>
+      <version>9.6.1</version>
+      <purl>pkg:npm/%40stryker-mutator%2Fcore@9.6.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Fcors@2.8.19">
+      <name>@types/cors</name>
+      <version>2.8.19</version>
+      <purl>pkg:npm/%40types%2Fcors@2.8.19</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Fexpress@5.0.6">
+      <name>@types/express</name>
+      <version>5.0.6</version>
+      <purl>pkg:npm/%40types%2Fexpress@5.0.6</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Fjsdom@28.0.1">
+      <name>@types/jsdom</name>
+      <version>28.0.1</version>
+      <purl>pkg:npm/%40types%2Fjsdom@28.0.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Fnode@25.6.0">
+      <name>@types/node</name>
+      <version>25.6.0</version>
+      <purl>pkg:npm/%40types%2Fnode@25.6.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Fopossum@8.1.9">
+      <name>@types/opossum</name>
+      <version>8.1.9</version>
+      <purl>pkg:npm/%40types%2Fopossum@8.1.9</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Freact@19.2.14">
+      <name>@types/react</name>
+      <version>19.2.14</version>
+      <purl>pkg:npm/%40types%2Freact@19.2.14</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Freact-dom@19.2.3">
+      <name>@types/react-dom</name>
+      <version>19.2.3</version>
+      <purl>pkg:npm/%40types%2Freact-dom@19.2.3</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Fsemver@7.7.1">
+      <name>@types/semver</name>
+      <version>7.7.1</version>
+      <purl>pkg:npm/%40types%2Fsemver@7.7.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Fsupertest@7.2.0">
+      <name>@types/supertest</name>
+      <version>7.2.0</version>
+      <purl>pkg:npm/%40types%2Fsupertest@7.2.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Fswagger-ui-express@4.1.8">
+      <name>@types/swagger-ui-express</name>
+      <version>4.1.8</version>
+      <purl>pkg:npm/%40types%2Fswagger-ui-express@4.1.8</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/%40types%2Fws@8.18.1">
+      <name>@types/ws</name>
+      <version>8.18.1</version>
+      <purl>pkg:npm/%40types%2Fws@8.18.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/bcryptjs@3.0.3">
+      <name>bcryptjs</name>
+      <version>3.0.3</version>
+      <purl>pkg:npm/bcryptjs@3.0.3</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/bullmq@5.74.1">
+      <name>bullmq</name>
+      <version>5.74.1</version>
+      <purl>pkg:npm/bullmq@5.74.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/c8@10.1.3">
+      <name>c8</name>
+      <version>10.1.3</version>
+      <purl>pkg:npm/c8@10.1.3</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/cors@2.8.6">
+      <name>cors</name>
+      <version>2.8.6</version>
+      <purl>pkg:npm/cors@2.8.6</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/eslint@10.2.1">
+      <name>eslint</name>
+      <version>10.2.1</version>
+      <purl>pkg:npm/eslint@10.2.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/eslint-import-resolver-typescript@4.4.4">
+      <name>eslint-import-resolver-typescript</name>
+      <version>4.4.4</version>
+      <purl>pkg:npm/eslint-import-resolver-typescript@4.4.4</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/eslint-plugin-import@2.32.0">
+      <name>eslint-plugin-import</name>
+      <version>2.32.0</version>
+      <purl>pkg:npm/eslint-plugin-import@2.32.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/express@5.2.1">
+      <name>express</name>
+      <version>5.2.1</version>
+      <purl>pkg:npm/express@5.2.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/express-rate-limit@8.3.2">
+      <name>express-rate-limit</name>
+      <version>8.3.2</version>
+      <purl>pkg:npm/express-rate-limit@8.3.2</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/helmet@8.1.0">
+      <name>helmet</name>
+      <version>8.1.0</version>
+      <purl>pkg:npm/helmet@8.1.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/husky@9.1.7">
+      <name>husky</name>
+      <version>9.1.7</version>
+      <purl>pkg:npm/husky@9.1.7</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/ioredis@5.10.1">
+      <name>ioredis</name>
+      <version>5.10.1</version>
+      <purl>pkg:npm/ioredis@5.10.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/isomorphic-dompurify@3.9.0">
+      <name>isomorphic-dompurify</name>
+      <version>3.9.0</version>
+      <purl>pkg:npm/isomorphic-dompurify@3.9.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/jose@6.2.2">
+      <name>jose</name>
+      <version>6.2.2</version>
+      <purl>pkg:npm/jose@6.2.2</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/jsdom@29.0.2">
+      <name>jsdom</name>
+      <version>29.0.2</version>
+      <purl>pkg:npm/jsdom@29.0.2</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/knip@5.88.1">
+      <name>knip</name>
+      <version>5.88.1</version>
+      <purl>pkg:npm/knip@5.88.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/lint-staged@16.4.0">
+      <name>lint-staged</name>
+      <version>16.4.0</version>
+      <purl>pkg:npm/lint-staged@16.4.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/lru-cache@11.3.5">
+      <name>lru-cache</name>
+      <version>11.3.5</version>
+      <purl>pkg:npm/lru-cache@11.3.5</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/lucide-react@1.8.0">
+      <name>lucide-react</name>
+      <version>1.8.0</version>
+      <purl>pkg:npm/lucide-react@1.8.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/msw@2.13.4">
+      <name>msw</name>
+      <version>2.13.4</version>
+      <purl>pkg:npm/msw@2.13.4</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/next@16.2.3">
+      <name>next</name>
+      <version>16.2.3</version>
+      <purl>pkg:npm/next@16.2.3</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/opossum@9.0.0">
+      <name>opossum</name>
+      <version>9.0.0</version>
+      <purl>pkg:npm/opossum@9.0.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/p-map@7.0.4">
+      <name>p-map</name>
+      <version>7.0.4</version>
+      <purl>pkg:npm/p-map@7.0.4</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/pino@10.3.1">
+      <name>pino</name>
+      <version>10.3.1</version>
+      <purl>pkg:npm/pino@10.3.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/pino-pretty@13.1.3">
+      <name>pino-pretty</name>
+      <version>13.1.3</version>
+      <purl>pkg:npm/pino-pretty@13.1.3</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/pipedrive@32.2.0">
+      <name>pipedrive</name>
+      <version>32.2.0</version>
+      <purl>pkg:npm/pipedrive@32.2.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/prettier@3.8.3">
+      <name>prettier</name>
+      <version>3.8.3</version>
+      <purl>pkg:npm/prettier@3.8.3</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/prisma@6.19.3">
+      <name>prisma</name>
+      <version>6.19.3</version>
+      <purl>pkg:npm/prisma@6.19.3</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/rate-limit-redis@4.3.1">
+      <name>rate-limit-redis</name>
+      <version>4.3.1</version>
+      <purl>pkg:npm/rate-limit-redis@4.3.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/react@19.2.4">
+      <name>react</name>
+      <version>19.2.4</version>
+      <purl>pkg:npm/react@19.2.4</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/react-confetti@6.4.0">
+      <name>react-confetti</name>
+      <version>6.4.0</version>
+      <purl>pkg:npm/react-confetti@6.4.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/react-dom@19.2.4">
+      <name>react-dom</name>
+      <version>19.2.4</version>
+      <purl>pkg:npm/react-dom@19.2.4</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/react-hook-form@7.72.1">
+      <name>react-hook-form</name>
+      <version>7.72.1</version>
+      <purl>pkg:npm/react-hook-form@7.72.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/reactflow@11.11.4">
+      <name>reactflow</name>
+      <version>11.11.4</version>
+      <purl>pkg:npm/reactflow@11.11.4</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/recharts@3.8.1">
+      <name>recharts</name>
+      <version>3.8.1</version>
+      <purl>pkg:npm/recharts@3.8.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/redis@5.12.1">
+      <name>redis</name>
+      <version>5.12.1</version>
+      <purl>pkg:npm/redis@5.12.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/redlock@5.0.0-beta.2">
+      <name>redlock</name>
+      <version>5.0.0-beta.2</version>
+      <purl>pkg:npm/redlock@5.0.0-beta.2</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/resend@6.12.0">
+      <name>resend</name>
+      <version>6.12.0</version>
+      <purl>pkg:npm/resend@6.12.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/semver@7.7.4">
+      <name>semver</name>
+      <version>7.7.4</version>
+      <purl>pkg:npm/semver@7.7.4</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/stripe@22.0.2">
+      <name>stripe</name>
+      <version>22.0.2</version>
+      <purl>pkg:npm/stripe@22.0.2</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/supertest@7.2.2">
+      <name>supertest</name>
+      <version>7.2.2</version>
+      <purl>pkg:npm/supertest@7.2.2</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/swagger-ui-express@5.0.1">
+      <name>swagger-ui-express</name>
+      <version>5.0.1</version>
+      <purl>pkg:npm/swagger-ui-express@5.0.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/tsx@4.21.0">
+      <name>tsx</name>
+      <version>4.21.0</version>
+      <purl>pkg:npm/tsx@4.21.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/turbo@2.9.6">
+      <name>turbo</name>
+      <version>2.9.6</version>
+      <purl>pkg:npm/turbo@2.9.6</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/twilio@5.13.1">
+      <name>twilio</name>
+      <version>5.13.1</version>
+      <purl>pkg:npm/twilio@5.13.1</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/typedoc@0.28.19">
+      <name>typedoc</name>
+      <version>0.28.19</version>
+      <purl>pkg:npm/typedoc@0.28.19</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/typescript@6.0.3">
+      <name>typescript</name>
+      <version>6.0.3</version>
+      <purl>pkg:npm/typescript@6.0.3</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/typescript-eslint@8.58.2">
+      <name>typescript-eslint</name>
+      <version>8.58.2</version>
+      <purl>pkg:npm/typescript-eslint@8.58.2</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/vitest-mock-extended@4.0.0">
+      <name>vitest-mock-extended</name>
+      <version>4.0.0</version>
+      <purl>pkg:npm/vitest-mock-extended@4.0.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/ws@8.20.0">
+      <name>ws</name>
+      <version>8.20.0</version>
+      <purl>pkg:npm/ws@8.20.0</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/zod@4.3.6">
+      <name>zod</name>
+      <version>4.3.6</version>
+      <purl>pkg:npm/zod@4.3.6</purl>
+    </component>
+    <component type="library" bom-ref="pkg:npm/zustand@5.0.12">
+      <name>zustand</name>
+      <version>5.0.12</version>
+      <purl>pkg:npm/zustand@5.0.12</purl>
+    </component>
+  </components>
+</bom>

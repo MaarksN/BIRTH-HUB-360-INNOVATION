@@ -1,0 +1,81 @@
+{
+  "checkedAt": "2026-04-19T03:45:11.535Z",
+  "checks": [
+    {
+      "detail": "json ok=true",
+      "id": "preflight",
+      "ok": true,
+      "path": "artifacts/release/production-preflight-summary.json"
+    },
+    {
+      "detail": "json ok=true",
+      "id": "smoke",
+      "ok": true,
+      "path": "artifacts/release/smoke-summary.json"
+    },
+    {
+      "detail": "source manifest bound to workflow_dispatch/1616de68c7ac3d923c817be2ca6fd80e82e887a9",
+      "id": "source_manifest",
+      "ok": true,
+      "path": "artifacts/release/source-manifest.json"
+    },
+    {
+      "detail": "present",
+      "id": "checksum_manifest",
+      "ok": true,
+      "path": "artifacts/release/checksums-manifest.sha256"
+    },
+    {
+      "detail": "present",
+      "id": "release_catalog_json",
+      "ok": true,
+      "path": "artifacts/release/release-artifact-catalog.json"
+    },
+    {
+      "detail": "present",
+      "id": "sbom_xml",
+      "ok": true,
+      "path": "artifacts/sbom/bom.xml"
+    },
+    {
+      "detail": "present",
+      "id": "sbom_spdx",
+      "ok": true,
+      "path": "artifacts/sbom/sbom.spdx.json"
+    },
+    {
+      "detail": "present",
+      "id": "release_catalog_markdown",
+      "ok": true,
+      "path": "releases/manifests/release_artifact_catalog.md"
+    },
+    {
+      "detail": "present",
+      "id": "release_notes",
+      "ok": true,
+      "path": "releases/notes/v1.0.0.md"
+    }
+  ],
+  "evidenceArtifacts": [
+    "artifacts/release/production-preflight-summary.json",
+    "artifacts/release/smoke-summary.json",
+    "artifacts/release/source-manifest.json",
+    "artifacts/release/checksums-manifest.sha256",
+    "artifacts/release/release-artifact-catalog.json",
+    "artifacts/sbom/bom.xml",
+    "artifacts/sbom/sbom.spdx.json",
+    "releases/manifests/release_artifact_catalog.md",
+    "releases/notes/v1.0.0.md"
+  ],
+  "mode": "automated_release_rehearsal",
+  "notes": null,
+  "ok": true,
+  "source": {
+    "generatedAt": "2026-04-18T05:25:37.218Z",
+    "sourceEvent": "workflow_dispatch",
+    "sourceRef": "1616de68c7ac3d923c817be2ca6fd80e82e887a9",
+    "sourceSha": "1616de68c7ac3d923c817be2ca6fd80e82e887a9"
+  },
+  "summary": "Rollback rehearsal evidence derived from preflight, smoke, source manifest and release bundle artifacts.",
+  "target": "production"
+}

@@ -1,0 +1,1067 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: Deployment target
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+
+permissions:
+  contents: read
+
+jobs:
+  resolve-release-source:
+    name: resolve-release-source
+    if: >
+      (github.event_name == 'push' &&
+      github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.deploy_target == 'production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      ci_ready: ${{ steps.ci_gate.outputs.ci_ready || steps.dispatch_gate.outputs.ci_ready }}
+      source_event: ${{ steps.resolve.outputs.source_event }}
+      source_ref: ${{ steps.resolve.outputs.source_ref }}
+      source_sha: ${{ steps.resolve.outputs.source_sha }}
+    steps:
+      - name: Wait for CI run on pushed SHA
+        id: ci_gate
+        if: github.event_name == 'push'
+        uses: actions/github-script@v8
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+          TARGET_SHA: ${{ github.sha }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const branch = process.env.TARGET_BRANCH;
+            const headSha = process.env.TARGET_SHA;
+            const pollIntervalMs = 15000;
+            const timeoutMs = 30 * 60 * 1000;
+            const deadline = Date.now() + timeoutMs;
+            let lastSeen = 'not found';
+
+            while (Date.now() < deadline) {
+              const { data } = await github.rest.actions.listWorkflowRuns({
+                owner,
+                repo,
+                workflow_id: 'ci.yml',
+                event: 'push',
+                branch,
+                head_sha: headSha,
+                per_page: 10,
+              });
+
+              const ciRun = data.workflow_runs.find((run) =>
+                run.head_sha === headSha &&
+                run.path &&
+                run.path.startsWith('.github/workflows/ci.yml')
+              );
+
+              if (ciRun) {
+                lastSeen = `${ciRun.status}/${ciRun.conclusion ?? 'pending'} (run ${ciRun.id})`;
+                core.info(`Observed CI run ${ciRun.id}: ${ciRun.status}/${ciRun.conclusion ?? 'pending'}`);
+
+                if (ciRun.status === 'completed') {
+                  const ciReady = ciRun.conclusion === 'success' ? 'true' : 'false';
+                  core.setOutput('ci_ready', ciReady);
+
+                  if (ciReady !== 'true') {
+                    core.notice(`CI run ${ciRun.id} concluded with ${ciRun.conclusion}; automatic CD jobs will be skipped.`);
+                  }
+
+                  return;
+                }
+              } else {
+                core.info(`CI run for ${headSha} is not visible yet.`);
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
+            }
+
+            core.setFailed(`Timed out waiting for CI to complete for ${headSha}. Last observed state: ${lastSeen}.`);
+
+      - name: Mark manual production dispatch as CI-ready
+        id: dispatch_gate
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: echo "ci_ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve immutable release source
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          event_name="${GITHUB_EVENT_NAME}"
+          source_event="${event_name}"
+
+          if [[ "${event_name}" == "push" ]]; then
+            if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then
+              echo "::error title=Invalid release branch::push source must come from main." >&2
+              exit 1
+            fi
+
+            source_sha="${GITHUB_SHA}"
+          elif [[ "${event_name}" == "workflow_dispatch" ]]; then
+            if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then
+              echo "::error title=Invalid release branch::workflow_dispatch must run from main." >&2
+              exit 1
+            fi
+
+            source_sha="${GITHUB_SHA}"
+          else
+            echo "::error title=Unsupported release event::Only push and workflow_dispatch are supported." >&2
+            exit 1
+          fi
+
+          if ! [[ "${source_sha}" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error title=Invalid release SHA::Resolved release source is not a full commit SHA." >&2
+            exit 1
+          fi
+
+          echo "source_event=${source_event}" >> "$GITHUB_OUTPUT"
+          echo "source_ref=${source_sha}" >> "$GITHUB_OUTPUT"
+          echo "source_sha=${source_sha}" >> "$GITHUB_OUTPUT"
+
+  staging-preflight:
+    name: staging-preflight
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.resolve-release-source.outputs.ci_ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    needs:
+      - resolve-release-source
+    outputs:
+      configured: ${{ steps.staging_config.outputs.configured }}
+    concurrency:
+      group: cd-staging-main
+      cancel-in-progress: false
+    environment: staging
+    env:
+      API_CORS_ORIGINS: ${{ vars.API_CORS_ORIGINS }}
+      BILLING_EXPORT_S3_BUCKET: ${{ vars.BILLING_EXPORT_S3_BUCKET }}
+      BILLING_EXPORT_STORAGE_MODE: ${{ vars.BILLING_EXPORT_STORAGE_MODE }}
+      AUTH_MFA_ENCRYPTION_KEY: ${{ secrets.AUTH_MFA_ENCRYPTION_KEY }}
+      CLOUD_RUN_API_SERVICE: ${{ vars.CLOUD_RUN_API_SERVICE }}
+      CLOUD_RUN_REGION: ${{ vars.CLOUD_RUN_REGION }}
+      CLOUD_RUN_WEB_SERVICE: ${{ vars.CLOUD_RUN_WEB_SERVICE }}
+      CLOUD_RUN_WORKER_SERVICE: ${{ vars.CLOUD_RUN_WORKER_SERVICE }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      GCP_ARTIFACT_REGISTRY_REGION: ${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}
+      GCP_ARTIFACT_REGISTRY_REPOSITORY: ${{ vars.GCP_ARTIFACT_REGISTRY_REPOSITORY }}
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GCP_SERVICE_ACCOUNT_EMAIL: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
+      GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+      JOB_HMAC_GLOBAL_SECRET: ${{ secrets.JOB_HMAC_GLOBAL_SECRET }}
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+      NEXT_PUBLIC_CSP_REPORT_ONLY: ${{ vars.NEXT_PUBLIC_CSP_REPORT_ONLY }}
+      NEXT_PUBLIC_SENTRY_DSN: ${{ vars.NEXT_PUBLIC_SENTRY_DSN }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+      RENDER_STAGING_DEPLOY_HOOK_URL: ${{ secrets.RENDER_STAGING_DEPLOY_HOOK_URL }}
+      REQUIRE_SECURE_COOKIES: ${{ vars.REQUIRE_SECURE_COOKIES }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      STRIPE_CANCEL_URL: ${{ vars.STRIPE_CANCEL_URL }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      STRIPE_SUCCESS_URL: ${{ vars.STRIPE_SUCCESS_URL }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+      WEB_BASE_URL: ${{ vars.WEB_BASE_URL }}
+    steps:
+      - name: Mask configured secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for key in AUTH_MFA_ENCRYPTION_KEY DATABASE_URL JOB_HMAC_GLOBAL_SECRET REDIS_URL RENDER_STAGING_DEPLOY_HOOK_URL SENTRY_DSN SESSION_SECRET STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET; do
+            value="${!key:-}"
+            if [[ -n "${value}" ]]; then
+              echo "::add-mask::${value}"
+            fi
+          done
+
+      - name: Validate required staging configuration
+        id: staging_config
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_secrets=(
+            RENDER_STAGING_DEPLOY_HOOK_URL
+            DATABASE_URL
+            REDIS_URL
+            SESSION_SECRET
+            JOB_HMAC_GLOBAL_SECRET
+            AUTH_MFA_ENCRYPTION_KEY
+            STRIPE_SECRET_KEY
+            STRIPE_WEBHOOK_SECRET
+            SENTRY_DSN
+          )
+
+          required_vars=(
+            API_CORS_ORIGINS
+            WEB_BASE_URL
+            NEXT_PUBLIC_API_URL
+            NEXT_PUBLIC_APP_URL
+            NEXT_PUBLIC_SENTRY_DSN
+            NEXT_PUBLIC_CSP_REPORT_ONLY
+            REQUIRE_SECURE_COOKIES
+            STRIPE_SUCCESS_URL
+            STRIPE_CANCEL_URL
+            BILLING_EXPORT_STORAGE_MODE
+            GCP_WORKLOAD_IDENTITY_PROVIDER
+            GCP_SERVICE_ACCOUNT_EMAIL
+            GCP_ARTIFACT_REGISTRY_REGION
+            GCP_PROJECT_ID
+            GCP_ARTIFACT_REGISTRY_REPOSITORY
+            CLOUD_RUN_REGION
+            CLOUD_RUN_API_SERVICE
+            CLOUD_RUN_WEB_SERVICE
+            CLOUD_RUN_WORKER_SERVICE
+          )
+
+          missing=()
+          present=()
+
+          for key in "${required_secrets[@]}"; do
+            if [[ -z "${!key:-}" ]]; then
+              missing+=("${key} (secret)")
+            else
+              present+=("${key} (secret)")
+            fi
+          done
+
+          for key in "${required_vars[@]}"; do
+            if [[ -z "${!key:-}" ]]; then
+              missing+=("${key} (variable)")
+            else
+              present+=("${key} (variable)")
+            fi
+          done
+
+          mkdir -p artifacts/release
+
+          if (( ${#missing[@]} > 0 )); then
+            checked_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            cat > artifacts/release/staging-preflight-summary.json <<EOF
+          {
+            "checkedAt": "${checked_at}",
+            "configured": false,
+            "missingCount": ${#missing[@]},
+            "ok": true,
+            "presentCount": ${#present[@]},
+            "reason": "Environment staging is not deployment-ready; staging deployment was skipped until all required Secrets and Variables are configured.",
+            "target": "staging"
+          }
+          EOF
+            cat > artifacts/release/staging-preflight-summary.txt <<EOF
+          Target: staging
+          Checked at: ${checked_at}
+          Status: SKIPPED
+          Reason: Environment staging is not deployment-ready; staging deployment was skipped until all required Secrets and Variables are configured.
+          EOF
+            printf 'Missing required staging configuration:\n' >> artifacts/release/staging-preflight-summary.txt
+            printf ' - %s\n' "${missing[@]}" >> artifacts/release/staging-preflight-summary.txt
+            printf 'Missing required staging configuration:\n' >&2
+            printf ' - %s\n' "${missing[@]}" >&2
+            echo "::notice title=Staging deployment skipped::Environment staging is missing required Secrets/Variables; configure them to enable staging deployment."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "${BILLING_EXPORT_STORAGE_MODE}" != "local" && "${BILLING_EXPORT_STORAGE_MODE}" != "s3" ]]; then
+            echo "::error title=Invalid variable::BILLING_EXPORT_STORAGE_MODE must be local or s3." >&2
+            exit 1
+          fi
+
+          if [[ "${BILLING_EXPORT_STORAGE_MODE}" == "s3" && -z "${BILLING_EXPORT_S3_BUCKET:-}" ]]; then
+            echo "::error title=Missing variable::BILLING_EXPORT_S3_BUCKET must be set when BILLING_EXPORT_STORAGE_MODE=s3." >&2
+            exit 1
+          fi
+
+          if [[ "${NEXT_PUBLIC_CSP_REPORT_ONLY}" != "false" ]]; then
+            echo "::error title=Invalid staging variable::NEXT_PUBLIC_CSP_REPORT_ONLY must be set to false in Environment staging variables." >&2
+            exit 1
+          fi
+
+          if [[ "${REQUIRE_SECURE_COOKIES}" != "true" ]]; then
+            echo "::error title=Invalid staging variable::REQUIRE_SECURE_COOKIES must be set to true in Environment staging variables." >&2
+            exit 1
+          fi
+
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout source from pushed commit
+        if: steps.staging_config.outputs.configured == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-release-source.outputs.source_ref }}
+
+      - name: Setup pnpm
+        if: steps.staging_config.outputs.configured == 'true'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        if: steps.staging_config.outputs.configured == 'true'
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        if: steps.staging_config.outputs.configured == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Run staging preflight
+        if: steps.staging_config.outputs.configured == 'true'
+        run: pnpm release:preflight:staging
+
+      - name: Upload staging preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-preflight-evidence
+          path: artifacts/release/staging-preflight-summary.*
+          if-no-files-found: ignore
+
+  release-sbom:
+    name: release-sbom
+    if: >
+      (github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.resolve-release-source.outputs.ci_ready == 'true') ||
+      (github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.deploy_target == 'production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    needs:
+      - resolve-release-source
+    steps:
+      - name: Checkout immutable release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-release-source.outputs.source_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate CycloneDX SBOM
+        run: pnpm release:sbom
+
+      - name: Materialize release bundle manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm release:materialize -- \
+            --tag=v1.0.0 \
+            --source-event="${{ needs.resolve-release-source.outputs.source_event }}" \
+            --source-ref="${{ needs.resolve-release-source.outputs.source_ref }}" \
+            --source-sha="${{ needs.resolve-release-source.outputs.source_sha }}" \
+            --workflow="${{ github.workflow }}" \
+            --run-id="${{ github.run_id }}"
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-sbom
+          path: |
+            artifacts/sbom/bom.xml
+            artifacts/sbom/sbom.spdx.json
+
+      - name: Upload release manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-manifests
+          path: |
+            artifacts/release/checksums-manifest.sha256
+            artifacts/release/release-artifact-catalog.json
+            artifacts/release/source-manifest.json
+            releases/manifests/release_artifact_catalog.md
+            releases/notes/v1.0.0.md
+
+  production-preflight:
+    name: production-preflight
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    needs:
+      - resolve-release-source
+    concurrency:
+      group: cd-production
+      cancel-in-progress: false
+    environment: production
+    env:
+      API_CORS_ORIGINS: ${{ vars.API_CORS_ORIGINS }}
+      BILLING_EXPORT_S3_BUCKET: ${{ vars.BILLING_EXPORT_S3_BUCKET }}
+      BILLING_EXPORT_STORAGE_MODE: ${{ vars.BILLING_EXPORT_STORAGE_MODE }}
+      AUTH_MFA_ENCRYPTION_KEY: ${{ secrets.AUTH_MFA_ENCRYPTION_KEY }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      JOB_HMAC_GLOBAL_SECRET: ${{ secrets.JOB_HMAC_GLOBAL_SECRET }}
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+      NEXT_PUBLIC_CSP_REPORT_ONLY: ${{ vars.NEXT_PUBLIC_CSP_REPORT_ONLY }}
+      NEXT_PUBLIC_SENTRY_DSN: ${{ vars.NEXT_PUBLIC_SENTRY_DSN }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+      RENDER_PRODUCTION_DEPLOY_HOOK_URL: ${{ secrets.RENDER_PRODUCTION_DEPLOY_HOOK_URL }}
+      REQUIRE_SECURE_COOKIES: ${{ vars.REQUIRE_SECURE_COOKIES }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      STRIPE_CANCEL_URL: ${{ vars.STRIPE_CANCEL_URL }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      STRIPE_SUCCESS_URL: ${{ vars.STRIPE_SUCCESS_URL }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+      WEB_BASE_URL: ${{ vars.WEB_BASE_URL }}
+    steps:
+      - name: Checkout immutable release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-release-source.outputs.source_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Mask configured secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for key in AUTH_MFA_ENCRYPTION_KEY DATABASE_URL JOB_HMAC_GLOBAL_SECRET REDIS_URL RENDER_PRODUCTION_DEPLOY_HOOK_URL SENTRY_DSN SESSION_SECRET STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET; do
+            value="${!key:-}"
+            if [[ -n "${value}" ]]; then
+              echo "::add-mask::${value}"
+            fi
+          done
+
+      - name: Validate required production configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_secrets=(
+            RENDER_PRODUCTION_DEPLOY_HOOK_URL
+            DATABASE_URL
+            REDIS_URL
+            SESSION_SECRET
+            JOB_HMAC_GLOBAL_SECRET
+            AUTH_MFA_ENCRYPTION_KEY
+            STRIPE_SECRET_KEY
+            STRIPE_WEBHOOK_SECRET
+            SENTRY_DSN
+          )
+
+          required_vars=(
+            API_CORS_ORIGINS
+            WEB_BASE_URL
+            NEXT_PUBLIC_API_URL
+            NEXT_PUBLIC_APP_URL
+            NEXT_PUBLIC_SENTRY_DSN
+            NEXT_PUBLIC_CSP_REPORT_ONLY
+            REQUIRE_SECURE_COOKIES
+            STRIPE_SUCCESS_URL
+            STRIPE_CANCEL_URL
+            BILLING_EXPORT_STORAGE_MODE
+          )
+
+          missing=()
+
+          for key in "${required_secrets[@]}"; do
+            if [[ -z "${!key:-}" ]]; then
+              missing+=("${key} (secret)")
+            fi
+          done
+
+          for key in "${required_vars[@]}"; do
+            if [[ -z "${!key:-}" ]]; then
+              missing+=("${key} (variable)")
+            fi
+          done
+
+          if (( ${#missing[@]} > 0 )); then
+            printf 'Missing required production configuration:\n' >&2
+            printf ' - %s\n' "${missing[@]}" >&2
+            echo "::error title=Missing production configuration::Configure missing keys in Environment production (Secrets/Variables)." >&2
+            exit 1
+          fi
+
+          if [[ "${BILLING_EXPORT_STORAGE_MODE}" != "local" && "${BILLING_EXPORT_STORAGE_MODE}" != "s3" ]]; then
+            echo "::error title=Invalid variable::BILLING_EXPORT_STORAGE_MODE must be local or s3." >&2
+            exit 1
+          fi
+
+          if [[ "${BILLING_EXPORT_STORAGE_MODE}" == "s3" && -z "${BILLING_EXPORT_S3_BUCKET:-}" ]]; then
+            echo "::error title=Missing variable::BILLING_EXPORT_S3_BUCKET must be set when BILLING_EXPORT_STORAGE_MODE=s3." >&2
+            exit 1
+          fi
+
+          if [[ "${NEXT_PUBLIC_CSP_REPORT_ONLY}" != "false" ]]; then
+            echo "::error title=Invalid production variable::NEXT_PUBLIC_CSP_REPORT_ONLY must be set to false in Environment production variables." >&2
+            exit 1
+          fi
+
+          if [[ "${REQUIRE_SECURE_COOKIES}" != "true" ]]; then
+            echo "::error title=Invalid production variable::REQUIRE_SECURE_COOKIES must be set to true in Environment production variables." >&2
+            exit 1
+          fi
+
+      - name: Run production preflight
+        run: pnpm release:preflight:production
+
+      - name: Upload production preflight evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: preflight-report
+          path: artifacts/release/production-preflight-summary.*
+
+  build-staging-images:
+    name: build-staging-images
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.resolve-release-source.outputs.ci_ready == 'true' &&
+      needs.staging-preflight.outputs.configured == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write
+    environment: staging
+    needs:
+      - resolve-release-source
+      - staging-preflight
+      - release-sbom
+    outputs:
+      api_image: ${{ steps.refs.outputs.api_image }}
+      web_image: ${{ steps.refs.outputs.web_image }}
+      worker_image: ${{ steps.refs.outputs.worker_image }}
+    steps:
+      - name: Checkout immutable release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-release-source.outputs.source_ref }}
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Compute image refs
+        id: refs
+        shell: bash
+        run: |
+          set -euo pipefail
+          SHORT_SHA="${{ needs.resolve-release-source.outputs.source_sha }}"
+          SHORT_SHA="${SHORT_SHA:0:12}"
+          REGISTRY="${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPOSITORY }}"
+          echo "api_image=${REGISTRY}/birthub-api:${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          echo "web_image=${REGISTRY}/birthub-web:${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          echo "worker_image=${REGISTRY}/birthub-worker:${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Configure Artifact Registry auth
+        shell: bash
+        run: gcloud auth configure-docker "${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev" --quiet
+
+      - name: Build and push API image
+        run: |
+          docker build -f apps/api/Dockerfile -t "${{ steps.refs.outputs.api_image }}" .
+          docker push "${{ steps.refs.outputs.api_image }}"
+
+      - name: Build and push Web image
+        run: |
+          docker build -f apps/web/Dockerfile -t "${{ steps.refs.outputs.web_image }}" .
+          docker push "${{ steps.refs.outputs.web_image }}"
+
+      - name: Build and push Worker image
+        run: |
+          docker build -f apps/worker/Dockerfile -t "${{ steps.refs.outputs.worker_image }}" .
+          docker push "${{ steps.refs.outputs.worker_image }}"
+
+  deploy-staging:
+    name: deploy-staging
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.resolve-release-source.outputs.ci_ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: cd-staging-main
+      cancel-in-progress: false
+    environment: staging
+    needs:
+      - build-staging-images
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Deploy staging revisions
+        shell: bash
+        run: |
+          set -euo pipefail
+          REGION="${{ vars.CLOUD_RUN_REGION }}"
+          mkdir -p artifacts/release
+          : > artifacts/release/staging-rollout.tsv
+
+          while IFS='|' read -r component service image; do
+            before_json="artifacts/release/${component}-before.json"
+            after_json="artifacts/release/${component}-after.json"
+
+            if ! gcloud run services describe "$service" --region "$REGION" --format=json > "$before_json" 2>/dev/null; then
+              echo '{}' > "$before_json"
+            fi
+
+            previous_revision=$(node -e "const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const traffic=(data.status&&data.status.traffic)||[]; const active=traffic.find((item)=>Number(item.percent||0)>0); process.stdout.write(active?.revisionName||'');" "$before_json")
+
+            gcloud run deploy "$service" --image "$image" --region "$REGION" --platform managed --tag candidate --no-traffic --quiet
+            gcloud run services describe "$service" --region "$REGION" --format=json > "$after_json"
+
+            candidate_revision=$(node -e "const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(data.status?.latestCreatedRevisionName||'');" "$after_json")
+            candidate_url=$(node -e "const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const traffic=(data.status&&data.status.traffic)||[]; const entry=traffic.find((item)=>item.tag==='candidate'); process.stdout.write(entry?.url||'');" "$after_json")
+
+            gcloud run services update-traffic "$service" --region "$REGION" --to-revisions "${candidate_revision}=100" --quiet
+            printf '%s\t%s\t%s\t%s\t%s\n' "$component" "$service" "$previous_revision" "$candidate_revision" "$candidate_url" >> artifacts/release/staging-rollout.tsv
+          done <<EOF
+          api|${{ vars.CLOUD_RUN_API_SERVICE }}|${{ needs.build-staging-images.outputs.api_image }}
+          web|${{ vars.CLOUD_RUN_WEB_SERVICE }}|${{ needs.build-staging-images.outputs.web_image }}
+          worker|${{ vars.CLOUD_RUN_WORKER_SERVICE }}|${{ needs.build-staging-images.outputs.worker_image }}
+          EOF
+
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const file = path.join(process.cwd(), 'artifacts', 'release', 'staging-rollout.tsv');
+          const lines = fs.readFileSync(file, 'utf8').trim().split(/\r?\n/).filter(Boolean);
+          const services = Object.fromEntries(lines.map((line) => {
+            const [component, service, previousRevision, candidateRevision, candidateUrl] = line.split('\t');
+            return [component, { service, previousRevision: previousRevision || null, candidateRevision, candidateUrl: candidateUrl || null }];
+          }));
+          fs.writeFileSync(
+            path.join(process.cwd(), 'artifacts', 'release', 'staging-rollout.json'),
+            JSON.stringify({ environment: 'staging', generatedAt: new Date().toISOString(), region: '${{ vars.CLOUD_RUN_REGION }}', services }, null, 2) + '\n',
+            'utf8'
+          );
+          NODE
+
+      - name: Upload staging rollout manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-rollout-manifest
+          path: |
+            artifacts/release/staging-rollout.json
+            artifacts/release/staging-rollout.tsv
+
+  backup-health-gate:
+    name: backup-health-gate
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    needs:
+      - resolve-release-source
+      - production-preflight
+      - release-sbom
+    concurrency:
+      group: cd-production
+      cancel-in-progress: false
+    environment: production
+    steps:
+      - name: Checkout immutable release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-release-source.outputs.source_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run backup health gate
+        run: pnpm ops:backup:health
+
+      - name: Upload backup health evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-health-report
+          path: |
+            artifacts/backups/backup-health.json
+            artifacts/backups/backup-health.txt
+
+  release-smoke-gate:
+    name: release-smoke-gate
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    needs:
+      - resolve-release-source
+      - production-preflight
+      - release-sbom
+    concurrency:
+      group: cd-production
+      cancel-in-progress: false
+    environment: production
+    steps:
+      - name: Checkout immutable release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-release-source.outputs.source_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run release smoke gate
+        run: pnpm release:smoke
+
+      - name: Upload smoke evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-results
+          path: artifacts/release/smoke-summary.*
+
+  release-e2e-gate:
+    name: release-e2e-gate
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    needs:
+      - resolve-release-source
+      - release-smoke-gate
+    concurrency:
+      group: cd-production
+      cancel-in-progress: false
+    environment: production
+    steps:
+      - name: Checkout immutable release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-release-source.outputs.source_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run release E2E gate
+        run: pnpm test:e2e:release
+
+      - name: Upload E2E evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-release-results
+          path: |
+            playwright-report
+            test-results
+
+  rollback-rehearsal-evidence-gate:
+    name: rollback-rehearsal-evidence-gate
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    needs:
+      - resolve-release-source
+      - release-e2e-gate
+    steps:
+      - name: Checkout immutable release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-release-source.outputs.source_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download production preflight evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: preflight-report
+          path: artifacts/release
+
+      - name: Download smoke evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: smoke-results
+          path: artifacts/release
+
+      - name: Download release manifests
+        uses: actions/download-artifact@v4
+        with:
+          name: release-manifests
+          path: .
+
+      - name: Download release SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: release-sbom
+          path: .
+
+      - name: Materialize rollback rehearsal evidence
+        run: pnpm release:rollback:evidence:auto -- --target=production
+
+      - name: Upload rollback rehearsal evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rollback-rehearsal-report
+          path: |
+            artifacts/release/production-rollback-evidence.txt
+            artifacts/release/production-rollback-evidence.json
+
+  dr-readiness-gate:
+    name: dr-readiness-gate
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    needs:
+      - resolve-release-source
+      - backup-health-gate
+      - rollback-rehearsal-evidence-gate
+    concurrency:
+      group: cd-production
+      cancel-in-progress: false
+    environment: production
+    steps:
+      - name: Checkout immutable release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-release-source.outputs.source_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download rollback rehearsal evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: rollback-rehearsal-report
+          path: artifacts/release
+
+      - name: Download smoke evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: smoke-results
+          path: artifacts/release
+
+      - name: Rebuild backup and DR readiness evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm ops:backup:health
+          pnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario="automated release readiness rehearsal"
+          pnpm ops:dr:report
+
+      - name: Upload disaster recovery readiness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dr-readiness-report
+          path: |
+            artifacts/backups/backup-health.json
+            artifacts/backups/backup-health.txt
+            artifacts/backups/drill-rto-rpo.json
+            artifacts/backups/drill-rto-rpo.txt
+            artifacts/dr/readiness-report.json
+            docs/evidence/disaster-recovery-report.md
+
+  deploy-production:
+    name: deploy-production
+    # Ponto único de entrada do caminho de produção, liberado apenas após todos os gates prévios
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    needs:
+      - resolve-release-source
+      - release-sbom
+      - production-preflight
+      - backup-health-gate
+      - release-smoke-gate
+      - release-e2e-gate
+      - rollback-rehearsal-evidence-gate
+      - dr-readiness-gate
+    concurrency:
+      group: cd-production
+      cancel-in-progress: false
+    environment: production
+    steps:
+      - name: Guard production deployment branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then
+            echo "::error title=Invalid branch::Production deploy can only run from main." >&2
+            exit 1
+          fi
+
+      - name: Mask deploy hook
+        shell: bash
+        env:
+          RENDER_PRODUCTION_DEPLOY_HOOK_URL: ${{ secrets.RENDER_PRODUCTION_DEPLOY_HOOK_URL }}
+        run: |
+          set -euo pipefail
+          if [[ -n "${RENDER_PRODUCTION_DEPLOY_HOOK_URL:-}" ]]; then
+            echo "::add-mask::${RENDER_PRODUCTION_DEPLOY_HOOK_URL}"
+          fi
+
+      - name: Trigger Render deploy hook (production)
+        shell: bash
+        env:
+          RENDER_PRODUCTION_DEPLOY_HOOK_URL: ${{ secrets.RENDER_PRODUCTION_DEPLOY_HOOK_URL }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${RENDER_PRODUCTION_DEPLOY_HOOK_URL:-}" ]]; then
+            echo "::error title=Missing secret::RENDER_PRODUCTION_DEPLOY_HOOK_URL is not configured in Environment production secrets." >&2
+            exit 1
+          fi
+
+          if ! [[ "${RENDER_PRODUCTION_DEPLOY_HOOK_URL}" =~ ^https://[^[:space:]]+$ ]]; then
+            echo "::error title=Invalid secret::RENDER_PRODUCTION_DEPLOY_HOOK_URL must be a valid HTTPS URL." >&2
+            exit 1
+          fi
+
+          curl --fail --show-error --silent --retry 3 --retry-delay 5 --request POST "${RENDER_PRODUCTION_DEPLOY_HOOK_URL}"
+
+      - name: Generate deploy manifest
+        shell: bash
+        run: |
+          mkdir -p artifacts/release
+          cat > artifacts/release/deploy-manifest.json <<EOF
+          {
+            "status": "deployed",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "sourceEvent": "${{ needs.resolve-release-source.outputs.source_event }}",
+            "sourceSha": "${{ needs.resolve-release-source.outputs.source_sha }}"
+          }
+          EOF
+
+      - name: Upload deploy manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-manifest
+          path: artifacts/release/deploy-manifest.json

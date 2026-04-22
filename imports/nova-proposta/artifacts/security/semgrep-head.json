@@ -1,0 +1,1161 @@
+{
+  "checkedAt": "2026-04-10T13:37:36.440Z",
+  "command": "C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\.tools\\semgrep-venv\\Scripts\\semgrep.exe scan --config auto --json --quiet apps/api apps/web apps/worker packages/database infra .github/workflows scripts/ops scripts/release scripts/security scripts/testing scripts/performance scripts/migrate-to-multitenant.ts scripts/audit/prime-backlog.mjs scripts/audit/prime-collect.mjs scripts/audit/prime-normalize.mjs scripts/audit/prime-refresh-evidence.mjs scripts/audit/prime-render.mjs scripts/audit/prime-score.mjs scripts/audit/prime-verify.mjs scripts/audit/shared-prime.mjs",
+  "exitCode": 0,
+  "status": "fresh",
+  "sufficient": true,
+  "version": "1.157.0",
+  "targets": [
+    "apps/api",
+    "apps/web",
+    "apps/worker",
+    "packages/database",
+    "infra",
+    ".github/workflows",
+    "scripts/ops",
+    "scripts/release",
+    "scripts/security",
+    "scripts/testing",
+    "scripts/performance",
+    "scripts/migrate-to-multitenant.ts",
+    "scripts/audit/prime-backlog.mjs",
+    "scripts/audit/prime-collect.mjs",
+    "scripts/audit/prime-normalize.mjs",
+    "scripts/audit/prime-refresh-evidence.mjs",
+    "scripts/audit/prime-render.mjs",
+    "scripts/audit/prime-score.mjs",
+    "scripts/audit/prime-verify.mjs",
+    "scripts/audit/shared-prime.mjs"
+  ],
+  "summary": {
+    "findings": 10,
+    "errors": 8,
+    "severities": {
+      "ERROR": 0,
+      "WARNING": 0,
+      "INFO": 10,
+      "UNKNOWN": 0
+    }
+  },
+  "results": [
+    {
+      "check_id": "yaml.kubernetes.security.run-as-non-root.run-as-non-root",
+      "path": "infra/cloudrun/service.yaml",
+      "start": {
+        "line": 10,
+        "col": 5,
+        "offset": 188
+      },
+      "end": {
+        "line": 10,
+        "col": 9,
+        "offset": 192
+      },
+      "extra": {
+        "message": "When running containers in Kubernetes, it's important to ensure that they  are properly secured to prevent privilege escalation attacks.  One potential vulnerability is when a container is allowed to run  applications as the root user, which could allow an attacker to gain  access to sensitive resources. To mitigate this risk, it's recommended to  add a `securityContext` to the container, with the parameter `runAsNonRoot`  set to `true`. This will ensure that the container runs as a non-root user,  limiting the damage that could be caused by any potential attacks. By  adding a `securityContext` to the container in your Kubernetes pod, you can  help to ensure that your containerized applications are more secure and  less vulnerable to privilege escalation attacks.",
+        "fix": "spec:\n      securityContext:\n        runAsNonRoot: true #",
+        "metadata": {
+          "references": [
+            "https://kubernetes.io/blog/2016/08/security-best-practices-kubernetes-deployment/",
+            "https://kubernetes.io/docs/concepts/policy/pod-security-policy/",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html#rule-2-set-a-user"
+          ],
+          "category": "security",
+          "cwe": [
+            "CWE-250: Execution with Unnecessary Privileges"
+          ],
+          "owasp": [
+            "A05:2021 - Security Misconfiguration",
+            "A06:2017 - Security Misconfiguration",
+            "A02:2025 - Security Misconfiguration"
+          ],
+          "technology": [
+            "kubernetes"
+          ],
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Improper Authorization"
+          ],
+          "source": "https://semgrep.dev/r/yaml.kubernetes.security.run-as-non-root.run-as-non-root",
+          "shortlink": "https://sg.run/dgP5"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+      "path": "scripts/audit/shared-prime.mjs",
+      "start": {
+        "line": 385,
+        "col": 10,
+        "offset": 11536
+      },
+      "end": {
+        "line": 386,
+        "col": 30,
+        "offset": 11579
+      },
+      "extra": {
+        "message": "Detected a call to `replaceAll()` in an attempt to HTML escape the string `String(value)`. Manually sanitizing input through a manually built list can be circumvented in many situations, and it's better to use a well known sanitization library such as `sanitize-html` or `DOMPurify`.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "javascript",
+            "typescript"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "references": [
+            "https://www.npmjs.com/package/dompurify",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+          ],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cross-Site-Scripting (XSS)"
+          ],
+          "source": "https://semgrep.dev/r/javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+          "shortlink": "https://sg.run/AzoB"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+      "path": "scripts/audit/shared-prime.mjs",
+      "start": {
+        "line": 385,
+        "col": 10,
+        "offset": 11536
+      },
+      "end": {
+        "line": 387,
+        "col": 29,
+        "offset": 11608
+      },
+      "extra": {
+        "message": "Detected a call to `replaceAll()` in an attempt to HTML escape the string `String(value)\n    .replaceAll(\"&\", \"&amp;\")`. Manually sanitizing input through a manually built list can be circumvented in many situations, and it's better to use a well known sanitization library such as `sanitize-html` or `DOMPurify`.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "javascript",
+            "typescript"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "references": [
+            "https://www.npmjs.com/package/dompurify",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+          ],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cross-Site-Scripting (XSS)"
+          ],
+          "source": "https://semgrep.dev/r/javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+          "shortlink": "https://sg.run/AzoB"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+      "path": "scripts/audit/shared-prime.mjs",
+      "start": {
+        "line": 385,
+        "col": 10,
+        "offset": 11536
+      },
+      "end": {
+        "line": 388,
+        "col": 29,
+        "offset": 11637
+      },
+      "extra": {
+        "message": "Detected a call to `replaceAll()` in an attempt to HTML escape the string `String(value)\n    .replaceAll(\"&\", \"&amp;\")\n    .replaceAll(\"<\", \"&lt;\")`. Manually sanitizing input through a manually built list can be circumvented in many situations, and it's better to use a well known sanitization library such as `sanitize-html` or `DOMPurify`.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "javascript",
+            "typescript"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "references": [
+            "https://www.npmjs.com/package/dompurify",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+          ],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cross-Site-Scripting (XSS)"
+          ],
+          "source": "https://semgrep.dev/r/javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+          "shortlink": "https://sg.run/AzoB"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+      "path": "scripts/audit/shared-prime.mjs",
+      "start": {
+        "line": 385,
+        "col": 10,
+        "offset": 11536
+      },
+      "end": {
+        "line": 389,
+        "col": 31,
+        "offset": 11668
+      },
+      "extra": {
+        "message": "Detected a call to `replaceAll()` in an attempt to HTML escape the string `String(value)\n    .replaceAll(\"&\", \"&amp;\")\n    .replaceAll(\"<\", \"&lt;\")\n    .replaceAll(\">\", \"&gt;\")`. Manually sanitizing input through a manually built list can be circumvented in many situations, and it's better to use a well known sanitization library such as `sanitize-html` or `DOMPurify`.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "javascript",
+            "typescript"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "references": [
+            "https://www.npmjs.com/package/dompurify",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+          ],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cross-Site-Scripting (XSS)"
+          ],
+          "source": "https://semgrep.dev/r/javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+          "shortlink": "https://sg.run/AzoB"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+      "path": "scripts/release/generate-sbom.mjs",
+      "start": {
+        "line": 16,
+        "col": 10,
+        "offset": 451
+      },
+      "end": {
+        "line": 17,
+        "col": 30,
+        "offset": 486
+      },
+      "extra": {
+        "message": "Detected a call to `replaceAll()` in an attempt to HTML escape the string `value`. Manually sanitizing input through a manually built list can be circumvented in many situations, and it's better to use a well known sanitization library such as `sanitize-html` or `DOMPurify`.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "javascript",
+            "typescript"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "references": [
+            "https://www.npmjs.com/package/dompurify",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+          ],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cross-Site-Scripting (XSS)"
+          ],
+          "source": "https://semgrep.dev/r/javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+          "shortlink": "https://sg.run/AzoB"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+      "path": "scripts/release/generate-sbom.mjs",
+      "start": {
+        "line": 16,
+        "col": 10,
+        "offset": 451
+      },
+      "end": {
+        "line": 18,
+        "col": 29,
+        "offset": 515
+      },
+      "extra": {
+        "message": "Detected a call to `replaceAll()` in an attempt to HTML escape the string `value\n    .replaceAll('&', '&amp;')`. Manually sanitizing input through a manually built list can be circumvented in many situations, and it's better to use a well known sanitization library such as `sanitize-html` or `DOMPurify`.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "javascript",
+            "typescript"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "references": [
+            "https://www.npmjs.com/package/dompurify",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+          ],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cross-Site-Scripting (XSS)"
+          ],
+          "source": "https://semgrep.dev/r/javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+          "shortlink": "https://sg.run/AzoB"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+      "path": "scripts/release/generate-sbom.mjs",
+      "start": {
+        "line": 16,
+        "col": 10,
+        "offset": 451
+      },
+      "end": {
+        "line": 19,
+        "col": 29,
+        "offset": 544
+      },
+      "extra": {
+        "message": "Detected a call to `replaceAll()` in an attempt to HTML escape the string `value\n    .replaceAll('&', '&amp;')\n    .replaceAll('<', '&lt;')`. Manually sanitizing input through a manually built list can be circumvented in many situations, and it's better to use a well known sanitization library such as `sanitize-html` or `DOMPurify`.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "javascript",
+            "typescript"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "references": [
+            "https://www.npmjs.com/package/dompurify",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+          ],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cross-Site-Scripting (XSS)"
+          ],
+          "source": "https://semgrep.dev/r/javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+          "shortlink": "https://sg.run/AzoB"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+      "path": "scripts/release/generate-sbom.mjs",
+      "start": {
+        "line": 16,
+        "col": 10,
+        "offset": 451
+      },
+      "end": {
+        "line": 20,
+        "col": 31,
+        "offset": 575
+      },
+      "extra": {
+        "message": "Detected a call to `replaceAll()` in an attempt to HTML escape the string `value\n    .replaceAll('&', '&amp;')\n    .replaceAll('<', '&lt;')\n    .replaceAll('>', '&gt;')`. Manually sanitizing input through a manually built list can be circumvented in many situations, and it's better to use a well known sanitization library such as `sanitize-html` or `DOMPurify`.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "javascript",
+            "typescript"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "references": [
+            "https://www.npmjs.com/package/dompurify",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+          ],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cross-Site-Scripting (XSS)"
+          ],
+          "source": "https://semgrep.dev/r/javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+          "shortlink": "https://sg.run/AzoB"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+      "path": "scripts/release/generate-sbom.mjs",
+      "start": {
+        "line": 16,
+        "col": 10,
+        "offset": 451
+      },
+      "end": {
+        "line": 21,
+        "col": 31,
+        "offset": 606
+      },
+      "extra": {
+        "message": "Detected a call to `replaceAll()` in an attempt to HTML escape the string `value\n    .replaceAll('&', '&amp;')\n    .replaceAll('<', '&lt;')\n    .replaceAll('>', '&gt;')\n    .replaceAll('\"', '&quot;')`. Manually sanitizing input through a manually built list can be circumvented in many situations, and it's better to use a well known sanitization library such as `sanitize-html` or `DOMPurify`.",
+        "metadata": {
+          "category": "security",
+          "technology": [
+            "javascript",
+            "typescript"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "references": [
+            "https://www.npmjs.com/package/dompurify",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+          ],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": [
+            "audit"
+          ],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cross-Site-Scripting (XSS)"
+          ],
+          "source": "https://semgrep.dev/r/javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization",
+          "shortlink": "https://sg.run/AzoB"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 2,
+      "level": "warn",
+      "type": "Internal matching error",
+      "rule_id": "yaml.github-actions.security.curl-eval.curl-eval",
+      "message": "Internal matching error when running yaml.github-actions.security.curl-eval.curl-eval on .github\\workflows\\cd.yml:\n An error occurred while invoking the Semgrep engine. Please help us fix this by creating an issue at https://github.com/semgrep/semgrep\n\nrule yaml.github-actions.security.curl-eval.curl-eval: metavariable-pattern failed when parsing $SHELL's content as Bash: set -euo pipefail\nREGION=\"${{ vars.CLOUD_RUN_REGION }}\"\nmkdir -p artifacts/release\n: > artifacts/release/staging-rollout.tsv\n\nwhile IFS='|' read -r component service image; do\n  before_json=\"artifacts/release/${component}-before.json\"\n  after_json=\"artifacts/release/${component}-after.json\"\n\n  if ! gcloud run services describe \"$service\" --region \"$REGION\" --format=json > \"$before_json\" 2>/dev/null; then\n    echo '{}' > \"$before_json\"\n  fi\n\n  previous_revision=$(node -e \"const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const traffic=(data.status&&data.status.traffic)||[]; const active=traffic.find((item)=>Number(item.percent||0)>0); process.stdout.write(active?.revisionName||'');\" \"$before_json\")\n\n  gcloud run deploy \"$service\" --image \"$image\" --region \"$REGION\" --platform managed --tag candidate --no-traffic --quiet\n  gcloud run services describe \"$service\" --region \"$REGION\" --format=json > \"$after_json\"\n\n  candidate_revision=$(node -e \"const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(data.status?.latestCreatedRevisionName||'');\" \"$after_json\")\n  candidate_url=$(node -e \"const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const traffic=(data.status&&data.status.traffic)||[]; const entry=traffic.find((item)=>item.tag==='candidate'); process.stdout.write(entry?.url||'');\" \"$after_json\")\n\n  gcloud run services update-traffic \"$service\" --region \"$REGION\" --to-revisions \"${candidate_revision}=100\" --quiet\n  printf '%s\\t%s\\t%s\\t%s\\t%s\\n' \"$component\" \"$service\" \"$previous_revision\" \"$candidate_revision\" \"$candidate_url\" >> artifacts/release/staging-rollout.tsv\ndone <<EOF\napi|${{ vars.CLOUD_RUN_API_SERVICE }}|${{ needs.build-stag... (truncated 1024 more characters)",
+      "path": ".github\\workflows\\cd.yml"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 55,
+              "col": 12,
+              "offset": 1239
+            },
+            "end": {
+              "line": 55,
+              "col": 51,
+              "offset": 1278
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 60,
+              "col": 12,
+              "offset": 1239
+            },
+            "end": {
+              "line": 60,
+              "col": 65,
+              "offset": 1292
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 60,
+              "col": 76,
+              "offset": 1239
+            },
+            "end": {
+              "line": 60,
+              "col": 95,
+              "offset": 1258
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 65,
+              "col": 17,
+              "offset": 1239
+            },
+            "end": {
+              "line": 65,
+              "col": 53,
+              "offset": 1275
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line .github\\workflows\\cd.yml:55:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ github.event.workflow_run.head_branch` was unexpected",
+      "path": ".github\\workflows\\cd.yml",
+      "spans": [
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 55,
+            "col": 12,
+            "offset": 1239
+          },
+          "end": {
+            "line": 55,
+            "col": 51,
+            "offset": 1278
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 60,
+            "col": 12,
+            "offset": 1239
+          },
+          "end": {
+            "line": 60,
+            "col": 65,
+            "offset": 1292
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 60,
+            "col": 76,
+            "offset": 1239
+          },
+          "end": {
+            "line": 60,
+            "col": 95,
+            "offset": 1258
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 65,
+            "col": 17,
+            "offset": 1239
+          },
+          "end": {
+            "line": 65,
+            "col": 53,
+            "offset": 1275
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 287,
+              "col": 21,
+              "offset": 9525
+            },
+            "end": {
+              "line": 287,
+              "col": 72,
+              "offset": 9576
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 288,
+              "col": 19,
+              "offset": 9525
+            },
+            "end": {
+              "line": 288,
+              "col": 68,
+              "offset": 9574
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 289,
+              "col": 19,
+              "offset": 9525
+            },
+            "end": {
+              "line": 289,
+              "col": 68,
+              "offset": 9574
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 290,
+              "col": 18,
+              "offset": 9525
+            },
+            "end": {
+              "line": 290,
+              "col": 35,
+              "offset": 9542
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 291,
+              "col": 15,
+              "offset": 9525
+            },
+            "end": {
+              "line": 291,
+              "col": 30,
+              "offset": 9540
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line .github\\workflows\\cd.yml:287:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ needs.resolve-release-source.outputs.source_event` was unexpected",
+      "path": ".github\\workflows\\cd.yml",
+      "spans": [
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 287,
+            "col": 21,
+            "offset": 9525
+          },
+          "end": {
+            "line": 287,
+            "col": 72,
+            "offset": 9576
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 288,
+            "col": 19,
+            "offset": 9525
+          },
+          "end": {
+            "line": 288,
+            "col": 68,
+            "offset": 9574
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 289,
+            "col": 19,
+            "offset": 9525
+          },
+          "end": {
+            "line": 289,
+            "col": 68,
+            "offset": 9574
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 290,
+            "col": 18,
+            "offset": 9525
+          },
+          "end": {
+            "line": 290,
+            "col": 35,
+            "offset": 9542
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 291,
+            "col": 15,
+            "offset": 9525
+          },
+          "end": {
+            "line": 291,
+            "col": 30,
+            "offset": 9540
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 503,
+              "col": 14,
+              "offset": 17421
+            },
+            "end": {
+              "line": 503,
+              "col": 63,
+              "offset": 17470
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 505,
+              "col": 13,
+              "offset": 17421
+            },
+            "end": {
+              "line": 505,
+              "col": 48,
+              "offset": 17456
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 505,
+              "col": 69,
+              "offset": 17421
+            },
+            "end": {
+              "line": 505,
+              "col": 90,
+              "offset": 17442
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 505,
+              "col": 96,
+              "offset": 17421
+            },
+            "end": {
+              "line": 505,
+              "col": 135,
+              "offset": 17460
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line .github\\workflows\\cd.yml:503:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ needs.resolve-release-source.outputs.source_sha` was unexpected",
+      "path": ".github\\workflows\\cd.yml",
+      "spans": [
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 503,
+            "col": 14,
+            "offset": 17421
+          },
+          "end": {
+            "line": 503,
+            "col": 63,
+            "offset": 17470
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 505,
+            "col": 13,
+            "offset": 17421
+          },
+          "end": {
+            "line": 505,
+            "col": 48,
+            "offset": 17456
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 505,
+            "col": 69,
+            "offset": 17421
+          },
+          "end": {
+            "line": 505,
+            "col": 90,
+            "offset": 17442
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 505,
+            "col": 96,
+            "offset": 17421
+          },
+          "end": {
+            "line": 505,
+            "col": 135,
+            "offset": 17460
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 517,
+              "col": 16,
+              "offset": 18204
+            },
+            "end": {
+              "line": 517,
+              "col": 46,
+              "offset": 18234
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line .github\\workflows\\cd.yml:517:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ steps.refs.outputs.api_image` was unexpected",
+      "path": ".github\\workflows\\cd.yml",
+      "spans": [
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 517,
+            "col": 16,
+            "offset": 18204
+          },
+          "end": {
+            "line": 517,
+            "col": 46,
+            "offset": 18234
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 522,
+              "col": 16,
+              "offset": 18408
+            },
+            "end": {
+              "line": 522,
+              "col": 46,
+              "offset": 18438
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line .github\\workflows\\cd.yml:522:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ steps.refs.outputs.web_image` was unexpected",
+      "path": ".github\\workflows\\cd.yml",
+      "spans": [
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 522,
+            "col": 16,
+            "offset": 18408
+          },
+          "end": {
+            "line": 522,
+            "col": 46,
+            "offset": 18438
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 527,
+              "col": 16,
+              "offset": 18615
+            },
+            "end": {
+              "line": 527,
+              "col": 49,
+              "offset": 18648
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line .github\\workflows\\cd.yml:527:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ steps.refs.outputs.worker_image` was unexpected",
+      "path": ".github\\workflows\\cd.yml",
+      "spans": [
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 527,
+            "col": 16,
+            "offset": 18615
+          },
+          "end": {
+            "line": 527,
+            "col": 49,
+            "offset": 18648
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 813,
+              "col": 21,
+              "offset": 29310
+            },
+            "end": {
+              "line": 813,
+              "col": 72,
+              "offset": 29361
+            }
+          },
+          {
+            "path": ".github\\workflows\\cd.yml",
+            "start": {
+              "line": 814,
+              "col": 19,
+              "offset": 29310
+            },
+            "end": {
+              "line": 814,
+              "col": 68,
+              "offset": 29359
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line .github\\workflows\\cd.yml:813:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ needs.resolve-release-source.outputs.source_event` was unexpected",
+      "path": ".github\\workflows\\cd.yml",
+      "spans": [
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 813,
+            "col": 21,
+            "offset": 29310
+          },
+          "end": {
+            "line": 813,
+            "col": 72,
+            "offset": 29361
+          }
+        },
+        {
+          "file": ".github\\workflows\\cd.yml",
+          "start": {
+            "line": 814,
+            "col": 19,
+            "offset": 29310
+          },
+          "end": {
+            "line": 814,
+            "col": 68,
+            "offset": 29359
+          }
+        }
+      ]
+    }
+  ],
+  "stderr": ""
+}

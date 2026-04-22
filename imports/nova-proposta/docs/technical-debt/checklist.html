@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checklist de Divida Tecnica - BirthHub 360</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f7fb;
+        --panel: #ffffff;
+        --border: #d7dfeb;
+        --text: #132238;
+        --muted: #53657d;
+        --p1: #9f1239;
+        --p2: #92400e;
+        --p3: #1d4ed8;
+        --ok: #166534;
+        --shadow: 0 18px 40px rgba(19, 34, 56, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at top right, rgba(29, 78, 216, 0.1), transparent 28%),
+          linear-gradient(180deg, #eef4fb 0%, var(--bg) 100%);
+        color: var(--text);
+        font: 16px/1.55 "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      main {
+        width: min(1120px, calc(100% - 32px));
+        margin: 40px auto 64px;
+      }
+
+      .hero,
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero {
+        padding: 32px;
+        margin-bottom: 24px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        letter-spacing: -0.04em;
+      }
+
+      h2 {
+        font-size: 1.35rem;
+        margin-bottom: 14px;
+      }
+
+      h3 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .subtitle {
+        margin-top: 10px;
+        max-width: 820px;
+        color: var(--muted);
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: #f8fbff;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 24px;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        margin-bottom: 24px;
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .stat {
+        display: grid;
+        gap: 8px;
+      }
+
+      .stat strong {
+        font-size: 1.8rem;
+        letter-spacing: -0.04em;
+      }
+
+      .stat small {
+        color: var(--muted);
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: #f8fbff;
+        border: 1px solid var(--border);
+        font-size: 0.9rem;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+
+      .p1 {
+        background: rgba(159, 18, 57, 0.1);
+        color: var(--p1);
+        border-color: rgba(159, 18, 57, 0.18);
+      }
+
+      .p2 {
+        background: rgba(146, 64, 14, 0.1);
+        color: var(--p2);
+        border-color: rgba(146, 64, 14, 0.18);
+      }
+
+      .p3 {
+        background: rgba(29, 78, 216, 0.1);
+        color: var(--p3);
+        border-color: rgba(29, 78, 216, 0.18);
+      }
+
+      .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid currentColor;
+        font-size: 0.86rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .section-head {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .section-head p,
+      .note {
+        color: var(--muted);
+      }
+
+      .checklist {
+        display: grid;
+        gap: 12px;
+      }
+
+      .item {
+        display: grid;
+        gap: 6px;
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: #fbfdff;
+      }
+
+      .item label {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .item input[type="checkbox"] {
+        margin-top: 3px;
+        width: 18px;
+        height: 18px;
+        accent-color: #0f766e;
+      }
+
+      .item small {
+        padding-left: 30px;
+        color: var(--muted);
+      }
+
+      .two-col {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      li + li {
+        margin-top: 6px;
+      }
+
+      .footer {
+        margin-top: 24px;
+        color: var(--muted);
+        text-align: center;
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 720px) {
+        .hero,
+        .panel {
+          padding: 20px;
+          border-radius: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <h1>Checklist de Divida Tecnica</h1>
+        <p class="subtitle">
+          Checklist HTML derivado do relatorio executivo de divida tecnica do BirthHub 360. O foco aqui e converter
+          os achados em itens executaveis, com ordem de ataque, criterio de saida e escopo por prioridade.
+        </p>
+        <div class="meta">
+          <span class="chip">Data base: 2026-04-02</span>
+          <span class="chip">Fonte: docs/technical-debt/executive-report.md</span>
+          <span class="chip">Escopo: apps/web, apps/api, apps/worker, packages/database, docs e CI</span>
+        </div>
+      </section>
+
+      <section class="grid summary-grid">
+        <article class="panel stat">
+          <small>Prioridades P1</small>
+          <strong>2</strong>
+          <p>Contrato de API parcial e deriva operacional do legado.</p>
+        </article>
+        <article class="panel stat">
+          <small>Prioridades P2</small>
+          <strong>4</strong>
+          <p>Duplicacao de UI, hotspots de modulo, type-safety e coverage gate.</p>
+        </article>
+        <article class="panel stat">
+          <small>Prioridades P3</small>
+          <strong>1</strong>
+          <p>Ruido nas metricas de qualidade e baseline de complexidade.</p>
+        </article>
+        <article class="panel stat">
+          <small>Itens nucleares</small>
+          <strong>25</strong>
+          <p>Tarefas distribuidas em tres sprints para reduzir risco tecnico e operacional.</p>
+        </article>
+      </section>
+
+      <section class="panel" style="margin-bottom: 24px">
+        <h2>Legenda</h2>
+        <div class="legend">
+          <span class="p1"><i class="dot" style="background: var(--p1)"></i>P1: risco alto e impacto imediato</span>
+          <span class="p2"><i class="dot" style="background: var(--p2)"></i>P2: manutencao cara e acoplamento</span>
+          <span class="p3"><i class="dot" style="background: var(--p3)"></i>P3: melhoria estrutural e sinal</span>
+          <span><i class="dot" style="background: var(--ok)"></i>Marcar apenas quando houver evidencia objetiva</span>
+        </div>
+      </section>
+
+      <section class="grid two-col">
+        <article class="panel">
+          <div class="section-head">
+            <span class="section-tag p1">Sprint 1</span>
+            <h2>Contrato de API e limpeza do legado</h2>
+            <p>Fechar o risco mais alto primeiro: alinhar a API publicada com a superficie real e remover referencias
+              operacionais que ainda tratam superficies em sunset como se fossem ativas.</p>
+          </div>
+          <div class="checklist">
+            <div class="item">
+              <label><input type="checkbox" />Inventariar todos os routers montados em <code>apps/api/src/app/module-routes.ts</code>.</label>
+              <small>Saida esperada: lista completa de modulos, base paths e handlers publicados.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Mapear cada router inventariado para paths equivalentes no OpenAPI.</label>
+              <small>Saida esperada: matriz router x endpoint x status de documentacao.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Expandir <code>apps/api/src/docs/openapi.ts</code> para cobrir a superficie canonica de negocio.</label>
+              <small>Criterio: o documento nao pode continuar restrito aos 3 paths atuais.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Validar se os exemplos, titulos e summaries do OpenAPI refletem o comportamento real dos modulos.</label>
+              <small>Evitar doc parcial ou enganosa para integradores e QA.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Atualizar o item <code>TD-005</code> no tracker com status, owner, prazo e evidencia nova.</label>
+              <small>Registrar o progresso no arquivo <code>docs/technical-debt/tracker.json</code>.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Executar uma varredura documental para remover ou reclassificar referencias a <code>apps/api-gateway</code>, <code>apps/agent-orchestrator</code>, <code>packages/db</code> e <code>apps/legacy/dashboard</code>.</label>
+              <small>Ponto de partida: 132 referencias encontradas em docs, README e package.json.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Corrigir <code>docs/runbooks/db-backup-restore.md</code> para nao depender de scripts em <code>packages/db</code>.</label>
+              <small>O runbook precisa apontar para o fluxo canonico atual de banco.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Corrigir <code>docs/slo.md</code> para refletir o core canonico e remover SLOs operacionais de superficies em sunset.</label>
+              <small>Os SLOs devem estar alinhados com <code>docs/service-catalog.md</code>.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Revisar <code>README.md</code> e <code>package.json</code> para distinguir o que e referencia historica do que e fluxo default suportado.</label>
+              <small>Especial atencao para <code>dev:legacy</code>, <code>stack:hybrid</code> e textos de onboarding.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Complementar o tracker de divida tecnica com os eixos que hoje nao aparecem explicitamente: duplicacao de UI, type-safety, coverage gate e ruido das metricas.</label>
+              <small>Sem isso, o tracker continua sub-representando a divida real do codigo.</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="section-head">
+            <span class="section-tag p2">Sprint 2</span>
+            <h2>Reducao de custo de manutencao</h2>
+            <p>Atacar a duplicacao de front-end e os hotspots de responsabilidades misturadas que tornam mudancas simples
+              em alteracoes caras, acopladas e propensas a regressao.</p>
+          </div>
+          <div class="checklist">
+            <div class="item">
+              <label><input type="checkbox" />Extrair componentes compartilhados de cards, estados vazios e blocos de formulario em <code>apps/web/components/agents/PolicyManager.tsx</code>.</label>
+              <small>Meta: reduzir a duplicacao hoje medida em 87.5% nesse componente.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Criar um padrao reutilizavel para tabelas administrativas usado por <code>settings/users</code> e <code>settings/team</code>.</label>
+              <small>Essas telas hoje repetem estrutura, layout e parte da logica de acao.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Consolidar a logica repetida de tabs, tabelas e paines em <code>apps/web/components/agents/agent-detail-tabs.tsx</code>.</label>
+              <small>Meta: reduzir os clones internos e simplificar manutencao do detalhe de agentes.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Separar <code>apps/web/app/(dashboard)/workflows/[id]/runs/page.tsx</code> em camadas de fetch, metricas, grafo e debugger.</label>
+              <small>Hoje o componente mistura carga remota, agregacao, retry, renderizacao e debug visual.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Extrair um hook ou service para retry e leitura de runs de workflow.</label>
+              <small>Objetivo: reduzir acoplamento entre interacao de UI e chamada remota.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Quebrar <code>apps/api/src/modules/connectors/router.ts</code> em schemas, helpers de contexto e handlers por caso de uso.</label>
+              <small>O arquivo concentra validacao, parsing, callback GET/POST, auth context e sync em um unico modulo.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Isolar o fluxo de callback OAuth de conectores em handler dedicado.</label>
+              <small>Separar claramente callback, sync, listagem e upsert melhora teste e leitura.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Adicionar testes de regressao nos pontos refatorados para preservar comportamento atual.</label>
+              <small>Refatoracao sem protecao de teste so desloca a divida tecnica.</small>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="grid two-col" style="margin-top: 24px">
+        <article class="panel">
+          <div class="section-head">
+            <span class="section-tag p2">Sprint 3</span>
+            <h2>Type-safety e quality gates</h2>
+            <p>Depois de reduzir o custo visivel de manutencao, fechar a fragilidade dos contratos internos e endurecer
+              os gates quantitativos do CI.</p>
+          </div>
+          <div class="checklist">
+            <div class="item">
+              <label><input type="checkbox" />Substituir os usos de <code>any</code> em <code>packages/shared-types/src/index.ts</code> por tipos estruturados ou <code>JsonValue</code> controlado.</label>
+              <small>O arquivo atual contem 17 ocorrencias de <code>any</code> em entidades centrais do dominio.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Definir contratos de payload para campos JSON de <code>Lead</code>, <code>Deal</code>, <code>Activity</code>, <code>Customer</code>, <code>Contract</code> e <code>AgentLog</code>.</label>
+              <small>Esses tipos precisam parar de vazar como caixa-preta entre pacotes.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Alinhar os tipos compartilhados com schema, API e front-end para evitar divergencia entre camadas.</label>
+              <small>Criterio: contrato unico reaproveitavel entre pacotes do monorepo.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Escolher a estrategia de cobertura para TypeScript do monorepo e definir thresholds minimos por pacote ou lane.</label>
+              <small>Hoje so existe piso explicito para Python com <code>--cov-fail-under=80</code>.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Adicionar etapa de cobertura TS/JS no CI em <code>.github/workflows/ci.yml</code>.</label>
+              <small>O gate deve falhar quando cobertura cair abaixo do piso aprovado.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Definir quais modulos entram primeiro no gate: pelo menos <code>apps/api</code>, <code>apps/web</code>, <code>apps/worker</code> e pacotes compartilhados criticos.</label>
+              <small>Evitar rollout amplo sem baseline inicial.</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="section-head">
+            <span class="section-tag p3">Estrutural</span>
+            <h2>Sinal de qualidade e baseline</h2>
+            <p>Melhorar a confiabilidade das metricas para que a priorizacao futura use sinal util, e nao ruido vindo de
+              arquivos gerados ou superficies ausentes do HEAD.</p>
+          </div>
+          <div class="checklist">
+            <div class="item">
+              <label><input type="checkbox" />Remover arquivos gerados do baseline de complexidade, especialmente artefatos em <code>packages/agents-core/docs/assets/</code>.</label>
+              <small>Hotspots de codigo gerado distorcem o ranking de refatoracao.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Separar superficies ausentes do <code>HEAD</code> ou em sunset dos relatorios principais de complexidade.</label>
+              <small>O core ativo nao deve competir com legado ausente no mesmo ranking operacional.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Regenerar os artefatos de complexidade e duplicacao depois das exclusoes de ruido.</label>
+              <small>Produzir um baseline que reflita o codigo realmente mantido pelo time.</small>
+            </div>
+            <div class="item">
+              <label><input type="checkbox" />Atualizar o dashboard tecnico e o changelog da divida depois da nova linha de base.</label>
+              <small>Isso fecha o ciclo entre relatorio, tracker e visibilidade executiva.</small>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="grid two-col" style="margin-top: 24px">
+        <article class="panel">
+          <h2>Criterios de saida</h2>
+          <ul>
+            <li>OpenAPI cobre a superficie canonica relevante de <code>apps/api</code>.</li>
+            <li>Runbooks e SLOs nao dependem mais de superficies em sunset como referencia operacional primaria.</li>
+            <li>O tracker passa a refletir os eixos reais de divida observados no codigo.</li>
+            <li>Os principais hotspots de UI deixam de depender de copia manual para evolucao.</li>
+            <li><code>packages/shared-types</code> deixa de propagar <code>any</code> nas entidades centrais.</li>
+            <li>O CI passa a rejeitar quedas de cobertura em TypeScript nas areas criticas.</li>
+            <li>Os relatorios de qualidade passam a ignorar arquivos gerados e superficies fora do escopo ativo.</li>
+          </ul>
+        </article>
+
+        <article class="panel">
+          <h2>Observacoes de uso</h2>
+          <ul>
+            <li>Marque cada item apenas com evidencia objetiva em PR, artefato ou relatorio regenerado.</li>
+            <li>Se uma tarefa for grande demais para um unico PR, quebre em subtarefas tecnicas mantendo este checklist como backlog mestre.</li>
+            <li>O item so deve ser considerado concluido quando o tracker e a documentacao derivada tambem forem atualizados.</li>
+            <li>Itens P1 devem ter owner ativo no sprint atual; itens P2 precisam data alvo visivel; itens P3 podem entrar como lote de saneamento.</li>
+          </ul>
+        </article>
+      </section>
+
+      <p class="footer">
+        Arquivo gerado a partir de <code>docs/technical-debt/executive-report.md</code>.
+      </p>
+    </main>
+  </body>
+</html>

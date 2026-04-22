@@ -1,0 +1,13 @@
+{
+  "cycle": 1,
+  "verdict": "FAILED",
+  "gate": "GATE_FAIL",
+  "approved_by": "JULES",
+  "validated_at": "2026-04-18T14:41:00Z",
+  "reason": "Ciclo 1 reprovado na primeira validação por inconsistência entre snapshot obrigatório e HEAD real do workspace.",
+  "evidence": [
+    ".ops/reports/phase1-report.md",
+    ".ops/evidence/cycle1/README.md",
+    ".ops/snapshots/snapshot.json"
+  ]
+}

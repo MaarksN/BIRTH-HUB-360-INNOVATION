@@ -1,0 +1,56 @@
+{
+  "name": "@birthub/integrations",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@hubspot/api-client": "^13.5.0",
+    "pipedrive": "^32.2.0",
+    "resend": "^6.9.4",
+    "stripe": "^22.0.1",
+    "@birthub/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "typescript": "^5.9.3"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./hubspot-crm-adapter": {
+      "types": "./dist/adapters/hubspot-crm-adapter.d.ts",
+      "default": "./dist/adapters/hubspot-crm-adapter.js"
+    },
+    "./hubspot-webhooks": {
+      "types": "./dist/adapters/hubspot-webhooks.d.ts",
+      "default": "./dist/adapters/hubspot-webhooks.js"
+    },
+    "./omie-erp-adapter": {
+      "types": "./dist/adapters/omie-erp-adapter.d.ts",
+      "default": "./dist/adapters/omie-erp-adapter.js"
+    },
+    "./slack-message-adapter": {
+      "types": "./dist/adapters/slack-message-adapter.d.ts",
+      "default": "./dist/adapters/slack-message-adapter.js"
+    },
+    "./stripe-payment-adapter": {
+      "types": "./dist/adapters/stripe-payment-adapter.d.ts",
+      "default": "./dist/adapters/stripe-payment-adapter.js"
+    },
+    "./zenvia-message-adapter": {
+      "types": "./dist/adapters/zenvia-message-adapter.d.ts",
+      "default": "./dist/adapters/zenvia-message-adapter.js"
+    }
+  },
+  "private": true,
+  "files": [
+    "dist"
+  ]
+}

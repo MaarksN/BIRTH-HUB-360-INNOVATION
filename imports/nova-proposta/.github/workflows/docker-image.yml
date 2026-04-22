@@ -1,0 +1,32 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - component: api
+            dockerfile: apps/api/Dockerfile
+          - component: web
+            dockerfile: apps/web/Dockerfile
+          - component: worker
+            dockerfile: apps/worker/Dockerfile
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build ${{ matrix.component }} image
+        run: docker build . --file ${{ matrix.dockerfile }} --tag birthub-${{ matrix.component }}:${{ github.sha }}

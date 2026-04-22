@@ -1,0 +1,241 @@
+root_package_manager=pnpm@9.15.9
+executables={"pnpm":"9.15.9","npm":"11.11.0"}
+lockfiles=pnpm-lock.yaml
+declared_workspace_globs=apps/*, packages/*
+declared_workspace_count=23
+real_workspace_count=23
+real_workspaces_missing_from_decl=none
+
+apps/api/package.json
+  name=@birthub/api
+  version=1.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=11
+
+apps/voice-engine/package.json
+  name=@birthub/voice-engine
+  version=0.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=5
+
+apps/web/package.json
+  name=@birthub/web
+  version=1.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=6
+
+apps/worker/package.json
+  name=@birthub/worker
+  version=1.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=8
+
+audit/autofix/snapshots/packages/queue/package.json
+  name=@birthub/queue
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=6
+
+audit/autofix/snapshots/packages/utils/package.json
+  name=@birthub/utils
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+package.json
+  name=birthub-360
+  version=1.0.0
+  private=true
+  packageManager=pnpm@9.15.9
+  engines={"node":">=24 <25","pnpm":"9.15.9"}
+  workspaces=["apps/*","packages/*"]
+  scripts=170
+
+packages/agent-packs/package.json
+  name=@birthub/agent-packs
+  version=1.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=12
+
+packages/agent-runtime/package.json
+  name=@birthub/agent-runtime
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/agents-core/package.json
+  name=@birthub/agents-core
+  version=0.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=5
+
+packages/agents-registry/package.json
+  name=@birthub/agents-registry
+  version=0.1.0
+  private=false
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/auth/package.json
+  name=@birthub/auth
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/config/package.json
+  name=@birthub/config
+  version=1.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/conversation-core/package.json
+  name=@birthub/conversation-core
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/database/package.json
+  name=@birthub/database
+  version=1.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=27
+
+packages/emails/package.json
+  name=@birthub/emails
+  version=1.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/integrations/package.json
+  name=@birthub/integrations
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/llm-client/package.json
+  name=@birthub/llm-client
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/logger/package.json
+  name=@birthub/logger
+  version=1.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/queue/package.json
+  name=@birthub/queue
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=6
+
+packages/security/package.json
+  name=@birthub/security
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/shared-types/package.json
+  name=@birthub/shared-types
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/shared/package.json
+  name=@birthub/shared
+  version=1.0.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/testing/package.json
+  name=@birthub/testing
+  version=0.1.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/utils/package.json
+  name=@birthub/utils
+  version=0.0.0
+  private=null
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=4
+
+packages/workflows-core/package.json
+  name=@birthub/workflows-core
+  version=0.1.0
+  private=true
+  packageManager=null
+  engines=null
+  workspaces=null
+  scripts=5

@@ -1,0 +1,165 @@
+{
+  "backupHealth": {
+    "backup": {
+      "directory": "C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\artifacts\\backups",
+      "exists": true,
+      "latest": null
+    },
+    "checkedAt": "2026-04-19T03:00:24.275Z",
+    "directories": {
+      "backupsDir": "C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\artifacts\\backups",
+      "walDir": null
+    },
+    "issues": [
+      "No backup files found in C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\artifacts\\backups."
+    ],
+    "ok": false,
+    "status": "fail",
+    "thresholds": {
+      "maxBackupAgeMinutes": 1440,
+      "maxWalLagMinutes": 5
+    },
+    "wal": {
+      "directory": null,
+      "exists": false,
+      "latest": null
+    }
+  },
+  "blockers": [
+    "No backup files found in C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\artifacts\\backups.",
+    "Missing or invalid artifacts/release/production-rollback-evidence.json.",
+    "DR drill artifact exists but is insufficient for auditability (scenario=scheduled release rehearsal, backupArtifact=artifacts/backups/backup-health.json, RTO=0m, RPO=27423m)."
+  ],
+  "checks": [
+    {
+      "artifactPath": "artifacts/backups/backup-health.json",
+      "detail": "No backup files found in C:\\Users\\Marks\\Documents\\GitHub\\PROJETO-FINAL-BIRTHUB-360-INNOVATION\\artifacts\\backups.",
+      "id": "backup_health",
+      "label": "backup health",
+      "status": "fail"
+    },
+    {
+      "artifactPath": "artifacts/release/production-rollback-evidence.json",
+      "detail": "Missing or invalid artifacts/release/production-rollback-evidence.json.",
+      "id": "rollback_evidence",
+      "label": "rollback evidence",
+      "status": "fail"
+    },
+    {
+      "artifactPath": "artifacts/backups/drill-rto-rpo.json",
+      "detail": "DR drill artifact exists but is insufficient for auditability (scenario=scheduled release rehearsal, backupArtifact=artifacts/backups/backup-health.json, RTO=0m, RPO=27423m).",
+      "id": "drill",
+      "label": "disaster recovery drill",
+      "status": "fail"
+    }
+  ],
+  "drill": {
+    "checkedAt": "2026-04-18T05:25:32.724Z",
+    "environment": "production",
+    "evidence": {
+      "backupArtifact": "artifacts/backups/backup-health.json",
+      "notes": "Automatically materialized from backup health, rollback rehearsal evidence and smoke validation artifacts.",
+      "rollbackEvidence": "artifacts/release/production-rollback-evidence.json",
+      "validationArtifact": "artifacts/release/smoke-summary.json"
+    },
+    "objectives": {
+      "allMet": false,
+      "rpoMet": false,
+      "rpoMinutes": 15,
+      "rtoMet": true,
+      "rtoMinutes": 60
+    },
+    "owner": "platform-ops",
+    "recoveredPoint": "2026-04-12T21:25:04.389Z",
+    "restoredAt": "2026-04-18T05:25:31.977Z",
+    "rpoMinutes": 27423,
+    "rtoMinutes": 0,
+    "scenario": "scheduled release rehearsal",
+    "startedAt": "2026-04-18T05:25:31.977Z",
+    "status": "warn",
+    "sufficient": true,
+    "targetPoint": "2026-03-24T20:22:09.602Z"
+  },
+  "generatedAt": "2026-04-19T03:00:24.469Z",
+  "overallStatus": "fail",
+  "rollbackEvidence": {
+    "checkedAt": "2026-04-18T05:27:49.764Z",
+    "checks": [
+      {
+        "detail": "json ok=true",
+        "id": "preflight",
+        "ok": true,
+        "path": "artifacts/release/production-preflight-summary.json"
+      },
+      {
+        "detail": "json present but ok != true",
+        "id": "smoke",
+        "ok": false,
+        "path": "artifacts/release/smoke-summary.json"
+      },
+      {
+        "detail": "source manifest bound to workflow_dispatch/1616de68c7ac3d923c817be2ca6fd80e82e887a9",
+        "id": "source_manifest",
+        "ok": true,
+        "path": "artifacts/release/source-manifest.json"
+      },
+      {
+        "detail": "present",
+        "id": "checksum_manifest",
+        "ok": true,
+        "path": "artifacts/release/checksums-manifest.sha256"
+      },
+      {
+        "detail": "present",
+        "id": "release_catalog_json",
+        "ok": true,
+        "path": "artifacts/release/release-artifact-catalog.json"
+      },
+      {
+        "detail": "present",
+        "id": "sbom_xml",
+        "ok": true,
+        "path": "artifacts/sbom/bom.xml"
+      },
+      {
+        "detail": "present",
+        "id": "sbom_spdx",
+        "ok": true,
+        "path": "artifacts/sbom/sbom.spdx.json"
+      },
+      {
+        "detail": "present",
+        "id": "release_catalog_markdown",
+        "ok": true,
+        "path": "releases/manifests/release_artifact_catalog.md"
+      },
+      {
+        "detail": "present",
+        "id": "release_notes",
+        "ok": true,
+        "path": "releases/notes/v1.0.0.md"
+      }
+    ],
+    "evidenceArtifacts": [
+      "artifacts/release/production-preflight-summary.json",
+      "artifacts/release/source-manifest.json",
+      "artifacts/release/checksums-manifest.sha256",
+      "artifacts/release/release-artifact-catalog.json",
+      "artifacts/sbom/bom.xml",
+      "artifacts/sbom/sbom.spdx.json",
+      "releases/manifests/release_artifact_catalog.md",
+      "releases/notes/v1.0.0.md"
+    ],
+    "mode": "automated_release_rehearsal",
+    "notes": null,
+    "ok": false,
+    "source": {
+      "generatedAt": "2026-04-18T05:25:37.218Z",
+      "sourceEvent": "workflow_dispatch",
+      "sourceRef": "1616de68c7ac3d923c817be2ca6fd80e82e887a9",
+      "sourceSha": "1616de68c7ac3d923c817be2ca6fd80e82e887a9"
+    },
+    "summary": "Rollback rehearsal evidence is incomplete; at least one prerequisite artifact is missing or invalid.",
+    "target": "production"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "checkedAt": "2026-04-19T23:42:05.287Z",
+  "issues": [],
+  "migrations": [
+    {
+      "issues": [],
+      "migration": "20260313000100_cycle1_foundation",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260313000200_cycle2_multitenancy",
+      "riskFlags": [
+        "set_not_null",
+        "alter_column_type",
+        "bulk_update"
+      ],
+      "viewsOrRoutines": [
+        "get_current_tenant_id"
+      ]
+    },
+    {
+      "issues": [],
+      "migration": "20260313000200_cycle3_security_foundation",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260313000300_cycle6_workflows_orchestration",
+      "riskFlags": [
+        "alter_column_type"
+      ],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260313000300_cycle7_billing_foundation",
+      "riskFlags": [
+        "drop_column",
+        "set_not_null",
+        "alter_column_type",
+        "bulk_update"
+      ],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260313000400_cycle9_engagement",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260315000100_cycle7_billing_credits_exports",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260315000200_cycle8_durable_budget_outputs",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260316000100_cycle10_connectors_handoffs",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260317000100_cycle11_billing_webhook_audit",
+      "riskFlags": [
+        "set_not_null",
+        "bulk_update"
+      ],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260322000100_cycle8_data_resilience_controls",
+      "riskFlags": [],
+      "viewsOrRoutines": [
+        "tenant_access_allowed",
+        "prevent_audit_log_mutation"
+      ]
+    },
+    {
+      "issues": [],
+      "migration": "20260331000100_cycle12_rls_policy_alignment",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260402000100_cycle12_ci_schema_alignment",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260407000300_phase1_lgpd_user_preferences",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260408000100_phase1_user_preference_locale",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260410000100_phase1_workflow_revision_rls",
+      "riskFlags": [],
+      "viewsOrRoutines": []
+    },
+    {
+      "issues": [],
+      "migration": "20260419000100_phase1_schema_drift_reconciliation",
+      "riskFlags": [
+        "drop_column"
+      ],
+      "viewsOrRoutines": []
+    }
+  ],
+  "ok": true
+}

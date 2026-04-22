@@ -1,0 +1,82 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "include": [
+    "files",
+    "dependencies",
+    "devDependencies",
+    "unlisted",
+    "binaries",
+    "exports",
+    "duplicates"
+  ],
+  "ignoreBinaries": [
+    "k6",
+    "powershell",
+    "pytest"
+  ],
+  "ignoreFiles": [
+    "audit/**",
+    "docs/**",
+    "test-results/**"
+  ],
+  "ignoreWorkspaces": [
+    "apps/api",
+    "apps/web",
+    "apps/worker",
+    "packages/agent-runtime",
+    "packages/agents-core",
+    "packages/agents-registry",
+    "packages/auth",
+    "packages/config",
+    "packages/conversation-core",
+    "packages/database",
+    "packages/emails",
+    "packages/integrations",
+    "packages/llm-client",
+    "packages/logger",
+    "packages/queue",
+    "packages/security",
+    "packages/shared",
+    "packages/shared-types",
+    "packages/testing",
+    "packages/utils",
+    "packages/workflows-core"
+  ],
+  "rules": {
+    "enumMembers": "off",
+    "types": "off"
+  },
+  "workspaces": {
+    ".": {
+      "entry": [
+        "package.json",
+        "scripts/ci/run-satellites.mjs",
+        "apps/webhook-receiver/src/server.ts",
+        "packages/agents/executivos/*/agent.ts"
+      ],
+      "project": [
+        "apps/webhook-receiver/**/*.py",
+        "apps/webhook-receiver/**/*.ts",
+        "packages/agents/executivos/**/*.{ts,js,mjs,cjs}",
+        "scripts/ci/run-satellites.mjs"
+      ]
+    },
+    "apps/voice-engine": {
+      "entry": [
+        "src/**/*.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
+    },
+    "packages/agent-packs": {
+      "entry": [
+        "**/source/**/*.{json,ts}",
+        "github-agents-v1/**/*.json"
+      ],
+      "project": [
+        "**/*.{json,ts}"
+      ]
+    }
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "generatedAt": "2026-04-11T16:43:32.338Z",
+  "ok": true,
+  "score": 60.85,
+  "thresholds": {
+    "break": 60,
+    "low": 70,
+    "high": 80
+  },
+  "counts": {
+    "total": 470,
+    "detected": 286,
+    "survived": 184,
+    "timeout": 1,
+    "noCoverage": 0,
+    "errors": 0,
+    "ignored": 0,
+    "pending": 0
+  },
+  "scope": [
+    "packages/auth/index.ts",
+    "packages/agents-core/src/manifest/catalog.ts",
+    "packages/agents-core/src/manifest/parser.ts",
+    "packages/agents-core/src/parser/manifestParser.ts",
+    "packages/agents-core/src/schemas/manifest.schema.ts",
+    "packages/agents-core/src/tools/slack.tool.ts"
+  ],
+  "files": [
+    {
+      "file": "packages/agents-core/src/parser/manifestParser.ts",
+      "total": 83,
+      "detected": 23,
+      "killed": 22,
+      "timeout": 1,
+      "survived": 60,
+      "noCoverage": 0,
+      "errors": 0,
+      "ignored": 0,
+      "pending": 0,
+      "score": 27.71
+    },
+    {
+      "file": "packages/agents-core/src/schemas/manifest.schema.ts",
+      "total": 50,
+      "detected": 23,
+      "killed": 23,
+      "timeout": 0,
+      "survived": 27,
+      "noCoverage": 0,
+      "errors": 0,
+      "ignored": 0,
+      "pending": 0,
+      "score": 46
+    },
+    {
+      "file": "packages/agents-core/src/manifest/parser.ts",
+      "total": 38,
+      "detected": 23,
+      "killed": 23,
+      "timeout": 0,
+      "survived": 15,
+      "noCoverage": 0,
+      "errors": 0,
+      "ignored": 0,
+      "pending": 0,
+      "score": 60.53
+    },
+    {
+      "file": "packages/agents-core/src/manifest/catalog.ts",
+      "total": 200,
+      "detected": 125,
+      "killed": 125,
+      "timeout": 0,
+      "survived": 75,
+      "noCoverage": 0,
+      "errors": 0,
+      "ignored": 0,
+      "pending": 0,
+      "score": 62.5
+    },
+    {
+      "file": "packages/agents-core/src/tools/slack.tool.ts",
+      "total": 52,
+      "detected": 48,
+      "killed": 48,
+      "timeout": 0,
+      "survived": 4,
+      "noCoverage": 0,
+      "errors": 0,
+      "ignored": 0,
+      "pending": 0,
+      "score": 92.31
+    },
+    {
+      "file": "packages/auth/index.ts",
+      "total": 47,
+      "detected": 44,
+      "killed": 44,
+      "timeout": 0,
+      "survived": 3,
+      "noCoverage": 0,
+      "errors": 0,
+      "ignored": 0,
+      "pending": 0,
+      "score": 93.62
+    }
+  ],
+  "hotspots": [
+    {
+      "file": "packages/agents-core/src/parser/manifestParser.ts",
+      "total": 83,
+      "detected": 23,
+      "killed": 22,
+      "timeout": 1,
+      "survived": 60,
+      "noCoverage": 0,
+      "errors": 0,
+      "ignored": 0,
+      "pending": 0,
+      "score": 27.71
+    },
+    {
+      "file": "packages/agents-core/src/schemas/manifest.schema.ts",
+      "total": 50,
+      "detected": 23,
+      "killed": 23,
+      "timeout": 0,
+      "survived": 27,
+      "noCoverage": 0,
+      "errors": 0,
+      "ignored": 0,
+      "pending": 0,
+      "score": 46
+    }
+  ],
+  "sourceArtifact": {
+    "path": "artifacts/stryker/mutation.json",
+    "updatedAt": "2026-04-09T18:29:02.571Z"
+  }
+}

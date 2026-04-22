@@ -1,0 +1,16 @@
+Performance audit: PASS
+Top slow queries collected: 0
+Unused indexes: 190
+agent_budget_events: autovacuum_vacuum_scale_factor=0.02,autovacuum_analyze_scale_factor=0.01,autovacuum_vacuum_threshold=50,autovacuum_analyze_threshold=50
+audit_logs: autovacuum_vacuum_scale_factor=0.02,autovacuum_analyze_scale_factor=0.01,autovacuum_vacuum_threshold=50,autovacuum_analyze_threshold=50
+billing_events: autovacuum_vacuum_scale_factor=0.02,autovacuum_analyze_scale_factor=0.01,autovacuum_vacuum_threshold=50,autovacuum_analyze_threshold=50
+crm_sync_events: autovacuum_vacuum_scale_factor=0.02,autovacuum_analyze_scale_factor=0.01,autovacuum_vacuum_threshold=50,autovacuum_analyze_threshold=50
+webhook_deliveries: autovacuum_vacuum_scale_factor=0.02,autovacuum_analyze_scale_factor=0.01,autovacuum_vacuum_threshold=50,autovacuum_analyze_threshold=50
+
+Observations:
+pg_stat_statements unavailable: 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+Raw query failed. Code: `42P01`. Message: `relation "pg_stat_statements" does not exist`
+Unused indexes detected: 190.
