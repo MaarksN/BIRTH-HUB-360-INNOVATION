@@ -18,6 +18,7 @@ Quick navigation for all documentation related to the technical debt fixes.
 | [`QUICKSTART.md`](./QUICKSTART.md) | Getting started + dev workflow | 10 min |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | System design + patterns | 15 min |
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Code conventions + PR process | 5 min |
+| [`docs/agents/manifest-standard.md`](./docs/agents/manifest-standard.md) | Official agent manifest contract + writing guide | 10 min |
 
 ### For DevOps/Infrastructure
 
