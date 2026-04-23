@@ -30,7 +30,7 @@ function decryptCredentialValue(encryptedValue: string): string {
   });
 }
 
-function toConnectorCredentials(
+export function toConnectorCredentials(
   account: Awaited<ReturnType<typeof resolveConnectorAccount>>
 ): ConnectorCredentials {
   const credentials: ConnectorCredentials = {};
@@ -79,7 +79,7 @@ async function resolveOrganization(input: { tenantId: string }) {
   return organization;
 }
 
-async function resolveConnectorAccount(input: {
+export async function resolveConnectorAccount(input: {
   connectorAccountId?: string;
   organizationId: string;
   provider: string;
