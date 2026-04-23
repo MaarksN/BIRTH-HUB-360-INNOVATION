@@ -30,6 +30,19 @@ function signPayload(secret: string, payload: string): string {
   return createHmac("sha256", secret).update(payload).digest("hex");
 }
 
+function assertSafeUrl(rawUrl: string): URL {
+  const parsed = new URL(rawUrl);
+  const normalizedHost = parsed.hostname.toLowerCase();
+  const blockedHosts = new Set(["localhost", "0.0.0.0", "127.0.0.1", "::1", "host.docker.internal"]);
+  if (blockedHosts.has(normalizedHost) || normalizedHost.endsWith(".internal")) {
+    throw new Error("SSRF_GUARD_BLOCKED_HOST");
+  }
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    throw new Error("SSRF_GUARD_BLOCKED_PROTOCOL");
+  }
+  return parsed;
+}
+
 async function dispatchHttpRequest(input: {
   payload: string;
   signature: string;
@@ -41,7 +54,9 @@ async function dispatchHttpRequest(input: {
   const timer = setTimeout(() => controller.abort(), config.WEBHOOK_TIMEOUT_MS);
 
   try {
-    const response = await fetch(input.url, {
+    const safeUrl = assertSafeUrl(input.url);
+
+    const response = await fetch(safeUrl.toString(), {
       body: input.payload,
       headers: {
         "content-type": "application/json",
