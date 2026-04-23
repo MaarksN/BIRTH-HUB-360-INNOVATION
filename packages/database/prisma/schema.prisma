@@ -1171,6 +1171,7 @@ enum WorkflowStepType {
   MS_EVENT
   AI_TEXT_EXTRACT
   DELAY
+  CONNECTOR_ACTION
 }
 
 enum WorkflowStepOnError {
