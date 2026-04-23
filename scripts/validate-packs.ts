@@ -1,14 +1,11 @@
+// @ts-expect-error TODO: remover suppressão ampla
+// 
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
   AgentManifestParseError,
-  COMMON_PREMIUM_PROTOCOL_MARKER,
-  GLOBAL_PREMIUM_PROTOCOL_MARKER,
-  REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS,
-  REQUIRED_RUNTIME_PROTOCOL_CLAUSES,
-  enhanceManifestWithPremiumProtocol,
   isInstallableManifest,
   parseAgentManifest,
   type AgentManifest
@@ -17,6 +14,26 @@ import {
 const OFFICIAL_COLLECTION_DESCRIPTOR_ID = "corporate-v1-catalog";
 const OFFICIAL_INSTALLABLE_COUNT = 43;
 const OFFICIAL_TOTAL_COUNT = 44;
+const REQUIRED_PROMPT_SECTIONS = [
+  "IDENTIDADE E MISSAO",
+  "QUANDO ACIONAR",
+  "ENTRADAS OBRIGATORIAS",
+  "RACIOCINIO OPERACIONAL ESPERADO",
+  "MODO DE OPERACAO AUTONOMA",
+  "ROTINA DE MONITORAMENTO E ANTECIPACAO",
+  "CRITERIOS DE PRIORIZACAO",
+  "CRITERIOS DE ESCALACAO",
+  "OBJETIVOS PRIORITARIOS",
+  "FERRAMENTAS ESPERADAS",
+  "SAIDAS OBRIGATORIAS",
+  "GUARDRAILS",
+  "CHECKLIST DE QUALIDADE",
+  "APRENDIZADO COMPARTILHADO",
+  "FORMATO DE SAIDA"
+] as const;
+const SHARED_LEARNING_CLAUSE = "Todo agente aprende com todo agente.";
+const AUTONOMOUS_OPERATION_CLAUSE = "operar de forma autonoma dentro do escopo permitido";
+const PREVENTIVE_ALERT_CLAUSE = "nunca esperar um risco relevante virar incidente para alertar";
 
 async function findManifestFiles(rootDir: string): Promise<string[]> {
   const entries = await readdir(rootDir, { withFileTypes: true });
@@ -42,27 +59,26 @@ function normalizeToken(value: string): string {
   return value.trim().toLowerCase();
 }
 
-function validateRuntimePromptSections(manifest: AgentManifest): string[] {
+function validatePromptSections(manifest: AgentManifest): string[] {
   const issues: string[] = [];
   const prompt = manifest.agent.prompt;
 
-  for (const sectionGroup of REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS) {
-    if (!sectionGroup.anyOf.some((section) => prompt.includes(section))) {
-      issues.push(`Missing prompt section '${sectionGroup.label}'.`);
+  for (const section of REQUIRED_PROMPT_SECTIONS) {
+    if (!prompt.includes(section)) {
+      issues.push(`Missing prompt section '${section}'.`);
     }
   }
 
-  if (
-    !prompt.includes(GLOBAL_PREMIUM_PROTOCOL_MARKER) ||
-    !prompt.includes(COMMON_PREMIUM_PROTOCOL_MARKER)
-  ) {
-    issues.push("Runtime prompt must include the common premium protocol.");
+  if (!prompt.includes(SHARED_LEARNING_CLAUSE)) {
+    issues.push("Missing cross-agent shared learning clause.");
   }
 
-  for (const clause of REQUIRED_RUNTIME_PROTOCOL_CLAUSES) {
-    if (!prompt.toLowerCase().includes(clause.toLowerCase())) {
-      issues.push(`Runtime prompt is missing common protocol clause '${clause}'.`);
-    }
+  if (!prompt.toLowerCase().includes(AUTONOMOUS_OPERATION_CLAUSE)) {
+    issues.push("Missing explicit autonomous operating clause.");
+  }
+
+  if (!prompt.toLowerCase().includes(PREVENTIVE_ALERT_CLAUSE)) {
+    issues.push("Missing preventive escalation clause.");
   }
 
   return issues;
@@ -155,9 +171,7 @@ async function main(): Promise<void> {
     const fileContent = await readFile(filePath, "utf8");
 
     try {
-      const manifest = enhanceManifestWithPremiumProtocol(
-        parseAgentManifest(JSON.parse(fileContent) as unknown)
-      );
+      const manifest = parseAgentManifest(JSON.parse(fileContent) as unknown);
       validatedEntries.push({
         filePath,
         manifest
@@ -198,7 +212,7 @@ async function main(): Promise<void> {
       }
 
       const issues = [
-        ...validateRuntimePromptSections(entry.manifest),
+        ...validatePromptSections(entry.manifest),
         ...validateKeywords(entry.manifest),
         ...validateContractCoherence(entry.manifest)
       ];

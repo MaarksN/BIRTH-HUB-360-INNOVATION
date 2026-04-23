@@ -1,23 +1,42 @@
+// @ts-expect-error TODO: remover suppressão ampla
+// 
 import { readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
-  REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS,
-  REQUIRED_RUNTIME_PROTOCOL_CLAUSES,
   isInstallableManifest,
   loadManifestCatalog,
   runAgentDryRun
 } from "@birthub/agents-core";
+
+const REQUIRED_PROMPT_SECTIONS = [
+  "IDENTIDADE E MISSAO",
+  "QUANDO ACIONAR",
+  "ENTRADAS OBRIGATORIAS",
+  "RACIOCINIO OPERACIONAL ESPERADO",
+  "MODO DE OPERACAO AUTONOMA",
+  "ROTINA DE MONITORAMENTO E ANTECIPACAO",
+  "CRITERIOS DE PRIORIZACAO",
+  "CRITERIOS DE ESCALACAO",
+  "OBJETIVOS PRIORITARIOS",
+  "FERRAMENTAS ESPERADAS",
+  "SAIDAS OBRIGATORIAS",
+  "GUARDRAILS",
+  "CHECKLIST DE QUALIDADE",
+  "APRENDIZADO COMPARTILHADO",
+  "FORMATO DE SAIDA"
+] as const;
+const SHARED_LEARNING_CLAUSE = "Todo agente aprende com todo agente.";
+const AUTONOMOUS_OPERATION_CLAUSE = "operar de forma autonoma dentro do escopo permitido";
+const PREVENTIVE_ALERT_CLAUSE = "nunca esperar um risco relevante virar incidente para alertar";
 
 function toDocSlug(agentId: string): string {
   return agentId.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
 }
 
 function countCoveredSections(prompt: string): number {
-  return REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS.filter((sectionGroup) =>
-    sectionGroup.anyOf.some((section) => prompt.includes(section))
-  ).length;
+  return REQUIRED_PROMPT_SECTIONS.filter((section) => prompt.includes(section)).length;
 }
 
 function average(values: number[]): number {
@@ -62,15 +81,13 @@ async function main(): Promise<void> {
   const promptRichness = installableCatalog.map((entry) => ({
     agentId: entry.manifest.agent.id,
     coveredSections: countCoveredSections(entry.manifest.agent.prompt),
-    hasLearningClause: entry.manifest.agent.prompt
-      .toLowerCase()
-      .includes(REQUIRED_RUNTIME_PROTOCOL_CLAUSES[0].toLowerCase()),
+    hasLearningClause: entry.manifest.agent.prompt.includes(SHARED_LEARNING_CLAUSE),
     hasAutonomousClause: entry.manifest.agent.prompt
       .toLowerCase()
-      .includes(REQUIRED_RUNTIME_PROTOCOL_CLAUSES[1].toLowerCase()),
+      .includes(AUTONOMOUS_OPERATION_CLAUSE),
     hasPreventiveClause: entry.manifest.agent.prompt
       .toLowerCase()
-      .includes(REQUIRED_RUNTIME_PROTOCOL_CLAUSES[2].toLowerCase()),
+      .includes(PREVENTIVE_ALERT_CLAUSE),
     keywordCount: entry.manifest.keywords.length,
     promptLength: entry.manifest.agent.prompt.length
   }));
@@ -78,7 +95,7 @@ async function main(): Promise<void> {
     const docsExists = docsCoverage.find((item) => item.agentId === row.agentId)?.exists ?? false;
     const dryRun = dryRunResults.find((item) => item.agentId === row.agentId)?.dryRun;
 
-    const sectionScore = Math.round((row.coveredSections / REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS.length) * 30);
+    const sectionScore = Math.round((row.coveredSections / REQUIRED_PROMPT_SECTIONS.length) * 30);
     const keywordScore = Math.min(20, row.keywordCount);
     const learningScore = row.hasLearningClause ? 15 : 0;
     const autonomousScore = row.hasAutonomousClause ? 10 : 0;
@@ -111,7 +128,7 @@ async function main(): Promise<void> {
   console.log(`Dry-run success: ${allDryRunsOk ? "OK" : "FAIL"}`);
   console.log(`Docs coverage: ${docsOkCount}/${catalog.length}`);
   console.log(
-    `Average prompt section coverage: ${average(promptRichness.map((item) => item.coveredSections)).toFixed(2)}/${REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS.length}`
+    `Average prompt section coverage: ${average(promptRichness.map((item) => item.coveredSections)).toFixed(2)}/${REQUIRED_PROMPT_SECTIONS.length}`
   );
   console.log(`Average keyword count: ${average(promptRichness.map((item) => item.keywordCount)).toFixed(2)}`);
   console.log(

@@ -15,6 +15,56 @@ export const APPROVAL_GOVERNANCE_CLAUSE =
 export const HANDOFF_CONTEXT_CLAUSE =
   "preparar handoff estruturado com objetivo, contexto, evidencias, lacunas, dono e checkpoint";
 
+export const COMMON_AUTONOMOUS_KEYWORDS = [
+  "automacao preventiva",
+  "analise proativa",
+  "sinais lideres",
+  "deteccao de anomalias",
+  "antecipacao de decisao",
+  "alerta antecipado",
+  "mitigacao preventiva",
+  "next best action",
+  "scenario planning",
+  "risk radar",
+  "premium-100",
+  "trigger ingress"
+];
+
+export const COMMON_AUTONOMOUS_SKILLS = [
+  {
+    description:
+      "Detectar cedo sinais lideres, anomalias, gargalos e riscos emergentes antes que virem incidente ou perda material.",
+    name: "Radar Preventivo"
+  },
+  {
+    description:
+      "Antecipar decisoes que precisam ser tomadas nos proximos ciclos e propor a melhor acao dentro da janela ideal.",
+    name: "Antecipacao de Decisao"
+  },
+  {
+    description:
+      "Transformar risco ou oportunidade em plano acionavel com prioridade, dono, prazo, checkpoint e criterio de escalacao.",
+    name: "Plano Preventivo"
+  }
+];
+
+export const COMMON_AUTONOMOUS_OUTPUTS = [
+  "alertas preventivos priorizados",
+  "decisoes que precisam ser antecipadas",
+  "plano preventivo com dono, prazo e checkpoint",
+  "oportunidades capturaveis antes da janela fechar"
+];
+
+export const COMMON_AUTONOMOUS_GUARDRAILS = [
+  "nunca esperar um risco relevante virar incidente para alertar",
+  "nunca deixar dependencia critica sem dono, prazo ou checkpoint",
+  "sempre explicitar impacto, urgencia, reversibilidade e confianca",
+  "sempre antecipar o que pode dar errado e o que pode ser capturado antes da janela fechar",
+  "nunca misturar dados entre tenants",
+  "nunca afirmar certeza quando a confianca for baixa",
+  "sempre registrar motivo, proximo passo e risco relevante"
+];
+
 type PremiumPillarDefinition = {
   id: string;
   name: string;
@@ -345,5 +395,40 @@ export function enhanceManifestWithPremiumProtocol(manifest: AgentManifest): Age
       prompt
     },
     keywords
+  };
+}
+
+export function rehydrateManifestWithPremiumProtocol(manifest: AgentManifest): AgentManifest {
+  const enhanced = enhanceManifestWithPremiumProtocol(manifest);
+
+  const skills = [...enhanced.skills];
+  for (const skill of COMMON_AUTONOMOUS_SKILLS) {
+    if (!skills.some((s) => s.name === skill.name)) {
+      skills.push({
+        ...skill,
+        id: `${enhanced.agent.id}.skill.${skill.name.toLowerCase().replace(/ /g, "-")}`,
+        inputSchema: { type: "object" },
+        outputSchema: { type: "object" }
+      });
+    }
+  }
+
+  const keywords = uniqueStrings([...enhanced.keywords, ...COMMON_AUTONOMOUS_KEYWORDS]);
+
+  const tags = {
+    ...enhanced.tags,
+    "use-case": uniqueStrings([
+      ...enhanced.tags["use-case"],
+      "preventive-operations",
+      "decision-anticipation",
+      "autonomous-monitoring"
+    ])
+  };
+
+  return {
+    ...enhanced,
+    keywords,
+    skills,
+    tags
   };
 }
