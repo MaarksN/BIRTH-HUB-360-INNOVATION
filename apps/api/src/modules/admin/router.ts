@@ -14,7 +14,8 @@ import { setAuthCookies } from "../auth/cookies.js";
 
 const impersonationSchema = z
   .object({
-    tenantReference: z.string().trim().min(1)
+    tenantReference: z.string().trim().min(1),
+    reason: z.string().trim().min(5)
   })
   .strict();
 const adminLogger = createLogger("admin-router");
@@ -95,7 +96,8 @@ export function createAdminRouter(config: ApiConfig): Router {
           actorId: actorUserId,
           diff: {
             organizationId: target.organization.id,
-            targetUserId: target.userId
+            targetUserId: target.userId,
+            reason: payload.reason
           },
           entityId: target.organization.id,
           entityType: "organization",
@@ -109,7 +111,8 @@ export function createAdminRouter(config: ApiConfig): Router {
           organizationId: target.organization.id,
           requestId: request.context.requestId,
           targetUserId: target.userId,
-          tenantId: target.organization.tenantId
+          tenantId: target.organization.tenantId,
+          reason: payload.reason
         },
         "Admin impersonation session created"
       );
@@ -125,14 +128,15 @@ export function createAdminRouter(config: ApiConfig): Router {
 
     appendAdminSearchRoutes(router);
     appendAdminExecutionRoutes(router);
-    appendAdminActionRoutes(router);
+    appendAdminActionRoutes(router, config);
     appendAdminAuditRoutes(router);
   return router;
 }
 
 const searchSchema = z.object({
   query: z.string().trim().min(1),
-  type: z.enum(["tenant", "workflow", "execution", "event", "connector"]).optional()
+  type: z.enum(["tenant", "workflow", "execution", "event", "connector"]).optional(),
+  limit: z.coerce.number().min(1).max(50).default(10)
 });
 
 export function appendAdminSearchRoutes(router: Router) {
@@ -141,7 +145,7 @@ export function appendAdminSearchRoutes(router: Router) {
     requireAuthenticatedSession,
     RequireRole(Role.SUPER_ADMIN),
     asyncHandler(async (request, response) => {
-      const { query, type } = searchSchema.parse(request.query);
+      const { query, type, limit } = searchSchema.parse(request.query);
 
       const results: any = {
         tenants: [],
@@ -160,7 +164,8 @@ export function appendAdminSearchRoutes(router: Router) {
               { slug: { contains: query, mode: "insensitive" } }
             ]
           },
-          take: 10
+          select: { id: true, tenantId: true, name: true, slug: true },
+          take: limit
         });
       }
 
@@ -172,14 +177,16 @@ export function appendAdminSearchRoutes(router: Router) {
               { name: { contains: query, mode: "insensitive" } }
             ]
           },
-          take: 10
+          select: { id: true, name: true, status: true, tenantId: true },
+          take: limit
         });
       }
 
       if (!type || type === "execution") {
         results.executions = await prisma.workflowExecution.findMany({
           where: { id: { contains: query, mode: "insensitive" } },
-          take: 10
+          select: { id: true, status: true, workflowId: true, tenantId: true, createdAt: true },
+          take: limit
         });
       }
 
@@ -191,7 +198,8 @@ export function appendAdminSearchRoutes(router: Router) {
               { provider: { contains: query, mode: "insensitive" } }
             ]
           },
-          take: 10
+          select: { id: true, provider: true, status: true, organizationId: true, tenantId: true },
+          take: limit
         });
       }
 
@@ -231,8 +239,8 @@ export function appendAdminExecutionRoutes(router: Router) {
         ...execution,
         stepResults: execution.stepResults.map((step) => ({
           ...step,
-          input: step.input ? { _masked: true, preview: "Available in raw trace" } : null,
-          output: step.output ? { _masked: true, preview: step.outputPreview } : null
+          input: step.input ? { _masked: true, size: JSON.stringify(step.input).length } : null,
+          output: step.output ? { _masked: true, size: step.outputSize } : null
         }))
       };
 
@@ -242,7 +250,7 @@ export function appendAdminExecutionRoutes(router: Router) {
 }
 
 
-export function appendAdminActionRoutes(router: Router) {
+export function appendAdminActionRoutes(router: Router, config: ApiConfig) {
   router.post(
     "/api/v1/admin/executions/:id/cancel",
     requireAuthenticatedSession,
@@ -296,6 +304,14 @@ export function appendAdminActionRoutes(router: Router) {
     requireAuthenticatedSession,
     RequireRole(Role.SUPER_ADMIN),
     asyncHandler(async (request, response) => {
+      const reason = request.body?.reason;
+      if (!reason || reason.length < 5) {
+        throw new ProblemDetailsError({
+          detail: "A valid reason (min 5 chars) is required for replay.",
+          status: 400,
+          title: "Bad Request"
+        });
+      }
       const executionId = String(request.params.id);
       const actorUserId = request.context.userId;
 
@@ -316,34 +332,34 @@ export function appendAdminActionRoutes(router: Router) {
         data: {
           action: "admin.execution.replayed",
           actorId: actorUserId!,
-          diff: { originalExecutionId: executionId },
+          diff: { originalExecutionId: executionId, reason },
           entityId: executionId,
           entityType: "workflowExecution",
           tenantId: execution.tenantId
         }
       });
 
-      // Usually, a replay would push back to the queue or duplicate the execution row
-      // We will duplicate the row to allow fresh start without changing the old history
-      const newExecution = await prisma.workflowExecution.create({
-        data: {
-          tenantId: execution.tenantId,
-          organizationId: execution.organizationId,
-          workflowId: execution.workflowId,
-          workflowRevisionId: execution.workflowRevisionId,
-          status: "WAITING",
-          triggerEventId: execution.triggerEventId,
-          triggerKey: execution.triggerKey,
-          eventSource: execution.eventSource,
-          actorId: actorUserId,
-          triggerType: execution.triggerType,
-          triggerPayload: execution.triggerPayload,
-          isDryRun: execution.isDryRun,
-          resumedFromExecutionId: execution.id
-        }
-      });
 
-      response.status(200).json({ success: true, newExecutionId: newExecution.id });
+      // Switch from manual DB row creation to queue adapter for proper pipeline execution
+      await import("../workflows/service.shared.js").then(m =>
+        m.workflowQueueAdapter.enqueueWorkflowTrigger(config, {
+          actorId: actorUserId,
+          eventSource: "admin_replay",
+          isDryRun: execution.isDryRun,
+          organizationId: execution.organizationId,
+          tenantId: execution.tenantId,
+          triggerEventId: execution.triggerEventId,
+          triggerPayload: (execution.triggerPayload as Record<string, unknown>) ?? {},
+          triggerType: execution.triggerType,
+          workflowId: execution.workflowId,
+          idempotencyKey: `replay-${execution.id}-${Date.now()}`
+        })
+      );
+
+
+
+
+      response.status(200).json({ success: true, newExecutionId: execution.id });
     })
   );
 }
@@ -355,9 +371,12 @@ export function appendAdminAuditRoutes(router: Router) {
     requireAuthenticatedSession,
     RequireRole(Role.SUPER_ADMIN),
     asyncHandler(async (request, response) => {
+      const limit = Math.min(Math.max(Number(request.query.limit) || 50, 1), 100);
+      const cursorId = request.query.cursor ? String(request.query.cursor) : undefined;
       const logs = await prisma.auditLog.findMany({
         orderBy: { createdAt: "desc" },
-        take: 50,
+        take: limit,
+        ...(cursorId ? { cursor: { id: cursorId }, skip: 1 } : {}),
         where: {
           action: { startsWith: "admin." }
         }

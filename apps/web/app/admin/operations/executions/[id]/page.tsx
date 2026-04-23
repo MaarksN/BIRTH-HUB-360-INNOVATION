@@ -42,8 +42,13 @@ export default function AdminExecutionDebugPage() {
   };
 
   const handleReplay = async () => {
+    const reason = window.prompt("Motivo para o replay (obrigatório):");
+    if (!reason || reason.length < 5) {
+      alert("Motivo inválido. O replay exige no mínimo 5 caracteres.");
+      return;
+    }
     try {
-      const response = await fetchWithSession(`/api/bff/api/v1/admin/executions/${executionId}/replay`, { method: "POST" });
+      const response = await fetchWithSession(`/api/bff/api/v1/admin/executions/${executionId}/replay`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reason }) });
       if (!response.ok) throw new Error("Erro ao dar replay");
       const data = await response.json();
       alert(`Replay criado com sucesso! Nova execução: ${data.newExecutionId}`);
@@ -86,7 +91,7 @@ export default function AdminExecutionDebugPage() {
               <summary>Ver Payload (Mascarado)</summary>
               <pre style={{ background: "#f4f4f4", padding: "1rem", borderRadius: "4px" }}>
                 {JSON.stringify(
-                  { input: step.input, output: step.output, preview: step.outputPreview },
+                  { input: step.input, output: step.output },
                   null,
                   2
                 )}
