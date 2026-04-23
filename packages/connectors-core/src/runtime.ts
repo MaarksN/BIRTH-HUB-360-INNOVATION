@@ -351,20 +351,6 @@ export function createZenviaMessageSendHandler(
   };
 }
 
-export function createDefaultConnectorRuntime(
-  dependencies: ConnectorRuntimeDependencies = {}
-): ConnectorRuntime {
-  return new ConnectorRuntime([
-    createHubspotCompanyUpsertHandler(dependencies),
-    createHubspotContactUpsertHandler(dependencies),
-    createOmieCustomerUpsertHandler(dependencies),
-    createOmieSalesOrderCreateHandler(dependencies),
-    createSlackMessageSendHandler(dependencies),
-    createStripePaymentReadHandler(dependencies),
-    createZenviaMessageSendHandler(dependencies)
-  ]);
-}
-
 export function createHubspotHealthCheckHandler(dependencies: ConnectorRuntimeDependencies = {}): ConnectorActionHandler<"health.check"> {
   return {
     action: "health.check",
