@@ -96,6 +96,7 @@ function registerListWorkflowsRoute(router: Router): void {
   router.get(
     "/api/v1/workflows",
     requireAuthenticatedSession,
+    RequireRole(Role.ADMIN),
     asyncHandler(async (request, response) => {
       const tenantId = requireTenantId(request);
       const items = await listWorkflows(tenantId);
@@ -155,6 +156,7 @@ function registerGetWorkflowRoute(router: Router): void {
   router.get(
     "/api/v1/workflows/:id",
     requireAuthenticatedSession,
+    RequireRole(Role.ADMIN),
     asyncHandler(async (request, response) => {
       const tenantId = requireTenantId(request);
       const workflow = await getWorkflowById(readWorkflowId(request), tenantId);

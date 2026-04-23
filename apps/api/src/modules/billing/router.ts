@@ -170,6 +170,7 @@ export function createBillingRouter(config: ApiConfig): Router {
   router.get(
     "/invoices",
     requireAuthenticatedSession,
+    RequireRole(Role.ADMIN),
     asyncHandler(async (request, response) => {
       const pagination = cursorPaginationQuerySchema.parse(request.query);
       const invoices = await listInvoicesForOrganization({
@@ -201,6 +202,7 @@ export function createBillingRouter(config: ApiConfig): Router {
   router.get(
     "/usage",
     requireAuthenticatedSession,
+    RequireRole(Role.ADMIN),
     asyncHandler(async (request, response) => {
       const usage = await listUsageForOrganization(request.context.organizationId!);
       const snapshot = await getBillingSnapshot(
