@@ -6,7 +6,7 @@
     "name": "BirthHub 360 Official Collection",
     "version": "2.3.0"
   },
-  "generatedAt": "2026-04-23T15:15:10.203Z",
+  "generatedAt": "2026-04-23T16:41:44.958Z",
   "agents": [
     {
       "category": "Retenção, Expansão e Treinamento",
@@ -298,23 +298,53 @@
       "skills": [
         {
           "description": "Classificar o problema e a severidade operacional.",
-          "name": "Classificar O Problema E A Severidade Operacional"
+          "name": "Classificar O Problema E A Severidade Operacional",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Selecionar os especialistas mais aderentes ao segmento do cliente.",
-          "name": "Selecionar Os Especialistas Mais Aderentes Ao Segmento Do Cliente"
+          "name": "Selecionar Os Especialistas Mais Aderentes Ao Segmento Do Cliente",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Definir a ordem ideal de execucao e handoff.",
-          "name": "Definir A Ordem Ideal De Execucao E Handoff"
+          "name": "Definir A Ordem Ideal De Execucao E Handoff",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Consolidar contexto e memoria para cada agente acionado.",
-          "name": "Consolidar Contexto E Memoria Para Cada Agente Acionado"
+          "name": "Consolidar Contexto E Memoria Para Cada Agente Acionado",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Explicar riscos, checkpoints e aprovacoes do fluxo.",
-          "name": "Explicar Riscos, Checkpoints E Aprovacoes Do Fluxo"
+          "name": "Explicar Riscos, Checkpoints E Aprovacoes Do Fluxo",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -344,27 +374,63 @@
       "tools": [
         {
           "description": "Ferramenta operacional Agent Registry necessaria para Agent Mesh Orchestrator funcionar com rastreabilidade e controle.",
-          "name": "Agent Registry"
+          "name": "Agent Registry",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Ferramenta operacional Segment Router necessaria para Agent Mesh Orchestrator funcionar com rastreabilidade e controle.",
-          "name": "Segment Router"
+          "name": "Segment Router",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Ferramenta operacional Context Memory necessaria para Agent Mesh Orchestrator funcionar com rastreabilidade e controle.",
-          "name": "Context Memory"
+          "name": "Context Memory",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Ferramenta operacional Workflow Planner necessaria para Agent Mesh Orchestrator funcionar com rastreabilidade e controle.",
-          "name": "Workflow Planner"
+          "name": "Workflow Planner",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Ferramenta operacional Agent Handoff necessaria para Agent Mesh Orchestrator funcionar com rastreabilidade e controle.",
-          "name": "Agent Handoff"
+          "name": "Agent Handoff",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Ferramenta operacional Approval Engine necessaria para Agent Mesh Orchestrator funcionar com rastreabilidade e controle.",
-          "name": "Approval Engine"
+          "name": "Approval Engine",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -536,15 +602,106 @@
       "skills": [
         {
           "description": "Capability for Strategic Planning in CEO Agent Pack workflows.",
-          "name": "Strategic Planning"
+          "name": "Strategic Planning",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "objectives": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "time_horizon": {
+                "type": "string",
+                "enum": [
+                  "quarterly",
+                  "yearly",
+                  "multi-year"
+                ]
+              },
+              "constraints": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "objectives"
+            ]
+          },
+          "outputSchema": {
+            "type": "object",
+            "properties": {
+              "roadmap": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "allocation": {
+                "type": "object"
+              },
+              "risks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         },
         {
           "description": "Capability for Executive Decisioning in CEO Agent Pack workflows.",
-          "name": "Executive Decisioning"
+          "name": "Executive Decisioning",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "criteria": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "options"
+            ]
+          },
+          "outputSchema": {
+            "type": "object",
+            "properties": {
+              "selected_option": {
+                "type": "string"
+              },
+              "rationale": {
+                "type": "string"
+              },
+              "trade_offs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         },
         {
           "description": "Capability for Portfolio Prioritization in CEO Agent Pack workflows.",
-          "name": "Portfolio Prioritization"
+          "name": "Portfolio Prioritization",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -570,15 +727,52 @@
       "tools": [
         {
           "description": "Operational tool Board Report Generator required by CEO Agent Pack.",
-          "name": "Board Report Generator"
+          "name": "Board Report Generator",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "sections": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "data_points": {
+                "type": "object"
+              }
+            }
+          },
+          "outputSchema": {
+            "type": "object",
+            "properties": {
+              "report_url": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              }
+            }
+          }
         },
         {
           "description": "Operational tool KPI Dashboard required by CEO Agent Pack.",
-          "name": "KPI Dashboard"
+          "name": "KPI Dashboard",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Budget Forecaster required by CEO Agent Pack.",
-          "name": "Budget Forecaster"
+          "name": "Budget Forecaster",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -641,15 +835,64 @@
       "skills": [
         {
           "description": "Capability for Cash Flow Analysis in CFO Agent Pack workflows.",
-          "name": "Cash Flow Analysis"
+          "name": "Cash Flow Analysis",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "period": {
+                "type": "string"
+              },
+              "inflows": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "outflows": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "outputSchema": {
+            "type": "object",
+            "properties": {
+              "net_cash_flow": {
+                "type": "number"
+              },
+              "runway_months": {
+                "type": "number"
+              },
+              "critical_points": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         },
         {
           "description": "Capability for Scenario Modeling in CFO Agent Pack workflows.",
-          "name": "Scenario Modeling"
+          "name": "Scenario Modeling",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Cost Governance in CFO Agent Pack workflows.",
-          "name": "Cost Governance"
+          "name": "Cost Governance",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -675,15 +918,57 @@
       "tools": [
         {
           "description": "Operational tool Budget Service required by CFO Agent Pack.",
-          "name": "Budget Service"
+          "name": "Budget Service",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "enum": [
+                  "check",
+                  "allocate",
+                  "reallocate"
+                ]
+              },
+              "amount": {
+                "type": "number"
+              },
+              "department": {
+                "type": "string"
+              }
+            }
+          },
+          "outputSchema": {
+            "type": "object",
+            "properties": {
+              "approved": {
+                "type": "boolean"
+              },
+              "remaining_budget": {
+                "type": "number"
+              }
+            }
+          }
         },
         {
           "description": "Operational tool Reporting Engine required by CFO Agent Pack.",
-          "name": "Reporting Engine"
+          "name": "Reporting Engine",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Spreadsheet Export required by CFO Agent Pack.",
-          "name": "Spreadsheet Export"
+          "name": "Spreadsheet Export",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -970,15 +1255,33 @@
       "skills": [
         {
           "description": "Capability for Campaign Architecture in CMO Agent Pack workflows.",
-          "name": "Campaign Architecture"
+          "name": "Campaign Architecture",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Attribution Analysis in CMO Agent Pack workflows.",
-          "name": "Attribution Analysis"
+          "name": "Attribution Analysis",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Brand Positioning in CMO Agent Pack workflows.",
-          "name": "Brand Positioning"
+          "name": "Brand Positioning",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -1004,15 +1307,33 @@
       "tools": [
         {
           "description": "Operational tool Marketing Mix Model required by CMO Agent Pack.",
-          "name": "Marketing Mix Model"
+          "name": "Marketing Mix Model",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Content Generator required by CMO Agent Pack.",
-          "name": "Content Generator"
+          "name": "Content Generator",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Analytics Connector required by CMO Agent Pack.",
-          "name": "Analytics Connector"
+          "name": "Analytics Connector",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -1305,15 +1626,33 @@
       "skills": [
         {
           "description": "Capability for Process Mapping in COO Agent Pack workflows.",
-          "name": "Process Mapping"
+          "name": "Process Mapping",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for SLA Control in COO Agent Pack workflows.",
-          "name": "SLA Control"
+          "name": "SLA Control",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Execution Cadence in COO Agent Pack workflows.",
-          "name": "Execution Cadence"
+          "name": "Execution Cadence",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -1339,15 +1678,33 @@
       "tools": [
         {
           "description": "Operational tool Workflow Orchestrator required by COO Agent Pack.",
-          "name": "Workflow Orchestrator"
+          "name": "Workflow Orchestrator",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Task Queue required by COO Agent Pack.",
-          "name": "Task Queue"
+          "name": "Task Queue",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Ops Dashboard required by COO Agent Pack.",
-          "name": "Ops Dashboard"
+          "name": "Ops Dashboard",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -1518,15 +1875,55 @@
       "skills": [
         {
           "description": "Capability for Pipeline Diagnostics in CRO Agent Pack workflows.",
-          "name": "Pipeline Diagnostics"
+          "name": "Pipeline Diagnostics",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Forecast Accuracy in CRO Agent Pack workflows.",
-          "name": "Forecast Accuracy"
+          "name": "Forecast Accuracy",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Revenue Acceleration in CRO Agent Pack workflows.",
-          "name": "Revenue Acceleration"
+          "name": "Revenue Acceleration",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "pipeline_data": {
+                "type": "object"
+              },
+              "growth_targets": {
+                "type": "object"
+              }
+            }
+          },
+          "outputSchema": {
+            "type": "object",
+            "properties": {
+              "forecast": {
+                "type": "number"
+              },
+              "velocity_score": {
+                "type": "number"
+              },
+              "bottlenecks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       ],
       "tags": {
@@ -1552,15 +1949,33 @@
       "tools": [
         {
           "description": "Operational tool CRM Adapter required by CRO Agent Pack.",
-          "name": "CRM Adapter"
+          "name": "CRM Adapter",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Forecast Analyzer required by CRO Agent Pack.",
-          "name": "Forecast Analyzer"
+          "name": "Forecast Analyzer",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Sales Alerting required by CRO Agent Pack.",
-          "name": "Sales Alerting"
+          "name": "Sales Alerting",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -1623,15 +2038,33 @@
       "skills": [
         {
           "description": "Capability for Architecture Review in CTO Agent Pack workflows.",
-          "name": "Architecture Review"
+          "name": "Architecture Review",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Reliability Planning in CTO Agent Pack workflows.",
-          "name": "Reliability Planning"
+          "name": "Reliability Planning",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Delivery Risk Management in CTO Agent Pack workflows.",
-          "name": "Delivery Risk Management"
+          "name": "Delivery Risk Management",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -1657,15 +2090,33 @@
       "tools": [
         {
           "description": "Operational tool Incident Monitor required by CTO Agent Pack.",
-          "name": "Incident Monitor"
+          "name": "Incident Monitor",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Roadmap Planner required by CTO Agent Pack.",
-          "name": "Roadmap Planner"
+          "name": "Roadmap Planner",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Dependency Auditor required by CTO Agent Pack.",
-          "name": "Dependency Auditor"
+          "name": "Dependency Auditor",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -1831,15 +2282,33 @@
       "skills": [
         {
           "description": "Capability for Health Scoring in Customer Success Agent Pack workflows.",
-          "name": "Health Scoring"
+          "name": "Health Scoring",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Renewal Forecasting in Customer Success Agent Pack workflows.",
-          "name": "Renewal Forecasting"
+          "name": "Renewal Forecasting",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Playbook Recommendation in Customer Success Agent Pack workflows.",
-          "name": "Playbook Recommendation"
+          "name": "Playbook Recommendation",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -1865,15 +2334,33 @@
       "tools": [
         {
           "description": "Operational tool Health Alerting required by Customer Success Agent Pack.",
-          "name": "Health Alerting"
+          "name": "Health Alerting",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool NPS Monitor required by Customer Success Agent Pack.",
-          "name": "NPS Monitor"
+          "name": "NPS Monitor",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool QBR Builder required by Customer Success Agent Pack.",
-          "name": "QBR Builder"
+          "name": "QBR Builder",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -2147,15 +2634,33 @@
       "skills": [
         {
           "description": "Capability for Budget Tracking in Finance Agent Pack workflows.",
-          "name": "Budget Tracking"
+          "name": "Budget Tracking",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Variance Analysis in Finance Agent Pack workflows.",
-          "name": "Variance Analysis"
+          "name": "Variance Analysis",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Closing Support in Finance Agent Pack workflows.",
-          "name": "Closing Support"
+          "name": "Closing Support",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -2181,15 +2686,33 @@
       "tools": [
         {
           "description": "Operational tool Ledger Reconciliation required by Finance Agent Pack.",
-          "name": "Ledger Reconciliation"
+          "name": "Ledger Reconciliation",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Cost Estimator required by Finance Agent Pack.",
-          "name": "Cost Estimator"
+          "name": "Cost Estimator",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool CSV Export required by Finance Agent Pack.",
-          "name": "CSV Export"
+          "name": "CSV Export",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -2906,15 +3429,33 @@
       "skills": [
         {
           "description": "Capability for Contract Analysis in Legal Agent Pack workflows.",
-          "name": "Contract Analysis"
+          "name": "Contract Analysis",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Clause Risk Detection in Legal Agent Pack workflows.",
-          "name": "Clause Risk Detection"
+          "name": "Clause Risk Detection",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Compliance Checklisting in Legal Agent Pack workflows.",
-          "name": "Compliance Checklisting"
+          "name": "Compliance Checklisting",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -2940,15 +3481,33 @@
       "tools": [
         {
           "description": "Operational tool Contract Parser required by Legal Agent Pack.",
-          "name": "Contract Parser"
+          "name": "Contract Parser",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Policy Knowledge Base required by Legal Agent Pack.",
-          "name": "Policy Knowledge Base"
+          "name": "Policy Knowledge Base",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Audit Trail required by Legal Agent Pack.",
-          "name": "Audit Trail"
+          "name": "Audit Trail",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -3461,15 +4020,33 @@
       "skills": [
         {
           "description": "Capability for Runbook Coordination in Ops Agent Pack workflows.",
-          "name": "Runbook Coordination"
+          "name": "Runbook Coordination",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Incident Triage in Ops Agent Pack workflows.",
-          "name": "Incident Triage"
+          "name": "Incident Triage",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for KPI Monitoring in Ops Agent Pack workflows.",
-          "name": "KPI Monitoring"
+          "name": "KPI Monitoring",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -3495,15 +4072,33 @@
       "tools": [
         {
           "description": "Operational tool Slack Notifier required by Ops Agent Pack.",
-          "name": "Slack Notifier"
+          "name": "Slack Notifier",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Calendar Scheduler required by Ops Agent Pack.",
-          "name": "Calendar Scheduler"
+          "name": "Calendar Scheduler",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Storage Archiver required by Ops Agent Pack.",
-          "name": "Storage Archiver"
+          "name": "Storage Archiver",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -4216,15 +4811,33 @@
       "skills": [
         {
           "description": "Capability for Hiring Funnel Analysis in RH Agent Pack workflows.",
-          "name": "Hiring Funnel Analysis"
+          "name": "Hiring Funnel Analysis",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Engagement Monitoring in RH Agent Pack workflows.",
-          "name": "Engagement Monitoring"
+          "name": "Engagement Monitoring",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Policy Guidance in RH Agent Pack workflows.",
-          "name": "Policy Guidance"
+          "name": "Policy Guidance",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -4250,15 +4863,33 @@
       "tools": [
         {
           "description": "Operational tool Interview Planner required by RH Agent Pack.",
-          "name": "Interview Planner"
+          "name": "Interview Planner",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool People Analytics required by RH Agent Pack.",
-          "name": "People Analytics"
+          "name": "People Analytics",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Communication Assistant required by RH Agent Pack.",
-          "name": "Communication Assistant"
+          "name": "Communication Assistant",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
@@ -4429,15 +5060,33 @@
       "skills": [
         {
           "description": "Capability for Lead Prioritization in Sales Agent Pack workflows.",
-          "name": "Lead Prioritization"
+          "name": "Lead Prioritization",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Deal Coaching in Sales Agent Pack workflows.",
-          "name": "Deal Coaching"
+          "name": "Deal Coaching",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Capability for Pipeline Hygiene in Sales Agent Pack workflows.",
-          "name": "Pipeline Hygiene"
+          "name": "Pipeline Hygiene",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "tags": {
@@ -4463,15 +5112,33 @@
       "tools": [
         {
           "description": "Operational tool CRM Adapter required by Sales Agent Pack.",
-          "name": "CRM Adapter"
+          "name": "CRM Adapter",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Call Summary required by Sales Agent Pack.",
-          "name": "Call Summary"
+          "name": "Call Summary",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         },
         {
           "description": "Operational tool Proposal Generator required by Sales Agent Pack.",
-          "name": "Proposal Generator"
+          "name": "Proposal Generator",
+          "inputSchema": {
+            "type": "object"
+          },
+          "outputSchema": {
+            "type": "object"
+          }
         }
       ],
       "whenToUse": [
