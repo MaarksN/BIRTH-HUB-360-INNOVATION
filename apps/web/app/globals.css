@@ -575,3 +575,113 @@ html[data-theme="dark"] .ghost-button {
   background: rgba(24, 122, 115, 0.08);
   color: var(--text);
 }
+
+:root {
+  --font-sans: var(--font-inter), "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-outfit), "Fraunces", Georgia, serif;
+  --surface: #f5eee5;
+  --surface-strong: #e9ddcd;
+  --surface-panel: rgba(252, 246, 239, 0.78);
+  --surface-panel-strong: rgba(255, 251, 246, 0.92);
+  --text: #181413;
+  --muted: #675b54;
+  --accent: #0d7b78;
+  --accent-strong: #092f37;
+  --accent-soft: #82d0c3;
+  --accent-contrast: #fcf7f0;
+  --card: rgba(255, 251, 246, 0.94);
+  --border: rgba(24, 20, 19, 0.12);
+  --border-strong: rgba(24, 20, 19, 0.2);
+  --shadow-glass: 0 24px 54px rgba(53, 35, 16, 0.08);
+  --shadow-grow: 0 18px 38px rgba(13, 123, 120, 0.16);
+  --gradient-start: #f7f0e6;
+  --gradient-mid: #efe5d7;
+  --gradient-end: #ebe3d8;
+  --glow-primary: rgba(13, 123, 120, 0.08);
+  --glow-secondary: rgba(184, 107, 50, 0.06);
+  --glow-tertiary: rgba(24, 20, 19, 0.04);
+  --glass-sheen: rgba(255, 255, 255, 0.42);
+  --grid-line: rgba(24, 20, 19, 0.07);
+  --highlight: #b86b32;
+}
+
+html[data-theme="dark"] {
+  --surface: #11161a;
+  --surface-strong: #181f24;
+  --surface-panel: rgba(19, 26, 32, 0.78);
+  --surface-panel-strong: rgba(20, 28, 34, 0.92);
+  --text: #f2eadf;
+  --muted: #b3a79b;
+  --accent: #79d8cc;
+  --accent-strong: #d6f8f0;
+  --accent-soft: #2b7d77;
+  --accent-contrast: #091114;
+  --card: rgba(22, 29, 35, 0.94);
+  --border: rgba(242, 234, 223, 0.12);
+  --border-strong: rgba(242, 234, 223, 0.2);
+  --shadow-glass: 0 26px 60px rgba(3, 7, 10, 0.42);
+  --shadow-grow: 0 20px 46px rgba(121, 216, 204, 0.16);
+  --gradient-start: #0e1317;
+  --gradient-mid: #141a1f;
+  --gradient-end: #1a2127;
+  --glow-primary: rgba(121, 216, 204, 0.08);
+  --glow-secondary: rgba(201, 144, 80, 0.08);
+  --glow-tertiary: rgba(255, 255, 255, 0.03);
+  --glass-sheen: rgba(255, 255, 255, 0.06);
+  --grid-line: rgba(242, 234, 223, 0.08);
+  --highlight: #c99050;
+}
+
+body {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 22%),
+    linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 46%, var(--gradient-end) 100%);
+  background-attachment: fixed;
+}
+
+body::before,
+body::after {
+  filter: none;
+}
+
+body::before {
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, transparent 0 82%, rgba(184, 107, 50, 0.1) 82%, rgba(184, 107, 50, 0.1) 84%, transparent 84%);
+  background-size:
+    96px 96px,
+    96px 96px,
+    100% 100%;
+  height: auto;
+  inset: 0;
+  left: 0;
+  opacity: 0.52;
+  top: 0;
+  width: auto;
+}
+
+body::after {
+  background:
+    linear-gradient(120deg, transparent 0 62%, rgba(13, 123, 120, 0.08) 62%, rgba(13, 123, 120, 0.08) 66%, transparent 66%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 24%);
+  height: auto;
+  inset: 0;
+  opacity: 0.6;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: 0;
+}
+
+::selection {
+  background: rgba(184, 107, 50, 0.18);
+}

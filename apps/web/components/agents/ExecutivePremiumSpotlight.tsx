@@ -44,38 +44,15 @@ export function ExecutivePremiumSpotlight(props: {
   }
 
   return (
-    <section
-      style={{
-        background: "linear-gradient(135deg, rgba(15,23,42,0.96), rgba(30,58,138,0.92))",
-        border: "1px solid rgba(148, 163, 184, 0.26)",
-        borderRadius: 20,
-        color: "#f8fafc",
-        display: "grid",
-        gap: "1rem",
-        padding: "1.1rem"
-      }}
-    >
-      <div className="dashboard-panel__header">
-        <div className="dashboard-panel__copy" style={{ gap: "0.35rem" }}>
+    <section className="executive-premium">
+      <div className="dashboard-panel__header executive-premium__header">
+        <div className="dashboard-panel__copy executive-premium__copy">
           {props.eyebrow ? (
-            <small style={{ letterSpacing: "0.08em", opacity: 0.8, textTransform: "uppercase" }}>
-              {props.eyebrow}
-            </small>
+            <small className="executive-premium__eyebrow">{props.eyebrow}</small>
           ) : null}
-          {props.badge ? (
-            <span
-              className="badge"
-              style={{
-                background: "rgba(255,255,255,0.12)",
-                borderColor: "rgba(255,255,255,0.18)",
-                color: "#f8fafc"
-              }}
-            >
-              {props.badge}
-            </span>
-          ) : null}
-          <h2 style={{ margin: 0 }}>{props.title}</h2>
-          <p style={{ color: "rgba(248,250,252,0.86)", margin: 0 }}>{props.description}</p>
+          {props.badge ? <span className="badge">{props.badge}</span> : null}
+          <h2>{props.title}</h2>
+          <p>{props.description}</p>
         </div>
 
         {props.primaryAction || props.secondaryAction ? (
@@ -96,35 +73,20 @@ export function ExecutivePremiumSpotlight(props: {
       </div>
 
       {props.metrics?.length ? (
-        <section className="stats-grid dashboard-stats-grid">
+        <section className="stats-grid dashboard-stats-grid executive-premium__metrics">
           {props.metrics.map((metric) => (
             <article key={metric.label}>
               <span className="badge">{metric.label}</span>
               <strong>{metric.value}</strong>
-              {metric.description ? (
-                <p
-                  className="dashboard-muted dashboard-muted--compact"
-                  style={{ color: "rgba(248,250,252,0.72)" }}
-                >
-                  {metric.description}
-                </p>
-              ) : null}
+              {metric.description ? <p className="dashboard-muted dashboard-muted--compact">{metric.description}</p> : null}
             </article>
           ))}
         </section>
       ) : (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
+        <div className="executive-premium__summary">
           {(props.summaryItems ?? [`${props.results.length} agentes premium`, `${EXECUTIVE_PREMIUM_SHARED_LAYER_COUNT} camadas premium`]).map(
             (item) => (
-              <span
-                key={item}
-                style={{
-                  background: "rgba(255,255,255,0.12)",
-                  border: "1px solid rgba(255,255,255,0.18)",
-                  borderRadius: 999,
-                  padding: "0.35rem 0.75rem"
-                }}
-              >
+              <span className="executive-premium__summary-chip" key={item}>
                 {item}
               </span>
             )
@@ -132,53 +94,25 @@ export function ExecutivePremiumSpotlight(props: {
         </div>
       )}
 
-      <div
-        style={{
-          display: "grid",
-          gap: "0.8rem",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))"
-        }}
-      >
+      <div className="executive-premium__grid">
         {props.results.map((item) => {
           const subhead = props.cardSubhead?.(item) ?? null;
 
           return (
-            <article
-              key={item.agent.id}
-              style={{
-                background: "rgba(255,255,255,0.12)",
-                border: "1px solid rgba(255,255,255,0.14)",
-                borderRadius: 16,
-                display: "grid",
-                gap: "0.45rem",
-                padding: "0.95rem"
-              }}
-            >
+            <article className="executive-premium__card" key={item.agent.id}>
               <strong>{item.agent.name}</strong>
               {props.cardBadge ? (
-                <small
-                  style={{
-                    color: "#bfdbfe",
-                    fontWeight: 700,
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase"
-                  }}
-                >
-                  {props.cardBadge}
-                </small>
+                <small className="executive-premium__card-badge">{props.cardBadge}</small>
               ) : null}
-              {subhead ? <small style={{ opacity: 0.8 }}>{subhead}</small> : null}
-              <p style={{ margin: 0, opacity: 0.92 }}>{item.agent.description}</p>
-              <small style={{ opacity: 0.76 }}>{props.cardMeta(item)}</small>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              {subhead ? <small className="executive-premium__card-subhead">{subhead}</small> : null}
+              <p>{item.agent.description}</p>
+              <small className="executive-premium__card-meta">{props.cardMeta(item)}</small>
+              <div className="executive-premium__card-actions">
                 <Link href={props.cardAction.href(item)}>{props.cardAction.label}</Link>
                 {props.cardSecondaryAction ? (
                   <Link
+                    className={props.cardSecondaryAction.tone === "accent" ? "executive-premium__link--accent" : undefined}
                     href={props.cardSecondaryAction.href(item)}
-                    style={{
-                      color:
-                        props.cardSecondaryAction.tone === "accent" ? "#bfdbfe" : "#f8fafc"
-                    }}
                   >
                     {props.cardSecondaryAction.label}
                   </Link>
