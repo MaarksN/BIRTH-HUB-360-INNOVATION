@@ -579,7 +579,7 @@ function buildFoundationAgent(
 
   return {
     category: override.category,
-    description: `${override.description ?? manifest.agent.description} Opera com padrao premium de governanca, qualidade, antecipacao de decisoes e aprendizado cruzado.`,
+    description: override.description ?? override.mission,
     guardrails: enrichedGuardrails,
     id: override.id,
     inputs: enrichedInputs,
@@ -601,8 +601,7 @@ function buildFoundationAgent(
       mission: override.mission,
       name: manifest.agent.name,
       objectives: uniqueStrings([
-        ...manifest.skills.map((skill) => skill.description),
-        ...AUTONOMOUS_SKILLS.map((skill) => skill.description)
+        ...manifest.skills.map((skill) => skill.description)
       ]),
       outputFormat,
       outputs: enrichedOutputs,
@@ -621,7 +620,7 @@ function buildFoundationAgent(
         description: skill.description,
         name: skill.name
       })),
-      AUTONOMOUS_SKILLS
+      []
     ),
     tags: enrichTags(manifest.tags),
     tools: manifest.tools.map((tool) => ({
