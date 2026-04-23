@@ -24,6 +24,8 @@ export interface FoundationAgentOverride {
 
 export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
   {
+    id: "ceo-pack",
+    category: "Executive Command",
     description: "Strategic intelligence for board-level growth and brutal prioritization. Orquestra a plataforma para alinhar receita, operacoes e produto.",
     mission:
       "Transformar sinais fragmentados do negocio em direcao executiva clara, priorizacao brutalmente objetiva e alinhamento entre receita, operacoes e produto.",
@@ -77,6 +79,8 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
+    id: "cfo-pack",
+    category: "Executive Command",
     description: "Financial radar for cash flow, margins, and defensive forecasting. Garante que o crescimento seja economicamente sustentavel.",
     mission:
       "Proteger margem, caixa e previsibilidade financeira, transformando operacao e crescimento em disciplina economica acionavel.",
@@ -228,6 +232,8 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
+    id: "cro-pack",
+    category: "Executive Command",
     description: "Revenue engine for pipeline predictability and sales velocity. Alinha marketing, vendas e CS sob uma mesma meta.",
     mission:
       "Aumentar previsibilidade de receita combinando diagnostico comercial, disciplina de pipeline e agressividade inteligente de conversao.",
@@ -330,6 +336,8 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
+    id: "sales-pack",
+    category: "Commercial Core",
     description: "Relentless execution for lead qualification and deal closing. Foca na higiene do pipeline e conversao de oportunidades.",
     mission:
       "Executar a cadencia comercial com foco em qualificacao, conversao e higiene de pipeline para transformar demanda em receita confiavel.",
@@ -481,6 +489,8 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
+    id: "ops-pack",
+    category: "Business Operations",
     description: "Operational stabilizer for incidents and runbook execution. Coordena a resposta rapida e a continuidade do negocio.",
     mission:
       "Coordenar operacao diaria com runbooks, resposta rapida a incidentes e controle rigoroso de execucao multi-time.",
@@ -583,6 +593,8 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
+    id: "cs-pack",
+    category: "Customer Growth",
     description: "Retention-first intelligence for account health and expansion. Garante a saude da base e identifica oportunidades de upsell.",
     mission:
       "Proteger receita recorrente e expandir contas saudaveis com leitura fina de uso, risco e oportunidade.",
