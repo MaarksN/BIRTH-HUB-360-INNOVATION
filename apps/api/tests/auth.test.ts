@@ -61,6 +61,32 @@ void test("auth login returns 200 and creates a session", async () => {
     }
   }
 });
+
+void test("auth login returns clear Problem Details for invalid credentials", async () => {
+  const restores = [
+    stubMethod(prisma.organization, "findFirst", () => Promise.resolve({ id: "org_1", tenantId: "tenant_1" })),
+    stubMethod(prisma.membership, "findFirst", () => Promise.resolve(null))
+  ];
+
+  try {
+    const app = createAuthTestApp();
+    const response = await request(app)
+      .post("/api/v1/auth/login")
+      .send({
+        email: "owner@birthub.local",
+        password: "wrong-password",
+        tenantId: "birthhub-alpha"
+      })
+      .expect(401);
+
+    assert.equal(response.body.title, "Unauthorized");
+    assert.match(String(response.body.detail), /Invalid email, password or organization reference/);
+  } finally {
+    for (const restore of restores.reverse()) {
+      restore();
+    }
+  }
+});
 void test("createSession generates session id with 16-byte hex entropy", async () => {
   const config = createTestApiConfig();
   let capturedSessionId: string | null = null;

@@ -12,11 +12,13 @@ import { createApp } from "../src/app.js";
 import { createTestApiConfig } from "./test-config.js";
 import { sha256 } from "../src/modules/auth/crypto.js";
 import { budgetService } from "../src/modules/budget/budget.service.js";
+import { createBillingRouter } from "../src/modules/billing/router.js";
 import {
   createRateLimitMiddleware,
   createWebhookRateLimitMiddleware
 } from "../src/middleware/rate-limit.js";
 import type { RequestContext } from "../src/middleware/request-context.js";
+import { createAuthenticatedApiTestApp } from "./http-test-helpers.js";
 
 setMaxListeners(20);
 
@@ -91,6 +93,24 @@ void test("security keeps operational routes outside the global API rate limit",
   assert.equal(secondResponse.header["ratelimit-limit"], undefined);
 });
 
+void test("security rejects unknown fields on billing checkout DTOs", async () => {
+  const app = createAuthenticatedApiTestApp({
+    mountPath: "/api/v1/billing",
+    router: createBillingRouter(createTestApiConfig())
+  });
+
+  const response = await request(app)
+    .post("/api/v1/billing/checkout")
+    .send({
+      planId: "plan_1",
+      tenantId: "tenant_from_body"
+    })
+    .expect(400);
+
+  assert.equal(response.body.title, "Bad Request");
+  assert.match(JSON.stringify(response.body.errors), /tenantId|unrecognized/i);
+});
+
 void test("security applies API rate limits by tenant and route group", async () => {
   const app = express();
   app.use((incomingRequest, _response, next) => {
@@ -160,7 +180,7 @@ void test("security applies webhook rate limits by tenant before provider proces
     .expect(204);
   await request(app)
     .post("/api/webhooks/stripe")
-    .set("stripe-signature", "sig_rate_limit_smoke")
+    .set("stripe-signature", "sig_rate_limit_smoke_rotated")
     .set("x-test-tenant", "tenant_a")
     .send("{}")
     .expect(429);

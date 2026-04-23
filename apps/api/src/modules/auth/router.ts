@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import type { ApiConfig } from "@birthub/config";
 import type { z } from "zod";
 import {
@@ -10,9 +12,11 @@ import {
   refreshResponseSchema
 } from "@birthub/config";
 import { prisma } from "@birthub/database";
+import { createLogger } from "@birthub/logger";
 import { Router } from "express";
 import { z as zod } from "zod";
 
+import { enqueueAuditEvent } from "../../audit/buffer.js";
 import { requireAuthenticatedSession } from "../../common/guards/index.js";
 import { asyncHandler, ProblemDetailsError } from "../../lib/problem-details.js";
 import type { RequestContext } from "../../middleware/request-context.js";
@@ -33,6 +37,7 @@ import { clearAuthCookies, setAuthCookies } from "./cookies.js";
 const AUTH_ROUTES_MOUNT_MARKER = "__birthhubAuthRoutesMounted" as const;
 
 export const AUTH_ROUTER_BASE_PATH = "/api/v1/auth";
+const authLogger = createLogger("auth-router");
 
 const enableMfaRequestSchema = zod
   .object({
@@ -68,6 +73,66 @@ function createUnauthorizedError(detail = "A valid authenticated session is requ
     detail,
     status: 401,
     title: "Unauthorized"
+  });
+}
+
+function hashAuditIdentifier(value: string): string {
+  return createHash("sha256").update(value.trim().toLowerCase()).digest("hex").slice(0, 16);
+}
+
+function mapKnownAuthError(error: unknown): ProblemDetailsError | null {
+  const code = error instanceof Error ? error.message : "";
+
+  switch (code) {
+    case "INVALID_CREDENTIALS":
+      return createUnauthorizedError("Invalid email, password or organization reference.");
+    case "ACCOUNT_SUSPENDED":
+      return new ProblemDetailsError({
+        detail: "The account is suspended.",
+        status: 403,
+        title: "Forbidden"
+      });
+    case "INVALID_MFA_CHALLENGE":
+    case "MFA_CHALLENGE_EXPIRED":
+    case "INVALID_MFA_CODE":
+      return createUnauthorizedError("MFA challenge is invalid or expired.");
+    case "MFA_CODE_ALREADY_USED":
+      return new ProblemDetailsError({
+        detail: "MFA challenge was already used.",
+        status: 409,
+        title: "Conflict"
+      });
+    case "MFA_NOT_CONFIGURED":
+      return new ProblemDetailsError({
+        detail: "MFA is not configured for this account.",
+        status: 409,
+        title: "Conflict"
+      });
+    default:
+      return null;
+  }
+}
+
+function auditLoginSuccess(input: {
+  ipAddress: string | null;
+  organizationId: string;
+  sessionId: string;
+  tenantId: string;
+  userAgent: string | null;
+  userId: string;
+}): void {
+  enqueueAuditEvent({
+    action: "auth.login.succeeded",
+    actorId: input.userId,
+    diff: {
+      authType: "session",
+      organizationId: input.organizationId
+    },
+    entityId: input.sessionId,
+    entityType: "session",
+    ip: input.ipAddress,
+    tenantId: input.tenantId,
+    userAgent: input.userAgent
   });
 }
 
@@ -154,35 +219,92 @@ function registerLoginRoute(router: ReturnType<typeof Router>, config: ApiConfig
     validateBody(loginRequestSchema),
     asyncHandler(async (request, response) => {
       const loginInput = loginRequestSchema.parse(request.body);
-      const organizationId = await resolveOrganizationId(loginInput.tenantId);
+      const loginAttemptContext = {
+        emailHash: hashAuditIdentifier(loginInput.email),
+        event: "auth.login.attempt",
+        requestId: request.context.requestId,
+        tenantReference: loginInput.tenantId
+      };
 
-      if (!organizationId) {
-        throw createUnauthorizedError("Invalid organization reference for login.");
-      }
+      try {
+        const organizationId = await resolveOrganizationId(loginInput.tenantId);
 
-      const login = await loginWithPassword({
-        config,
-        email: loginInput.email,
-        ipAddress: request.ip ?? null,
-        organizationId,
-        password: loginInput.password,
-        userAgent: readUserAgent(request)
-      });
+        if (!organizationId) {
+          authLogger.warn(
+            loginAttemptContext,
+            "Login rejected because the organization reference is invalid"
+          );
+          throw createUnauthorizedError("Invalid organization reference for login.");
+        }
 
-      if (login.mfaRequired === true) {
+        const login = await loginWithPassword({
+          config,
+          email: loginInput.email,
+          ipAddress: request.ip ?? null,
+          organizationId,
+          password: loginInput.password,
+          userAgent: readUserAgent(request)
+        });
+
+        if (login.mfaRequired === true) {
+          authLogger.info(
+            {
+              ...loginAttemptContext,
+              event: "auth.login.mfa_required",
+              organizationId
+            },
+            "Login accepted pending MFA verification"
+          );
+          response
+            .status(200)
+            .json(buildMfaChallengeResponse(request.context.requestId, login));
+          return;
+        }
+
+        const session = login;
+
+        applySessionContext(request, session);
+        auditLoginSuccess({
+          ipAddress: request.ip ?? null,
+          organizationId: session.organizationId,
+          sessionId: session.sessionId,
+          tenantId: session.tenantId,
+          userAgent: readUserAgent(request),
+          userId: session.userId
+        });
+        authLogger.info(
+          {
+            event: "auth.login.succeeded",
+            organizationId: session.organizationId,
+            requestId: request.context.requestId,
+            sessionId: session.sessionId,
+            tenantId: session.tenantId,
+            userId: session.userId
+          },
+          "Login succeeded"
+        );
+        setAuthCookies(response, config, session.tokens);
         response
           .status(200)
-          .json(buildMfaChallengeResponse(request.context.requestId, login));
-        return;
+          .json(buildSessionResponse(request.context.requestId, session));
+      } catch (error) {
+        const authError = mapKnownAuthError(error);
+
+        if (authError) {
+          authLogger.warn(
+            {
+              ...loginAttemptContext,
+              event: "auth.login.rejected",
+              status: authError.status,
+              title: authError.title
+            },
+            "Login rejected"
+          );
+          throw authError;
+        }
+
+        throw error;
       }
-
-      const session = login;
-
-      applySessionContext(request, session);
-      setAuthCookies(response, config, session.tokens);
-      response
-        .status(200)
-        .json(buildSessionResponse(request.context.requestId, session));
     })
   );
 }
@@ -193,20 +315,58 @@ function registerMfaChallengeRoute(router: ReturnType<typeof Router>, config: Ap
     validateBody(mfaVerifyRequestSchema),
     asyncHandler(async (request, response) => {
       const body = request.body as z.infer<typeof mfaVerifyRequestSchema>;
-      const session = await verifyMfaChallenge({
-        challengeToken: body.challengeToken,
-        config,
-        ipAddress: request.ip ?? null,
-        ...(body.recoveryCode ? { recoveryCode: body.recoveryCode } : {}),
-        ...(body.totpCode ? { totpCode: body.totpCode } : {}),
-        userAgent: readUserAgent(request)
-      });
+      try {
+        const session = await verifyMfaChallenge({
+          challengeToken: body.challengeToken,
+          config,
+          ipAddress: request.ip ?? null,
+          ...(body.recoveryCode ? { recoveryCode: body.recoveryCode } : {}),
+          ...(body.totpCode ? { totpCode: body.totpCode } : {}),
+          userAgent: readUserAgent(request)
+        });
 
-      applySessionContext(request, session);
-      setAuthCookies(response, config, session.tokens);
-      response
-        .status(200)
-        .json(buildSessionResponse(request.context.requestId, session));
+        applySessionContext(request, session);
+        auditLoginSuccess({
+          ipAddress: request.ip ?? null,
+          organizationId: session.organizationId,
+          sessionId: session.sessionId,
+          tenantId: session.tenantId,
+          userAgent: readUserAgent(request),
+          userId: session.userId
+        });
+        authLogger.info(
+          {
+            event: "auth.mfa.verified",
+            organizationId: session.organizationId,
+            requestId: request.context.requestId,
+            sessionId: session.sessionId,
+            tenantId: session.tenantId,
+            userId: session.userId
+          },
+          "MFA challenge verified"
+        );
+        setAuthCookies(response, config, session.tokens);
+        response
+          .status(200)
+          .json(buildSessionResponse(request.context.requestId, session));
+      } catch (error) {
+        const authError = mapKnownAuthError(error);
+
+        if (authError) {
+          authLogger.warn(
+            {
+              event: "auth.mfa.rejected",
+              requestId: request.context.requestId,
+              status: authError.status,
+              title: authError.title
+            },
+            "MFA challenge rejected"
+          );
+          throw authError;
+        }
+
+        throw error;
+      }
     })
   );
 }

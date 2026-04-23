@@ -1,5 +1,6 @@
 import type { ApiConfig } from "@birthub/config";
 import { prisma, Role } from "@birthub/database";
+import { createLogger } from "@birthub/logger";
 import { Router } from "express";
 import { z } from "zod";
 
@@ -16,6 +17,7 @@ const impersonationSchema = z
     tenantReference: z.string().trim().min(1)
   })
   .strict();
+const adminLogger = createLogger("admin-router");
 
 async function resolveImpersonationTarget(tenantReference: string) {
   const organization = await prisma.organization.findFirst({
@@ -100,12 +102,22 @@ export function createAdminRouter(config: ApiConfig): Router {
           tenantId: target.organization.tenantId
         }
       });
+      adminLogger.info(
+        {
+          actorUserId,
+          event: "admin.impersonation.created",
+          organizationId: target.organization.id,
+          requestId: request.context.requestId,
+          targetUserId: target.userId,
+          tenantId: target.organization.tenantId
+        },
+        "Admin impersonation session created"
+      );
 
       setAuthCookies(response, config, session.tokens);
       response.status(201).json({
         organizationId: target.organization.id,
         tenantId: target.organization.tenantId,
-        tokens: session.tokens,
         userId: target.userId
       });
     })
