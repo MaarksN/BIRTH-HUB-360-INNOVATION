@@ -1,9 +1,0 @@
-<<<<<<< SEARCH
-        return Promise.resolve();
-      },
-      name: "workflow-execution.dlq"
-=======
-        return Promise.resolve();
-      },
-      name: "workflow-execution.dlq"
->>>>>>> REPLACE

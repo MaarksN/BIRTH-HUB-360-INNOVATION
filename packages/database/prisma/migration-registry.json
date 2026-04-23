@@ -62,6 +62,66 @@
         "viewsAndRoutinesReviewed": true
       }
     },
+    "20260422000200_remove_dedupe_hash": {
+      "environments": [
+        "dev",
+        "staging",
+        "prod"
+      ],
+      "estimatedDurationMinutes": 5,
+      "impact": "low",
+      "maintenanceWindowSlaMinutes": 30,
+      "notes": "Removes dedupe hash.",
+      "owner": "Platform Data",
+      "postMigrationChecklist": [
+        "drift_check",
+        "fk_index_audit",
+        "integrity_health_check",
+        "migration_state_report",
+        "release_smoke",
+        "rls_audit"
+      ],
+      "preProductionChecklist": [
+        "backup_confirmed",
+        "maintenance_window",
+        "rollback_validated",
+        "stakeholder_notice"
+      ],
+      "review": {
+        "approverRoles": [
+          "DBA",
+          "DB_LEAD"
+        ],
+        "reviewer": "Database Lead"
+      },
+      "rollback": {
+        "strategy": "Restore the previous snapshot if the new columns cause regression.",
+        "steps": [
+          "Pause deployment.",
+          "Validate backup freshness.",
+          "Drop the columns or restore the previous stable snapshot if required.",
+          "Replay tests."
+        ],
+        "testedEnvironments": [
+          "staging"
+        ]
+      },
+      "severity": "P1",
+      "strategy": {
+        "backwardCompatible": true,
+        "batching": {
+          "required": false
+        },
+        "expandContract": true,
+        "transactional": true
+      },
+      "validation": {
+        "driftChecked": true,
+        "rlsReviewed": true,
+        "rollbackTested": true,
+        "viewsAndRoutinesReviewed": true
+      }
+    },
     "20260313000200_cycle2_multitenancy": {
       "environments": [
         "dev",
