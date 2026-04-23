@@ -17,6 +17,7 @@ interface HtmlAgentRecord {
   title: string;
   mission: string;
   whenToUse: string[];
+  whenNotToUse?: string[];
   expectedTools: string[];
   inputs: string[];
   outputs: string[];
@@ -38,6 +39,7 @@ interface GeneratedAgentSource {
   description: string;
   mission: string;
   whenToUse: string[];
+  whenNotToUse?: string[];
   inputs: string[];
   outputs: string[];
   guardrails: string[];
@@ -430,6 +432,9 @@ function buildCompiledPrompt(input: {
     "QUANDO ACIONAR",
     ...input.whenToUse.map((item) => `- ${item}`),
     "",
+    ...(input.whenNotToUse && input.whenNotToUse.length > 0
+      ? ["QUANDO NAO ACIONAR", ...input.whenNotToUse.map((item) => `- ${item}`), ""]
+      : []),
     "ENTRADAS OBRIGATORIAS",
     ...input.inputs.map((item) => `- ${item}`),
     "",
@@ -557,6 +562,7 @@ function buildHtmlAgent(record: HtmlAgentRecord): GeneratedAgentSource {
       qualityChecklist,
       rules: record.promptSections.rules,
       tools: record.expectedTools,
+      whenNotToUse: record.whenNotToUse,
       whenToUse: record.whenToUse
     }),
     qualityChecklist,
@@ -614,6 +620,7 @@ function buildFoundationAgent(
         "escalar para aprovacao humana quando o risco exigir"
       ],
       tools: manifest.tools.map((tool) => tool.name),
+      whenNotToUse: override.whenNotToUse,
       whenToUse: override.whenToUse
     }),
     qualityChecklist,

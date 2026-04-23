@@ -5,6 +5,7 @@ export interface FoundationAgentOverride {
   mission: string;
   name?: string;
   whenToUse: string[];
+  whenNotToUse?: string[];
   inputs: string[];
   outputs: string[];
   guardrails: string[];
@@ -23,8 +24,7 @@ export interface FoundationAgentOverride {
 
 export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
   {
-    id: "ceo-pack",
-    category: "Executive Command",
+    description: "Strategic intelligence for board-level growth and brutal prioritization. Orquestra a plataforma para alinhar receita, operacoes e produto.",
     mission:
       "Transformar sinais fragmentados do negocio em direcao executiva clara, priorizacao brutalmente objetiva e alinhamento entre receita, operacoes e produto.",
     whenToUse: [
@@ -32,6 +32,11 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
       "quando houver conflitos de alocacao entre squads, budget e roadmap",
       "quando o board pedir sintese executiva, risco e recomendacao",
       "quando for necessario definir foco trimestral com impacto mensuravel"
+    ],
+    whenNotToUse: [
+      "detalhamento de planilhas financeiras (use CFO)",
+      "taticas especificas de vendas (use Sales)",
+      "resolucao de tickets individuais (use CS ou Ops)"
     ],
     inputs: [
       "KPIs executivos, pipeline, receita, churn e eficiencia operacional",
@@ -72,8 +77,7 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
-    id: "cfo-pack",
-    category: "Executive Command",
+    description: "Financial radar for cash flow, margins, and defensive forecasting. Garante que o crescimento seja economicamente sustentavel.",
     mission:
       "Proteger margem, caixa e previsibilidade financeira, transformando operacao e crescimento em disciplina economica acionavel.",
     whenToUse: [
@@ -81,6 +85,11 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
       "quando for necessario modelar cenarios de caixa e margem",
       "quando a operacao precisar explicar variancia financeira",
       "quando a lideranca pedir previsao economica defensavel"
+    ],
+    whenNotToUse: [
+      "gestao de pipeline comercial (use CRO)",
+      "priorizacao de produto (use CEO)",
+      "operacao de campanhas (use CMO)"
     ],
     inputs: [
       "orcamento, forecast, custos fixos e variaveis",
@@ -219,8 +228,7 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
-    id: "cro-pack",
-    category: "Executive Command",
+    description: "Revenue engine for pipeline predictability and sales velocity. Alinha marketing, vendas e CS sob uma mesma meta.",
     mission:
       "Aumentar previsibilidade de receita combinando diagnostico comercial, disciplina de pipeline e agressividade inteligente de conversao.",
     whenToUse: [
@@ -228,6 +236,11 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
       "quando forecast precisar de sustentacao mais robusta",
       "quando houver desalinhamento entre prospeccao, vendas e CS",
       "quando receita precisar de plano de aceleracao"
+    ],
+    whenNotToUse: [
+      "revisao de contratos (use Legal)",
+      "conciliacao bancaria (use Finance)",
+      "gestao de talentos (use RH)"
     ],
     inputs: [
       "pipeline por etapa, aging, win rate e cobertura",
@@ -317,8 +330,7 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
-    id: "sales-pack",
-    category: "Commercial Core",
+    description: "Relentless execution for lead qualification and deal closing. Foca na higiene do pipeline e conversao de oportunidades.",
     mission:
       "Executar a cadencia comercial com foco em qualificacao, conversao e higiene de pipeline para transformar demanda em receita confiavel.",
     whenToUse: [
@@ -326,6 +338,11 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
       "quando deals pedirem orientacao de proximo passo",
       "quando a operacao comercial precisar de disciplina de funil",
       "quando vendedores precisarem de apoio pratico para fechar"
+    ],
+    whenNotToUse: [
+      "analise de saude de base instalada (use CS)",
+      "posicionamento de marca e campanhas (use CMO)",
+      "resolucao de incidentes tecnicos (use Ops)"
     ],
     inputs: [
       "leads, contas, sinais de compra e atividade recente",
@@ -464,8 +481,7 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
-    id: "ops-pack",
-    category: "Business Operations",
+    description: "Operational stabilizer for incidents and runbook execution. Coordena a resposta rapida e a continuidade do negocio.",
     mission:
       "Coordenar operacao diaria com runbooks, resposta rapida a incidentes e controle rigoroso de execucao multi-time.",
     whenToUse: [
@@ -473,6 +489,11 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
       "quando runbooks e rotinas recorrentes precisarem de disciplina",
       "quando houver necessidade de comunicacao operacional estruturada",
       "quando a empresa precisar preservar continuidade com menos caos"
+    ],
+    whenNotToUse: [
+      "analise financeira de custos (use Finance)",
+      "estrategia de longo prazo (use CEO)",
+      "negociacao de novos deals (use Sales)"
     ],
     inputs: [
       "alertas, fila operacional e severidade do evento",
@@ -562,8 +583,7 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
     ]
   },
   {
-    id: "cs-pack",
-    category: "Customer Growth",
+    description: "Retention-first intelligence for account health and expansion. Garante a saude da base e identifica oportunidades de upsell.",
     mission:
       "Proteger receita recorrente e expandir contas saudaveis com leitura fina de uso, risco e oportunidade.",
     whenToUse: [
@@ -571,6 +591,11 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
       "quando houver sinais de churn, queda de uso ou ticket sensivel",
       "quando for preciso identificar expansion com responsabilidade",
       "quando CS precisar priorizar intervencoes de alto impacto"
+    ],
+    whenNotToUse: [
+      "prospecção de novos leads (use Sales)",
+      "fechamento de novos logos (use Sales)",
+      "gestao de budget de marketing (use CMO)"
     ],
     inputs: [
       "uso do produto, engajamento e marcos de renovacao",
@@ -624,6 +649,11 @@ export const FOUNDATION_AGENT_OVERRIDES: FoundationAgentOverride[] = [
       "quando o segmento do cliente exigir mudanca de linguagem, plano ou especialistas envolvidos",
       "quando a plataforma precisar consolidar contexto e distribuir trabalho sem perda de memoria",
       "quando chegar um novo lead, ticket critico, renovacao em risco ou incidente operacional"
+    ],
+    whenNotToUse: [
+      "tarefas simples de um único agente (use o especialista diretamente)",
+      "decisões puramente financeiras sem contexto operacional (use CFO)",
+      "análise isolada de contratos (use Legal)"
     ],
     inputs: [
       "objetivo da solicitacao ou evento gatilho",

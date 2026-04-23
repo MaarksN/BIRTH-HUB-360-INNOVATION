@@ -52,6 +52,11 @@
     "title": "Maestro Orchestrator",
     "whenToUse": [
       "Quando houver novo evento, nova tarefa, ambiguidade de roteamento, necessidade de coordenação ou consolidação de múltiplos agentes."
+    ],
+    "whenNotToUse": [
+      "Quando o especialista já é conhecido e a tarefa é simples (use o agente direto)",
+      "Quando a demanda é puramente de roteamento por segmento (use Agent Mesh Orchestrator)",
+      "Para execução de tarefas de baixo nível que não exigem coordenação."
     ]
   },
   {
@@ -101,6 +106,11 @@
     "title": "Policy & Approval Guard",
     "whenToUse": [
       "Antes de qualquer ação externa, mudança crítica de negócio, comunicação em massa ou operação sensível."
+    ],
+    "whenNotToUse": [
+      "Para consultas de informação que não envolvem alteração de estado ou risco.",
+      "Para tarefas puramente analíticas sem execução de ferramentas.",
+      "Quando a ação já foi previamente autorizada por uma política global sem exceções."
     ]
   },
   {
