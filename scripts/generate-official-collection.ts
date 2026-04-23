@@ -601,7 +601,9 @@ function buildFoundationAgent(
       mission: override.mission,
       name: manifest.agent.name,
       objectives: uniqueStrings([
-        ...manifest.skills.map((skill) => skill.description)
+        ...manifest.skills
+          .filter((skill) => !AUTONOMOUS_SKILLS.some((s) => s.name === skill.name))
+          .map((skill) => skill.description)
       ]),
       outputFormat,
       outputs: enrichedOutputs,
@@ -616,10 +618,12 @@ function buildFoundationAgent(
     }),
     qualityChecklist,
     skills: mergeSkillSources(
-      manifest.skills.map((skill) => ({
-        description: skill.description,
-        name: skill.name
-      })),
+      manifest.skills
+        .filter((skill) => !AUTONOMOUS_SKILLS.some((s) => s.name === skill.name))
+        .map((skill) => ({
+          description: skill.description,
+          name: skill.name
+        })),
       []
     ),
     tags: enrichTags(manifest.tags),
