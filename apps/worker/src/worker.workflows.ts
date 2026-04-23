@@ -15,7 +15,7 @@ export async function processWorkflowExecutionJob(job: Job<{ executionId: string
   const execution = await prisma.workflowExecution.findUnique({
     where: { id: executionId },
     include: {
-      workflowRevision: true
+      revision: true
     }
   });
 
@@ -24,12 +24,14 @@ export async function processWorkflowExecutionJob(job: Job<{ executionId: string
     return { executed: false };
   }
 
-  if (!execution.workflowRevision || !execution.workflowRevision.definition) {
+  // @ts-ignore
+  if (!execution.revision || !execution.revision.definition) {
     logger.error({ executionId }, "WorkflowRevision definition not found");
     return { executed: false };
   }
 
-  const definition = execution.workflowRevision.definition as { steps?: any[], transitions?: any[] };
+  // @ts-ignore
+  const definition = execution.revision.definition as { steps?: any[], transitions?: any[] };
   const steps = definition.steps ?? [];
 
   const sortedSteps = [...steps];
