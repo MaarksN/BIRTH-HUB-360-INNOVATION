@@ -45,6 +45,16 @@ export const apiEnvSchema = z.object({
   API_LOGIN_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(10),
   API_LOGIN_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(15 * 60 * 1000),
   API_PORT: z.coerce.number().int().positive().default(3000),
+  API_TRUST_PROXY: z.preprocess((value) => {
+    if (typeof value === "string") {
+      const normalized = value.trim();
+      if (["true", "1", "on", "yes"].includes(normalized.toLowerCase())) return true;
+      if (["false", "0", "off", "no"].includes(normalized.toLowerCase())) return false;
+      if (/^\d+$/.test(normalized)) return parseInt(normalized, 10);
+      return normalized;
+    }
+    return value;
+  }, z.union([z.boolean(), z.number(), z.string()])).default(false),
   API_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(120),
   API_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
   API_WEBHOOK_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(300),
