@@ -1,0 +1,552 @@
+{
+  "generated_at": "2026-04-18T05:31:17.159392+00:00",
+  "workflows": [
+    {
+      "workflow": "CI",
+      "status": "partial",
+      "jobs": [
+        {
+          "job": "branch-name",
+          "status": "failed"
+        },
+        {
+          "job": "commit-messages",
+          "status": "passed"
+        },
+        {
+          "job": "lockfile-integrity",
+          "status": "passed"
+        },
+        {
+          "job": "lockfile-corruption-simulation",
+          "status": "passed"
+        },
+        {
+          "job": "inline-credentials",
+          "status": "passed"
+        },
+        {
+          "job": "documentation-links",
+          "status": "passed"
+        },
+        {
+          "job": "repo-hygiene",
+          "status": "failed"
+        },
+        {
+          "job": "gitleaks",
+          "status": "not-executed"
+        },
+        {
+          "job": "security-guardrails",
+          "status": "passed"
+        },
+        {
+          "job": "platform(lint)",
+          "status": "passed"
+        },
+        {
+          "job": "platform(typecheck)",
+          "status": "passed"
+        },
+        {
+          "job": "platform(test)",
+          "status": "passed"
+        },
+        {
+          "job": "platform(test:isolation)",
+          "status": "passed"
+        },
+        {
+          "job": "platform(build)",
+          "status": "blocked_external"
+        },
+        {
+          "job": "satellites",
+          "status": "passed"
+        },
+        {
+          "job": "workflow-suite",
+          "status": "passed"
+        },
+        {
+          "job": "integration-db",
+          "status": "passed"
+        },
+        {
+          "job": "coverage-quality",
+          "status": "failed"
+        },
+        {
+          "job": "mutation-testing",
+          "status": "failed"
+        },
+        {
+          "job": "pack-tests",
+          "status": "passed"
+        },
+        {
+          "job": "governance-gates",
+          "status": "failed"
+        },
+        {
+          "job": "e2e-release",
+          "status": "failed"
+        }
+      ]
+    },
+    {
+      "workflow": "Security Scan",
+      "status": "partial",
+      "jobs": [
+        {
+          "job": "semgrep",
+          "status": "not-executed"
+        },
+        {
+          "job": "dependency-audit",
+          "status": "blocked_external"
+        },
+        {
+          "job": "python-security",
+          "status": "partial"
+        },
+        {
+          "job": "rbac-suite",
+          "status": "passed"
+        },
+        {
+          "job": "zap-baseline",
+          "status": "blocked_external"
+        },
+        {
+          "job": "security-report",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "workflow": "F4 Script Compliance",
+      "status": "passed",
+      "jobs": [
+        {
+          "job": "workspace-compliance",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "workflow": "Agent Packs Conformity",
+      "status": "passed",
+      "jobs": [
+        {
+          "job": "validate-agent-packs",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "workflow": "Repository Health",
+      "status": "passed",
+      "jobs": [
+        {
+          "job": "repository-health",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "workflow": "Materialize Doc-Only Controls",
+      "status": "passed",
+      "jobs": [
+        {
+          "job": "materialize-doc-only",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "workflow": "Release Rehearsal",
+      "status": "failed",
+      "jobs": [
+        {
+          "job": "cycle0-rehearsal",
+          "status": "failed"
+        }
+      ]
+    },
+    {
+      "workflow": "CD",
+      "status": "partial",
+      "jobs": [
+        {
+          "job": "staging-preflight",
+          "status": "passed"
+        },
+        {
+          "job": "release-sbom",
+          "status": "passed"
+        },
+        {
+          "job": "production-preflight",
+          "status": "passed"
+        },
+        {
+          "job": "release-smoke-gate",
+          "status": "failed"
+        },
+        {
+          "job": "release-e2e-gate",
+          "status": "failed"
+        },
+        {
+          "job": "rollback-rehearsal-evidence-gate",
+          "status": "failed"
+        },
+        {
+          "job": "deploy-staging/deploy-production",
+          "status": "not-executed-external-cloud"
+        }
+      ]
+    },
+    {
+      "workflow": "Dependabot Security Auto-Merge",
+      "status": "not-executed-event-driven"
+    },
+    {
+      "workflow": "Cleanup Merged Branches",
+      "status": "not-executed-event-driven"
+    }
+  ],
+  "commands": [
+    {
+      "command": "pnpm install --frozen-lockfile",
+      "exit_code": 0,
+      "observation": "Base dependency install OK"
+    },
+    {
+      "command": "pnpm branch:check",
+      "exit_code": 1,
+      "observation": "Branch naming policy failed on branch copilot/validate-github-actions"
+    },
+    {
+      "command": "pnpm ci:commitlint",
+      "exit_code": 0,
+      "observation": "Commitlint gate OK"
+    },
+    {
+      "command": "pnpm ci:default-e2e-surface-freeze",
+      "exit_code": 1,
+      "observation": "Failed before fix: missing playwright.config.ts"
+    },
+    {
+      "command": "pnpm security:inline-credentials",
+      "exit_code": 1,
+      "observation": "Failed before fix: 7 findings (test fixture false positives)"
+    },
+    {
+      "command": "pnpm hygiene:check",
+      "exit_code": 1,
+      "observation": "Failed on changed-file hygiene/complexity/line-count constraints"
+    },
+    {
+      "command": "pnpm ci:lockfile",
+      "exit_code": 0,
+      "observation": "Lockfile governance OK"
+    },
+    {
+      "command": "lockfile corruption simulation",
+      "exit_code": 0,
+      "observation": "Frozen install failed as expected on corrupted lockfile"
+    },
+    {
+      "command": "pnpm db:bootstrap:ci",
+      "exit_code": 1,
+      "observation": "Failed before fix: migration 20260410000100 relation workflow_revisions missing"
+    },
+    {
+      "command": "pnpm db:bootstrap:ci",
+      "exit_code": 0,
+      "observation": "Passed after migration fix"
+    },
+    {
+      "command": "pnpm ci:security-guardrails",
+      "exit_code": 1,
+      "observation": "Failed before fix: auth guard policy + migration governance issues"
+    },
+    {
+      "command": "pnpm ci:security-guardrails",
+      "exit_code": 0,
+      "observation": "Passed after fixes"
+    },
+    {
+      "command": "pnpm ci:task lint",
+      "exit_code": 0,
+      "observation": "Platform lint OK"
+    },
+    {
+      "command": "pnpm typecheck",
+      "exit_code": 0,
+      "observation": "Typecheck passed after fixes"
+    },
+    {
+      "command": "pnpm ci:task test",
+      "exit_code": 0,
+      "observation": "Platform tests passed after fixes"
+    },
+    {
+      "command": "pnpm ci:task test:isolation",
+      "exit_code": 0,
+      "observation": "Isolation lane OK"
+    },
+    {
+      "command": "pnpm ci:task build",
+      "exit_code": 1,
+      "observation": "Build blocked by fonts.googleapis.com DNS/network restriction"
+    },
+    {
+      "command": "pnpm ci:task satellites",
+      "exit_code": 0,
+      "observation": "Satellites lane OK"
+    },
+    {
+      "command": "pnpm ci:task workflow-suite",
+      "exit_code": 0,
+      "observation": "Workflow suite lane OK"
+    },
+    {
+      "command": "pnpm test:integration",
+      "exit_code": 0,
+      "observation": "Integration DB lane OK"
+    },
+    {
+      "command": "pnpm coverage:check",
+      "exit_code": 1,
+      "observation": "Missing artifacts/coverage/summary.json in local run context"
+    },
+    {
+      "command": "pnpm test:python:coverage",
+      "exit_code": 4,
+      "observation": "pytest-xdist flags unsupported in current python env (missing plugin)"
+    },
+    {
+      "command": "pnpm quality:dead-code",
+      "exit_code": 1,
+      "observation": "45 dead-code regressions vs baseline"
+    },
+    {
+      "command": "pnpm test:mutation",
+      "exit_code": 1,
+      "observation": "@stryker-mutator/core not installed (module not found)"
+    },
+    {
+      "command": "pnpm ci:task pack-tests",
+      "exit_code": 0,
+      "observation": "Pack tests lane OK"
+    },
+    {
+      "command": "pnpm monorepo:doctor && RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard && pnpm audit:ownership",
+      "exit_code": 1,
+      "observation": "Release scorecard below threshold due dead-code/backup/DR/rollback evidence"
+    },
+    {
+      "command": "corepack pnpm --filter @birthub/agent-packs validate && corepack pnpm --filter @birthub/agent-packs test",
+      "exit_code": 0,
+      "observation": "Agents conformity commands OK"
+    },
+    {
+      "command": "pnpm workspace:audit",
+      "exit_code": 0,
+      "observation": "F4 workspace audit OK"
+    },
+    {
+      "command": "pnpm audit:materialize:all",
+      "exit_code": 0,
+      "observation": "Materialize doc-only controls OK"
+    },
+    {
+      "command": "pnpm artifacts:clean -- --apply",
+      "exit_code": 0,
+      "observation": "Repository-health cleanup step OK"
+    },
+    {
+      "command": "pnpm audit --audit-level=high",
+      "exit_code": 1,
+      "observation": "npm audit endpoint returned HTTP 400 (external registry/network)"
+    },
+    {
+      "command": "python scripts/ci/check-python-workflow-hard-fail.py",
+      "exit_code": 0,
+      "observation": "Python workflow hard-fail policy OK"
+    },
+    {
+      "command": "python -m bandit -q -r agents apps/webhook-receiver -x '*/tests/*' -lll",
+      "exit_code": 0,
+      "observation": "Bandit OK"
+    },
+    {
+      "command": "python -m pip_audit -r requirements-test.txt --ignore-vuln CVE-2026-4539",
+      "exit_code": 0,
+      "observation": "pip-audit OK"
+    },
+    {
+      "command": "python -m safety check --full-report -r requirements-test.txt",
+      "exit_code": 68,
+      "observation": "Safety failed due unreachable backend/network"
+    },
+    {
+      "command": "DATABASE_URL=...birthub_cycle3 pnpm db:generate && pnpm test:rbac",
+      "exit_code": 0,
+      "observation": "RBAC suite OK"
+    },
+    {
+      "command": "pnpm --filter @birthub/web build (ZAP pre-step)",
+      "exit_code": 1,
+      "observation": "Blocked by fonts.googleapis.com DNS/network restriction"
+    },
+    {
+      "command": "pnpm security:guards",
+      "exit_code": 0,
+      "observation": "Security guard scan OK"
+    },
+    {
+      "command": "pnpm security:report",
+      "exit_code": 0,
+      "observation": "Security report generation OK"
+    },
+    {
+      "command": "pnpm release:verify:cycle0",
+      "exit_code": 1,
+      "observation": "Failed because build step failed (external font DNS restriction)"
+    },
+    {
+      "command": "pnpm ops:backup:health",
+      "exit_code": 1,
+      "observation": "No backup files found locally"
+    },
+    {
+      "command": "pnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario='scheduled release rehearsal'",
+      "exit_code": 0,
+      "observation": "DR auto record generated"
+    },
+    {
+      "command": "pnpm ops:dr:report",
+      "exit_code": 1,
+      "observation": "DR readiness report indicates unmet readiness conditions"
+    },
+    {
+      "command": "pnpm release:preflight:staging",
+      "exit_code": 0,
+      "observation": "Preflight staging command executed"
+    },
+    {
+      "command": "pnpm release:preflight:production",
+      "exit_code": 0,
+      "observation": "Preflight production command executed"
+    },
+    {
+      "command": "pnpm release:sbom",
+      "exit_code": 0,
+      "observation": "SBOM generation OK"
+    },
+    {
+      "command": "pnpm release:materialize -- --tag=v1.0.0 --source-event=workflow_dispatch --source-ref=<sha> --source-sha=<sha> --workflow=CD --run-id=local",
+      "exit_code": 0,
+      "observation": "Release materialization OK"
+    },
+    {
+      "command": "pnpm release:smoke",
+      "exit_code": 1,
+      "observation": "Failed on test:isolation and playwright-release sub-gates"
+    },
+    {
+      "command": "pnpm exec playwright install --with-deps chromium && pnpm test:e2e:release",
+      "exit_code": 1,
+      "observation": "E2E failed: invalid relative URL navigation due missing Playwright baseURL config"
+    },
+    {
+      "command": "pnpm release:rollback:evidence:auto -- --target=production",
+      "exit_code": 1,
+      "observation": "Rollback evidence incomplete because smoke artifact reported ok=false"
+    }
+  ],
+  "pass_fail": {
+    "passed": 29,
+    "failed": 21
+  },
+  "remaining_blockers": [
+    "Sandbox DNS/network restrictions to fonts.googleapis.com (Next.js build and ZAP pre-build).",
+    "External npm audit endpoint response (HTTP 400) prevents dependency-audit equivalence.",
+    "Safety backend unreachable in this environment.",
+    "Coverage-quality preconditions unavailable locally (coverage summary + pytest-xdist plugin).",
+    "Mutation lane requires @stryker-mutator/core but dependency is absent in current workspace.",
+    "Repo hygiene and governance scorecard failures depend on existing changed surface and operational evidence thresholds."
+  ],
+  "changed_files": [
+    " M apps/web/components/sales-os/SdrAutomaticPlatform.tsx",
+    " M apps/worker/src/engine/runner.db-integration.test.ts",
+    " M apps/worker/test/benchmarkUserCleanup.ts",
+    " M artifacts/backups/backup-health.json",
+    " M artifacts/backups/backup-health.txt",
+    " M artifacts/backups/drill-rto-rpo.json",
+    " M artifacts/backups/drill-rto-rpo.txt",
+    " M artifacts/database/f8/fk-index-report.json",
+    " M artifacts/database/f8/fk-index-report.txt",
+    " M artifacts/database/f8/migration-governance-report.json",
+    " M artifacts/database/f8/migration-governance-report.txt",
+    " M artifacts/database/f8/referential-integrity-report.json",
+    " M artifacts/database/f8/tenant-isolation-report.json",
+    " M artifacts/database/scripts/db-bootstrap-ci.json",
+    " M artifacts/doctor/monorepo-doctor-report.md",
+    " M artifacts/dr/latest-drill.json",
+    " M artifacts/dr/readiness-report.json",
+    " M artifacts/materialization/doc-only-controls-report.json",
+    " M artifacts/materialization/doc-only-controls-report.md",
+    " M artifacts/ownership-governance/ownership-governance-report.json",
+    " M artifacts/ownership-governance/ownership-governance-report.md",
+    " M artifacts/privacy/anonymization-report.json",
+    " M artifacts/quality/dead-code/knip-report.json",
+    " M artifacts/quality/dead-code/knip-report.raw.json",
+    " M artifacts/quality/ts-directives-baseline.json",
+    " M artifacts/release/checksums-manifest.sha256",
+    " M artifacts/release/cycle0-flow-summary.json",
+    " M artifacts/release/cycle0-flow-summary.txt",
+    " M artifacts/release/final-data-migration-report.json",
+    " M artifacts/release/production-preflight-summary.json",
+    " M artifacts/release/production-preflight-summary.txt",
+    " M artifacts/release/production-rollback-evidence.json",
+    " M artifacts/release/production-rollback-evidence.txt",
+    " M artifacts/release/release-artifact-catalog.json",
+    " M artifacts/release/scorecard.json",
+    " M artifacts/release/scorecard.md",
+    " M artifacts/release/smoke-summary.json",
+    " M artifacts/release/smoke-summary.txt",
+    " M artifacts/release/staging-preflight-summary.json",
+    " M artifacts/release/staging-preflight-summary.txt",
+    " M artifacts/runtime-governance/runtime-governance-report.json",
+    " M artifacts/runtime-governance/runtime-governance-report.md",
+    " M artifacts/sbom/bom.xml",
+    " M artifacts/sbom/sbom.spdx.json",
+    " M artifacts/script-compliance/workspace-script-compliance.json",
+    " M artifacts/script-compliance/workspace-script-compliance.md",
+    " M artifacts/security/inline-credential-scan.json",
+    " M artifacts/security/security-coverage-report.json",
+    " M docs/evidence/billing-coverage.md",
+    " M docs/evidence/dead-code-report.md",
+    " M docs/evidence/disaster-recovery-report.md",
+    " M docs/evidence/workflow-coverage.md",
+    " M docs/security/security-coverage-report.md",
+    " M docs/standards/package-script-status.md",
+    " M packages/database/prisma/migration-registry.json",
+    " M packages/database/prisma/migrations/20260410000100_phase1_workflow_revision_rls/migration.sql",
+    " M packages/utils/src/__tests__/fetchWithTimeout.test.ts",
+    " M releases/manifests/release_artifact_catalog.md",
+    " M releases/notes/v1.0.0.md",
+    " M scripts/ci/check-default-e2e-surface-freeze.mjs",
+    " M scripts/security/check-auth-guards.ts",
+    " M scripts/security/scan-inline-credentials.mjs",
+    "?? artifacts/f2-legacy-2026-04-18/",
+    "?? artifacts/release/source-manifest.json",
+    "?? audit/github-actions/"
+  ]
+}

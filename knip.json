@@ -1,0 +1,181 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "include": [
+    "files",
+    "dependencies",
+    "devDependencies",
+    "unlisted",
+    "binaries",
+    "exports",
+    "duplicates"
+  ],
+  "ignoreBinaries": [
+    "k6",
+    "rimraf",
+    "powershell",
+    "pytest"
+  ],
+  "ignoreDependencies": [
+    "@stryker-mutator/core",
+    "@stryker-mutator/typescript-checker",
+    "@commitlint/cli",
+    "@birthub/contracts",
+    "@opentelemetry/auto-instrumentations-node",
+    "@opentelemetry/api",
+    "@opentelemetry/exporter-trace-otlp-http",
+    "@opentelemetry/resources",
+    "@opentelemetry/sdk-node",
+    "@prisma/client",
+    "@prisma/instrumentation",
+    "c8",
+    "express-rate-limit",
+    "jsdom",
+    "k6",
+    "lint-staged",
+    "pino-pretty",
+    "rate-limit-redis"
+  ],
+  "ignoreFiles": [
+    "**/*.d.ts",
+    "**/__mocks__/**"
+  ],
+  "ignoreIssues": {
+    "apps/web/lib/auth-client.ts": [
+      "exports"
+    ],
+    "apps/web/lib/web-session.ts": [
+      "files"
+    ]
+  },
+  "ignoreWorkspaces": [
+    "apps/voice-engine",
+    "packages/agent-packs",
+    "packages/llm-client",
+    "packages/integrations"
+  ],
+  "rules": {
+    "enumMembers": "off",
+    "types": "off"
+  },
+  "workspaces": {
+    ".": {
+      "entry": [
+        "*.config.{js,mjs,cjs,ts}",
+        "package.json",
+        "scripts/**/*.{js,mjs,cjs,ts,tsx}",
+        "scripts/agent/**/*.{js,mjs,cjs,ts,tsx}",
+        "scripts/ai/export-finetune.ts",
+        "scripts/audit/**/*.{js,mjs,cjs,ts,tsx}",
+        "scripts/f0/**/*.{js,mjs,cjs,ts,tsx}",
+        "scripts/load-tests/**/*.{js,mjs,cjs,ts,tsx}",
+        "scripts/notifications/**/*.{js,mjs,cjs,ts,tsx}",
+        "scripts/ops/**/*.{js,mjs,cjs,ts,tsx}",
+        "scripts/performance/**/*.{js,mjs,cjs,ts,tsx}",
+        "scripts/security/**/*.{js,mjs,cjs,ts,tsx}"
+      ],
+      "project": [
+        ".github/**/*.{yml,yaml}",
+        "*.config.{js,mjs,cjs,ts}",
+        "scripts/**/*.{js,mjs,cjs,ts,tsx}"
+      ],
+      "ignore": [
+        "artifacts/**",
+        "audit/**"
+      ]
+    },
+    "apps/api": {
+      "entry": [
+        "test/**/*.test.ts",
+        "tests/**/*.test.ts"
+      ],
+      "project": [
+        "src/**/*.ts",
+        "test/**/*.ts",
+        "tests/**/*.ts"
+      ]
+    },
+    "apps/web": {
+      "entry": [
+        "app/**/*.ts",
+        "app/**/*.tsx",
+        "public/sw.js",
+        "tests/**/*.test.ts"
+      ],
+      "project": [
+        "app/**/*.ts",
+        "app/**/*.tsx",
+        "components/**/*.tsx",
+        "lib/**/*.ts",
+        "providers/**/*.tsx",
+        "stores/**/*.ts",
+        "tests/**/*.ts"
+      ]
+    },
+    "apps/worker": {
+      "entry": [
+        "src/**/*.test.ts",
+        "src/load/*.ts",
+        "test/**/*.test.ts"
+      ],
+      "project": [
+        "src/**/*.ts",
+        "test/**/*.ts"
+      ],
+      "ignoreFiles": [
+        "src/**/*.harness.ts"
+      ]
+    },
+    "packages/agents-core": {
+      "entry": [
+        "src/**/*.test.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
+    },
+    "packages/auth": {
+      "entry": [
+        "index.ts",
+        "src/__tests__/*.test.ts"
+      ],
+      "project": [
+        "index.ts",
+        "src/**/*.ts"
+      ]
+    },
+    "packages/database": {
+      "entry": [
+        "f8.config.ts",
+        "prisma/seeds/**/*.ts",
+        "scripts/**/*.ts",
+        "test/**/*.test.ts"
+      ],
+      "project": [
+        "prisma/**/*.ts",
+        "scripts/**/*.ts",
+        "src/**/*.ts",
+        "test/**/*.ts"
+      ]
+    },
+    "packages/emails": {
+      "entry": [
+        "templates/*.test.ts",
+        "templates/*.tsx"
+      ],
+      "project": [
+        "templates/*.test.ts",
+        "templates/*.tsx"
+      ]
+    },
+    "packages/utils": {
+      "entry": [
+        "index.ts",
+        "src/__tests__/*.test.ts"
+      ],
+      "project": [
+        "index.ts",
+        "src/**/*.ts"
+      ]
+    }
+  }
+}

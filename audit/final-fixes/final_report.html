@@ -1,0 +1,73 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Final Fixes Report</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#f6f8fb;color:#111;margin:24px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:20px}
+    .card{background:#fff;border:1px solid #dde3ee;border-radius:10px;padding:12px}
+    .ok{color:#0a7f4f;font-weight:700}.fail{color:#b42318;font-weight:700}
+    table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #dde3ee}
+    th,td{padding:10px;border-bottom:1px solid #edf1f7;text-align:left}
+    th{background:#f2f6fc}
+    ul{background:#fff;border:1px solid #dde3ee;border-radius:10px;padding:12px 24px}
+    a{color:#0b57d0;text-decoration:none}
+  </style>
+</head>
+<body>
+  <h1>Final Fixes Report</h1>
+
+  <div class="grid">
+    <div class="card"><strong>Comandos alvo</strong><div>6</div></div>
+    <div class="card"><strong>Status final</strong><div class="ok">PASS (6/6)</div></div>
+    <div class="card"><strong>Bloqueios remanescentes</strong><div>0</div></div>
+  </div>
+
+  <h2>Status antes/depois</h2>
+  <table>
+    <thead><tr><th>Comando</th><th>Antes</th><th>Depois</th><th>Log final</th></tr></thead>
+    <tbody>
+      <tr><td>pnpm lint</td><td>PASS*</td><td class="ok">PASS</td><td><a href="logs/lint-final.log">lint-final.log</a></td></tr>
+      <tr><td>pnpm typecheck</td><td class="fail">FAIL</td><td class="ok">PASS</td><td><a href="logs/typecheck-final.log">typecheck-final.log</a></td></tr>
+      <tr><td>pnpm build</td><td class="fail">FAIL</td><td class="ok">PASS</td><td><a href="logs/build-final.log">build-final.log</a></td></tr>
+      <tr><td>pnpm build:core</td><td class="fail">FAIL</td><td class="ok">PASS</td><td><a href="logs/build-core-final.log">build-core-final.log</a></td></tr>
+      <tr><td>pnpm ci:task typecheck</td><td class="fail">FAIL</td><td class="ok">PASS</td><td><a href="logs/ci-task-typecheck-final.log">ci-task-typecheck-final.log</a></td></tr>
+      <tr><td>pnpm ci:security-guardrails</td><td class="fail">FAIL</td><td class="ok">PASS</td><td><a href="logs/ci-security-guardrails-final.log">ci-security-guardrails-final.log</a></td></tr>
+    </tbody>
+  </table>
+  <p><small>* Na reprodução local da Fase 1, lint já estava PASS.</small></p>
+
+  <h2>Arquivos alterados</h2>
+  <ul>
+    <li>apps/web/app/(dashboard)/workflows/[id]/edit/page.tsx</li>
+    <li>apps/web/app/(dashboard)/workflows/[id]/edit/workflow-editor-helpers.tsx</li>
+    <li>apps/web/app/globals.css</li>
+    <li>apps/web/app/layout.tsx</li>
+    <li>apps/web/components/sales-os/SdrAutomaticPlatform.tsx</li>
+    <li>apps/worker/test/benchmarkUserCleanup.ts</li>
+    <li>packages/database/prisma/migration-registry.json</li>
+    <li>packages/utils/src/__tests__/fetchWithTimeout.test.ts</li>
+    <li>scripts/ci/security-guardrails-local.mjs</li>
+    <li>scripts/security/check-auth-guards.ts</li>
+  </ul>
+
+  <h2>Erros corrigidos</h2>
+  <ul>
+    <li>Governança de diretivas TS (`@ts-nocheck` fora do baseline)</li>
+    <li>Tipagem de props e mocks (`crmRegions`, `Promise<Response>`)</li>
+    <li>Cast de mock Prisma no benchmark</li>
+    <li>Import browser-safe para workflows-core no app web</li>
+    <li>Build web sem dependência de fetch externo de Google Fonts</li>
+    <li>Guardrails de segurança/migrations alinhados</li>
+  </ul>
+
+  <h2>Bloqueios remanescentes</h2>
+  <ul><li>Nenhum.</li></ul>
+
+  <h2>Evidência adicional</h2>
+  <ul><li><a href=\"rollback-evidence-20260407000300.md\">rollback-evidence-20260407000300.md</a></li></ul>
+</body>
+</html>
+

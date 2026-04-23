@@ -374,7 +374,6 @@ model WorkflowStep {
   tenantId         String
   organizationId   String
   workflowId       String
-  workflowRevisionId String?
   key              String
   name             String
   type             WorkflowStepType
@@ -387,12 +386,11 @@ model WorkflowStep {
   updatedAt        DateTime                 @updatedAt
   organization     Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   workflow         Workflow                 @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  workflowRevision WorkflowRevision?        @relation(fields: [workflowRevisionId], references: [id], onDelete: SetNull)
   sourceTransitions WorkflowTransition[]    @relation("WorkflowTransitionSource")
   targetTransitions WorkflowTransition[]    @relation("WorkflowTransitionTarget")
   results          StepResult[]
 
-  @@unique([workflowRevisionId, key])
+  @@unique([workflowId, key])
   @@index([tenantId])
   @@index([tenantId, id])
   @@index([organizationId])
@@ -406,18 +404,16 @@ model WorkflowTransition {
   tenantId       String
   organizationId String
   workflowId     String
-  workflowRevisionId String?
   sourceStepId   String
   targetStepId   String
   route          WorkflowTransitionRoute @default(ALWAYS)
   createdAt      DateTime                @default(now())
   organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   workflow       Workflow                @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  workflowRevision WorkflowRevision?     @relation(fields: [workflowRevisionId], references: [id], onDelete: SetNull)
   sourceStep     WorkflowStep            @relation("WorkflowTransitionSource", fields: [sourceStepId], references: [id], onDelete: Cascade)
   targetStep     WorkflowStep            @relation("WorkflowTransitionTarget", fields: [targetStepId], references: [id], onDelete: Cascade)
 
-  @@unique([workflowRevisionId, sourceStepId, targetStepId, route])
+  @@unique([workflowId, sourceStepId, targetStepId, route])
   @@index([tenantId])
   @@index([tenantId, id])
   @@index([organizationId])
@@ -437,10 +433,6 @@ model WorkflowRevision {
   createdAt      DateTime     @default(now())
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   workflow       Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  steps          WorkflowStep[]
-  transitions    WorkflowTransition[]
-  executions     WorkflowExecution[]
-  stepResults    StepResult[]
 
   @@unique([workflowId, version])
   @@index([tenantId])
@@ -454,16 +446,11 @@ model WorkflowExecution {
   tenantId              String
   organizationId        String
   workflowId            String
-  workflowRevisionId    String?
   status                WorkflowExecutionStatus @default(RUNNING)
-  triggerEventId        String?
-  triggerKey            String?
-  eventSource           String?
-  actorId               String?
-  idempotencyKey        String?
   triggerType           WorkflowTriggerType
   triggerPayload        Json?
   isDryRun              Boolean                 @default(false)
+  dedupeHash            String?
   depth                 Int                     @default(0)
   startedAt             DateTime                @default(now())
   completedAt           DateTime?
@@ -474,17 +461,15 @@ model WorkflowExecution {
   updatedAt             DateTime                @updatedAt
   organization          Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   workflow              Workflow                @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  workflowRevision      WorkflowRevision?       @relation(fields: [workflowRevisionId], references: [id], onDelete: SetNull)
   stepResults           StepResult[]
 
   @@index([tenantId])
   @@index([tenantId, id])
   @@index([organizationId])
   @@index([tenantId, workflowId])
-  @@index([tenantId, workflowRevisionId])
   @@index([tenantId, status])
   @@index([tenantId, startedAt])
-  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, dedupeHash])
   @@map("workflow_executions")
 }
 
@@ -493,13 +478,10 @@ model StepResult {
   tenantId           String
   organizationId     String
   workflowId         String
-  workflowRevisionId String?
   executionId        String
   stepId             String
   status             StepResultStatus @default(SUCCESS)
   attempt            Int              @default(1)
-  nextRetryAt        DateTime?
-  durationMs         Int?
   input              Json?
   output             Json?
   outputSize         Int              @default(0)
@@ -507,13 +489,11 @@ model StepResult {
   externalPayloadUrl String?
   startedAt          DateTime         @default(now())
   finishedAt         DateTime?
-  errorCode          String?
   errorMessage       String?
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   organization       Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   workflow           Workflow         @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  workflowRevision   WorkflowRevision? @relation(fields: [workflowRevisionId], references: [id], onDelete: SetNull)
   execution          WorkflowExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
   step               WorkflowStep     @relation(fields: [stepId], references: [id], onDelete: Cascade)
 
@@ -523,10 +503,8 @@ model StepResult {
   @@index([organizationId])
   @@index([tenantId, executionId])
   @@index([tenantId, workflowId])
-  @@index([tenantId, workflowRevisionId])
   @@index([tenantId, stepId])
   @@index([tenantId, status])
-  @@index([tenantId, nextRetryAt])
   @@map("step_results")
 }
 
@@ -974,7 +952,6 @@ model CrmSyncEvent {
   provider       String       @default("hubspot")
   direction      String       @default("outbound")
   eventType      String       @map("event_type")
-  externalEventId String?     @map("external_event_id")
   requestBody    Json         @map("request_body")
   responseStatus Int?         @map("response_status")
   responseBody   String?      @map("response_body")
@@ -982,7 +959,6 @@ model CrmSyncEvent {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([tenantId])
-  @@index([tenantId, provider, direction, externalEventId])
   @@index([organizationId, createdAt])
   @@map("crm_sync_events")
 }
@@ -1189,7 +1165,6 @@ enum WorkflowStepType {
   SEND_NOTIFICATION
   AGENT_EXECUTE
   AGENT_HANDOFF
-  CONNECTOR_ACTION
   CRM_UPSERT
   WHATSAPP_SEND
   GOOGLE_EVENT

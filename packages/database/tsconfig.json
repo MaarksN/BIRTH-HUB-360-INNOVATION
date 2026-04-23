@@ -1,5 +1,4 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
@@ -11,11 +10,23 @@
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo",
     "strict": true,
     "esModuleInterop": true,
-    "paths": {},
     "skipLibCheck": true,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "composite": true
   },
-  "include": ["src"],
-  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "***.spec.ts",
+    "dist",
+    "node_modules",
+    "***.spec.ts",
+    "***.spec.ts",
+    "***.spec.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
 }

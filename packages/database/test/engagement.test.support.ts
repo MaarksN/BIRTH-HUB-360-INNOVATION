@@ -96,31 +96,28 @@ export function createMockMembership(overrides: Partial<Prisma.MembershipGetPayl
 
 export function createPrismaPromise<T>(value: T): Prisma.PrismaPromise<T> {
   const promise = Promise.resolve(value);
-  void Object.defineProperty(promise, Symbol.toStringTag, {
-    value: "PrismaPromise",
-    configurable: true
-  });
+  void Object.defineProperty(promise, Symbol.toStringTag, { value: 'PrismaPromise', configurable: true });
   return promise as unknown as Prisma.PrismaPromise<T>;
 }
 
 export function createEngagementPrismaMock(): EngagementPrismaClient {
   return {
-    auditLog: {
-      create: mock.fn(() => createPrismaPromise(createMockAuditLog()))
+    userPreference: {
+      upsert: mock.fn(() => createMockUserPreference()),
+      findUnique: mock.fn(() => createMockUserPreference())
     },
-    membership: {
-      findMany: mock.fn(() => createPrismaPromise([]))
+    auditLog: {
+      create: mock.fn(() => createMockAuditLog())
     },
     notification: {
-      count: mock.fn(() => createPrismaPromise(0)),
-      create: mock.fn(() => createPrismaPromise(createMockNotification())),
-      createMany: mock.fn(() => createPrismaPromise({ count: 1 } as Prisma.BatchPayload)),
-      findMany: mock.fn(() => createPrismaPromise([])),
-      updateMany: mock.fn(() => createPrismaPromise({ count: 1 } as Prisma.BatchPayload))
+      create: mock.fn(() => createMockNotification()),
+      createMany: mock.fn(async () => createPrismaPromise({ count: 1 } as Prisma.BatchPayload)),
+      findMany: mock.fn(async () => createPrismaPromise([])),
+      count: mock.fn(async () => createPrismaPromise(0)),
+      updateMany: mock.fn(async () => createPrismaPromise({ count: 1 } as Prisma.BatchPayload))
     },
-    userPreference: {
-      findUnique: mock.fn(() => createPrismaPromise(createMockUserPreference())),
-      upsert: mock.fn(() => createPrismaPromise(createMockUserPreference()))
+    membership: {
+      findMany: mock.fn(async () => createPrismaPromise([]))
     }
   } as unknown as EngagementPrismaClient;
 }

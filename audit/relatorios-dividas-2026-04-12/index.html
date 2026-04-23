@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indice Mestre - Relatorios de Dividas BirthHub</title>
+  <style>
+    :root{
+      --bg:#f4f1ea;
+      --panel:#fffdf8;
+      --ink:#1f2937;
+      --muted:#5b6472;
+      --line:#d8d1c4;
+      --accent:#0f766e;
+      --accent-2:#9a3412;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Segoe UI,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(15,118,110,.12), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(154,52,18,.10), transparent 30%),
+        var(--bg);
+      line-height:1.55;
+    }
+    main{max-width:1180px;margin:0 auto;padding:40px 24px 56px}
+    header{
+      background:linear-gradient(135deg, rgba(15,118,110,.10), rgba(255,253,248,.96));
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:28px;
+      box-shadow:0 10px 30px rgba(31,41,55,.06);
+    }
+    h1,h2,h3{margin:0 0 12px}
+    h1{font-size:2.2rem;line-height:1.1}
+    h2{font-size:1.3rem}
+    p{margin:0 0 12px}
+    .meta{color:var(--muted)}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:16px;
+      margin-top:24px;
+    }
+    .card,.summary,.note{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 10px 24px rgba(31,41,55,.05);
+    }
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:14px;
+      margin:24px 0;
+    }
+    .kpi{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+    }
+    .kpi strong{display:block;font-size:1.8rem;color:var(--accent)}
+    .pill{
+      display:inline-block;
+      padding:5px 10px;
+      border-radius:999px;
+      background:rgba(15,118,110,.10);
+      color:var(--accent);
+      font-size:.88rem;
+      font-weight:700;
+    }
+    .warn{color:var(--accent-2)}
+    ul{margin:10px 0 0 18px;padding:0}
+    li{margin:0 0 8px}
+    a{color:var(--accent);text-decoration:none;font-weight:600}
+    a:hover{text-decoration:underline}
+    .reports{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+    .reports article{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+    }
+    .reports h3{font-size:1.05rem}
+    .reports p{color:var(--muted)}
+    .footer{margin-top:28px;color:var(--muted);font-size:.95rem}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <span class="pill">Indice Mestre</span>
+      <h1>Relatorios de Dividas Tecnicas e Estruturais</h1>
+      <p>Consolidado executivo dos 12 relatórios individuais gerados a partir dos prompts de auditoria fornecidos para o projeto BirthHub 360 Innovation.</p>
+      <p class="meta"><strong>Data:</strong> 2026-04-12 | <strong>Escopo:</strong> codigo, arquitetura, convergencia, dados, testes, infra/devops, documentacao, seguranca, dependencias, automacao, design/ux e produto.</p>
+    </header>
+
+    <section class="kpis" aria-label="Resumo numerico">
+      <div class="kpi">
+        <strong>12</strong>
+        <span>relatórios HTML gerados</span>
+      </div>
+      <div class="kpi">
+        <strong>27</strong>
+        <span>itens de dívida registrados</span>
+      </div>
+      <div class="kpi">
+        <strong>16</strong>
+        <span>itens com gravidade alta</span>
+      </div>
+      <div class="kpi">
+        <strong>11</strong>
+        <span>itens com gravidade média</span>
+      </div>
+    </section>
+
+    <section class="summary">
+      <h2>Resumo Executivo</h2>
+      <p>O conjunto de relatórios mostra um projeto com boa quantidade de evidências e artefatos, mas ainda com dívidas importantes de coerência operacional e de governança. Os pontos mais críticos se concentram em configuracao espalhada no código, superfícies legacy ainda misturadas ao workspace ativo, evidências de teste e cobertura que não convergem perfeitamente com a realidade executada, e ambiguidade de produto em torno do workspace clínico.</p>
+      <p>Também apareceram riscos relevantes em segurança e operação: revogação de sessão dependente de memória local, rotina de criptografia com comportamento permissivo em falhas, setup local sem espera de prontidão real e processos críticos de rollback e release ainda excessivamente manuais.</p>
+    </section>
+
+    <section class="grid" aria-label="Temas dominantes">
+      <div class="card">
+        <h2>Temas Dominantes</h2>
+        <ul>
+          <li>Desalinhamento entre documentação, manifests e catálogo real do monorepo.</li>
+          <li>Concentração excessiva de responsabilidade em alguns arquivos e shells centrais.</li>
+          <li>Validações críticas que existem, mas nem sempre rodam com prova forte no ambiente atual.</li>
+          <li>Capacidades preservadas em código sem posição inequívoca na estratégia de produto.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Prioridades Recomendadas</h2>
+        <ul>
+          <li>Fechar a dívida de RLS, revogação de sessão e criptografia fail-open.</li>
+          <li>Alinhar README, service catalog, workspace manifests e dashboard de cobertura.</li>
+          <li>Reduzir hotspots arquiteturais em clinical service e Sales OS.</li>
+          <li>Definir oficialmente o status do workspace clínico no produto.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Leitura Sugerida</h2>
+        <ul>
+          <li>Começar por segurança, dados e testes para visão de risco imediato.</li>
+          <li>Seguir para convergência, documentação e produto para alinhar narrativa.</li>
+          <li>Fechar com código, arquitetura e automação para planejamento de execução.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2 style="margin-top:28px">Relatórios Individuais</h2>
+      <div class="reports">
+        <article>
+          <h3><a href="./01_divida_codigo_relatorio.html">01. Dívida de Código</a></h3>
+          <p>Configuração global espalhada, supressão ampla de tipagem e logging operacional fora do pipeline estruturado.</p>
+        </article>
+        <article>
+          <h3><a href="./02_divida_arquitetura_relatorio.html">02. Dívida de Arquitetura</a></h3>
+          <p>Legacy ainda no grafo principal, serviço clínico monolítico e hotspots grandes no front-end comercial.</p>
+        </article>
+        <article>
+          <h3><a href="./03_divida_convergencia_relatorio.html">03. Dívida de Convergência</a></h3>
+          <p>Divergência entre manifests, README, catálogo de serviços e dashboard humano de cobertura.</p>
+        </article>
+        <article>
+          <h3><a href="./04_divida_dados_relatorio.html">04. Dívida de Dados</a></h3>
+          <p>Isolamento por tenant não fica plenamente provado quando a role ativa ignora RLS.</p>
+        </article>
+        <article>
+          <h3><a href="./05_divida_teste_relatorio.html">05. Dívida de Teste</a></h3>
+          <p>Suite crítica com skip aceitável demais e artefato de cobertura que não representa fielmente a fonte bruta.</p>
+        </article>
+        <article>
+          <h3><a href="./06_divida_infra_devops_relatorio.html">06. Dívida de Infra e DevOps</a></h3>
+          <p>Bootstrap local dependente de timing feliz e compose com defaults pouco portáveis e permissivos.</p>
+        </article>
+        <article>
+          <h3><a href="./07_divida_documentacao_relatorio.html">07. Dívida de Documentação</a></h3>
+          <p>README desatualizado e governança de ADRs ambígua por índice incompleto e numeração duplicada.</p>
+        </article>
+        <article>
+          <h3><a href="./08_divida_seguranca_relatorio.html">08. Dívida de Segurança</a></h3>
+          <p>Revogação em memória, criptografia de MFA fail-open e defaults locais fracos.</p>
+        </article>
+        <article>
+          <h3><a href="./09_divida_dependencia_relatorio.html">09. Dívida de Dependência</a></h3>
+          <p>Override com pacote vazio mascarando incompatibilidade e faixas abertas demais na governança de versões.</p>
+        </article>
+        <article>
+          <h3><a href="./10_divida_automacao_relatorio.html">10. Dívida de Automação</a></h3>
+          <p>Rollback, DR e release bundle ainda excessivamente dependentes de ação manual.</p>
+        </article>
+        <article>
+          <h3><a href="./11_divida_design_ux_relatorio.html">11. Dívida de Design e UX</a></h3>
+          <p>Rota de pacientes sem boundaries equivalentes e tela com copy hardcoded e estilo inline repetitivo.</p>
+        </article>
+        <article>
+          <h3><a href="./12_divida_produto_relatorio.html">12. Dívida de Produto</a></h3>
+          <p>Workspace clínico em estado ambíguo entre capacidade preservada, desativada e parcialmente exposta.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="note" style="margin-top:24px">
+      <h2>Observação</h2>
+      <p class="warn">Este índice consolida os achados já validados nos relatórios individuais e não substitui a leitura dos detalhes, evidências e prompts de correção de cada documento.</p>
+    </section>
+
+    <p class="footer">Arquivo gerado em 2026-04-12 para navegação centralizada dos relatórios da pasta <code>audit/relatorios-dividas-2026-04-12</code>.</p>
+  </main>
+</body>
+</html>

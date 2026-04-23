@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatorio 08 - Divida de Seguranca</title>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;line-height:1.5;margin:32px;max-width:1100px}
+    code,pre{font-family:Consolas,monospace} pre{white-space:pre-wrap;background:#f6f8fa;padding:12px;border:1px solid #d0d7de}
+    .item{border:1px solid #d0d7de;border-radius:10px;padding:18px;margin:18px 0} .gravidade{font-weight:700;color:#9a3412}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Relatorio 08 - Divida de Seguranca</h1>
+    <p><strong>Projeto:</strong> BirthHub 360 Innovation</p>
+    <p><strong>Data:</strong> 2026-04-12</p>
+    <p><strong>Escopo:</strong> Sessao, criptografia de MFA e defaults locais que enfraquecem a postura de seguranca.</p>
+  </header>
+  <main>
+    <section id="metodo">
+      <h2>Metodo</h2>
+      <p>A inspecao cobriu modulos de autenticacao, cifragem e compose local para localizar escolhas que fragilizam revogacao, sigilo ou aproximacao entre desenvolvimento e um baseline mais seguro.</p>
+    </section>
+    <section id="resultado">
+      <h2>Resultado</h2>
+      <article class="item">
+        <h3>Item 1 - Revogacao de refresh token depende de armazenamento em memoria de processo</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> A revogacao local de refresh tokens utiliza um <code>Map</code> em memoria, o que nao persiste entre instancias e nao e adequado para cenarios distribuidos ou reinicios de processo.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>packages/auth/index.ts:21</code> declara <code>const refreshStore = new Map&lt;string, JWTPayload&gt;();</code>.</li>
+        </ul>
+        <p><strong>Impacto:</strong> Logout, revogacao e invalidacao podem se tornar inconsistentes entre replicas, deploys e restarts, com risco direto sobre controle de sessao.</p>
+        <p><strong>Plano sequencial:</strong> 1. Migrar store para backend compartilhado. 2. Introduzir TTL e auditoria. 3. Cobrir revogacao multi-instancia. 4. Remover dependencia de memoria local.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Substitua o armazenamento em memoria de refresh tokens por um mecanismo compartilhado e persistente adequado a revogacao de sessao. Preserve a API atual de autenticacao, introduza expiracao controlada e adicione testes cobrindo logout, revogacao e reinicio de processo ou multipla instancia.</pre>
+        </details>
+      </article>
+      <article class="item">
+        <h3>Item 2 - Rotina de decriptacao de MFA falha de forma permissiva</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> O modulo de criptografia de MFA opera com <code>// @ts-nocheck</code> e devolve texto original em varios cenarios de erro, caracterizando um comportamento fail-open para dado sensivel.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>apps/api/src/lib/encryption.ts:1</code> usa <code>// @ts-nocheck</code>.</li>
+          <li><code>apps/api/src/lib/encryption.ts:43</code>, <code>:47</code> e <code>:50</code> retornam o valor original em entradas malformadas.</li>
+          <li><code>apps/api/src/lib/encryption.ts:68</code> retorna o valor original em caso de falha na decriptacao.</li>
+        </ul>
+        <p><strong>Impacto:</strong> Erros de cifragem podem ser silenciosamente absorvidos e transformar dados protegidos em carga trafegando como texto claro ou estado ambiguo.</p>
+        <p><strong>Plano sequencial:</strong> 1. Remover fail-open. 2. Tipar completamente o modulo. 3. Distinguir erro operacional de formato invalido. 4. Adicionar testes de corrupcao e chave incorreta.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Fortaleça apps/api/src/lib/encryption.ts para eliminar retornos permissivos do texto original em falhas de cifragem ou decriptacao. Remova // @ts-nocheck, torne o modulo fail-closed para dados de MFA e adicione testes cobrindo entradas malformadas, chave invalida e payload corrompido.</pre>
+        </details>
+      </article>
+      <article class="item">
+        <h3>Item 3 - Defaults locais mantem credenciais fracas e seguranca desligada em dependencia auxiliar</h3>
+        <p class="gravidade">Gravidade: media</p>
+        <p><strong>Diagnostico:</strong> O compose de desenvolvimento conserva escolhas permissivas que facilitam bootstrap, mas normalizam defaults fracos no ecossistema local.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>docker-compose.yml:8</code> fixa <code>POSTGRES_PASSWORD: postgrespassword</code>.</li>
+          <li><code>docker-compose.yml:40</code> define <code>xpack.security.enabled=false</code>.</li>
+        </ul>
+        <p><strong>Impacto:</strong> O ambiente local tende a mascarar problemas de configuracao de credenciais e de integracao com componentes que exigiriam seguranca minima habilitada.</p>
+        <p><strong>Plano sequencial:</strong> 1. Parametrizar defaults. 2. Documentar excecoes inevitaveis. 3. Aproximar dev de baseline seguro quando possivel.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Revise os defaults de seguranca do ambiente local para evitar senha hardcoded e desabilitacao silenciosa de protecoes quando isso nao for estritamente necessario. Mantenha o fluxo de desenvolvimento pratico, mas force parametrizacao explicita e documente claramente qualquer excecao residual.</pre>
+        </details>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
+

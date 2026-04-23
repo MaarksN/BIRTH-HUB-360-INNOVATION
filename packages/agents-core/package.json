@@ -6,7 +6,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -b tsconfig.json --force",
-    "test": "sh -c 'files=$(find src -name \"*.test.ts\" -print); if [ -n \"$files\" ]; then node --import tsx --test $files; else echo \"No tests found\"; fi'",
+    "test": "node --import tsx --test \"src*.test.ts\"",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "docs": "typedoc --out docs src/index.ts",

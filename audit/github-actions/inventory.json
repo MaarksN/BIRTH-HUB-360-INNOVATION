@@ -1,0 +1,3245 @@
+{
+  "generated_at": "2026-04-18T05:29:50.267897Z",
+  "workflows": [
+    {
+      "file": ".github/workflows/agents-conformity.yml",
+      "name": "Agent Packs Conformity",
+      "on": null,
+      "permissions": null,
+      "jobs": [
+        {
+          "id": "validate-agent-packs",
+          "name": "validate-agent-packs",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "corepack pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Validate generated collection",
+              "uses": null,
+              "run": "corepack pnpm --filter @birthub/agent-packs validate",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Test generated collection",
+              "uses": null,
+              "run": "corepack pnpm --filter @birthub/agent-packs test",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Upload generated collection evidence",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": "always()",
+              "shell": null,
+              "env": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/branch-cleanup.yml",
+      "name": "Cleanup Merged Branches",
+      "on": null,
+      "permissions": {
+        "contents": "write"
+      },
+      "jobs": [
+        {
+          "id": "cleanup_branch",
+          "name": "cleanup_branch",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event.pull_request.merged == true",
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Delete Branch",
+              "uses": "dawidd6/action-delete-branch@v3",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/cd.yml",
+      "name": "CD",
+      "on": null,
+      "permissions": {
+        "contents": "read"
+      },
+      "jobs": [
+        {
+          "id": "resolve-release-source",
+          "name": "resolve-release-source",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "(github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production')\n",
+          "needs": null,
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Resolve immutable release source",
+              "uses": null,
+              "run": "set -euo pipefail\n\nevent_name=\"${GITHUB_EVENT_NAME}\"\nsource_event=\"${event_name}\"\n\nif [[ \"${event_name}\" == \"workflow_run\" ]]; then\n  if [[ \"${{ github.event.workflow_run.head_branch }}\" != \"main\" ]]; then\n    echo \"::error title=Invalid release branch::workflow_run source must come from main.\" >&2\n    exit 1\n  fi\n\n  if [[ \"${{ github.event.workflow_run.head_repository.full_name }}\" != \"${{ github.repository }}\" ]]; then\n    echo \"::error title=Invalid release source::workflow_run source repository must match the current repository.\" >&2\n    exit 1\n  fi\n\n  source_sha=\"${{ github.event.workflow_run.head_sha }}\"\nelif [[ \"${event_name}\" == \"workflow_dispatch\" ]]; then\n  if [[ \"${GITHUB_REF}\" != \"refs/heads/main\" ]]; then\n    echo \"::error title=Invalid release branch::workflow_dispatch must run from main.\" >&2\n    exit 1\n  fi\n\n  source_sha=\"${GITHUB_SHA}\"\nelse\n  echo \"::error title=Unsupported release event::Only workflow_run and workflow_dispatch are supported.\" >&2\n  exit 1\nfi\n\nif ! [[ \"${source_sha}\" =~ ^[0-9a-f]{40}$ ]]; then\n  echo \"::error title=Invalid release SHA::Resolved release source is not a full commit SHA.\" >&2\n  exit 1\nfi\n\necho \"source_event=${source_event}\" >> \"$GITHUB_OUTPUT\"\necho \"source_ref=${source_sha}\" >> \"$GITHUB_OUTPUT\"\necho \"source_sha=${source_sha}\" >> \"$GITHUB_OUTPUT\"\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "staging-preflight",
+          "name": "staging-preflight",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'\n",
+          "needs": [
+            "resolve-release-source"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": {
+            "API_CORS_ORIGINS": "${{ vars.API_CORS_ORIGINS }}",
+            "BILLING_EXPORT_S3_BUCKET": "${{ vars.BILLING_EXPORT_S3_BUCKET }}",
+            "BILLING_EXPORT_STORAGE_MODE": "${{ vars.BILLING_EXPORT_STORAGE_MODE }}",
+            "AUTH_MFA_ENCRYPTION_KEY": "${{ secrets.AUTH_MFA_ENCRYPTION_KEY }}",
+            "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
+            "JOB_HMAC_GLOBAL_SECRET": "${{ secrets.JOB_HMAC_GLOBAL_SECRET }}",
+            "NEXT_PUBLIC_API_URL": "${{ vars.NEXT_PUBLIC_API_URL }}",
+            "NEXT_PUBLIC_APP_URL": "${{ vars.NEXT_PUBLIC_APP_URL }}",
+            "NEXT_PUBLIC_CSP_REPORT_ONLY": "${{ vars.NEXT_PUBLIC_CSP_REPORT_ONLY }}",
+            "NEXT_PUBLIC_SENTRY_DSN": "${{ vars.NEXT_PUBLIC_SENTRY_DSN }}",
+            "REDIS_URL": "${{ secrets.REDIS_URL }}",
+            "RENDER_STAGING_DEPLOY_HOOK_URL": "${{ secrets.RENDER_STAGING_DEPLOY_HOOK_URL }}",
+            "REQUIRE_SECURE_COOKIES": "${{ vars.REQUIRE_SECURE_COOKIES }}",
+            "SENTRY_DSN": "${{ secrets.SENTRY_DSN }}",
+            "SESSION_SECRET": "${{ secrets.SESSION_SECRET }}",
+            "STRIPE_CANCEL_URL": "${{ vars.STRIPE_CANCEL_URL }}",
+            "STRIPE_SECRET_KEY": "${{ secrets.STRIPE_SECRET_KEY }}",
+            "STRIPE_SUCCESS_URL": "${{ vars.STRIPE_SUCCESS_URL }}",
+            "STRIPE_WEBHOOK_SECRET": "${{ secrets.STRIPE_WEBHOOK_SECRET }}",
+            "WEB_BASE_URL": "${{ vars.WEB_BASE_URL }}"
+          },
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout source from CI run",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Mask configured secrets",
+              "uses": null,
+              "run": "set -euo pipefail\nfor key in AUTH_MFA_ENCRYPTION_KEY DATABASE_URL JOB_HMAC_GLOBAL_SECRET REDIS_URL RENDER_STAGING_DEPLOY_HOOK_URL SENTRY_DSN SESSION_SECRET STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET; do\n  value=\"${!key:-}\"\n  if [[ -n \"${value}\" ]]; then\n    echo \"::add-mask::${value}\"\n  fi\ndone\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Validate required staging configuration",
+              "uses": null,
+              "run": "set -euo pipefail\n\nrequired_secrets=(\n  RENDER_STAGING_DEPLOY_HOOK_URL\n  DATABASE_URL\n  REDIS_URL\n  SESSION_SECRET\n  JOB_HMAC_GLOBAL_SECRET\n  AUTH_MFA_ENCRYPTION_KEY\n  STRIPE_SECRET_KEY\n  STRIPE_WEBHOOK_SECRET\n  SENTRY_DSN\n)\n\nrequired_vars=(\n  API_CORS_ORIGINS\n  WEB_BASE_URL\n  NEXT_PUBLIC_API_URL\n  NEXT_PUBLIC_APP_URL\n  NEXT_PUBLIC_SENTRY_DSN\n  NEXT_PUBLIC_CSP_REPORT_ONLY\n  REQUIRE_SECURE_COOKIES\n  STRIPE_SUCCESS_URL\n  STRIPE_CANCEL_URL\n  BILLING_EXPORT_STORAGE_MODE\n)\n\nmissing=()\n\nfor key in \"${required_secrets[@]}\"; do\n  if [[ -z \"${!key:-}\" ]]; then\n    missing+=(\"${key} (secret)\")\n  fi\ndone\n\nfor key in \"${required_vars[@]}\"; do\n  if [[ -z \"${!key:-}\" ]]; then\n    missing+=(\"${key} (variable)\")\n  fi\ndone\n\nif (( ${#missing[@]} > 0 )); then\n  printf 'Missing required staging configuration:\\n' >&2\n  printf ' - %s\\n' \"${missing[@]}\" >&2\n  echo \"::error title=Missing staging configuration::Configure missing keys in Environment staging (Secrets/Variables).\" >&2\n  exit 1\nfi\n\n\nif [[ \"${BILLING_EXPORT_STORAGE_MODE}\" != \"local\" && \"${BILLING_EXPORT_STORAGE_MODE}\" != \"s3\" ]]; then\n  echo \"::error title=Invalid variable::BILLING_EXPORT_STORAGE_MODE must be local or s3.\" >&2\n  exit 1\nfi\n\nif [[ \"${BILLING_EXPORT_STORAGE_MODE}\" == \"s3\" && -z \"${BILLING_EXPORT_S3_BUCKET:-}\" ]]; then\n  echo \"::error title=Missing variable::BILLING_EXPORT_S3_BUCKET must be set when BILLING_EXPORT_STORAGE_MODE=s3.\" >&2\n  exit 1\nfi\n\n\nif [[ \"${NEXT_PUBLIC_CSP_REPORT_ONLY}\" != \"false\" ]]; then\n  echo \"::error title=Invalid staging variable::NEXT_PUBLIC_CSP_REPORT_ONLY must be set to false in Environment staging variables.\" >&2\n  exit 1\nfi\n\nif [[ \"${REQUIRE_SECURE_COOKIES}\" != \"true\" ]]; then\n  echo \"::error title=Invalid staging variable::REQUIRE_SECURE_COOKIES must be set to true in Environment staging variables.\" >&2\n  exit 1\nfi\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Run staging preflight",
+              "uses": null,
+              "run": "pnpm release:preflight:staging",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 8,
+              "name": "Upload staging preflight evidence",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "release-sbom",
+          "name": "release-sbom",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "(github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production')\n",
+          "needs": [
+            "resolve-release-source"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout immutable release source",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Generate CycloneDX SBOM",
+              "uses": null,
+              "run": "pnpm release:sbom",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Materialize release bundle manifests",
+              "uses": null,
+              "run": "set -euo pipefail\npnpm release:materialize -- \\\n  --tag=v1.0.0 \\\n  --source-event=\"${{ needs.resolve-release-source.outputs.source_event }}\" \\\n  --source-ref=\"${{ needs.resolve-release-source.outputs.source_ref }}\" \\\n  --source-sha=\"${{ needs.resolve-release-source.outputs.source_sha }}\" \\\n  --workflow=\"${{ github.workflow }}\" \\\n  --run-id=\"${{ github.run_id }}\"\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Upload SBOM artifact",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 8,
+              "name": "Upload release manifests",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "production-preflight",
+          "name": "production-preflight",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'",
+          "needs": [
+            "resolve-release-source"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": {
+            "API_CORS_ORIGINS": "${{ vars.API_CORS_ORIGINS }}",
+            "BILLING_EXPORT_S3_BUCKET": "${{ vars.BILLING_EXPORT_S3_BUCKET }}",
+            "BILLING_EXPORT_STORAGE_MODE": "${{ vars.BILLING_EXPORT_STORAGE_MODE }}",
+            "AUTH_MFA_ENCRYPTION_KEY": "${{ secrets.AUTH_MFA_ENCRYPTION_KEY }}",
+            "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
+            "JOB_HMAC_GLOBAL_SECRET": "${{ secrets.JOB_HMAC_GLOBAL_SECRET }}",
+            "NEXT_PUBLIC_API_URL": "${{ vars.NEXT_PUBLIC_API_URL }}",
+            "NEXT_PUBLIC_APP_URL": "${{ vars.NEXT_PUBLIC_APP_URL }}",
+            "NEXT_PUBLIC_CSP_REPORT_ONLY": "${{ vars.NEXT_PUBLIC_CSP_REPORT_ONLY }}",
+            "NEXT_PUBLIC_SENTRY_DSN": "${{ vars.NEXT_PUBLIC_SENTRY_DSN }}",
+            "REDIS_URL": "${{ secrets.REDIS_URL }}",
+            "RENDER_PRODUCTION_DEPLOY_HOOK_URL": "${{ secrets.RENDER_PRODUCTION_DEPLOY_HOOK_URL }}",
+            "REQUIRE_SECURE_COOKIES": "${{ vars.REQUIRE_SECURE_COOKIES }}",
+            "SENTRY_DSN": "${{ secrets.SENTRY_DSN }}",
+            "SESSION_SECRET": "${{ secrets.SESSION_SECRET }}",
+            "STRIPE_CANCEL_URL": "${{ vars.STRIPE_CANCEL_URL }}",
+            "STRIPE_SECRET_KEY": "${{ secrets.STRIPE_SECRET_KEY }}",
+            "STRIPE_SUCCESS_URL": "${{ vars.STRIPE_SUCCESS_URL }}",
+            "STRIPE_WEBHOOK_SECRET": "${{ secrets.STRIPE_WEBHOOK_SECRET }}",
+            "WEB_BASE_URL": "${{ vars.WEB_BASE_URL }}"
+          },
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout immutable release source",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Mask configured secrets",
+              "uses": null,
+              "run": "set -euo pipefail\nfor key in AUTH_MFA_ENCRYPTION_KEY DATABASE_URL JOB_HMAC_GLOBAL_SECRET REDIS_URL RENDER_PRODUCTION_DEPLOY_HOOK_URL SENTRY_DSN SESSION_SECRET STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET; do\n  value=\"${!key:-}\"\n  if [[ -n \"${value}\" ]]; then\n    echo \"::add-mask::${value}\"\n  fi\ndone\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Validate required production configuration",
+              "uses": null,
+              "run": "set -euo pipefail\n\nrequired_secrets=(\n  RENDER_PRODUCTION_DEPLOY_HOOK_URL\n  DATABASE_URL\n  REDIS_URL\n  SESSION_SECRET\n  JOB_HMAC_GLOBAL_SECRET\n  AUTH_MFA_ENCRYPTION_KEY\n  STRIPE_SECRET_KEY\n  STRIPE_WEBHOOK_SECRET\n  SENTRY_DSN\n)\n\nrequired_vars=(\n  API_CORS_ORIGINS\n  WEB_BASE_URL\n  NEXT_PUBLIC_API_URL\n  NEXT_PUBLIC_APP_URL\n  NEXT_PUBLIC_SENTRY_DSN\n  NEXT_PUBLIC_CSP_REPORT_ONLY\n  REQUIRE_SECURE_COOKIES\n  STRIPE_SUCCESS_URL\n  STRIPE_CANCEL_URL\n  BILLING_EXPORT_STORAGE_MODE\n)\n\nmissing=()\n\nfor key in \"${required_secrets[@]}\"; do\n  if [[ -z \"${!key:-}\" ]]; then\n    missing+=(\"${key} (secret)\")\n  fi\ndone\n\nfor key in \"${required_vars[@]}\"; do\n  if [[ -z \"${!key:-}\" ]]; then\n    missing+=(\"${key} (variable)\")\n  fi\ndone\n\nif (( ${#missing[@]} > 0 )); then\n  printf 'Missing required production configuration:\\n' >&2\n  printf ' - %s\\n' \"${missing[@]}\" >&2\n  echo \"::error title=Missing production configuration::Configure missing keys in Environment production (Secrets/Variables).\" >&2\n  exit 1\nfi\n\nif [[ \"${BILLING_EXPORT_STORAGE_MODE}\" != \"local\" && \"${BILLING_EXPORT_STORAGE_MODE}\" != \"s3\" ]]; then\n  echo \"::error title=Invalid variable::BILLING_EXPORT_STORAGE_MODE must be local or s3.\" >&2\n  exit 1\nfi\n\nif [[ \"${BILLING_EXPORT_STORAGE_MODE}\" == \"s3\" && -z \"${BILLING_EXPORT_S3_BUCKET:-}\" ]]; then\n  echo \"::error title=Missing variable::BILLING_EXPORT_S3_BUCKET must be set when BILLING_EXPORT_STORAGE_MODE=s3.\" >&2\n  exit 1\nfi\n\nif [[ \"${NEXT_PUBLIC_CSP_REPORT_ONLY}\" != \"false\" ]]; then\n  echo \"::error title=Invalid production variable::NEXT_PUBLIC_CSP_REPORT_ONLY must be set to false in Environment production variables.\" >&2\n  exit 1\nfi\n\nif [[ \"${REQUIRE_SECURE_COOKIES}\" != \"true\" ]]; then\n  echo \"::error title=Invalid production variable::REQUIRE_SECURE_COOKIES must be set to true in Environment production variables.\" >&2\n  exit 1\nfi\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Run production preflight",
+              "uses": null,
+              "run": "pnpm release:preflight:production",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 8,
+              "name": "Upload production preflight evidence",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "build-staging-images",
+          "name": "build-staging-images",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'\n",
+          "needs": [
+            "resolve-release-source",
+            "staging-preflight",
+            "release-sbom"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read",
+            "id-token": "write"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout immutable release source",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Authenticate to Google Cloud",
+              "uses": "google-github-actions/auth@v3",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup gcloud",
+              "uses": "google-github-actions/setup-gcloud@v3",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Setup Docker Buildx",
+              "uses": "docker/setup-buildx-action@v4",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Compute image refs",
+              "uses": null,
+              "run": "set -euo pipefail\nSHORT_SHA=\"${{ needs.resolve-release-source.outputs.source_sha }}\"\nSHORT_SHA=\"${SHORT_SHA:0:12}\"\nREGISTRY=\"${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPOSITORY }}\"\necho \"api_image=${REGISTRY}/birthub-api:${SHORT_SHA}\" >> \"$GITHUB_OUTPUT\"\necho \"web_image=${REGISTRY}/birthub-web:${SHORT_SHA}\" >> \"$GITHUB_OUTPUT\"\necho \"worker_image=${REGISTRY}/birthub-worker:${SHORT_SHA}\" >> \"$GITHUB_OUTPUT\"\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Configure Artifact Registry auth",
+              "uses": null,
+              "run": "gcloud auth configure-docker \"${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev\" --quiet",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Build and push API image",
+              "uses": null,
+              "run": "docker build -f apps/api/Dockerfile -t \"${{ steps.refs.outputs.api_image }}\" .\ndocker push \"${{ steps.refs.outputs.api_image }}\"\n",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 8,
+              "name": "Build and push Web image",
+              "uses": null,
+              "run": "docker build -f apps/web/Dockerfile -t \"${{ steps.refs.outputs.web_image }}\" .\ndocker push \"${{ steps.refs.outputs.web_image }}\"\n",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 9,
+              "name": "Build and push Worker image",
+              "uses": null,
+              "run": "docker build -f apps/worker/Dockerfile -t \"${{ steps.refs.outputs.worker_image }}\" .\ndocker push \"${{ steps.refs.outputs.worker_image }}\"\n",
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "deploy-staging",
+          "name": "deploy-staging",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'\n",
+          "needs": [
+            "build-staging-images"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read",
+            "id-token": "write"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Authenticate to Google Cloud",
+              "uses": "google-github-actions/auth@v3",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup gcloud",
+              "uses": "google-github-actions/setup-gcloud@v3",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Deploy staging revisions",
+              "uses": null,
+              "run": "set -euo pipefail\nREGION=\"${{ vars.CLOUD_RUN_REGION }}\"\nmkdir -p artifacts/release\n: > artifacts/release/staging-rollout.tsv\n\nwhile IFS='|' read -r component service image; do\n  before_json=\"artifacts/release/${component}-before.json\"\n  after_json=\"artifacts/release/${component}-after.json\"\n\n  if ! gcloud run services describe \"$service\" --region \"$REGION\" --format=json > \"$before_json\" 2>/dev/null; then\n    echo '{}' > \"$before_json\"\n  fi\n\n  previous_revision=$(node -e \"const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const traffic=(data.status&&data.status.traffic)||[]; const active=traffic.find((item)=>Number(item.percent||0)>0); process.stdout.write(active?.revisionName||'');\" \"$before_json\")\n\n  gcloud run deploy \"$service\" --image \"$image\" --region \"$REGION\" --platform managed --tag candidate --no-traffic --quiet\n  gcloud run services describe \"$service\" --region \"$REGION\" --format=json > \"$after_json\"\n\n  candidate_revision=$(node -e \"const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(data.status?.latestCreatedRevisionName||'');\" \"$after_json\")\n  candidate_url=$(node -e \"const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const traffic=(data.status&&data.status.traffic)||[]; const entry=traffic.find((item)=>item.tag==='candidate'); process.stdout.write(entry?.url||'');\" \"$after_json\")\n\n  gcloud run services update-traffic \"$service\" --region \"$REGION\" --to-revisions \"${candidate_revision}=100\" --quiet\n  printf '%s\\t%s\\t%s\\t%s\\t%s\\n' \"$component\" \"$service\" \"$previous_revision\" \"$candidate_revision\" \"$candidate_url\" >> artifacts/release/staging-rollout.tsv\ndone <<EOF\napi|${{ vars.CLOUD_RUN_API_SERVICE }}|${{ needs.build-staging-images.outputs.api_image }}\nweb|${{ vars.CLOUD_RUN_WEB_SERVICE }}|${{ needs.build-staging-images.outputs.web_image }}\nworker|${{ vars.CLOUD_RUN_WORKER_SERVICE }}|${{ needs.build-staging-images.outputs.worker_image }}\nEOF\n\nnode <<'NODE'\nconst fs = require('fs');\nconst path = require('path');\nconst file = path.join(process.cwd(), 'artifacts', 'release', 'staging-rollout.tsv');\nconst lines = fs.readFileSync(file, 'utf8').trim().split(/\\r?\\n/).filter(Boolean);\nconst services = Object.fromEntries(lines.map((line) => {\n  const [component, service, previousRevision, candidateRevision, candidateUrl] = line.split('\\t');\n  return [component, { service, previousRevision: previousRevision || null, candidateRevision, candidateUrl: candidateUrl || null }];\n}));\nfs.writeFileSync(\n  path.join(process.cwd(), 'artifacts', 'release', 'staging-rollout.json'),\n  JSON.stringify({ environment: 'staging', generatedAt: new Date().toISOString(), region: '${{ vars.CLOUD_RUN_REGION }}', services }, null, 2) + '\\n',\n  'utf8'\n);\nNODE\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Upload staging rollout manifest",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "backup-health-gate",
+          "name": "backup-health-gate",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'",
+          "needs": [
+            "resolve-release-source",
+            "production-preflight",
+            "release-sbom"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout immutable release source",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Run backup health gate",
+              "uses": null,
+              "run": "pnpm ops:backup:health",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Upload backup health evidence",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": "always()",
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "release-smoke-gate",
+          "name": "release-smoke-gate",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'",
+          "needs": [
+            "resolve-release-source",
+            "production-preflight",
+            "release-sbom"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout immutable release source",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Run release smoke gate",
+              "uses": null,
+              "run": "pnpm release:smoke",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Upload smoke evidence",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "release-e2e-gate",
+          "name": "release-e2e-gate",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'",
+          "needs": [
+            "resolve-release-source",
+            "release-smoke-gate"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout immutable release source",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Run release E2E gate",
+              "uses": null,
+              "run": "pnpm test:e2e:release",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Upload E2E evidence",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": "always()",
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "rollback-rehearsal-evidence-gate",
+          "name": "rollback-rehearsal-evidence-gate",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'",
+          "needs": [
+            "resolve-release-source",
+            "release-e2e-gate"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout immutable release source",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Download production preflight evidence",
+              "uses": "actions/download-artifact@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Download smoke evidence",
+              "uses": "actions/download-artifact@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Download release manifests",
+              "uses": "actions/download-artifact@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 8,
+              "name": "Download release SBOM",
+              "uses": "actions/download-artifact@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 9,
+              "name": "Materialize rollback rehearsal evidence",
+              "uses": null,
+              "run": "pnpm release:rollback:evidence:auto -- --target=production",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 10,
+              "name": "Upload rollback rehearsal evidence",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "dr-readiness-gate",
+          "name": "dr-readiness-gate",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'",
+          "needs": [
+            "resolve-release-source",
+            "backup-health-gate",
+            "rollback-rehearsal-evidence-gate"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout immutable release source",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Download rollback rehearsal evidence",
+              "uses": "actions/download-artifact@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Download smoke evidence",
+              "uses": "actions/download-artifact@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Rebuild backup and DR readiness evidence",
+              "uses": null,
+              "run": "set -euo pipefail\npnpm ops:backup:health\npnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario=\"automated release readiness rehearsal\"\npnpm ops:dr:report\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 8,
+              "name": "Upload disaster recovery readiness evidence",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": "always()",
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "deploy-production",
+          "name": "deploy-production",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'",
+          "needs": [
+            "resolve-release-source",
+            "release-sbom",
+            "production-preflight",
+            "backup-health-gate",
+            "release-smoke-gate",
+            "release-e2e-gate",
+            "rollback-rehearsal-evidence-gate",
+            "dr-readiness-gate"
+          ],
+          "strategy": null,
+          "permissions": {
+            "contents": "read"
+          },
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Guard production deployment branch",
+              "uses": null,
+              "run": "set -euo pipefail\nif [[ \"${GITHUB_REF}\" != \"refs/heads/main\" ]]; then\n  echo \"::error title=Invalid branch::Production deploy can only run from main.\" >&2\n  exit 1\nfi\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Mask deploy hook",
+              "uses": null,
+              "run": "set -euo pipefail\nif [[ -n \"${RENDER_PRODUCTION_DEPLOY_HOOK_URL:-}\" ]]; then\n  echo \"::add-mask::${RENDER_PRODUCTION_DEPLOY_HOOK_URL}\"\nfi\n",
+              "if": null,
+              "shell": "bash",
+              "env": {
+                "RENDER_PRODUCTION_DEPLOY_HOOK_URL": "${{ secrets.RENDER_PRODUCTION_DEPLOY_HOOK_URL }}"
+              }
+            },
+            {
+              "index": 3,
+              "name": "Trigger Render deploy hook (production)",
+              "uses": null,
+              "run": "set -euo pipefail\n\nif [[ -z \"${RENDER_PRODUCTION_DEPLOY_HOOK_URL:-}\" ]]; then\n  echo \"::error title=Missing secret::RENDER_PRODUCTION_DEPLOY_HOOK_URL is not configured in Environment production secrets.\" >&2\n  exit 1\nfi\n\nif ! [[ \"${RENDER_PRODUCTION_DEPLOY_HOOK_URL}\" =~ ^https://[^[:space:]]+$ ]]; then\n  echo \"::error title=Invalid secret::RENDER_PRODUCTION_DEPLOY_HOOK_URL must be a valid HTTPS URL.\" >&2\n  exit 1\nfi\n\ncurl --fail --show-error --silent --retry 3 --retry-delay 5 --request POST \"${RENDER_PRODUCTION_DEPLOY_HOOK_URL}\"\n",
+              "if": null,
+              "shell": "bash",
+              "env": {
+                "RENDER_PRODUCTION_DEPLOY_HOOK_URL": "${{ secrets.RENDER_PRODUCTION_DEPLOY_HOOK_URL }}"
+              }
+            },
+            {
+              "index": 4,
+              "name": "Generate deploy manifest",
+              "uses": null,
+              "run": "mkdir -p artifacts/release\ncat > artifacts/release/deploy-manifest.json <<EOF\n{\n  \"status\": \"deployed\",\n  \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\n  \"sourceEvent\": \"${{ needs.resolve-release-source.outputs.source_event }}\",\n  \"sourceSha\": \"${{ needs.resolve-release-source.outputs.source_sha }}\"\n}\nEOF\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Upload deploy manifest",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "name": "CI",
+      "on": null,
+      "permissions": {
+        "contents": "read",
+        "pull-requests": "read"
+      },
+      "jobs": [
+        {
+          "id": "branch-name",
+          "name": "branch-name",
+          "uses": "./.github/workflows/reusable-node-check.yml",
+          "runs_on": null,
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": {
+            "command": "pnpm branch:check",
+            "timeout_minutes": 10
+          },
+          "steps": []
+        },
+        {
+          "id": "commit-messages",
+          "name": "commitlint",
+          "uses": "./.github/workflows/reusable-node-check.yml",
+          "runs_on": null,
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": {
+            "command": "pnpm ci:commitlint",
+            "fetch_depth": 0,
+            "timeout_minutes": 10
+          },
+          "steps": []
+        },
+        {
+          "id": "lockfile-integrity",
+          "name": "lockfile-integrity",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Enforce agent surface freeze",
+              "uses": null,
+              "run": "node scripts/ci/check-agent-surface-freeze.mjs",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Enforce legacy DB surface freeze",
+              "uses": null,
+              "run": "node scripts/ci/check-legacy-db-surface-freeze.mjs",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Enforce legacy runtime surface freeze",
+              "uses": null,
+              "run": "node scripts/ci/check-legacy-runtime-surface-freeze.mjs",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 8,
+              "name": "Enforce active product capability alignment",
+              "uses": null,
+              "run": "pnpm ci:active-product-capabilities",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 9,
+              "name": "Enforce default e2e surface freeze",
+              "uses": null,
+              "run": "pnpm ci:default-e2e-surface-freeze",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 10,
+              "name": "Enforce web inline style freeze",
+              "uses": null,
+              "run": "node scripts/ci/check-web-inline-style-freeze.mjs",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 11,
+              "name": "Enforce lockfile governance",
+              "uses": null,
+              "run": "pnpm ci:lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "lockfile-corruption-simulation",
+          "name": "lockfile-corruption-simulation",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Corrupt lockfile fixture",
+              "uses": null,
+              "run": "set -euo pipefail\ncp pnpm-lock.yaml pnpm-lock.yaml.bak\nprintf '\\n__corrupted_lockfile_marker: [\\n' >> pnpm-lock.yaml\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Assert frozen install fails on corrupted lockfile",
+              "uses": null,
+              "run": "set +e\npnpm install --frozen-lockfile > lockfile-corruption.log 2>&1\nstatus=$?\nset -e\n\nif [[ \"${status}\" -eq 0 ]]; then\n  echo \"::error title=Lockfile corruption simulation failed::pnpm install unexpectedly succeeded.\"\n  cat lockfile-corruption.log\n  exit 1\nfi\n\nif ! grep -Eiq \"ERR_PNPM|lockfile|yaml|parse\" lockfile-corruption.log; then\n  echo \"::warning::Install failed as expected, but lockfile-specific markers were not found in output.\"\nfi\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Restore lockfile",
+              "uses": null,
+              "run": "mv pnpm-lock.yaml.bak pnpm-lock.yaml",
+              "if": "always()",
+              "shell": "bash",
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "inline-credentials",
+          "name": "inline-credentials",
+          "uses": "./.github/workflows/reusable-node-check.yml",
+          "runs_on": null,
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": {
+            "command": "pnpm security:inline-credentials",
+            "timeout_minutes": 10
+          },
+          "steps": []
+        },
+        {
+          "id": "documentation-links",
+          "name": "documentation-links",
+          "uses": "./.github/workflows/reusable-node-check.yml",
+          "runs_on": null,
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": {
+            "command": "pnpm docs:check-links",
+            "timeout_minutes": 15
+          },
+          "steps": []
+        },
+        {
+          "id": "repo-hygiene",
+          "name": "repo-hygiene",
+          "uses": "./.github/workflows/reusable-node-check.yml",
+          "runs_on": null,
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": {
+            "command": "pnpm hygiene:check",
+            "fetch_depth": 0,
+            "timeout_minutes": 20
+          },
+          "steps": []
+        },
+        {
+          "id": "gitleaks",
+          "name": "gitleaks",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Run Gitleaks",
+              "uses": "gitleaks/gitleaks-action@v2",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": {
+                "GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "security-guardrails",
+          "name": "security-guardrails",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": {
+            "postgres": {
+              "image": "postgres:16-alpine",
+              "env": {
+                "POSTGRES_DB": "birthub_cycle1",
+                "POSTGRES_PASSWORD": "postgrespassword",
+                "POSTGRES_USER": "postgres"
+              },
+              "options": "--health-cmd \"pg_isready -U postgres -d birthub_cycle1\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "5432:5432"
+              ]
+            }
+          },
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Generate Prisma client",
+              "uses": null,
+              "run": "pnpm db:generate",
+              "if": null,
+              "shell": null,
+              "env": {
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1"
+              }
+            },
+            {
+              "index": 6,
+              "name": "Enforce security guardrails",
+              "uses": null,
+              "run": "pnpm ci:security-guardrails",
+              "if": null,
+              "shell": null,
+              "env": {
+                "API_CORS_ORIGINS": "http://localhost:3001",
+                "API_PORT": 3000,
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1",
+                "NEXT_PUBLIC_API_URL": "http://localhost:3000",
+                "NEXT_PUBLIC_APP_URL": "http://localhost:3001",
+                "NEXT_PUBLIC_ENVIRONMENT": "ci",
+                "NODE_ENV": "test",
+                "QUEUE_NAME": "birthub-cycle1",
+                "REDIS_URL": "redis://localhost:6379",
+                "SESSION_SECRET": "ci-secret",
+                "WEB_BASE_URL": "http://localhost:3001"
+              }
+            }
+          ]
+        },
+        {
+          "id": "platform",
+          "name": "platform (${{ matrix.task }})",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": {
+            "fail-fast": false,
+            "matrix": {
+              "task": [
+                "lint",
+                "typecheck",
+                "test",
+                "test:isolation",
+                "build"
+              ]
+            }
+          },
+          "permissions": null,
+          "env": null,
+          "services": {
+            "postgres": {
+              "image": "postgres:16-alpine",
+              "env": {
+                "POSTGRES_DB": "birthub_cycle1",
+                "POSTGRES_PASSWORD": "postgrespassword",
+                "POSTGRES_USER": "postgres"
+              },
+              "options": "--health-cmd \"pg_isready -U postgres -d birthub_cycle1\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "5432:5432"
+              ]
+            },
+            "redis": {
+              "image": "redis:7.2-alpine",
+              "options": "--health-cmd \"redis-cli ping\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "6379:6379"
+              ]
+            }
+          },
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Cache Turbo",
+              "uses": "actions/cache@v5",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Generate Prisma client",
+              "uses": null,
+              "run": "pnpm db:generate",
+              "if": null,
+              "shell": null,
+              "env": {
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1"
+              }
+            },
+            {
+              "index": 7,
+              "name": "Bootstrap CI database",
+              "uses": null,
+              "run": "pnpm db:bootstrap:ci",
+              "if": "${{ matrix.task == 'test' || matrix.task == 'test:isolation' }}",
+              "shell": null,
+              "env": {
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1"
+              }
+            },
+            {
+              "index": 8,
+              "name": "Run ${{ matrix.task }}",
+              "uses": null,
+              "run": "pnpm ci:task ${{ matrix.task }}",
+              "if": null,
+              "shell": null,
+              "env": {
+                "API_CORS_ORIGINS": "http://localhost:3001",
+                "API_PORT": 3000,
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1",
+                "NEXT_PUBLIC_API_URL": "http://localhost:3000",
+                "NEXT_PUBLIC_APP_URL": "http://localhost:3001",
+                "NEXT_PUBLIC_ENVIRONMENT": "ci",
+                "NODE_ENV": "test",
+                "QUEUE_NAME": "birthub-cycle1",
+                "REDIS_URL": "redis://localhost:6379",
+                "SESSION_SECRET": "ci-secret",
+                "WEB_BASE_URL": "http://localhost:3001"
+              }
+            }
+          ]
+        },
+        {
+          "id": "satellites",
+          "name": "satellites",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Setup Python",
+              "uses": "actions/setup-python@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Install Python test dependencies",
+              "uses": null,
+              "run": "python -m pip install --upgrade pip\npython -m pip install -r requirements-test.txt -r apps/webhook-receiver/requirements.txt\n",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Run satellites lane",
+              "uses": null,
+              "run": "pnpm ci:task satellites",
+              "if": null,
+              "shell": null,
+              "env": {
+                "INTERNAL_SERVICE_TOKEN": "ci-service-token",
+                "NODE_ENV": "test",
+                "STRICT_RUNTIME": "false",
+                "SVIX_WEBHOOK_SECRET": "svix-test-secret"
+              }
+            }
+          ]
+        },
+        {
+          "id": "workflow-suite",
+          "name": "workflow-suite",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": {
+            "postgres": {
+              "image": "postgres:16-alpine",
+              "env": {
+                "POSTGRES_DB": "birthub_cycle1",
+                "POSTGRES_PASSWORD": "postgrespassword",
+                "POSTGRES_USER": "postgres"
+              },
+              "options": "--health-cmd \"pg_isready -U postgres -d birthub_cycle1\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "5432:5432"
+              ]
+            },
+            "redis": {
+              "image": "redis:7.2-alpine",
+              "options": "--health-cmd \"redis-cli ping\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "6379:6379"
+              ]
+            }
+          },
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Setup Python",
+              "uses": "actions/setup-python@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Generate Prisma client",
+              "uses": null,
+              "run": "pnpm db:generate",
+              "if": null,
+              "shell": null,
+              "env": {
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1"
+              }
+            },
+            {
+              "index": 7,
+              "name": "Bootstrap CI database",
+              "uses": null,
+              "run": "pnpm db:bootstrap:ci",
+              "if": null,
+              "shell": null,
+              "env": {
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1"
+              }
+            },
+            {
+              "index": 8,
+              "name": "Run workflow suite",
+              "uses": null,
+              "run": "pnpm ci:task workflow-suite",
+              "if": null,
+              "shell": null,
+              "env": {
+                "API_CORS_ORIGINS": "http://localhost:3001",
+                "API_PORT": 3000,
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1",
+                "NEXT_PUBLIC_API_URL": "http://localhost:3000",
+                "NEXT_PUBLIC_APP_URL": "http://localhost:3001",
+                "NEXT_PUBLIC_ENVIRONMENT": "ci",
+                "NODE_ENV": "test",
+                "QUEUE_NAME": "birthub-cycle1",
+                "REDIS_URL": "redis://localhost:6379",
+                "SESSION_SECRET": "ci-secret",
+                "WEB_BASE_URL": "http://localhost:3001"
+              }
+            }
+          ]
+        },
+        {
+          "id": "integration-db",
+          "name": "integration-db",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": {
+            "postgres": {
+              "image": "postgres:16-alpine",
+              "env": {
+                "POSTGRES_DB": "birthub_cycle1",
+                "POSTGRES_PASSWORD": "postgrespassword",
+                "POSTGRES_USER": "postgres"
+              },
+              "options": "--health-cmd \"pg_isready -U postgres -d birthub_cycle1\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "5432:5432"
+              ]
+            },
+            "redis": {
+              "image": "redis:7.2-alpine",
+              "options": "--health-cmd \"redis-cli ping\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "6379:6379"
+              ]
+            }
+          },
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Generate Prisma client",
+              "uses": null,
+              "run": "pnpm db:generate",
+              "if": null,
+              "shell": null,
+              "env": {
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1",
+                "DATABASE_URL_TEST": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1"
+              }
+            },
+            {
+              "index": 6,
+              "name": "Run integration lane with real database",
+              "uses": null,
+              "run": "pnpm test:integration",
+              "if": null,
+              "shell": null,
+              "env": {
+                "API_CORS_ORIGINS": "http://localhost:3001",
+                "API_PORT": 3000,
+                "BIRTHUB_ENABLE_DB_TESTS": "1",
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1",
+                "DATABASE_URL_TEST": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle1",
+                "NEXT_PUBLIC_API_URL": "http://localhost:3000",
+                "NEXT_PUBLIC_APP_URL": "http://localhost:3001",
+                "NEXT_PUBLIC_ENVIRONMENT": "ci",
+                "NODE_ENV": "test",
+                "QUEUE_NAME": "birthub-cycle1",
+                "REDIS_URL": "redis://localhost:6379",
+                "SESSION_SECRET": "ci-secret",
+                "WEB_BASE_URL": "http://localhost:3001"
+              }
+            }
+          ]
+        },
+        {
+          "id": "coverage-quality",
+          "name": "coverage-quality",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": {
+            "postgres": {
+              "image": "postgres:16-alpine",
+              "env": {
+                "POSTGRES_DB": "birthub_coverage",
+                "POSTGRES_PASSWORD": "postgrespassword",
+                "POSTGRES_USER": "postgres"
+              },
+              "options": "--health-cmd \"pg_isready -U postgres -d birthub_coverage\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "5432:5432"
+              ]
+            },
+            "redis": {
+              "image": "redis:7.2-alpine",
+              "options": "--health-cmd \"redis-cli ping\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "6379:6379"
+              ]
+            }
+          },
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Setup Python",
+              "uses": "actions/setup-python@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Install Python coverage dependencies",
+              "uses": null,
+              "run": "python -m pip install --upgrade pip\npython -m pip install -r requirements-test.txt -r apps/webhook-receiver/requirements.txt\n",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Generate Prisma client",
+              "uses": null,
+              "run": "pnpm db:generate",
+              "if": null,
+              "shell": null,
+              "env": {
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_coverage"
+              }
+            },
+            {
+              "index": 8,
+              "name": "Bootstrap coverage database",
+              "uses": null,
+              "run": "pnpm db:bootstrap:ci",
+              "if": null,
+              "shell": null,
+              "env": {
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_coverage"
+              }
+            },
+            {
+              "index": 9,
+              "name": "Enforce TypeScript coverage baseline",
+              "uses": null,
+              "run": "pnpm coverage:check",
+              "if": null,
+              "shell": null,
+              "env": {
+                "API_CORS_ORIGINS": "http://localhost:3001",
+                "API_PORT": 3000,
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_coverage",
+                "NEXT_PUBLIC_API_URL": "http://localhost:3000",
+                "NEXT_PUBLIC_APP_URL": "http://localhost:3001",
+                "NEXT_PUBLIC_ENVIRONMENT": "ci",
+                "NODE_ENV": "test",
+                "QUEUE_NAME": "birthub-coverage",
+                "REDIS_URL": "redis://localhost:6379",
+                "SESSION_SECRET": "ci-secret",
+                "WEB_BASE_URL": "http://localhost:3001"
+              }
+            },
+            {
+              "index": 10,
+              "name": "Enforce Python coverage baseline",
+              "uses": null,
+              "run": "pnpm test:python:coverage",
+              "if": null,
+              "shell": null,
+              "env": {
+                "INTERNAL_SERVICE_TOKEN": "ci-service-token",
+                "NODE_ENV": "test",
+                "STRICT_RUNTIME": "false",
+                "SVIX_WEBHOOK_SECRET": "svix-test-secret"
+              }
+            },
+            {
+              "index": 11,
+              "name": "Detect dead code",
+              "uses": null,
+              "run": "pnpm quality:dead-code",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 12,
+              "name": "Upload coverage evidence",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": "always()",
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "mutation-testing",
+          "name": "mutation-testing",
+          "uses": "./.github/workflows/reusable-node-check.yml",
+          "runs_on": null,
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": {
+            "command": "pnpm test:mutation",
+            "timeout_minutes": 35
+          },
+          "steps": []
+        },
+        {
+          "id": "pack-tests",
+          "name": "pack-tests",
+          "uses": "./.github/workflows/reusable-node-check.yml",
+          "runs_on": null,
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": {
+            "command": "pnpm ci:task pack-tests",
+            "timeout_minutes": 20
+          },
+          "steps": []
+        },
+        {
+          "id": "governance-gates",
+          "name": "governance-gates",
+          "uses": "./.github/workflows/reusable-node-check.yml",
+          "runs_on": null,
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": {
+            "command": "pnpm monorepo:doctor && RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard && pnpm audit:ownership",
+            "timeout_minutes": 15
+          },
+          "steps": []
+        },
+        {
+          "id": "e2e-release",
+          "name": "e2e-release",
+          "uses": "./.github/workflows/reusable-node-check.yml",
+          "runs_on": null,
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": {
+            "command": "pnpm test:e2e:release",
+            "timeout_minutes": 20
+          },
+          "steps": []
+        },
+        {
+          "id": "ci",
+          "name": "ci",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": [
+            "branch-name",
+            "commit-messages",
+            "lockfile-integrity",
+            "lockfile-corruption-simulation",
+            "inline-credentials",
+            "documentation-links",
+            "repo-hygiene",
+            "gitleaks",
+            "security-guardrails",
+            "platform",
+            "satellites",
+            "workflow-suite",
+            "integration-db",
+            "coverage-quality",
+            "mutation-testing",
+            "pack-tests",
+            "governance-gates",
+            "e2e-release"
+          ],
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Done",
+              "uses": null,
+              "run": "echo \"All required checks passed.\"",
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/dependabot-auto-merge.yml",
+      "name": "Dependabot Security Auto-Merge",
+      "on": null,
+      "permissions": {
+        "contents": "write",
+        "pull-requests": "write"
+      },
+      "jobs": [
+        {
+          "id": "auto-merge",
+          "name": "auto-merge",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "github.actor == 'dependabot[bot]'",
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Fetch Dependabot metadata",
+              "uses": "dependabot/fetch-metadata@v3",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Enable auto-merge for security patches",
+              "uses": null,
+              "run": "gh pr merge --auto --squash \"$PR_URL\"",
+              "if": "contains(github.event.pull_request.labels.*.name, 'security') && steps.metadata.outputs['update-type'] == 'version-update:semver-patch'\n",
+              "shell": null,
+              "env": {
+                "GH_TOKEN": "${{ secrets.GITHUB_TOKEN }}",
+                "PR_URL": "${{ github.event.pull_request.html_url }}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/f4-script-compliance.yml",
+      "name": "F4 Script Compliance",
+      "on": null,
+      "permissions": null,
+      "jobs": [
+        {
+          "id": "workspace-compliance",
+          "name": "workspace-compliance",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Run workspace audit",
+              "uses": null,
+              "run": "pnpm workspace:audit",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Upload compliance artifacts",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": "always()",
+              "shell": null,
+              "env": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/materialize-doc-only.yml",
+      "name": "Materialize Doc-Only Controls",
+      "on": null,
+      "permissions": {
+        "contents": "read"
+      },
+      "jobs": [
+        {
+          "id": "materialize-doc-only",
+          "name": "materialize-doc-only",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Run technical materialization controls",
+              "uses": null,
+              "run": "pnpm audit:materialize:all",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Upload materialization report",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": "always()",
+              "shell": null,
+              "env": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/release-rehearsal.yml",
+      "name": "Release Rehearsal",
+      "on": null,
+      "permissions": {
+        "contents": "read"
+      },
+      "jobs": [
+        {
+          "id": "cycle0-rehearsal",
+          "name": "cycle0-rehearsal",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Run recurring release rehearsal",
+              "uses": null,
+              "run": "pnpm release:verify:cycle0",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Rebuild backup and DR readiness evidence",
+              "uses": null,
+              "run": "set -euo pipefail\npnpm ops:backup:health\npnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario=\"scheduled release rehearsal\"\npnpm ops:dr:report\n",
+              "if": "always()",
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Upload rehearsal artifacts",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": "always()",
+              "shell": null,
+              "env": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/repository-health.yml",
+      "name": "Repository Health",
+      "on": null,
+      "permissions": null,
+      "jobs": [
+        {
+          "id": "repository-health",
+          "name": "repository-health",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Clean stale untracked artifacts",
+              "uses": null,
+              "run": "pnpm artifacts:clean -- --apply",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Generate repository health report",
+              "uses": null,
+              "run": "pnpm monorepo:doctor",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Upload doctor artifacts",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/reusable-node-check.yml",
+      "name": "Reusable Node Check",
+      "on": null,
+      "permissions": {
+        "contents": "read"
+      },
+      "jobs": [
+        {
+          "id": "run",
+          "name": "run",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Install Playwright browsers",
+              "uses": null,
+              "run": "pnpm exec playwright install --with-deps chromium",
+              "if": "contains(inputs.command, 'test:e2e')",
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Prisma diagnostics",
+              "uses": null,
+              "run": "node -e \"const pkg=require('./packages/database/package.json'); console.log('prisma(dev):', pkg.devDependencies?.prisma ?? 'missing'); console.log('@prisma/client(dep):', pkg.dependencies?.['@prisma/client'] ?? 'missing');\"\npnpm ls @prisma/client\npnpm ls prisma\ncat packages/database/prisma/schema.prisma | grep -A 5 datasource || true\nsha256sum packages/database/prisma/schema.prisma || true\n",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Run command",
+              "uses": null,
+              "run": "case \"$WORKFLOW_COMMAND\" in\n  \"pnpm branch:check\")\n    pnpm branch:check\n    ;;\n  \"pnpm ci:commitlint\")\n    pnpm ci:commitlint\n    ;;\n  \"pnpm security:inline-credentials\")\n    pnpm security:inline-credentials\n    ;;\n  \"pnpm docs:check-links\")\n    pnpm docs:check-links\n    ;;\n  \"pnpm hygiene:check\")\n    pnpm hygiene:check\n    ;;\n  \"pnpm ci:task pack-tests\")\n    pnpm ci:task pack-tests\n    ;;\n  \"pnpm monorepo:doctor && RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard && pnpm audit:ownership\")\n    pnpm monorepo:doctor\n    RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard\n    pnpm audit:ownership\n    ;;\n  \"pnpm test:e2e:release\")\n    pnpm test:e2e:release\n    ;;\n  *)\n    echo \"Unsupported workflow command: $WORKFLOW_COMMAND\" >&2\n    exit 1\n    ;;\nesac\n",
+              "if": null,
+              "shell": null,
+              "env": {
+                "WORKFLOW_COMMAND": "${{ inputs.command }}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/security-scan.yml",
+      "name": "Security Scan",
+      "on": null,
+      "permissions": {
+        "contents": "read"
+      },
+      "jobs": [
+        {
+          "id": "semgrep",
+          "name": "semgrep (typescript + express)",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Run Semgrep",
+              "uses": "semgrep/semgrep-action@v1",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "dependency-audit",
+          "name": "npm audit (high+)",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Audit dependencies",
+              "uses": null,
+              "run": "pnpm audit --audit-level=high",
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "python-security",
+          "name": "python-security",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Setup Python",
+              "uses": "actions/setup-python@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Install Python dependencies",
+              "uses": null,
+              "run": "set -euo pipefail\npython -m pip install --upgrade pip\npython -m pip install -r requirements-test.txt bandit pip-audit \"safety>=3.7.0\"\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Enforce Python workflow hard-fail policy",
+              "uses": null,
+              "run": "python scripts/ci/check-python-workflow-hard-fail.py",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 8,
+              "name": "Run Bandit",
+              "uses": null,
+              "run": "python -m bandit -q -r agents apps/webhook-receiver -x \"*/tests/*\" -lll",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 9,
+              "name": "Run pip-audit",
+              "uses": null,
+              "run": "python -m pip_audit -r requirements-test.txt --ignore-vuln CVE-2026-4539",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 10,
+              "name": "Run Safety",
+              "uses": null,
+              "run": "python -m safety check --full-report -r requirements-test.txt",
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "rbac-suite",
+          "name": "RBAC suite",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": {
+            "postgres": {
+              "image": "postgres:16-alpine",
+              "env": {
+                "POSTGRES_DB": "birthub_cycle3",
+                "POSTGRES_PASSWORD": "postgrespassword",
+                "POSTGRES_USER": "postgres"
+              },
+              "options": "--health-cmd \"pg_isready -U postgres -d birthub_cycle3\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "5432:5432"
+              ]
+            },
+            "redis": {
+              "image": "redis:7.2-alpine",
+              "options": "--health-cmd \"redis-cli ping\" --health-interval 10s --health-timeout 5s --health-retries 10",
+              "ports": [
+                "6379:6379"
+              ]
+            }
+          },
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Generate Prisma client",
+              "uses": null,
+              "run": "pnpm db:generate",
+              "if": null,
+              "shell": null,
+              "env": {
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle3"
+              }
+            },
+            {
+              "index": 6,
+              "name": "Run RBAC tests",
+              "uses": null,
+              "run": "pnpm test:rbac",
+              "if": null,
+              "shell": null,
+              "env": {
+                "API_CORS_ORIGINS": "http://localhost:3001",
+                "DATABASE_URL": "postgresql://postgres:postgrespassword@localhost:5432/birthub_cycle3",
+                "NODE_ENV": "test",
+                "REDIS_URL": "redis://localhost:6379",
+                "SESSION_SECRET": "ci-secret",
+                "WEB_BASE_URL": "http://localhost:3001"
+              }
+            }
+          ]
+        },
+        {
+          "id": "zap-baseline",
+          "name": "OWASP ZAP baseline",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": null,
+          "needs": null,
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Build canonical web target",
+              "uses": null,
+              "run": "pnpm --filter @birthub/web build",
+              "if": null,
+              "shell": null,
+              "env": {
+                "NEXT_PUBLIC_API_URL": "http://127.0.0.1:3000",
+                "NEXT_PUBLIC_APP_URL": "http://127.0.0.1:3001",
+                "NEXT_PUBLIC_CSP_REPORT_ONLY": "true",
+                "NEXT_PUBLIC_ENVIRONMENT": "test"
+              }
+            },
+            {
+              "index": 6,
+              "name": "Start canonical web target",
+              "uses": null,
+              "run": "set -euo pipefail\nmkdir -p artifacts/security/zap\npnpm --filter @birthub/web start > artifacts/security/zap/web-server.log 2>&1 &\necho \"$!\" > artifacts/security/zap/web-server.pid\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 7,
+              "name": "Wait for canonical web target",
+              "uses": null,
+              "run": "set -euo pipefail\ntarget_url=\"http://127.0.0.1:3001/login\"\nfor attempt in {1..60}; do\n  if curl --silent --show-error --fail \"$target_url\" > /dev/null; then\n    exit 0\n  fi\n  sleep 2\ndone\necho \"Canonical web target did not become ready for ZAP baseline.\" >&2\nexit 1\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 8,
+              "name": "ZAP baseline scan",
+              "uses": null,
+              "run": "set -euo pipefail\nmkdir -p artifacts/security/zap\ndocker run --rm --network host \\\n  -v \"${PWD}/artifacts/security/zap:/zap/wrk\" \\\n  ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \\\n  -t http://127.0.0.1:3001/login \\\n  -J zap-report.json \\\n  -r zap-report.html \\\n  -w zap-report.md \\\n  -a\n",
+              "if": null,
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 9,
+              "name": "Stop canonical web target",
+              "uses": null,
+              "run": "set -euo pipefail\nif [[ -f artifacts/security/zap/web-server.pid ]]; then\n  pid=\"$(cat artifacts/security/zap/web-server.pid)\"\n  kill \"$pid\" 2>/dev/null || true\nfi\n",
+              "if": "always()",
+              "shell": "bash",
+              "env": null
+            },
+            {
+              "index": 10,
+              "name": "Upload ZAP artifacts",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": "always()",
+              "shell": null,
+              "env": null
+            }
+          ]
+        },
+        {
+          "id": "security-report",
+          "name": "security coverage report",
+          "uses": null,
+          "runs_on": "ubuntu-latest",
+          "if": "always()",
+          "needs": [
+            "semgrep",
+            "dependency-audit",
+            "python-security",
+            "rbac-suite",
+            "zap-baseline"
+          ],
+          "strategy": null,
+          "permissions": null,
+          "env": null,
+          "services": null,
+          "with": null,
+          "steps": [
+            {
+              "index": 1,
+              "name": "Checkout",
+              "uses": "actions/checkout@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 2,
+              "name": "Setup pnpm",
+              "uses": "pnpm/action-setup@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 3,
+              "name": "Setup Node.js",
+              "uses": "actions/setup-node@v6",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 4,
+              "name": "Install dependencies",
+              "uses": null,
+              "run": "pnpm install --frozen-lockfile",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 5,
+              "name": "Verify auth guards",
+              "uses": null,
+              "run": "pnpm security:guards",
+              "if": null,
+              "shell": null,
+              "env": null
+            },
+            {
+              "index": 6,
+              "name": "Generate security report",
+              "uses": null,
+              "run": "pnpm security:report",
+              "if": null,
+              "shell": null,
+              "env": {
+                "DAST_TARGET_STRATEGY": "local-web-login-route",
+                "DAST_TARGET_URL": "http://127.0.0.1:3001/login",
+                "NPM_AUDIT_STATUS": "${{ needs.dependency-audit.result }}",
+                "PYTHON_SECURITY_STATUS": "${{ needs.python-security.result }}",
+                "RBAC_STATUS": "${{ needs.rbac-suite.result }}",
+                "SEMGREP_STATUS": "${{ needs.semgrep.result }}",
+                "ZAP_STATUS": "${{ needs.zap-baseline.result }}"
+              }
+            },
+            {
+              "index": 7,
+              "name": "Upload security report",
+              "uses": "actions/upload-artifact@v7",
+              "run": null,
+              "if": null,
+              "shell": null,
+              "env": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
