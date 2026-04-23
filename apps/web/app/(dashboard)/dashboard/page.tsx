@@ -14,7 +14,6 @@ import {
 } from "./page.sections";
 import {
   DashboardAttributionSection,
-  DashboardClinicalSection,
   DashboardCustomerHealthSection,
   DashboardIntegrationActivitySection,
   DashboardSalesOsSection,
@@ -90,7 +89,6 @@ export default async function DashboardHomePage() {
         salesOsToolCount={salesOsToolCount}
         staticCopy={staticCopy}
       />
-      <DashboardClinicalSection copy={copy.dashboardHome} data={data} locale={locale} />
       <DashboardWorkflowUsageSection
         copy={copy.dashboardHome}
         data={data}

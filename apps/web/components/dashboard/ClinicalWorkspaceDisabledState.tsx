@@ -15,24 +15,24 @@ export function ClinicalWorkspaceDisabledState() {
       ? {
           actionPrimary: "Voltar ao dashboard",
           actionSecondary: "Abrir workflows",
-          badge: "Workspace clinico desativado",
+          badge: "Workspace legado desativado",
           description:
-            "Pacientes, agenda, prontuarios e integrações FHIR permanecem fora do produto ativo nesta implantacao e so voltam por decisao explicita de reavaliacao controlada.",
+            "Esta area nao faz parte do produto ativo. O BirthHub 360 segue focado em operacao comercial, agentes autonomos, workflows e integracoes de receita.",
           emptyDescription:
-            "O modulo foi preservado no codigo como superficie controlada, sem navegacao default e sem compromisso de suporte continuo no fluxo principal.",
-          emptyTitle: "Superficie clinica preservada fora do produto ativo",
-          title: "Modulo clinico indisponivel no caminho padrao"
+            "Use o dashboard, Sales OS, workflows e agentes para operar o fluxo principal da plataforma.",
+          emptyTitle: "Area fora do foco comercial ativo",
+          title: "Workspace indisponivel no caminho padrao"
         }
       : {
           actionPrimary: "Back to dashboard",
           actionSecondary: "Open workflows",
-          badge: "Clinical workspace disabled",
+          badge: "Legacy workspace disabled",
           description:
-            "Patients, scheduling, clinical records, and FHIR surfaces remain outside the active product for this deployment and only return through an explicit controlled-evaluation decision.",
+            "This area is not part of the active product. BirthHub 360 stays focused on commercial operations, autonomous agents, workflows, and revenue integrations.",
           emptyDescription:
-            "The module was kept in code as a controlled surface, without default navigation and without ongoing support commitment in the main path.",
-          emptyTitle: "Clinical surface preserved outside the active product",
-          title: "Clinical module unavailable in the default path"
+            "Use the dashboard, Sales OS, workflows, and agents to operate the platform's main flow.",
+          emptyTitle: "Area outside the active commercial focus",
+          title: "Workspace unavailable in the default path"
         };
 
   return (

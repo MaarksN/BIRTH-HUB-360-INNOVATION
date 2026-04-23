@@ -90,10 +90,10 @@ export function getDashboardStaticCopy(locale: SupportedLocale) {
       premiumDashboardMetrics: ["Agentes premium", "Camadas premium", "Entrada padrao"],
       premiumDashboardTitle: "Executive premium agora aparece na home",
       productAlignmentCopy: {
-        badge: "Alinhamento de dominio",
+        badge: "Foco de produto",
         description:
-          "Superficies clinicas, FHIR e privacy avancada permanecem fora do produto ativo nesta implantacao. O produto segue com dashboard operacional, workflows, billing, analytics, notificacoes e privacidade self-service, enquanto o clinico fica restrito a avaliacao controlada por flag.",
-        title: "Capacidades fora do produto ativo ficaram explicitamente isoladas"
+          "O produto ativo concentra a operacao comercial: Sales OS, agentes autonomos, workflows, billing, analytics, notificacoes, privacidade self-service e integracoes governadas.",
+        title: "BirthHub 360 opera como sistema operacional de receita"
       },
       salesOsCta: "Abrir Sales OS",
       salesOsDescription:
@@ -129,10 +129,10 @@ export function getDashboardStaticCopy(locale: SupportedLocale) {
     premiumDashboardMetrics: ["Premium agents", "Premium layers", "Default entry"],
     premiumDashboardTitle: "Executive premium now lands on home",
     productAlignmentCopy: {
-      badge: "Domain alignment",
+      badge: "Product focus",
       description:
-        "Clinical, FHIR, and advanced privacy surfaces remain outside the active product for this deployment. The product keeps the operational dashboard, workflows, billing, analytics, notifications, and self-service privacy active, while clinical stays restricted to flag-driven controlled evaluation.",
-      title: "Out-of-scope capabilities were explicitly isolated"
+        "The active product focuses on revenue operations: Sales OS, autonomous agents, workflows, billing, analytics, notifications, self-service privacy, and governed integrations.",
+      title: "BirthHub 360 operates as a revenue operating system"
     },
     salesOsCta: "Open Sales OS",
     salesOsDescription:
@@ -159,9 +159,7 @@ export function DashboardNoticeSections(props: {
     props.data.capabilities.privacyAdvancedEnabled &&
     consentPreferences?.lgpdConsentStatus === "PENDING";
   const completedOnboardingSteps = props.data.onboarding.items.filter((item) => item.complete).length;
-  const showProductAlignmentNotice =
-    !props.data.capabilities.clinicalWorkspaceEnabled ||
-    !props.data.capabilities.privacyAdvancedEnabled;
+  const showProductAlignmentNotice = !props.data.capabilities.privacyAdvancedEnabled;
 
   return (
     <>

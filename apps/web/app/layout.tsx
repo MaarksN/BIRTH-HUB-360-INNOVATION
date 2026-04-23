@@ -7,7 +7,8 @@ import { getRequestLocale } from "../lib/i18n.server";
 import { AppProviders } from "../providers/AppProviders";
 
 export const metadata: Metadata = {
-  description: "BirthHub 360: multitenancy, workflow engine, marketplace de agentes e billing.",
+  description:
+    "BirthHub 360: sistema operacional de receita com Sales OS, agentes autonomos, workflows, integracoes e billing.",
   icons: {
     icon: "/brand/birthhub360-mark.svg",
     shortcut: "/brand/birthhub360-mark.svg"

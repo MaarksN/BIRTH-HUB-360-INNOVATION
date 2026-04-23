@@ -1,6 +1,37 @@
 # BirthHub 360 Monorepo
 
-Base técnica do BirthHub 360 com aplicações, serviços e pacotes compartilhados no mesmo workspace `pnpm` + `turbo`.
+BirthHub 360 e uma plataforma SaaS B2B de automacao comercial e RevOps com agentes autonomos.
+
+Em uma frase: o BirthHub 360 e um sistema operacional de receita, onde times de vendas, marketing, CS, financeiro, juridico e lideranca usam agentes, workflows e integracoes para executar tarefas com governanca, rastreabilidade e escala.
+
+## Foco do Produto
+
+- Centralizar a operacao comercial em um dashboard unico.
+- Oferecer um Sales OS para SDR, BDR, closers, CS, RevOps, financeiro, risco e executivos.
+- Permitir instalar, governar e executar agentes de IA especializados.
+- Automatizar tarefas repetitivas com workflows e integracoes.
+- Integrar CRM, canais de comunicacao, webhooks, billing e sistemas operacionais.
+- Manter trilha de execucao, custo, politicas, historico e auditoria.
+
+O foco unico da ferramenta e atender a operacao comercial de qualquer empresa. Os agentes autonomos assumem o trabalho operacional que pode ser delegado, enquanto humanos ficam com relacionamento, julgamento, estrategia, criatividade e decisoes sensiveis.
+
+## Quem Atende
+
+- Times comerciais.
+- SDR, BDR e LDR.
+- Gestores de vendas e RevOps.
+- Marketing e growth.
+- CS, suporte e pos-venda.
+- Financeiro, juridico e compliance.
+- Lideranca C-level e conselho.
+
+## Dor que Resolve
+
+Empresas B2B costumam operar com contexto espalhado, tarefas manuais, handoffs ruins e pouca previsibilidade. O BirthHub 360 transforma essa operacao em um fluxo previsivel, automatizado e auditavel, reduzindo retrabalho e dando aos humanos mais tempo para desempenhar seu papel de maior valor.
+
+## Base Tecnica
+
+Base tecnica do BirthHub 360 com aplicacoes, servicos e pacotes compartilhados no mesmo workspace `pnpm` + `turbo`.
 
 ## Requisitos
 

@@ -29,7 +29,9 @@ export function isDashboardNavigationItemEnabled(
   href: string,
   capabilities: ProductCapabilities = getProductCapabilities()
 ): boolean {
-  if (isClinicalWorkspacePath(href) && !capabilities.clinicalWorkspaceEnabled) {
+  void capabilities;
+
+  if (isClinicalWorkspacePath(href)) {
     return false;
   }
 
@@ -51,11 +53,13 @@ export function sanitizeCapabilityScopedLink(
   path: string | null,
   capabilities: ProductCapabilities = getProductCapabilities()
 ): string | null {
+  void capabilities;
+
   if (!path) {
     return null;
   }
 
-  if (isClinicalWorkspacePath(path) && !capabilities.clinicalWorkspaceEnabled) {
+  if (isClinicalWorkspacePath(path)) {
     return null;
   }
 

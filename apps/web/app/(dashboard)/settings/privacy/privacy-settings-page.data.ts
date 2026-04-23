@@ -101,8 +101,8 @@ export const consentCopy: Record<
     title: "Analytics e telemetria"
   },
   HEALTH_DATA_SHARING: {
-    description: "Compartilhamento controlado de dados clinicos para integracoes e interoperabilidade.",
-    title: "Compartilhamento de dados de saude"
+    description: "Compartilhamento controlado de dados operacionais para integracoes e interoperabilidade.",
+    title: "Compartilhamento de dados operacionais"
   },
   MARKETING: {
     description: "Comunicacoes promocionais, novidades do produto e convites comerciais.",
