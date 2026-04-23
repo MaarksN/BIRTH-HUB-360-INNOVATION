@@ -4,6 +4,7 @@ import { Role } from "@birthub/database";
 import { Router } from "express";
 import { z } from "zod";
 
+import { Auditable } from "../../audit/auditable.js";
 import { sendEtaggedJson } from "../../common/cache/index.js";
 import {
   RequireRole,
@@ -25,7 +26,27 @@ import {
 
 const checkoutRequestSchema = z.object({
   planId: z.string().min(1)
-});
+}).strict();
+
+type BillingAuditResult = {
+  checkoutSessionId?: string;
+  planId?: string;
+  portalSessionCreated?: boolean;
+};
+
+function createBillingAudit(input: {
+  action: string;
+  methods?: readonly string[];
+}) {
+  return Auditable<BillingAuditResult>({
+    action: input.action,
+    entityType: "billing",
+    ...(input.methods ? { methods: input.methods } : {}),
+    requireActor: true,
+    resolveEntityId: (request, _response, result) =>
+      result?.checkoutSessionId ?? result?.planId ?? request.context.organizationId ?? undefined
+  });
+}
 
 export function createBillingRouter(config: ApiConfig): Router {
   const router = Router();
@@ -55,72 +76,90 @@ export function createBillingRouter(config: ApiConfig): Router {
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
     validateBody(checkoutRequestSchema),
-    asyncHandler(async (request, response) => {
-      const requesterIp = request.ip ?? request.header("x-forwarded-for") ?? null;
+    asyncHandler(
+      createBillingAudit({
+        action: "billing.checkout.created"
+      })(async (request, response) => {
+        const requesterIp = request.ip ?? request.header("x-forwarded-for") ?? null;
 
-      if (await isCheckoutIpTemporarilyBanned(requesterIp)) {
-        throw new ProblemDetailsError({
-          detail: "Checkout temporarily blocked for this IP due to repeated card decline errors.",
-          status: 429,
-          title: "Too Many Requests"
-        });
-      }
-
-      try {
-        const body = checkoutRequestSchema.parse(request.body);
-        const checkout = await createCheckoutSessionForOrganization({
-          config,
-          countryCode:
-            request.header("x-country-code") ??
-            request.header("cf-ipcountry") ??
-            request.header("x-vercel-ip-country") ??
-            null,
-          locale: request.header("accept-language")?.split(",")[0] ?? null,
-          organizationReference: request.context.organizationId!,
-          planId: body.planId
-        });
-
-        await clearCheckoutIpBan(requesterIp);
-
-        response.status(200).json({
-          checkoutSessionId: checkout.id,
-          requestId: request.context.requestId,
-          url: checkout.url
-        });
-      } catch (error) {
-        const isCardDecline =
-          typeof error === "object" &&
-          error !== null &&
-          ("decline_code" in error ||
-            ("type" in error && (error as { type?: string }).type === "StripeCardError"));
-
-        if (isCardDecline) {
-          await registerCheckoutDecline({
-            config,
-            ipAddress: requesterIp
+        if (await isCheckoutIpTemporarilyBanned(requesterIp)) {
+          throw new ProblemDetailsError({
+            detail: "Checkout temporarily blocked for this IP due to repeated card decline errors.",
+            status: 429,
+            title: "Too Many Requests"
           });
         }
 
-        throw error;
-      }
-    })
+        try {
+          const body = checkoutRequestSchema.parse(request.body);
+          const checkout = await createCheckoutSessionForOrganization({
+            config,
+            countryCode:
+              request.header("x-country-code") ??
+              request.header("cf-ipcountry") ??
+              request.header("x-vercel-ip-country") ??
+              null,
+            locale: request.header("accept-language")?.split(",")[0] ?? null,
+            organizationReference: request.context.organizationId!,
+            planId: body.planId
+          });
+
+          await clearCheckoutIpBan(requesterIp);
+
+          response.status(200).json({
+            checkoutSessionId: checkout.id,
+            requestId: request.context.requestId,
+            url: checkout.url
+          });
+
+          return {
+            checkoutSessionId: checkout.id,
+            planId: body.planId
+          };
+        } catch (error) {
+          const isCardDecline =
+            typeof error === "object" &&
+            error !== null &&
+            ("decline_code" in error ||
+              ("type" in error && (error as { type?: string }).type === "StripeCardError"));
+
+          if (isCardDecline) {
+            await registerCheckoutDecline({
+              config,
+              ipAddress: requesterIp
+            });
+          }
+
+          throw error;
+        }
+      })
+    )
   );
 
   router.get(
     "/portal",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
-    asyncHandler(async (request, response) => {
-      const portal = await createCustomerPortalSessionForOrganization({
-        config,
-        organizationReference: request.context.organizationId!
-      });
+    asyncHandler(
+      createBillingAudit({
+        action: "billing.portal.created",
+        methods: ["GET"]
+      })(async (request, response) => {
+        const portal = await createCustomerPortalSessionForOrganization({
+          config,
+          organizationReference: request.context.organizationId!
+        });
 
-      response.status(200).json({
-        requestId: request.context.requestId,
-        url: portal.url
-      });
-    })
+        response.status(200).json({
+          requestId: request.context.requestId,
+          url: portal.url
+        });
+
+        return {
+          portalSessionCreated: true
+        };
+      })
+    )
   );
 
   router.get(

@@ -467,12 +467,8 @@ export function createWebhookRateLimitMiddleware(config: ApiConfig): RequestHand
     detail: "Inbound webhook traffic temporarily rate limited for this route.",
     keyGenerator: (request) => {
       const tenantId = request.context.tenantId ?? "public";
-      const signature =
-        request.header("stripe-signature") ??
-        request.header("x-birthhub-signature") ??
-        "unsigned";
 
-      return `webhook:${tenantId}:${resolveEndpointKey(request)}:${signature}:${resolveIpKey(request)}`;
+      return `webhook:${tenantId}:${resolveEndpointKey(request)}:${resolveIpKey(request)}`;
     },
     limit: (request) =>
       request.context.tenantId
