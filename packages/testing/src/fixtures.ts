@@ -1,12 +1,105 @@
 import { randomUUID } from "node:crypto";
-import type {
-  CrmAdapter,
-  CrmContact,
-  ErpAdapter,
-  ErpProduct,
-  PaymentAdapter,
-  Payment
-} from "@birthub/integrations";
+
+interface CrmContact {
+  id: string;
+  email: string;
+  name: string;
+  phone?: string;
+  externalId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  metadata?: Record<string, unknown>;
+}
+interface CrmContactData {
+  email: string;
+  name: string;
+  phone?: string;
+  metadata?: Record<string, unknown>;
+}
+interface CrmContactFilter {
+  email?: string;
+  limit?: number;
+  offset?: number;
+}
+interface CrmAdapter {
+  readonly name: string;
+  readonly version: string;
+  initialize(): Promise<void>;
+  shutdown(): Promise<void>;
+  healthcheck(): Promise<boolean>;
+  createContact(data: CrmContactData): Promise<CrmContact>;
+  updateContact(id: string, data: Partial<CrmContactData>): Promise<CrmContact>;
+  deleteContact(id: string): Promise<void>;
+  getContact(id: string): Promise<CrmContact | null>;
+  listContacts(filter?: CrmContactFilter): Promise<CrmContact[]>;
+}
+
+interface ErpProduct {
+  id: string;
+  sku: string;
+  name: string;
+  externalId: string;
+  quantity: number;
+  price: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+interface ErpProductData {
+  sku: string;
+  name: string;
+  quantity: number;
+  price: number;
+}
+interface ErpProductFilter {
+  sku?: string;
+  limit?: number;
+  offset?: number;
+}
+interface ErpAdapter {
+  readonly name: string;
+  readonly version: string;
+  initialize(): Promise<void>;
+  shutdown(): Promise<void>;
+  healthcheck(): Promise<boolean>;
+  createProduct(data: ErpProductData): Promise<ErpProduct>;
+  updateProduct(id: string, data: Partial<ErpProductData>): Promise<ErpProduct>;
+  deleteProduct(id: string): Promise<void>;
+  getProduct(id: string): Promise<ErpProduct | null>;
+  listProducts(filter?: ErpProductFilter): Promise<ErpProduct[]>;
+}
+
+interface Payment {
+  id: string;
+  externalId: string;
+  amount: number;
+  currency: string;
+  status: "pending" | "completed" | "failed" | "refunded";
+  createdAt: Date;
+  updatedAt: Date;
+  metadata?: Record<string, unknown>;
+}
+interface PaymentData {
+  amount: number;
+  currency: string;
+  customerId?: string;
+  metadata?: Record<string, unknown>;
+}
+interface PaymentFilter {
+  limit?: number;
+  offset?: number;
+}
+interface PaymentAdapter {
+  readonly name: string;
+  readonly version: string;
+  initialize(): Promise<void>;
+  shutdown(): Promise<void>;
+  healthcheck(): Promise<boolean>;
+  createPayment(data: PaymentData): Promise<Payment>;
+  getPayment(id: string): Promise<Payment | null>;
+  refundPayment(paymentId: string, amount?: number): Promise<unknown>;
+  listPayments(filter?: PaymentFilter): Promise<Payment[]>;
+  webhookHandler(payload: unknown): Promise<unknown>;
+}
 
 /**
  * Test fixtures and factory functions for unit and integration tests
@@ -112,7 +205,7 @@ export class MockCrmAdapter implements CrmAdapter {
     return this.initialized;
   }
 
-  async createContact(data): Promise<CrmContact> {
+  async createContact(data: CrmContactData): Promise<CrmContact> {
     const contact: CrmContact = {
       id: randomUUID(),
       externalId: `ext-${randomUUID()}`,
@@ -127,7 +220,7 @@ export class MockCrmAdapter implements CrmAdapter {
     return contact;
   }
 
-  async updateContact(id: string, data): Promise<CrmContact> {
+  async updateContact(id: string, data: Partial<CrmContactData>): Promise<CrmContact> {
     const contact = this.contacts.get(id);
     if (!contact) throw new Error(`Contact ${id} not found`);
 
@@ -144,7 +237,7 @@ export class MockCrmAdapter implements CrmAdapter {
     return this.contacts.get(id) ?? null;
   }
 
-  async listContacts(filter?): Promise<CrmContact[]> {
+  async listContacts(filter?: CrmContactFilter): Promise<CrmContact[]> {
     let results = Array.from(this.contacts.values());
 
     if (filter?.email) {
@@ -186,7 +279,7 @@ export class MockErpAdapter implements ErpAdapter {
     return this.initialized;
   }
 
-  async createProduct(data): Promise<ErpProduct> {
+  async createProduct(data: ErpProductData): Promise<ErpProduct> {
     const product: ErpProduct = {
       id: randomUUID(),
       externalId: `ext-${randomUUID()}`,
@@ -201,7 +294,7 @@ export class MockErpAdapter implements ErpAdapter {
     return product;
   }
 
-  async updateProduct(id: string, data): Promise<ErpProduct> {
+  async updateProduct(id: string, data: Partial<ErpProductData>): Promise<ErpProduct> {
     const product = this.products.get(id);
     if (!product) throw new Error(`Product ${id} not found`);
 
@@ -218,7 +311,7 @@ export class MockErpAdapter implements ErpAdapter {
     return this.products.get(id) ?? null;
   }
 
-  async listProducts(filter?): Promise<ErpProduct[]> {
+  async listProducts(filter?: ErpProductFilter): Promise<ErpProduct[]> {
     let results = Array.from(this.products.values());
 
     if (filter?.sku) {
@@ -260,7 +353,7 @@ export class MockPaymentAdapter implements PaymentAdapter {
     return this.initialized;
   }
 
-  async createPayment(data): Promise<Payment> {
+  async createPayment(data: PaymentData): Promise<Payment> {
     const payment: Payment = {
       id: randomUUID(),
       externalId: `ext-${randomUUID()}`,
@@ -279,7 +372,7 @@ export class MockPaymentAdapter implements PaymentAdapter {
     return this.payments.get(id) ?? null;
   }
 
-  async refundPayment(paymentId: string, amount?): Promise<any> {
+  async refundPayment(paymentId: string, amount?: number): Promise<any> {
     const payment = this.payments.get(paymentId);
     if (!payment) throw new Error(`Payment ${paymentId} not found`);
 
@@ -292,14 +385,14 @@ export class MockPaymentAdapter implements PaymentAdapter {
     };
   }
 
-  async listPayments(filter?): Promise<Payment[]> {
+  async listPayments(filter?: PaymentFilter): Promise<Payment[]> {
     return Array.from(this.payments.values()).slice(
       filter?.offset ?? 0,
       (filter?.offset ?? 0) + (filter?.limit ?? 100)
     );
   }
 
-  async webhookHandler(payload): Promise<any> {
+  async webhookHandler(payload: unknown): Promise<any> {
     return {
       id: randomUUID(),
       type: "payment.completed",
@@ -330,7 +423,15 @@ export function createMockRequest(overrides: any = {}): any {
 }
 
 export function createMockResponse(): any {
-  const response = {
+  const response: {
+    body: null | unknown;
+    headers: Record<string, string>;
+    json: (data: unknown) => typeof response;
+    send: (data: unknown) => typeof response;
+    setHeader: (key: string, value: string) => void;
+    status: (code: number) => typeof response;
+    statusCode: number;
+  } = {
     status: (code: number) => {
       response.statusCode = code;
       return response;
