@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync } from "node:fs";
-import { rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -129,7 +128,7 @@ void test("billing export groups invoices by organization and uploads determinis
 });
 
 void test("local billing export storage writes JSON artifacts to disk", async () => {
-  const baseDir = mkdtempSync(join(tmpdir(), "billing-export-"));
+  const baseDir = await mkdtemp(join(tmpdir(), "billing-export-"));
 
   try {
     const storage = new LocalBillingExportStorage(baseDir);
@@ -142,7 +141,7 @@ void test("local billing export storage writes JSON artifacts to disk", async ()
     });
 
     assert.match(result.storageUrl, /org_alpha\.json$/);
-    const written = JSON.parse(readFileSync(result.storageUrl, "utf8")) as { ok: boolean };
+    const written = JSON.parse(await readFile(result.storageUrl, "utf8")) as { ok: boolean };
     assert.equal(written.ok, true);
   } finally {
     await rm(baseDir, { force: true, recursive: true });
