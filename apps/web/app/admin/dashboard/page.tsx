@@ -67,12 +67,6 @@ type OperationsDashboardMetrics = {
 type ImpersonationResult = {
   organizationId: string;
   tenantId: string;
-  tokens: {
-    csrfToken: string;
-    expiresAt: string;
-    refreshToken: string;
-    token: string;
-  };
   userId: string;
 };
 

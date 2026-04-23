@@ -8,6 +8,7 @@ import {
   requireAuthenticatedSession
 } from "../../common/guards/index.js";
 import { asyncHandler, ProblemDetailsError } from "../../lib/problem-details.js";
+import { createWebhookRateLimitMiddleware } from "../../middleware/rate-limit.js";
 import {
   callbackSchema,
   connectSchema,
@@ -586,6 +587,7 @@ function registerHealthCheckRoute(router: Router, config: ApiConfig): void {
 function registerWebhookIngestRoute(router: Router, config: ApiConfig): void {
   router.post(
     "/webhooks/:provider",
+    createWebhookRateLimitMiddleware(config),
     asyncHandler(async (request, response) => {
       const payload = connectorWebhookIngestSchema.parse(request.body ?? {});
       const provider = readProvider(request.params.provider);
@@ -614,6 +616,7 @@ function registerWebhookIngestRoute(router: Router, config: ApiConfig): void {
 function registerZenviaStatusWebhookRoute(router: Router, config: ApiConfig): void {
   router.post(
     "/webhooks/zenvia/:connectorAccountId/status",
+    createWebhookRateLimitMiddleware(config),
     asyncHandler(async (request, response) => {
       const payload = zenviaStatusWebhookSchema.parse(request.body ?? {}) as ZenviaStatusWebhookPayload;
       const connectorAccountId = readOptionalString(request.params.connectorAccountId);

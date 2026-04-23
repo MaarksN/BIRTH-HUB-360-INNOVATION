@@ -43,8 +43,13 @@ function createBillingAudit(input: {
     entityType: "billing",
     ...(input.methods ? { methods: input.methods } : {}),
     requireActor: true,
-    resolveEntityId: (request, _response, result) =>
-      result?.checkoutSessionId ?? result?.planId ?? request.context.organizationId ?? undefined
+    resolveEntityId: (request, _response, result) => {
+      if (result) {
+        return result.checkoutSessionId ?? result.planId;
+      }
+
+      return request.context.organizationId ?? undefined;
+    }
   });
 }
 
