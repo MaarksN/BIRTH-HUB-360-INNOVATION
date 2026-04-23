@@ -15,7 +15,12 @@ import {
   type ManifestCatalogEntry
 } from "../manifest/catalog.js";
 import { parseAgentManifest } from "../manifest/parser.js";
-import { GLOBAL_PREMIUM_PROTOCOL_MARKER } from "../runtime/premiumProtocol.js";
+import {
+  COMMON_PREMIUM_PROTOCOL_MARKER,
+  GLOBAL_PREMIUM_PROTOCOL_MARKER,
+  REQUIRED_RUNTIME_PROTOCOL_CLAUSES,
+  enhanceManifestWithPremiumProtocol
+} from "../runtime/premiumProtocol.js";
 import { MANIFEST_VERSION, type AgentManifest } from "../manifest/schema.js";
 
 type ManifestOverrides = {
@@ -250,5 +255,16 @@ void test("loadManifestCatalog walks nested directories and only reads manifest.
     );
   } finally {
     await rm(tempDir, { force: true, recursive: true });
+  }
+});
+
+void test("premium protocol enhancement injects the common runtime protocol", () => {
+  const enhanced = enhanceManifestWithPremiumProtocol(manifest);
+
+  assert.ok(enhanced.agent.prompt.includes(GLOBAL_PREMIUM_PROTOCOL_MARKER));
+  assert.ok(enhanced.agent.prompt.includes(COMMON_PREMIUM_PROTOCOL_MARKER));
+
+  for (const clause of REQUIRED_RUNTIME_PROTOCOL_CLAUSES) {
+    assert.ok(enhanced.agent.prompt.toLowerCase().includes(clause.toLowerCase()));
   }
 });

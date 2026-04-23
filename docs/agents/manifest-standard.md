@@ -5,7 +5,8 @@ Este documento define o contrato ideal para todo agente novo ou revisado do cata
 O padrao tem duas camadas:
 
 - Contrato de manifest: campos JSON exigidos pelo runtime e pelo catalogo.
-- Contrato operacional: secoes obrigatorias dentro de `agent.prompt`, escritas de forma consistente para governanca, fallback e handoff.
+- Contrato especifico do agente: secoes curtas dentro de `agent.prompt` com identidade, gatilhos, entradas, objetivos, ferramentas, saidas e schema.
+- Protocolo comum de runtime: `premiumProtocol` em `packages/agents-core/src/runtime/premiumProtocol.ts`, injetado pelo catalogo antes da execucao.
 
 Template oficial: `packages/agent-packs/templates/agent-manifest.template.json`.
 
@@ -13,12 +14,12 @@ Template oficial: `packages/agent-packs/templates/agent-manifest.template.json`.
 
 Um agente novo ou revisado so esta pronto quando:
 
-- Tem objetivo, quando usar, quando nao usar, entradas obrigatorias, saida esperada, ferramentas reais, policies, fallback, handoff e criterios de qualidade.
+- Tem objetivo, quando usar, entradas obrigatorias, saida esperada, ferramentas reais, policies e formato de saida especificos.
+- Mantem no prompt fonte apenas comportamento especifico do agente; governanca, memoria, evidencia, aprovacao, handoff e aprendizado comum ficam no `premiumProtocol`.
 - O `agent.id`, ids de skills, ids de tools e ids de policies usam o mesmo prefixo.
 - Toda ferramenta citada no prompt existe em `tools`.
 - Toda acao sensivel citada no prompt esta coberta por `policies`.
-- O fallback explica como degradar sem inventar dados.
-- O handoff explica quando transferir, para quem e com qual contexto.
+- O protocolo comum de runtime explica como degradar, pedir aprovacao, preservar evidencia e transferir contexto sem inventar dados.
 - A saida esperada tem schema objetivo e inclui confianca, dono, prazo e checkpoint quando houver recomendacao.
 - `pnpm --filter @birthub/agent-packs validate` passa.
 
@@ -28,14 +29,13 @@ Um agente novo ou revisado so esta pronto quando:
 | --- | --- | --- |
 | objetivo | `agent.prompt` em `OBJETIVO` e resumo em `agent.description` | Define resultado de negocio, dono funcional e impacto esperado. |
 | quando usar | `agent.prompt` em `QUANDO USAR` | Lista gatilhos objetivos, eventos ou pedidos que acionam o agente. |
-| quando nao usar | `agent.prompt` em `QUANDO NAO USAR` | Define limites, exclusoes e casos que exigem outro agente ou humano. |
 | entradas obrigatorias | `agent.prompt` em `ENTRADAS OBRIGATORIAS` | Lista dados minimos, fonte, recencia, tenant, escopo e restricoes. |
 | saida esperada | `agent.prompt` em `SAIDA ESPERADA` e `FORMATO DE SAIDA` | Define entregaveis e schema, com status, evidencias, lacunas, recomendacoes e checkpoint. |
-| ferramentas reais | `tools` e `agent.prompt` em `FERRAMENTAS REAIS` | Declara apenas ferramentas com adapter real ou binding planejado e dono tecnico claro. |
-| policies | `policies` e `agent.prompt` em `POLICIES E LIMITES` | Declara actions permitidas, limites de execucao, aprovacao e auditoria. |
-| fallback | `agent.prompt` em `FALLBACK` | Define falha de ferramenta, dado ausente, baixa confianca e resposta degradada. |
-| handoff | `agent.prompt` em `HANDOFF` | Define destino, condicao de transferencia e payload minimo. |
-| criterios de qualidade | `agent.prompt` em `CRITERIOS DE QUALIDADE` | Define checagens de evidencia, schema, rastreabilidade, dono e risco. |
+| ferramentas reais | `tools` e `agent.prompt` em `FERRAMENTAS REAIS` | Declara apenas ferramentas com adapter ou binding existente no runtime. |
+| policies | `policies`; protocolo comum em runtime | Declara actions permitidas, limites de execucao, aprovacao e auditoria. |
+| fallback | protocolo comum em runtime | Define falha de ferramenta, dado ausente, baixa confianca e resposta degradada. |
+| handoff | protocolo comum em runtime; opcionalmente `GUARDRAILS ESPECIFICOS` | Define destino, condicao de transferencia e payload minimo. |
+| criterios de qualidade | protocolo comum em runtime; opcionalmente `CRITERIOS DE QUALIDADE ESPECIFICOS` | Define checagens de evidencia, schema, rastreabilidade, dono e risco. |
 
 ## Estrutura JSON do manifesto
 
@@ -57,33 +57,44 @@ Campos de `agent`:
 - `kind`: `agent` para agentes instalaveis; `catalog` apenas para descritores de colecao.
 - `name`: nome humano curto.
 - `description`: uma frase com resultado, dominio e usuario principal.
-- `prompt`: contrato operacional completo.
+- `prompt`: contrato especifico do agente; o protocolo comum e aplicado em runtime.
 - `tenantId`: use `catalog` para manifests publicados no catalogo.
 - `version`: versao semantica do agente.
 - `changelog`: uma linha por mudanca relevante.
 
-## Secoes obrigatorias do prompt
+## Secoes do prompt fonte
 
-Use exatamente estes titulos, nesta ordem, em agentes novos ou revisados:
+Use estes titulos no manifesto-fonte. Eles devem carregar apenas comportamento especifico do agente:
 
 1. `IDENTIDADE E MISSAO`
-2. `OBJETIVO`
-3. `QUANDO USAR`
-4. `QUANDO NAO USAR`
-5. `ENTRADAS OBRIGATORIAS`
-6. `RACIOCINIO OPERACIONAL ESPERADO`
-7. `MODO DE OPERACAO AUTONOMA`
-8. `ROTINA DE MONITORAMENTO E ANTECIPACAO`
-9. `CRITERIOS DE PRIORIZACAO`
-10. `CRITERIOS DE ESCALACAO`
-11. `FERRAMENTAS REAIS`
-12. `POLICIES E LIMITES`
-13. `FALLBACK`
-14. `HANDOFF`
-15. `SAIDA ESPERADA`
-16. `CRITERIOS DE QUALIDADE`
-17. `APRENDIZADO COMPARTILHADO`
-18. `FORMATO DE SAIDA`
+2. `OBJETIVO` ou `OBJETIVOS PRIORITARIOS`
+3. `QUANDO USAR` ou `QUANDO ACIONAR`
+4. `ENTRADAS OBRIGATORIAS`
+5. `FERRAMENTAS REAIS` ou `FERRAMENTAS ESPERADAS`
+6. `SAIDA ESPERADA` ou `SAIDAS OBRIGATORIAS`
+7. `GUARDRAILS ESPECIFICOS` quando houver limite exclusivo daquele agente
+8. `CRITERIOS DE QUALIDADE ESPECIFICOS` quando houver checagem exclusiva daquele agente
+9. `FORMATO DE SAIDA`
+
+## Protocolo comum de runtime
+
+O catalogo carrega manifests com `loadManifestCatalog`, que chama `enhanceManifestWithPremiumProtocol`.
+Esse passo injeta `PROTOCOLO PREMIUM GLOBAL 100` e `PROTOCOLO PREMIUM COMUM` no prompt efetivo.
+
+O protocolo comum cobre:
+
+- raciocinio operacional esperado
+- modo de operacao autonoma
+- rotina de monitoramento e antecipacao
+- criterios de priorizacao
+- criterios de escalacao
+- governanca, evidencia e aprovacao
+- handoff
+- guardrails comuns
+- criterios de qualidade comuns
+- aprendizado compartilhado
+
+Os validadores devem checar o prompt efetivo de runtime, nao apenas o JSON bruto. Assim o manifesto fica menor sem perder governanca na execucao.
 
 ### Objetivo
 
@@ -107,15 +118,6 @@ Liste situacoes observaveis:
 - Incidente, risco, oportunidade ou decisao recorrente.
 
 Evite gatilhos vagos como "quando precisar de ajuda".
-
-### Quando nao usar
-
-Todo agente precisa declarar fronteiras. Inclua:
-
-- Fora de dominio.
-- Baixa confianca ou dados minimos ausentes.
-- Acao sensivel sem aprovacao.
-- Caso em que outro agente e dono primario.
 
 ### Entradas obrigatorias
 
@@ -153,16 +155,16 @@ Se o agente exige JSON, o prompt deve dizer para retornar apenas JSON valido.
 
 Nao declare ferramenta decorativa. Uma ferramenta e real quando:
 
-- Existe adapter ou binding no runtime, ou ha tarefa tecnica explicita para cria-lo.
+- Existe adapter ou binding no runtime.
 - Tem `id`, `name`, `description`, `inputSchema`, `outputSchema` e `timeoutMs`.
 - O nome citado no prompt e identico ao nome em `tools`.
 - A policy permite a acao necessaria.
 
-Se a capacidade ainda nao existe, registre como gap; nao finja que a ferramenta executa.
+Se a capacidade ainda nao existe, registre como gap fora de `tools`; nao finja que a ferramenta executa.
 
 ### Policies
 
-Policies devem cobrir apenas o que o agente pode fazer. Padrao recomendado:
+Policies devem cobrir apenas o que o agente pode fazer. O protocolo comum assume que as acoes abaixo existem quando forem necessarias:
 
 - `tool:execute` para chamar ferramentas.
 - `memory:read` e `memory:write` para memoria operacional.
@@ -175,49 +177,20 @@ Policies devem cobrir apenas o que o agente pode fazer. Padrao recomendado:
 
 Use `deny` quando uma restricao precisa ficar explicita.
 
-### Fallback
+### Guardrails especificos
 
-Fallback e obrigatorio. Ele deve responder:
+Use `GUARDRAILS ESPECIFICOS` apenas para limites que nao pertencem ao protocolo comum. O comum ja cobre:
 
-- O que acontece se a ferramenta falhar?
-- O que acontece se faltar dado critico?
-- O que acontece se os dados forem conflitantes?
-- O que acontece se a confianca for baixa?
-- Qual status o agente retorna?
-- O que o agente nunca pode inventar?
+- proibicao de inventar dados, fatos, metricas, aprovacoes ou decisoes
+- isolamento entre tenants
+- exigencia de aprovacao para acao sensivel
+- rastreabilidade e auditoria
+- confianca explicita
+- proximo passo seguro quando houver lacuna
 
-Padrao de saida em fallback:
+### Criterios de qualidade especificos
 
-- `status: "fallback"`
-- `fallback_applied: true`
-- `missing_inputs`
-- `safe_next_step`
-- `human_decision_required` quando aplicavel
-
-### Handoff
-
-Handoff e obrigatorio mesmo quando raro. Ele deve definir:
-
-- Condicao de transferencia.
-- Agente ou dominio de destino.
-- Motivo do handoff.
-- Contexto minimo enviado.
-- Quem permanece responsavel pelo resumo final.
-
-Payload minimo:
-
-- objetivo
-- evidencias
-- decisao pendente
-- risco
-- dono
-- prazo
-- confianca
-- artefatos usados
-
-### Criterios de qualidade
-
-Todo agente deve checar:
+Use `CRITERIOS DE QUALIDADE ESPECIFICOS` para regras de dominio, schema ou ferramenta. O protocolo comum ja checa:
 
 - Fatos separados de inferencias.
 - Ausencia de informacao explicitada.
@@ -261,9 +234,8 @@ Escreva prompts como contrato operacional:
 - Evite repetir adjetivos como "premium" sem efeito operacional.
 - Nunca esconda lacuna de dado.
 - Nunca autorize acao sensivel fora de policy.
-- Sempre diga quando pedir aprovacao.
-- Sempre diga como degradar.
-- Sempre diga como transferir contexto.
+- Nao repita blocos comuns de governanca, memoria, evidencia, aprovacao ou handoff.
+- Quando precisar de regra propria, escreva como `GUARDRAILS ESPECIFICOS` ou `CRITERIOS DE QUALIDADE ESPECIFICOS`.
 
 ## Checklist de revisao
 
@@ -272,12 +244,10 @@ Antes de aprovar um agente novo ou revisado:
 - [ ] `manifestVersion` e `agent.version` definidos.
 - [ ] `agent.id` unico e em kebab-case.
 - [ ] `agent.description` tem resultado de negocio e dominio.
-- [ ] Prompt contem todas as secoes obrigatorias.
-- [ ] `QUANDO NAO USAR` tem limites reais.
+- [ ] Prompt fonte contem apenas as secoes especificas necessarias.
 - [ ] `FERRAMENTAS REAIS` bate com `tools`.
-- [ ] `POLICIES E LIMITES` bate com `policies`.
-- [ ] `FALLBACK` cobre ferramenta, dado ausente, conflito e baixa confianca.
-- [ ] `HANDOFF` define destino, condicao e payload.
+- [ ] `policies` cobrem ferramentas, memoria, learning, auditoria, aprovacao e workflow quando usados.
+- [ ] Prompt efetivo de runtime inclui `PROTOCOLO PREMIUM COMUM`.
 - [ ] `FORMATO DE SAIDA` e valido e acionavel.
 - [ ] Skills, tools e policies usam prefixo do agente.
 - [ ] Keywords e tags ajudam descoberta no catalogo.
@@ -285,7 +255,7 @@ Antes de aprovar um agente novo ou revisado:
 
 ## Relacao com agentes existentes
 
-Os 392 agentes inventariados podem continuar no formato atual ate revisao. Ao revisar qualquer agente, aplique este padrao completo e registre a mudanca no `agent.changelog`.
+Os agentes inventariados devem permanecer enxutos no manifesto-fonte. Ao revisar qualquer agente, nao reintroduza blocos comuns que ja pertencem ao `premiumProtocol`.
 
 Para migracoes em lote, priorize:
 
