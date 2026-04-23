@@ -85,7 +85,7 @@ export function createBillingRouter(config: ApiConfig): Router {
       createBillingAudit({
         action: "billing.checkout.created"
       })(async (request, response) => {
-        const requesterIp = request.ip ?? request.header("x-forwarded-for") ?? null;
+        const requesterIp = request.ip ?? null;
 
         if (await isCheckoutIpTemporarilyBanned(requesterIp)) {
           throw new ProblemDetailsError({
