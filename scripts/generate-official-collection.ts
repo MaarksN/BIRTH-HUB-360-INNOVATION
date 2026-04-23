@@ -11,6 +11,8 @@ import {
   type FoundationAgentOverride
 } from "../packages/agent-packs/corporate-v1/source/foundation-agent-overrides";
 
+import { CORPORATE_SCHEMAS } from "../packages/agent-packs/corporate-v1/source/schemas";
+
 interface HtmlAgentRecord {
   code: string;
   category: string;
@@ -627,17 +629,27 @@ function buildFoundationAgent(
     skills: mergeSkillSources(
       manifest.skills
         .filter((skill) => !AUTONOMOUS_SKILLS.some((s) => s.name === skill.name))
-        .map((skill) => ({
-          description: skill.description,
-          name: skill.name
-        })),
+        .map((skill) => {
+          const schema = CORPORATE_SCHEMAS[override.id]?.skills?.[slugify(skill.name)];
+          return {
+            description: skill.description,
+            name: skill.name,
+            inputSchema: schema?.input ?? { type: "object" },
+            outputSchema: schema?.output ?? { type: "object" }
+          };
+        }),
       []
     ),
     tags: enrichTags(manifest.tags),
-    tools: manifest.tools.map((tool) => ({
-      description: tool.description,
-      name: tool.name
-    })),
+    tools: manifest.tools.map((tool) => {
+      const schema = CORPORATE_SCHEMAS[override.id]?.tools?.[slugify(tool.name)];
+      return {
+        description: tool.description,
+        name: tool.name,
+        inputSchema: schema?.input ?? { type: "object" },
+        outputSchema: schema?.output ?? { type: "object" }
+      };
+    }),
     whenToUse: override.whenToUse
   };
 }
