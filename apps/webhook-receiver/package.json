@@ -9,7 +9,7 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/apps/webhook-receiver/src/index.js",
-    "test": "node --import tsx --test src/**/*.test.ts",
+    "test": "sh -c 'files=$(find src -name \"*.test.ts\" -print); if [ -n \"$files\" ]; then node --import tsx --test $files; else echo \"No tests found\"; fi'",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

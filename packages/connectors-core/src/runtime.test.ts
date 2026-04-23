@@ -402,3 +402,66 @@ void test("runtime surfaces fatal connector errors for Zenvia auth failures", as
       error.statusCode === 401
   );
 });
+
+void test("runtime executes Slack health.check with a real provider probe", async () => {
+  const calls: Array<{ input: string; method?: string }> = [];
+  const runtime = createDefaultConnectorRuntime({
+    fetchImpl: async (input, init) => {
+      calls.push({ input: String(input), method: init?.method });
+      return {
+        json: async () => ({ ok: true }),
+        ok: true,
+        status: 200,
+        text: async () => JSON.stringify({ ok: true })
+      };
+    }
+  });
+
+  const result = await runtime.execute({
+    action: "health.check",
+    credentials: {
+      botToken: "xoxb-health-ok"
+    },
+    payload: {},
+    provider: "slack"
+  });
+
+  assert.equal(result.status, "success");
+  assert.equal(calls.length, 1);
+  assert.match(calls[0]?.input ?? "", /\/api\/auth\.test$/);
+  assert.equal(calls[0]?.method, "POST");
+});
+
+void test("runtime fails Slack health.check when token is invalid", async () => {
+  const runtime = createDefaultConnectorRuntime({
+    fetchImpl: async () => ({
+      json: async () => ({
+        error: "invalid_auth",
+        ok: false
+      }),
+      ok: true,
+      status: 200,
+      text: async () =>
+        JSON.stringify({
+          error: "invalid_auth",
+          ok: false
+        })
+    })
+  });
+
+  await assert.rejects(
+    runtime.execute({
+      action: "health.check",
+      credentials: {
+        botToken: "xoxb-health-invalid"
+      },
+      payload: {},
+      provider: "slack"
+    }),
+    (error: unknown) =>
+      error instanceof ConnectorExecutionError &&
+      error.code === "SLACK_AUTH_FAILED" &&
+      error.retryable === false &&
+      error.statusCode === 401
+  );
+});
