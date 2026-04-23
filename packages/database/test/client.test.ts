@@ -114,6 +114,17 @@ void test("resolveConnectionLimit prefers env override, then URL, then fallback"
   assert.equal(resolveConnectionLimit("postgresql://user:pass@db.birthhub.local:5432/app"), 10);
 });
 
+void test("resolveConnectionLimit returns default value for malformed URLs", () => {
+  const previous = process.env.DATABASE_CONNECTION_LIMIT;
+  delete process.env.DATABASE_CONNECTION_LIMIT;
+
+  try {
+    assert.equal(resolveConnectionLimit("not-a-url"), 10);
+  } finally {
+    restoreEnv("DATABASE_CONNECTION_LIMIT", previous);
+  }
+});
+
 void test("resolveRuntimeDatabaseUrl falls back only in development-like environments", () => {
   const previousNodeEnv = process.env.NODE_ENV;
   process.env.NODE_ENV = "test";
