@@ -164,7 +164,7 @@ export class RequestObservabilityContext {
     logger[level](
       {
         ...this.spanContext,
-        ...data
+        ...(data as Record<string, unknown>)
       },
       message
     );

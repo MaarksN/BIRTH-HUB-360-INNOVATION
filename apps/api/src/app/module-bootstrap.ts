@@ -1,5 +1,5 @@
 import type { ApiConfig } from "@birthub/config";
-import type { Router } from "express";
+import type { Router, Express } from "express";
 import { globalModuleRegistry, mountRegisteredModules, type RegisteredModule } from "./module-registry.js";
 
 // Import all module definitions

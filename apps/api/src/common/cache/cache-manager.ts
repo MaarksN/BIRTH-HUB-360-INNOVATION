@@ -1,4 +1,4 @@
-import type Redis from "ioredis";
+import { Redis } from "ioredis";
 
 /**
  * Intelligent caching layer with TTL, tagging, and invalidation strategies

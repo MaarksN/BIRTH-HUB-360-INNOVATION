@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, ZodIssue } from "zod";
 
 /**
  * Centralized validation schemas for BirthHub API
@@ -55,7 +55,7 @@ export const WorkflowStatusSchema = z
 export const WorkflowStepSchema = z.object({
   id: IdSchema,
   type: z.string(),
-  config: z.record(z.unknown()).optional(),
+  config: z.record(z.string(), z.unknown()).optional(),
   nextStepId: IdSchema.optional()
 });
 
@@ -90,13 +90,13 @@ export const WorkflowResponseSchema = z.object({
 export const AgentCreateSchema = z.object({
   name: z.string().min(1).max(255),
   description: z.string().optional(),
-  config: z.record(z.unknown())
+  config: z.record(z.string(), z.unknown())
 });
 
 export const AgentUpdateSchema = z.object({
   name: z.string().min(1).max(255).optional(),
   description: z.string().optional(),
-  config: z.record(z.unknown()).optional()
+  config: z.record(z.string(), z.unknown()).optional()
 });
 
 export const AgentResponseSchema = z.object({
@@ -104,7 +104,7 @@ export const AgentResponseSchema = z.object({
   name: z.string(),
   version: z.string(),
   organizationId: IdSchema,
-  config: z.record(z.unknown()),
+  config: z.record(z.string(), z.unknown()),
   createdAt: DateSchema,
   updatedAt: DateSchema
 });
@@ -118,7 +118,7 @@ export const PaymentCreateSchema = z.object({
   amount: z.number().positive(),
   currency: z.string().length(3),
   customerId: z.string().optional(),
-  metadata: z.record(z.unknown()).optional()
+  metadata: z.record(z.string(), z.unknown()).optional()
 });
 
 export const PaymentResponseSchema = z.object({
@@ -129,7 +129,7 @@ export const PaymentResponseSchema = z.object({
   status: PaymentStatusSchema,
   createdAt: DateSchema,
   updatedAt: DateSchema,
-  metadata: z.record(z.unknown()).optional()
+  metadata: z.record(z.string(), z.unknown()).optional()
 });
 
 export const RefundSchema = z.object({
@@ -161,7 +161,7 @@ export const ProblemDetailsSchema = z.object({
 // ============ VALIDATION UTILITIES ============
 export type ValidationResult<T> =
   | { success: true; data: T }
-  | { success: false; errors: z.ZodError["errors"] };
+  | { success: false; errors: ZodIssue[] };
 
 /**
  * Validate data against schema and return result
@@ -171,7 +171,7 @@ export function validate<T>(schema: z.ZodSchema<T>, data: unknown): ValidationRe
   if (result.success) {
     return { success: true, data: result.data };
   }
-  return { success: false, errors: result.error.errors };
+  return { success: false, errors: result.error.issues || (result.error as any).errors };
 }
 
 /**
@@ -185,7 +185,7 @@ export function validateRequest<T>(schema: z.ZodSchema<T>) {
         type: "https://api.birthub.local/validation-error",
         title: "Validation Error",
         status: 400,
-        errors: result.errors.map((e) => ({
+        errors: result.errors.map((e: ZodIssue) => ({
           field: e.path.join("."),
           message: e.message,
           value: e.code

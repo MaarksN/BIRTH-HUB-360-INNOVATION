@@ -1,8 +1,8 @@
-import { createHash, createHmac, timingSafeEqual   createDefaultConnectorRuntime,
-} from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
 import type { ApiConfig } from "@birthub/config";
 import {
+  createDefaultConnectorRuntime,
   decryptConnectorToken,
   ensureConnectorExecutionError,
   serializeConnectorError,

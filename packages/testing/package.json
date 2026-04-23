@@ -16,7 +16,8 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@birthub/database": "workspace:*"
+    "@birthub/database": "workspace:*",
+    "@birthub/integrations": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",

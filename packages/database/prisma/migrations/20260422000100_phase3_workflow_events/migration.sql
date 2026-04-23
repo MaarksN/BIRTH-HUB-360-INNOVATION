@@ -1,5 +1,67 @@
 -- Phase 3 workflow execution durability and revision lineage.
 
+ALTER TABLE "workflow_executions"
+  ADD COLUMN IF NOT EXISTS "workflowRevisionId" TEXT,
+  ADD COLUMN IF NOT EXISTS "triggerEventId" TEXT,
+  ADD COLUMN IF NOT EXISTS "triggerKey" TEXT,
+  ADD COLUMN IF NOT EXISTS "eventSource" TEXT,
+  ADD COLUMN IF NOT EXISTS "actorId" TEXT,
+  ADD COLUMN IF NOT EXISTS "idempotencyKey" TEXT;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'workflow_executions_workflowRevisionId_fkey'
+      AND conrelid = 'workflow_executions'::regclass
+  ) THEN
+    ALTER TABLE "workflow_executions"
+      ADD CONSTRAINT "workflow_executions_workflowRevisionId_fkey"
+      FOREIGN KEY ("workflowRevisionId") REFERENCES "workflow_revisions"("id")
+      ON DELETE SET NULL ON UPDATE CASCADE;
+  END IF;
+END
+$$;
+
+ALTER TABLE "workflow_steps"
+  ADD COLUMN IF NOT EXISTS "workflowRevisionId" TEXT;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'workflow_steps_workflowRevisionId_fkey'
+      AND conrelid = 'workflow_steps'::regclass
+  ) THEN
+    ALTER TABLE "workflow_steps"
+      ADD CONSTRAINT "workflow_steps_workflowRevisionId_fkey"
+      FOREIGN KEY ("workflowRevisionId") REFERENCES "workflow_revisions"("id")
+      ON DELETE SET NULL ON UPDATE CASCADE;
+  END IF;
+END
+$$;
+
+ALTER TABLE "workflow_transitions"
+  ADD COLUMN IF NOT EXISTS "workflowRevisionId" TEXT;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'workflow_transitions_workflowRevisionId_fkey'
+      AND conrelid = 'workflow_transitions'::regclass
+  ) THEN
+    ALTER TABLE "workflow_transitions"
+      ADD CONSTRAINT "workflow_transitions_workflowRevisionId_fkey"
+      FOREIGN KEY ("workflowRevisionId") REFERENCES "workflow_revisions"("id")
+      ON DELETE SET NULL ON UPDATE CASCADE;
+  END IF;
+END
+$$;
+
 ALTER TABLE "step_results"
   ADD COLUMN IF NOT EXISTS "workflowRevisionId" TEXT,
   ADD COLUMN IF NOT EXISTS "nextRetryAt" TIMESTAMP(3),

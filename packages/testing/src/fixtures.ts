@@ -1,12 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type {
-  CrmAdapter,
-  CrmContact,
-  ErpAdapter,
-  ErpProduct,
-  PaymentAdapter,
-  Payment
-} from "@birthub/integrations";
+
 
 /**
  * Test fixtures and factory functions for unit and integration tests
@@ -92,11 +85,11 @@ export function createTestAgent(overrides?: Partial<TestAgent>): TestAgent {
 }
 
 // ============ MOCK ADAPTERS ============
-export class MockCrmAdapter implements CrmAdapter {
+export class MockCrmAdapter  {
   readonly name = "mock-crm";
   readonly version = "1.0.0";
 
-  private contacts: Map<string, CrmContact> = new Map();
+  private contacts: Map<string, any> = new Map();
   private initialized = false;
 
   async initialize(): Promise<void> {
@@ -112,8 +105,8 @@ export class MockCrmAdapter implements CrmAdapter {
     return this.initialized;
   }
 
-  async createContact(data): Promise<CrmContact> {
-    const contact: CrmContact = {
+  async createContact(data: any): Promise<any> {
+    const contact: any = {
       id: randomUUID(),
       externalId: `ext-${randomUUID()}`,
       email: data.email,
@@ -127,7 +120,7 @@ export class MockCrmAdapter implements CrmAdapter {
     return contact;
   }
 
-  async updateContact(id: string, data): Promise<CrmContact> {
+  async updateContact(id: string, data: any): Promise<any> {
     const contact = this.contacts.get(id);
     if (!contact) throw new Error(`Contact ${id} not found`);
 
@@ -140,11 +133,11 @@ export class MockCrmAdapter implements CrmAdapter {
     this.contacts.delete(id);
   }
 
-  async getContact(id: string): Promise<CrmContact | null> {
+  async getContact(id: string): Promise<any | null> {
     return this.contacts.get(id) ?? null;
   }
 
-  async listContacts(filter?): Promise<CrmContact[]> {
+  async listContacts(filter?: any): Promise<any[]> {
     let results = Array.from(this.contacts.values());
 
     if (filter?.email) {
@@ -166,11 +159,11 @@ export class MockCrmAdapter implements CrmAdapter {
   }
 }
 
-export class MockErpAdapter implements ErpAdapter {
+export class MockErpAdapter  {
   readonly name = "mock-erp";
   readonly version = "1.0.0";
 
-  private products: Map<string, ErpProduct> = new Map();
+  private products: Map<string, any> = new Map();
   private initialized = false;
 
   async initialize(): Promise<void> {
@@ -186,8 +179,8 @@ export class MockErpAdapter implements ErpAdapter {
     return this.initialized;
   }
 
-  async createProduct(data): Promise<ErpProduct> {
-    const product: ErpProduct = {
+  async createProduct(data: any): Promise<any> {
+    const product: any = {
       id: randomUUID(),
       externalId: `ext-${randomUUID()}`,
       sku: data.sku,
@@ -201,7 +194,7 @@ export class MockErpAdapter implements ErpAdapter {
     return product;
   }
 
-  async updateProduct(id: string, data): Promise<ErpProduct> {
+  async updateProduct(id: string, data: any): Promise<any> {
     const product = this.products.get(id);
     if (!product) throw new Error(`Product ${id} not found`);
 
@@ -214,11 +207,11 @@ export class MockErpAdapter implements ErpAdapter {
     this.products.delete(id);
   }
 
-  async getProduct(id: string): Promise<ErpProduct | null> {
+  async getProduct(id: string): Promise<any | null> {
     return this.products.get(id) ?? null;
   }
 
-  async listProducts(filter?): Promise<ErpProduct[]> {
+  async listProducts(filter?: any): Promise<any[]> {
     let results = Array.from(this.products.values());
 
     if (filter?.sku) {
@@ -240,11 +233,11 @@ export class MockErpAdapter implements ErpAdapter {
   }
 }
 
-export class MockPaymentAdapter implements PaymentAdapter {
+export class MockanyAdapter  {
   readonly name = "mock-payment";
   readonly version = "1.0.0";
 
-  private payments: Map<string, Payment> = new Map();
+  private payments: Map<string, any> = new Map();
   private initialized = false;
 
   async initialize(): Promise<void> {
@@ -260,8 +253,8 @@ export class MockPaymentAdapter implements PaymentAdapter {
     return this.initialized;
   }
 
-  async createPayment(data): Promise<Payment> {
-    const payment: Payment = {
+  async createany(data: any): Promise<any> {
+    const payment: any = {
       id: randomUUID(),
       externalId: `ext-${randomUUID()}`,
       amount: data.amount,
@@ -275,13 +268,13 @@ export class MockPaymentAdapter implements PaymentAdapter {
     return payment;
   }
 
-  async getPayment(id: string): Promise<Payment | null> {
+  async getany(id: string): Promise<any | null> {
     return this.payments.get(id) ?? null;
   }
 
-  async refundPayment(paymentId: string, amount?): Promise<any> {
+  async refundany(paymentId: string, amount?: any): Promise<any> {
     const payment = this.payments.get(paymentId);
-    if (!payment) throw new Error(`Payment ${paymentId} not found`);
+    if (!payment) throw new Error(`any ${paymentId} not found`);
 
     return {
       id: randomUUID(),
@@ -292,14 +285,14 @@ export class MockPaymentAdapter implements PaymentAdapter {
     };
   }
 
-  async listPayments(filter?): Promise<Payment[]> {
+  async listanys(filter?: any): Promise<any[]> {
     return Array.from(this.payments.values()).slice(
       filter?.offset ?? 0,
       (filter?.offset ?? 0) + (filter?.limit ?? 100)
     );
   }
 
-  async webhookHandler(payload): Promise<any> {
+  async webhookHandler(payload: any): Promise<any> {
     return {
       id: randomUUID(),
       type: "payment.completed",
@@ -344,7 +337,7 @@ export function createMockResponse(): any {
       return response;
     },
     statusCode: 200,
-    body: null,
+    body: null as any,
     headers: {} as Record<string, string>,
     setHeader: (key: string, value: string) => {
       response.headers[key] = value;
