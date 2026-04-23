@@ -358,27 +358,27 @@ function titleCase(value: string): string {
 
 function buildSkillEntries(
   agentId: string,
-  items: Array<{ description: string; name: string }>
+  items: Array<{ description: string; name: string; inputSchema?: any; outputSchema?: any }>
 ): AgentManifest["skills"] {
   return items.slice(0, 8).map((item, index) => ({
     description: item.description,
     id: `${agentId}.skill.${slugify(item.name || `skill-${index + 1}`)}`,
-    inputSchema: { type: "object" },
+    inputSchema: item.inputSchema ?? { type: "object" },
     name: item.name,
-    outputSchema: { type: "object" }
+    outputSchema: item.outputSchema ?? { type: "object" }
   }));
 }
 
 function buildToolEntries(
   agentId: string,
-  items: Array<{ description: string; name: string }>
+  items: Array<{ description: string; name: string; inputSchema?: any; outputSchema?: any }>
 ): AgentManifest["tools"] {
   return items.slice(0, 6).map((item, index) => ({
     description: item.description,
     id: `${agentId}.tool.${slugify(item.name || `tool-${index + 1}`)}`,
-    inputSchema: { type: "object" },
+    inputSchema: item.inputSchema ?? { type: "object" },
     name: item.name,
-    outputSchema: { type: "object" },
+    outputSchema: item.outputSchema ?? { type: "object" },
     timeoutMs: 15000
   }));
 }
@@ -508,17 +508,6 @@ function buildHtmlAgent(record: HtmlAgentRecord): GeneratedAgentSource {
   const enrichedGuardrails = enrichGuardrails(record.guardrails);
   const objectiveLines = uniqueStrings(
     record.promptSections.objectives.length > 0 ? record.promptSections.objectives : enrichedOutputs
-  );
-  const tools = record.expectedTools.map((tool) => ({
-    description: `Ferramenta operacional ${tool} necessaria para ${record.title} funcionar com rastreabilidade e controle.`,
-    name: titleCase(tool)
-  }));
-  const skills = mergeSkillSources(
-    objectiveLines.slice(0, 5).map((objective) => ({
-      description: objective,
-      name: titleCase(objective)
-    })),
-    []
   );
   const outputFormat = buildDefaultOutputFormat(agentId, enrichedOutputs);
   const qualityChecklist = enrichChecklist([
@@ -651,6 +640,83 @@ function buildFoundationAgent(
       };
     }),
     whenToUse: override.whenToUse
+  };
+}
+
+function buildHtmlAgent(record: HtmlAgentRecord, qualityChecklist: string[]): GeneratedAgentSource {
+  const agentId = slugify(record.title);
+  const enrichedGuardrails = enrichGuardrails(record.guardrails);
+  const enrichedInputs = uniqueStrings([...record.inputs]);
+  const enrichedOutputs = uniqueStrings([...record.outputs]);
+  const objectiveLines = uniqueStrings(
+    record.promptSections.objectives.length > 0 ? record.promptSections.objectives : enrichedOutputs
+  );
+
+  const outputFormat = buildDefaultOutputFormat(agentId, enrichedOutputs);
+
+  return {
+    category: record.category,
+    description: record.mission,
+    guardrails: enrichedGuardrails,
+    id: agentId,
+    inputs: enrichedInputs,
+    keywords: enrichKeywords([], [
+      slugify(record.title),
+      "executive automation",
+      "preventive analysis",
+      "autonomous execution"
+    ]),
+    mission: record.mission,
+    name: record.title,
+    origin: "birthhub-html",
+    outputFormat,
+    outputs: enrichedOutputs,
+    qualityChecklist,
+    skills: mergeSkillSources(
+      objectiveLines.slice(0, 5).map((objective) => {
+        const schema = CORPORATE_SCHEMAS[slugify(record.title)]?.skills?.[slugify(objective)];
+        return {
+          description: objective,
+          name: titleCase(objective),
+          inputSchema: schema?.input ?? { type: "object" },
+          outputSchema: schema?.output ?? { type: "object" }
+        };
+      }),
+      []
+    ),
+    tags: enrichTags({
+      domain: [slugify(record.category)],
+      industry: ["cross-industry"],
+      level: ["operational"],
+      persona: [slugify(record.title)],
+      "use-case": [slugify(record.category)]
+    }),
+    tools: record.expectedTools.map((toolName) => {
+      const schema = CORPORATE_SCHEMAS[slugify(record.title)]?.tools?.[slugify(toolName)];
+      return {
+        description: `Operational tool ${toolName} required by ${record.title}.`,
+        name: toolName,
+        inputSchema: schema?.input ?? { type: "object" },
+        outputSchema: schema?.output ?? { type: "object" }
+      };
+    }),
+    prompt: buildCompiledPrompt({
+      category: record.category,
+      guardrails: enrichedGuardrails,
+      inputs: enrichedInputs,
+      mission: record.mission,
+      name: record.title,
+      objectives: objectiveLines,
+      outputFormat,
+      outputs: enrichedOutputs,
+      qualityChecklist,
+      rules: record.promptSections.rules,
+      tools: record.expectedTools,
+      whenNotToUse: record.whenNotToUse,
+      whenToUse: record.whenToUse
+    }),
+    whenNotToUse: record.whenNotToUse,
+    whenToUse: record.whenToUse
   };
 }
 

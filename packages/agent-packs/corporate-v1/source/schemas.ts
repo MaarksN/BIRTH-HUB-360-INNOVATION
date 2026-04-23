@@ -142,5 +142,108 @@ export const CORPORATE_SCHEMAS: AgentSchemaMap = {
       }
     },
     tools: {}
+  },
+  "sales-pack": {
+    skills: {
+      "lead-qualification": {
+        input: {
+          type: "object",
+          properties: {
+            lead_data: { type: "object" },
+            framework: { type: "string", enum: ["BANT", "MEDDIC", "CHAMP"] }
+          }
+        },
+        output: {
+          type: "object",
+          properties: {
+            qualified: { type: "boolean" },
+            score: { type: "number" },
+            justification: { type: "string" }
+          }
+        }
+      },
+      "deal-coaching": {
+        input: {
+          type: "object",
+          properties: {
+            deal_stage: { type: "string" },
+            objections: { type: "array", items: { type: "string" } }
+          }
+        },
+        output: {
+          type: "object",
+          properties: {
+            recommended_actions: { type: "array", items: { type: "string" } },
+            closing_probability: { type: "number" }
+          }
+        }
+      }
+    },
+    tools: {}
+  },
+  "cs-pack": {
+    skills: {
+      "health-scoring": {
+        input: {
+          type: "object",
+          properties: {
+            usage_metrics: { type: "object" },
+            sentiment_score: { type: "number" }
+          }
+        },
+        output: {
+          type: "object",
+          properties: {
+            health_score: { type: "number" },
+            churn_risk: { type: "string", enum: ["low", "medium", "high"] },
+            recommendations: { type: "array", items: { type: "string" } }
+          }
+        }
+      }
+    },
+    tools: {}
+  },
+  "ops-pack": {
+    skills: {
+      "incident-triage": {
+        input: {
+          type: "object",
+          properties: {
+            alert_data: { type: "object" },
+            severity: { type: "string", enum: ["p0", "p1", "p2", "p3"] }
+          }
+        },
+        output: {
+          type: "object",
+          properties: {
+            priority: { type: "number" },
+            owner: { type: "string" },
+            runbook_steps: { type: "array", items: { type: "string" } }
+          }
+        }
+      }
+    },
+    tools: {}
+  },
+  "agent-mesh-orchestrator-pack": {
+    skills: {
+      "select-specialists": {
+        input: {
+          type: "object",
+          properties: {
+            request_type: { type: "string" },
+            context_summary: { type: "string" }
+          }
+        },
+        output: {
+          type: "object",
+          properties: {
+            specialists: { type: "array", items: { type: "string" } },
+            handoff_order: { type: "array", items: { type: "string" } }
+          }
+        }
+      }
+    },
+    tools: {}
   }
 };
