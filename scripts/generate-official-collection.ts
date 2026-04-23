@@ -501,68 +501,6 @@ function buildDefaultOutputFormat(agentId: string, outputs: string[]): string {
   );
 }
 
-function buildHtmlAgent(record: HtmlAgentRecord): GeneratedAgentSource {
-  const agentId = inferHtmlAgentId(record);
-  const enrichedInputs = enrichInputs(record.inputs);
-  const enrichedOutputs = enrichOutputs(record.outputs);
-  const enrichedGuardrails = enrichGuardrails(record.guardrails);
-  const objectiveLines = uniqueStrings(
-    record.promptSections.objectives.length > 0 ? record.promptSections.objectives : enrichedOutputs
-  );
-  const outputFormat = buildDefaultOutputFormat(agentId, enrichedOutputs);
-  const qualityChecklist = enrichChecklist([
-    "separar fato, inferencia e ausencia de informacao",
-    "deixar proximo passo e risco objetivo",
-    "publicar aprendizado compartilhado relevante ao final"
-  ]);
-
-  return {
-    category: record.category,
-    description: record.mission,
-    guardrails: enrichedGuardrails,
-    id: agentId,
-    inputs: enrichedInputs,
-    keywords: enrichKeywords(
-      buildKeywordSet({
-      category: record.category,
-      expectedTools: record.expectedTools,
-      extra: [
-        ...record.promptSections.objectives,
-        ...enrichedGuardrails
-      ],
-      inputs: enrichedInputs,
-      outputs: enrichedOutputs,
-      title: record.title
-      }),
-      [record.code.toLowerCase(), slugify(record.title), "analise preventiva", "decisao antecipada"]
-    ),
-    mission: record.promptSections.mission || record.mission,
-    name: record.title,
-    origin: "birthhub-html",
-    outputFormat,
-    outputs: enrichedOutputs,
-    prompt: buildCompiledPrompt({
-      category: record.category,
-      guardrails: enrichedGuardrails,
-      inputs: enrichedInputs,
-      mission: record.promptSections.mission || record.mission,
-      name: record.title,
-      objectives: objectiveLines,
-      outputFormat,
-      outputs: enrichedOutputs,
-      qualityChecklist,
-      rules: record.promptSections.rules,
-      tools: record.expectedTools,
-      whenNotToUse: record.whenNotToUse,
-      whenToUse: record.whenToUse
-    }),
-    qualityChecklist,
-    skills,
-    tags: enrichTags(inferHtmlTags(record, agentId)),
-    tools,
-    whenToUse: record.whenToUse
-  };
-}
 
 function buildFoundationAgent(
   manifest: AgentManifest,

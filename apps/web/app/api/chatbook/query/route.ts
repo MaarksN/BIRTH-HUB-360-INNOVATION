@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getWebConfig } from "@birthub/config/web";
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { getWebConfig } from "../../../../lib/web-config";
+import { fetchWithTimeout } from "../../../../lib/fetch-with-timeout";
 
 import {
   buildChatbookReply,
   isChatbookTool,
   type ChatbookAttachmentContext,
   type ChatbookLivePlatformResult,
-  type ChatbookTool
+  type ChatbookTool,
 } from "../../../../lib/chatbook";
 
 const webConfig = getWebConfig();
@@ -51,7 +51,7 @@ async function fetchLivePlatformResults(
   }
 
   const query = new URLSearchParams({
-    q: message.trim()
+    q: message.trim(),
   });
 
   try {
@@ -61,7 +61,7 @@ async function fetchLivePlatformResults(
         cache: "no-store",
         headers: buildSearchHeaders(request),
         timeoutMessage: `ChatBook internal search exceeded the ${SEARCH_TIMEOUT_MS}ms budget.`,
-        timeoutMs: SEARCH_TIMEOUT_MS
+        timeoutMs: SEARCH_TIMEOUT_MS,
       }
     );
 
@@ -79,7 +79,7 @@ async function fetchLivePlatformResults(
           module: group.label ?? "Busca interna",
           subtitle: item.subtitle ?? "",
           title: item.title ?? "Resultado interno",
-          type: item.type ?? "registro"
+          type: item.type ?? "registro",
         }))
       )
       .filter((item) => item.href.trim().length > 0 || item.subtitle.trim().length > 0)
@@ -134,7 +134,7 @@ function parseAttachmentContexts(value: unknown): ChatbookAttachmentContext[] {
         ...(typeof record.size === "number" && Number.isFinite(record.size)
           ? { size: record.size }
           : {}),
-        text: text.slice(0, 4_000)
+        text: text.slice(0, 4_000),
       };
     })
     .filter((item): item is ChatbookAttachmentContext => item !== null)
@@ -166,7 +166,7 @@ function parseSimulationInput(value: unknown) {
       : {}),
     ...(typeof record.recommendedPlan === "string" && record.recommendedPlan.trim()
       ? { recommendedPlan: record.recommendedPlan.trim() }
-      : {})
+      : {}),
   };
 }
 
@@ -177,14 +177,13 @@ export async function POST(request: NextRequest) {
   if (!message) {
     return NextResponse.json(
       {
-        error: "message is required"
+        error: "message is required",
       },
       { status: 400 }
     );
   }
 
-  const requestId =
-    request.headers.get("x-request-id") ?? `chatbook-${Date.now().toString(36)}`;
+  const requestId = request.headers.get("x-request-id") ?? `chatbook-${Date.now().toString(36)}`;
   const livePlatformResults = await fetchLivePlatformResults(request, message);
   const reply = buildChatbookReply({
     attachmentContexts: parseAttachmentContexts(payload?.attachmentContexts),
@@ -194,17 +193,17 @@ export async function POST(request: NextRequest) {
     preferredTools: parsePreferredTools(payload?.preferredTools),
     requestId,
     simulationInput: parseSimulationInput(payload?.simulationInput),
-    voiceEnabled: payload?.voiceEnabled === true
+    voiceEnabled: payload?.voiceEnabled === true,
   });
 
   return NextResponse.json(
     {
-      reply
+      reply,
     },
     {
       headers: {
-        "cache-control": "no-store"
-      }
+        "cache-control": "no-store",
+      },
     }
   );
 }

@@ -1,4 +1,4 @@
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "../../../../lib/web-config";
 
 import { fetchBudgetEstimate, fetchBudgetUsage } from "../../../../lib/marketplace-api.server";
 
@@ -6,7 +6,9 @@ export default async function BudgetsPage() {
   const config = getWebConfig();
   const [usage, estimate] = await Promise.all([
     fetchBudgetUsage().catch(() => ({ alerts: [], records: [], usageEvents: [] })),
-    fetchBudgetEstimate("rh-pack").catch(() => ({ estimate: { avgCostBRL: 0.5, details: "Fallback" } }))
+    fetchBudgetEstimate("rh-pack").catch(() => ({
+      estimate: { avgCostBRL: 0.5, details: "Fallback" },
+    })),
   ]);
 
   return (
@@ -23,13 +25,13 @@ export default async function BudgetsPage() {
           background: "rgba(255,255,255,0.8)",
           border: "1px solid var(--border)",
           borderRadius: 16,
-          padding: "1rem"
+          padding: "1rem",
         }}
       >
         <h2 style={{ marginTop: 0 }}>Estimativa pre-execucao</h2>
         <p style={{ margin: 0 }}>
-          Custo medio estimado: <strong>~R$ {estimate.estimate.avgCostBRL.toFixed(2)}</strong> por execucao
-          (RH Pack).
+          Custo medio estimado: <strong>~R$ {estimate.estimate.avgCostBRL.toFixed(2)}</strong> por
+          execucao (RH Pack).
         </p>
         <small style={{ color: "var(--muted)" }}>{estimate.estimate.details}</small>
       </section>
@@ -41,11 +43,15 @@ export default async function BudgetsPage() {
           borderRadius: 16,
           display: "grid",
           gap: "0.8rem",
-          padding: "1rem"
+          padding: "1rem",
         }}
       >
         <h2 style={{ margin: 0 }}>Configurar limite</h2>
-        <form action={`${config.NEXT_PUBLIC_API_URL}/api/v1/budgets/limits`} method="post" style={{ display: "grid", gap: "0.6rem", maxWidth: 420 }}>
+        <form
+          action={`${config.NEXT_PUBLIC_API_URL}/api/v1/budgets/limits`}
+          method="post"
+          style={{ display: "grid", gap: "0.6rem", maxWidth: 420 }}
+        >
           <label>
             Agent ID
             <input defaultValue="rh-pack" name="agentId" type="text" />
@@ -61,25 +67,63 @@ export default async function BudgetsPage() {
       <section style={{ display: "grid", gap: "0.8rem" }}>
         <h2 style={{ margin: 0 }}>Consumo historico</h2>
         <div style={{ overflowX: "auto" }}>
-          <table style={{ background: "rgba(255,255,255,0.8)", borderCollapse: "collapse", width: "100%" }}>
+          <table
+            style={{
+              background: "rgba(255,255,255,0.8)",
+              borderCollapse: "collapse",
+              width: "100%",
+            }}
+          >
             <thead>
               <tr>
-                <th style={{ borderBottom: "1px solid var(--border)", padding: "0.5rem", textAlign: "left" }}>Agent</th>
-                <th style={{ borderBottom: "1px solid var(--border)", padding: "0.5rem", textAlign: "left" }}>Consumido</th>
-                <th style={{ borderBottom: "1px solid var(--border)", padding: "0.5rem", textAlign: "left" }}>Limite</th>
+                <th
+                  style={{
+                    borderBottom: "1px solid var(--border)",
+                    padding: "0.5rem",
+                    textAlign: "left",
+                  }}
+                >
+                  Agent
+                </th>
+                <th
+                  style={{
+                    borderBottom: "1px solid var(--border)",
+                    padding: "0.5rem",
+                    textAlign: "left",
+                  }}
+                >
+                  Consumido
+                </th>
+                <th
+                  style={{
+                    borderBottom: "1px solid var(--border)",
+                    padding: "0.5rem",
+                    textAlign: "left",
+                  }}
+                >
+                  Limite
+                </th>
               </tr>
             </thead>
             <tbody>
               {usage.records.length === 0 ? (
                 <tr>
-                  <td colSpan={3} style={{ padding: "0.75rem" }}>Sem dados ainda.</td>
+                  <td colSpan={3} style={{ padding: "0.75rem" }}>
+                    Sem dados ainda.
+                  </td>
                 </tr>
               ) : (
                 usage.records.map((record) => (
                   <tr key={`${record.agentId}-${record.limit}`}>
-                    <td style={{ borderBottom: "1px solid var(--border)", padding: "0.5rem" }}>{record.agentId}</td>
-                    <td style={{ borderBottom: "1px solid var(--border)", padding: "0.5rem" }}>R$ {record.consumed.toFixed(2)}</td>
-                    <td style={{ borderBottom: "1px solid var(--border)", padding: "0.5rem" }}>R$ {record.limit.toFixed(2)}</td>
+                    <td style={{ borderBottom: "1px solid var(--border)", padding: "0.5rem" }}>
+                      {record.agentId}
+                    </td>
+                    <td style={{ borderBottom: "1px solid var(--border)", padding: "0.5rem" }}>
+                      R$ {record.consumed.toFixed(2)}
+                    </td>
+                    <td style={{ borderBottom: "1px solid var(--border)", padding: "0.5rem" }}>
+                      R$ {record.limit.toFixed(2)}
+                    </td>
                   </tr>
                 ))
               )}
@@ -94,7 +138,7 @@ export default async function BudgetsPage() {
           background: "rgba(255,255,255,0.8)",
           border: "1px solid var(--border)",
           borderRadius: 16,
-          padding: "1rem"
+          padding: "1rem",
         }}
       >
         <h3 style={{ marginTop: 0 }}>Alertas</h3>
@@ -113,4 +157,3 @@ export default async function BudgetsPage() {
     </main>
   );
 }
-

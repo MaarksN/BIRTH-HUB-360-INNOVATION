@@ -1,7 +1,7 @@
 import { isSupportedSessionAction } from "../session-actions";
 import { NextRequest, NextResponse } from "next/server";
 
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "../../../../lib/fetch-with-timeout";
 
 import { resolveApiBaseUrl } from "../../../../lib/auth-client";
 
@@ -16,7 +16,7 @@ function buildProxyHeaders(request: NextRequest, initHeaders?: RequestInit["head
     "cookie",
     "x-active-tenant",
     "x-csrf-token",
-    "x-request-id"
+    "x-request-id",
   ];
 
   for (const headerName of forwardedHeaderNames) {
@@ -30,7 +30,11 @@ function buildProxyHeaders(request: NextRequest, initHeaders?: RequestInit["head
   return headers;
 }
 
-async function proxyApi(request: NextRequest, path: string, init: RequestInit): Promise<NextResponse> {
+async function proxyApi(
+  request: NextRequest,
+  path: string,
+  init: RequestInit
+): Promise<NextResponse> {
   const headers = buildProxyHeaders(request, init.headers);
   if (init.body && !headers.has("content-type")) {
     headers.set("content-type", "application/json");
@@ -40,7 +44,7 @@ async function proxyApi(request: NextRequest, path: string, init: RequestInit): 
     ...init,
     headers,
     timeoutMessage: `Auth BFF exceeded the ${AUTH_SESSION_PROXY_TIMEOUT_MS}ms timeout budget.`,
-    timeoutMs: AUTH_SESSION_PROXY_TIMEOUT_MS
+    timeoutMs: AUTH_SESSION_PROXY_TIMEOUT_MS,
   });
 
   const responseBody = await response.text();
@@ -56,10 +60,7 @@ async function proxyApi(request: NextRequest, path: string, init: RequestInit): 
   return nextResponse;
 }
 
-export async function POST(
-  request: NextRequest,
-  context: RouteContext
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const params = await context.params;
   const action = params.session?.[0];
   const body = request.method === "POST" ? await request.text() : "";
@@ -87,16 +88,13 @@ export async function POST(
   return NextResponse.json({ error: "Unsupported auth action." }, { status: 404 });
 }
 
-export async function GET(
-  request: NextRequest,
-  context: RouteContext
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const params = await context.params;
   const action = params.session?.[0];
 
   if (action === "session") {
     return proxyApi(request, "/api/v1/sessions", {
-      method: "GET"
+      method: "GET",
     });
   }
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "../../../lib/fetch-with-timeout";
 
 import { toApiUrl } from "../../../lib/auth-client";
 
@@ -19,7 +19,7 @@ export default function AcceptInvitePage() {
   }>({
     error: null,
     loading: Boolean(token),
-    membershipId: null
+    membershipId: null,
   });
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function AcceptInvitePage() {
       setState({
         error: "Token de convite ausente.",
         loading: false,
-        membershipId: null
+        membershipId: null,
       });
       return;
     }
@@ -37,15 +37,15 @@ export default function AcceptInvitePage() {
 
     void fetchWithTimeout(toApiUrl("/api/v1/invites/accept"), {
       body: JSON.stringify({
-        token
+        token,
       }),
       headers: {
-        "content-type": "application/json"
+        "content-type": "application/json",
       },
       method: "POST",
       signal: controller.signal,
       timeoutMessage: `Falha ao aceitar convite dentro do limite de ${INVITE_ACCEPT_TIMEOUT_MS}ms.`,
-      timeoutMs: INVITE_ACCEPT_TIMEOUT_MS
+      timeoutMs: INVITE_ACCEPT_TIMEOUT_MS,
     })
       .then(async (response) => {
         if (!response.ok) {
@@ -63,7 +63,7 @@ export default function AcceptInvitePage() {
         setState({
           error: null,
           loading: false,
-          membershipId: payload.membershipId ?? null
+          membershipId: payload.membershipId ?? null,
         });
       })
       .catch((error) => {
@@ -74,7 +74,7 @@ export default function AcceptInvitePage() {
         setState({
           error: error instanceof Error ? error.message : "Falha ao aceitar convite.",
           loading: false,
-          membershipId: null
+          membershipId: null,
         });
       });
 
@@ -92,7 +92,7 @@ export default function AcceptInvitePage() {
         margin: "0 auto",
         maxWidth: 640,
         minHeight: "100vh",
-        padding: "2rem 1.5rem"
+        padding: "2rem 1.5rem",
       }}
     >
       <section
@@ -103,7 +103,7 @@ export default function AcceptInvitePage() {
           borderRadius: 28,
           display: "grid",
           gap: "0.75rem",
-          padding: "1.5rem"
+          padding: "1.5rem",
         }}
       >
         <span className="badge">Organization Invite</span>
@@ -119,4 +119,3 @@ export default function AcceptInvitePage() {
     </main>
   );
 }
-

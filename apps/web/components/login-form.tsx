@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
 
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "../lib/fetch-with-timeout";
 import { persistStoredSession } from "../lib/auth-client";
 import { useUserPreferencesStore } from "../stores/user-preferences-store";
 
@@ -47,12 +47,12 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
-    tenantId: ""
+    tenantId: "",
   });
   const [mfaChallenge, setMfaChallenge] = useState<MfaChallengeState | null>(null);
   const [mfaValues, setMfaValues] = useState({
     recoveryCode: "",
-    totpCode: ""
+    totpCode: "",
   });
 
   useEffect(() => {
@@ -64,13 +64,13 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
   async function finalizeAuthenticatedSession(session: AuthenticatedSessionPayload) {
     persistStoredSession({
       tenantId: session.tenantId,
-      userId: session.userId
+      userId: session.userId,
     });
 
     setMfaChallenge(null);
     setMfaValues({
       recoveryCode: "",
-      totpCode: ""
+      totpCode: "",
     });
     await useUserPreferencesStore.getState().hydrate();
     setResult(`Sessao criada para ${session.userId}`);
@@ -88,7 +88,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
     return JSON.stringify({
       challengeToken: challenge.challengeToken,
       ...(recoveryCode ? { recoveryCode } : {}),
-      ...(totpCode ? { totpCode } : {})
+      ...(totpCode ? { totpCode } : {}),
     });
   }
 
@@ -96,7 +96,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
     setMfaChallenge(null);
     setMfaValues({
       recoveryCode: "",
-      totpCode: ""
+      totpCode: "",
     });
     setResult(null);
   }
@@ -119,12 +119,12 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
             credentials: "include",
             headers: {
               "content-type": "application/json",
-              "x-request-id": requestId
+              "x-request-id": requestId,
             },
             method: "POST",
             signal: controller.signal,
             timeoutMessage: `Falha ao autenticar dentro do limite de ${LOGIN_REQUEST_TIMEOUT_MS}ms.`,
-            timeoutMs: LOGIN_REQUEST_TIMEOUT_MS
+            timeoutMs: LOGIN_REQUEST_TIMEOUT_MS,
           }
         );
 
@@ -141,7 +141,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
 
           setMfaChallenge({
             challengeExpiresAt: payload.challengeExpiresAt ?? null,
-            challengeToken: payload.challengeToken
+            challengeToken: payload.challengeToken,
           });
           setResult("MFA requerido. Informe um codigo TOTP ou um recovery code.");
           return;
@@ -173,7 +173,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
     <section
       style={{
         display: "grid",
-        gap: "1.5rem"
+        gap: "1.5rem",
       }}
     >
       <header style={{ display: "grid", gap: "0.5rem" }}>
@@ -183,7 +183,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
             fontSize: "0.85rem",
             fontWeight: 700,
             letterSpacing: "0.08em",
-            textTransform: "uppercase"
+            textTransform: "uppercase",
           }}
         >
           BirthHub360
@@ -204,7 +204,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
           boxShadow: "0 24px 80px rgba(19, 93, 102, 0.08)",
           display: "grid",
           gap: "1rem",
-          padding: "1.5rem"
+          padding: "1.5rem",
         }}
       >
         {mfaChallenge ? (
@@ -216,7 +216,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
                 borderRadius: "1rem",
                 display: "grid",
                 gap: "0.35rem",
-                padding: "0.9rem"
+                padding: "0.9rem",
               }}
             >
               <strong>Validacao MFA em andamento</strong>
@@ -300,7 +300,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
             alignItems: "center",
             display: "flex",
             gap: "0.75rem",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
           }}
         >
           <code>{requestId}</code>
@@ -319,7 +319,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
                 color: "white",
                 cursor: "pointer",
                 fontWeight: 700,
-                padding: "0.9rem 1.4rem"
+                padding: "0.9rem 1.4rem",
               }}
               type="submit"
             >
@@ -336,12 +336,7 @@ function LoginFormContent({ initialRequestId, navigate }: LoginFormContentProps)
 
 export function LoginForm({ initialRequestId, navigate }: Readonly<LoginFormProps>) {
   if (navigate) {
-    return (
-      <LoginFormContent
-        initialRequestId={initialRequestId}
-        navigate={navigate}
-      />
-    );
+    return <LoginFormContent initialRequestId={initialRequestId} navigate={navigate} />;
   }
 
   return (

@@ -1,7 +1,7 @@
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "./web-config";
 import { cookies } from "next/headers";
 
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "./fetch-with-timeout";
 
 export type ExecutionStatus = "FAILED" | "RUNNING" | "SUCCESS";
 
@@ -85,7 +85,7 @@ function normalizeAgent(agent: AgentSnapshot): AgentSnapshot {
     promptVersions:
       Array.isArray(agent.promptVersions) && agent.promptVersions.length > 0
         ? agent.promptVersions
-        : normalizePromptVersions(agent.manifest)
+        : normalizePromptVersions(agent.manifest),
   };
 }
 
@@ -95,12 +95,12 @@ async function fetchJson<T>(path: string): Promise<T> {
   const requestInit: RequestInit = {
     cache: "no-store",
     ...(typeof window === "undefined" ? {} : { credentials: "include" }),
-    ...(cookieStore ? { headers: { cookie: cookieStore.toString() } } : {})
+    ...(cookieStore ? { headers: { cookie: cookieStore.toString() } } : {}),
   };
   const response = await fetchWithTimeout(`${config.NEXT_PUBLIC_API_URL}${path}`, {
     ...requestInit,
     timeoutMessage: `Agents API exceeded the ${AGENTS_REQUEST_TIMEOUT_MS}ms timeout budget for ${path}.`,
-    timeoutMs: AGENTS_REQUEST_TIMEOUT_MS
+    timeoutMs: AGENTS_REQUEST_TIMEOUT_MS,
   });
 
   if (!response.ok) {
@@ -121,7 +121,9 @@ export async function listInstalledAgents(): Promise<AgentSnapshot[]> {
 
 export async function getInstalledAgentById(id: string): Promise<AgentSnapshot | null> {
   try {
-    const payload = await fetchJson<InstalledAgentResponse>(`/api/v1/agents/installed/${encodeURIComponent(id)}`);
+    const payload = await fetchJson<InstalledAgentResponse>(
+      `/api/v1/agents/installed/${encodeURIComponent(id)}`
+    );
     return normalizeAgent(payload.agent);
   } catch {
     return null;
@@ -139,4 +141,3 @@ export async function getInstalledAgentPolicies(id: string): Promise<AgentPolici
     return null;
   }
 }
-

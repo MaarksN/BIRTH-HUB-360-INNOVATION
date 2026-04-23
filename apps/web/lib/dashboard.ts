@@ -1,7 +1,7 @@
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "./web-config";
 import { cookies } from "next/headers";
 
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "./fetch-with-timeout";
 
 const DASHBOARD_REQUEST_TIMEOUT_MS = 8_000;
 
@@ -69,12 +69,12 @@ async function fetchDashboardJson<T>(path: string): Promise<T> {
   const requestInit: RequestInit = {
     cache: "no-store",
     ...(typeof window === "undefined" ? {} : { credentials: "include" }),
-    ...(cookieStore ? { headers: { cookie: cookieStore.toString() } } : {})
+    ...(cookieStore ? { headers: { cookie: cookieStore.toString() } } : {}),
   };
   const response = await fetchWithTimeout(`${config.NEXT_PUBLIC_API_URL}${path}`, {
     ...requestInit,
     timeoutMessage: `Dashboard API exceeded the ${DASHBOARD_REQUEST_TIMEOUT_MS}ms timeout budget for ${path}.`,
-    timeoutMs: DASHBOARD_REQUEST_TIMEOUT_MS
+    timeoutMs: DASHBOARD_REQUEST_TIMEOUT_MS,
   });
 
   if (!response.ok) {
@@ -89,14 +89,13 @@ export async function loadDashboardSnapshot(): Promise<DashboardSnapshot> {
     fetchDashboardJson<DashboardMetrics>("/api/v1/dashboard/metrics"),
     fetchDashboardJson<DashboardAgentStatuses>("/api/v1/dashboard/agent-statuses"),
     fetchDashboardJson<DashboardRecentTasks>("/api/v1/dashboard/recent-tasks"),
-    fetchDashboardJson<DashboardBillingSummary>("/api/v1/dashboard/billing-summary")
+    fetchDashboardJson<DashboardBillingSummary>("/api/v1/dashboard/billing-summary"),
   ]);
 
   return {
     agentStatuses,
     billingSummary,
     metrics,
-    recentTasks
+    recentTasks,
   };
 }
-

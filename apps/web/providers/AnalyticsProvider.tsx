@@ -8,13 +8,13 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
 import { getStoredSession } from "../lib/auth-client";
 import { useUserPreferencesStore } from "../stores/user-preferences-store";
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "../lib/fetch-with-timeout";
 
 interface AnalyticsContextValue {
   ready: boolean;
@@ -37,14 +37,14 @@ const redactedFieldPatterns = [
   /expected/i,
   /description/i,
   /input/i,
-  /output/i
+  /output/i,
 ];
 
 const ANALYTICS_REQUEST_TIMEOUT_MS = 3_000;
 
 const AnalyticsContext = createContext<AnalyticsContextValue>({
   ready: false,
-  track: () => undefined
+  track: () => undefined,
 });
 
 function safeSessionId(): string {
@@ -109,7 +109,7 @@ function sanitizeValue(keyPath: string[], value: unknown): unknown {
     return Object.fromEntries(
       Object.entries(value as Record<string, unknown>).map(([key, nested]) => [
         key,
-        sanitizeValue([...keyPath, key], nested)
+        sanitizeValue([...keyPath, key], nested),
       ])
     );
   }
@@ -143,8 +143,8 @@ function buildAnalyticsClient(input: {
         properties: sanitizeValue([], {
           ...properties,
           bh_session_id: input.sessionId,
-          bh_tenant_id: input.tenantId
-        })
+          bh_tenant_id: input.tenantId,
+        }),
       };
 
       const body = JSON.stringify(payload);
@@ -154,7 +154,7 @@ function buildAnalyticsClient(input: {
           navigator.sendBeacon(
             endpoint,
             new Blob([body], {
-              type: "application/json"
+              type: "application/json",
             })
           );
           return;
@@ -163,18 +163,18 @@ function buildAnalyticsClient(input: {
         await fetchWithTimeout(endpoint, {
           body,
           headers: {
-            "content-type": "application/json"
+            "content-type": "application/json",
           },
           keepalive: true,
           method: "POST",
           mode: "cors",
           timeoutMessage: `Analytics dispatch exceeded the ${ANALYTICS_REQUEST_TIMEOUT_MS}ms timeout budget.`,
-          timeoutMs: ANALYTICS_REQUEST_TIMEOUT_MS
+          timeoutMs: ANALYTICS_REQUEST_TIMEOUT_MS,
         });
       } catch {
         // Trackers blocked by extensions or privacy settings must never break the UI tree.
       }
-    }
+    },
   };
 }
 
@@ -193,14 +193,7 @@ export function AnalyticsProvider({ children }: Readonly<{ children: ReactNode }
     const userId = session?.userId;
     const tenantId = session?.tenantId;
 
-    if (
-      !session ||
-      !userId ||
-      !tenantId ||
-      cookieConsent !== "ACCEPTED" ||
-      !apiKey ||
-      !host
-    ) {
+    if (!session || !userId || !tenantId || cookieConsent !== "ACCEPTED" || !apiKey || !host) {
       clientRef.current = null;
       setReady(false);
       return;
@@ -218,7 +211,7 @@ export function AnalyticsProvider({ children }: Readonly<{ children: ReactNode }
         distinctId,
         host,
         sessionId: safeSessionId(),
-        tenantId
+        tenantId,
       });
 
       startTransition(() => {
@@ -245,7 +238,7 @@ export function AnalyticsProvider({ children }: Readonly<{ children: ReactNode }
     previousPageViewRef.current = nextPage;
     void clientRef.current.track("$pageview", {
       path: pathname,
-      search: searchParams.toString()
+      search: searchParams.toString(),
     });
   }, [pathname, ready, searchParams]);
 
@@ -254,7 +247,7 @@ export function AnalyticsProvider({ children }: Readonly<{ children: ReactNode }
       ready,
       track(event, properties) {
         void clientRef.current?.track(event, properties);
-      }
+      },
     }),
     [ready]
   );

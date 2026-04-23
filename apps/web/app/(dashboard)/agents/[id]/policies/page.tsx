@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "../../../../../lib/web-config";
 
 import { ExecutivePremiumAgentCallout } from "../../../../../components/agents/ExecutivePremiumAgentCallout";
 import { PolicyManager } from "../../../../../components/agents/PolicyManager";
@@ -40,7 +40,7 @@ export default async function AgentPoliciesPage(props: { params: Promise<{ id: s
   const { id } = await props.params;
   const [agent, policies] = await Promise.all([
     getInstalledAgentById(id),
-    getInstalledAgentPolicies(id)
+    getInstalledAgentPolicies(id),
   ]);
 
   if (!agent) {

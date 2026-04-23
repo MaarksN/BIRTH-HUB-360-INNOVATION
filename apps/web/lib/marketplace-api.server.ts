@@ -1,7 +1,7 @@
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "./web-config";
 import { cookies } from "next/headers";
 
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "./fetch-with-timeout";
 import { EXECUTIVE_PREMIUM_TAG } from "./executive-premium";
 
 export interface MarketplaceSearchResponse {
@@ -52,10 +52,10 @@ async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetchWithTimeout(url, {
     cache: "no-store",
     headers: {
-      cookie: cookieStore.toString()
+      cookie: cookieStore.toString(),
     },
     timeoutMessage: `Marketplace API exceeded the ${MARKETPLACE_REQUEST_TIMEOUT_MS}ms timeout budget.`,
-    timeoutMs: MARKETPLACE_REQUEST_TIMEOUT_MS
+    timeoutMs: MARKETPLACE_REQUEST_TIMEOUT_MS,
   });
 
   if (!response.ok) {
@@ -82,11 +82,13 @@ export async function fetchMarketplaceSearch(
   );
 }
 
-export async function fetchExecutivePremiumCollection(pageSize: number): Promise<MarketplaceSearchResponse> {
+export async function fetchExecutivePremiumCollection(
+  pageSize: number
+): Promise<MarketplaceSearchResponse> {
   return fetchMarketplaceSearch({
     page: "1",
     pageSize: String(pageSize),
-    useCase: EXECUTIVE_PREMIUM_TAG
+    useCase: EXECUTIVE_PREMIUM_TAG,
   });
 }
 
@@ -144,7 +146,12 @@ export async function fetchBudgetUsage() {
   return fetchJson<{
     alerts: Array<{ level: string; message: string; timestamp: string }>;
     records: Array<{ agentId: string; consumed: number; limit: number }>;
-    usageEvents: Array<{ agentId: string; costBRL: number; executionMode: string; timestamp: string }>;
+    usageEvents: Array<{
+      agentId: string;
+      costBRL: number;
+      executionMode: string;
+      timestamp: string;
+    }>;
   }>(`${config.NEXT_PUBLIC_API_URL}/api/v1/budgets/usage`);
 }
 
@@ -155,10 +162,7 @@ export async function fetchBudgetEstimate(agentId: string) {
   );
 }
 
-export async function fetchOutputs(input?: {
-  executionId?: string;
-  type?: string;
-}) {
+export async function fetchOutputs(input?: { executionId?: string; type?: string }) {
   const config = getWebConfig();
   const query = new URLSearchParams();
 
@@ -181,7 +185,9 @@ export async function fetchOutputs(input?: {
       status: string;
       type: string;
     }>;
-  }>(`${config.NEXT_PUBLIC_API_URL}/api/v1/outputs${query.toString() ? `?${query.toString()}` : ""}`);
+  }>(
+    `${config.NEXT_PUBLIC_API_URL}/api/v1/outputs${query.toString() ? `?${query.toString()}` : ""}`
+  );
 }
 
 export async function fetchOutputDetail(outputId: string) {
@@ -205,4 +211,3 @@ export async function fetchOutputDetail(outputId: string) {
     };
   }>(`${config.NEXT_PUBLIC_API_URL}/api/v1/outputs/${encodeURIComponent(outputId)}`);
 }
-
