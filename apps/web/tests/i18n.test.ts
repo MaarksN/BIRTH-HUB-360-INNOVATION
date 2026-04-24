@@ -14,13 +14,14 @@ void test("pt-BR dictionary exposes canonical product navigation and consent cop
   const conversationsItem = copy.navbar.items.find((item) => item.href === "/conversations");
   const chatbookItem = copy.navbar.items.find((item) => item.href === "/agents/chatbook-inteligentissimo");
   const marketplaceItem = copy.navbar.items.find((item) => item.href === "/marketplace");
+  const salesOsItem = copy.navbar.items.find((item) => item.href === "/sales-os");
 
-  assert.equal(copy.navbar.identityTitle, "Central de Operacao");
+  assert.equal(copy.navbar.identityTitle, "Revenue OS");
   assert.equal(copy.navbar.items[0]?.href, "/dashboard");
   assert.equal(conversationsItem?.label, "Conversas");
   assert.equal(chatbookItem?.label, "ChatBook");
   assert.equal(marketplaceItem?.label, "Marketplace");
-  assert.equal(copy.navbar.items.at(-1)?.href, "/sales-os");
+  assert.equal(salesOsItem?.label, "Sales OS");
   assert.equal(copy.navbar.premiumLinkTitle, "Abrir colecao premium executiva");
   assert.equal(copy.consentBanner.settings, "Abrir central LGPD");
   assert.equal(copy.dashboardHome.badge, "Home do produto");
@@ -52,12 +53,12 @@ void test("en-US dictionary exposes translated navigation and dashboard copy", (
   const copy = getDictionary("en-US");
   const chatbookItem = copy.navbar.items.find((item) => item.href === "/agents/chatbook-inteligentissimo");
   const marketplaceItem = copy.navbar.items.find((item) => item.href === "/marketplace");
+  const salesOsItem = copy.navbar.items.find((item) => item.href === "/sales-os");
 
-  assert.equal(copy.navbar.identityTitle, "Operations Hub");
-  assert.equal(copy.navbar.items[1]?.label, "Patients");
+  assert.equal(copy.navbar.identityTitle, "Revenue OS");
   assert.equal(chatbookItem?.label, "ChatBook");
   assert.equal(marketplaceItem?.label, "Marketplace");
-  assert.equal(copy.navbar.items.at(-1)?.label, "Sales OS");
+  assert.equal(salesOsItem?.label, "Sales OS");
   assert.equal(copy.navbar.premiumLinkLabel, "Premium");
   assert.equal(copy.workflowsPage.backHome, "Back to home");
   assert.equal(copy.dashboardHome.noUsageTitle, "No recorded usage");

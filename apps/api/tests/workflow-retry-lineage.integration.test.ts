@@ -52,7 +52,13 @@ function createSessionStubs(): Array<() => void> {
       plan: {
         code: "starter",
         id: "plan_starter",
-        limits: {},
+        limits: {
+          features: {
+            workflows: true
+          },
+          workflowExecutions: -1,
+          workflows: 30
+        },
         name: "Starter"
       },
       slug: "tenant-one",
