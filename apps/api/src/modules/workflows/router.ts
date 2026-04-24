@@ -31,6 +31,7 @@ import {
   runWorkflowNow,
   updateWorkflow
 } from "./service.js";
+import { registerWorkflowMarketplaceRoutes } from "./router.marketplace.js";
 
 type WorkflowRouteRegistrar = (router: Router, config: ApiConfig) => void;
 
@@ -38,7 +39,7 @@ function isWorkflowNotPublishedError(cause: unknown): boolean {
   return cause instanceof Error && cause.message === "WORKFLOW_NOT_PUBLISHED";
 }
 
-function requireTenantId(request: Request): string {
+export function requireTenantId(request: Request): string {
   const tenantId = request.context.tenantId;
   if (!tenantId) {
     throw new ProblemDetailsError({
@@ -410,6 +411,7 @@ export function createWorkflowsRouter(config: ApiConfig): Router {
   applyWorkflowRegistrars(router, config, registerCrudWorkflowRoutes);
   applyWorkflowRegistrars(router, config, registerWorkflowExecutionRoutes);
   applyWorkflowRegistrars(router, config, registerWorkflowEventRoutes);
+  registerWorkflowMarketplaceRoutes(router, config);
 
   return router;
 }
