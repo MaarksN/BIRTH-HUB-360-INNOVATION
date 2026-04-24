@@ -35,10 +35,12 @@
     "start:api": "pnpm --filter @birthub/api start",
     "start:worker": "pnpm --filter @birthub/worker start",
     "clean": "rimraf --glob .turbo \"apps/*/.turbo\" \"apps/*/dist\" \"apps/web/.next\" \"packages/*/.turbo\" \"packages/*/dist\" \"packages/*/*.tsbuildinfo\" \"packages/config/src/*.js\" \"packages/config/src/*.d.ts\" \"packages/config/src/*.d.ts.map\" \"packages/logger/src/*.js\" \"packages/logger/src/*.d.ts\" \"packages/logger/src/*.d.ts.map\"",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@birthub/agents-core": "workspace:*",
+    "@changesets/cli": "^2.31.0",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/js": "^10.0.1",

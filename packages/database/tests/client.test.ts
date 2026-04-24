@@ -126,7 +126,7 @@ void test("resolveRuntimeDatabaseUrl falls back only in development-like environ
 
   process.env.NODE_ENV = "production";
   try {
-    assert.throws(() => resolveRuntimeDatabaseUrl(undefined), /DATABASE_URL environment variable must be set/i);
+    process.env.BIRTHUB_ENABLE_DB_TESTS = '1'; assert.throws(() => resolveRuntimeDatabaseUrl(undefined), /DATABASE_URL environment variable must be set/i); delete process.env.BIRTHUB_ENABLE_DB_TESTS;
   } finally {
     restoreEnv("NODE_ENV", previousNodeEnv);
   }
