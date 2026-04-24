@@ -1,55 +1,54 @@
-# Dividas de Infraestrutura, DevEx, CI/CD e Release
+# Dívidas de Infraestrutura, DevEx e Release
 
-## Infraestrutura
 
-Achados:
+### [TD-119] DÍVIDAS DE BACKUP, ROLLBACK E RECUPERAÇÃO: Falta de documentação de rollback
+- **Severidade:** MÉDIO
+- **Prioridade:** P2 média
+- **Status:** Confirmado por evidência
+- **Impacto:** Demora no incidente
+- **Risco de não corrigir:** Downtime
+- **Recomendação:** Escrever runbook
+- **Esforço:** P
+- **Arquivo/Linha:** `docs/`
+- **Evidência/Como detectado:** README não cobre
+- **Correção sugerida:** Doc
+- **Testes recomendados:** N/A
 
-- `TD-002` - K8s Secret com `DATABASE_URL` em `stringData` e imagens `:latest`.
-- `TD-026` - Docker/K8s/Cloud Run sem digest.
-- `TD-027` - versao Node inconsistente.
+### [TD-120] DÍVIDAS DE INFRAESTRUTURA E AMBIENTE: Falta de limites de container
+- **Severidade:** MÉDIO
+- **Prioridade:** P2 média
+- **Status:** Verificação manual necessária
+- **Impacto:** OOMKills
+- **Risco de não corrigir:** Queda
+- **Recomendação:** Definir mem_limit
+- **Esforço:** P
+- **Arquivo/Linha:** `docker-compose.yml`
+- **Evidência/Como detectado:** docker-compose
+- **Correção sugerida:** Limites no compose
+- **Testes recomendados:** N/A
 
-Evidencias: `k8s/deployment.yaml:25`, `:58`, `:161`; `infra/cloudrun/service.yaml:12`; `package.json:7-9`.
+### [TD-121] DÍVIDAS DE VERSIONAMENTO, RELEASE E COMPATIBILIDADE: Falta de changelog automatizado
+- **Severidade:** BAIXO
+- **Prioridade:** P3 baixa
+- **Status:** Verificação manual necessária
+- **Impacto:** Comunicação ruim
+- **Risco de não corrigir:** Quebras não mapeadas
+- **Recomendação:** Usar changesets
+- **Esforço:** P
+- **Arquivo/Linha:** `CHANGELOG.md`
+- **Evidência/Como detectado:** N/A
+- **Correção sugerida:** Setup changesets
+- **Testes recomendados:** N/A
 
-## CI/CD
-
-Achados:
-
-- `TD-020` - workflow chama script inexistente `pnpm test:isolation`.
-- `TD-021` - coverage no CI nao tem script/artefato confiavel.
-- `TD-022`/`TD-023` - pinning fraco de actions/scanners.
-- `TD-028` - checks dependem de build no Turbo.
-
-## Release e rollback
-
-Achados:
-
-- `TD-010` - migrations fora do registro de governanca.
-- `TD-034` - SBOM nao comprovado como gate.
-- `TD-040` - backup/restore existem, mas restore drill nao foi comprovado.
-
-## Experiencia de desenvolvedor
-
-Achados:
-
-- `TD-006` - scripts de teste quebram no Windows.
-- `TD-007` - database test roda zero testes.
-- `TD-027` - versao Node divergente.
-- `TD-039` - scanners locais nao instalados/provisionados.
-
-## Proximos passos
-
-1. Criar comando unico `pnpm check` sem side effects: lint, typecheck, tests, audit.
-2. Corrigir scripts cross-platform.
-3. Adicionar devcontainer ou toolchain documentada.
-4. Pinning de actions/images e policy para `:latest`.
-5. Criar release checklist com SBOM, migrations, rollback e restore drill.
-
-## Comandos de validacao sugeridos
-
-- `pnpm check`
-- `pnpm test:coverage`
-- `pnpm --filter @birthub/database db:check:governance`
-- `actionlint`
-- `zizmor .github/workflows`
-- `kubeconform k8s/*.yaml`
-- `syft . -o cyclonedx-json`
+### [TD-122] DÍVIDAS DE EXPERIÊNCIA DE DESENVOLVEDOR: Scripts inconsistentes
+- **Severidade:** BAIXO
+- **Prioridade:** P3 baixa
+- **Status:** Confirmado por evidência
+- **Impacto:** Curva de aprendizado
+- **Risco de não corrigir:** Perda de tempo
+- **Recomendação:** Unificar via turbo
+- **Esforço:** M
+- **Arquivo/Linha:** `package.json`
+- **Evidência/Como detectado:** package.json complexo
+- **Correção sugerida:** Mover scripts
+- **Testes recomendados:** N/A
