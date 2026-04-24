@@ -321,28 +321,6 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
 
-  apps/webhook-receiver:
-    dependencies:
-      '@birthub/config':
-        specifier: workspace:*
-        version: link:../../packages/config
-      '@birthub/integrations':
-        specifier: workspace:*
-        version: link:../../packages/integrations
-      ioredis:
-        specifier: ^5.10.1
-        version: 5.10.1
-    devDependencies:
-      '@types/node':
-        specifier: ^25.6.0
-        version: 25.6.0
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
-
   apps/worker:
     dependencies:
       '@aws-sdk/client-s3':
@@ -366,6 +344,9 @@ importers:
       '@birthub/integrations':
         specifier: workspace:*
         version: link:../../packages/integrations
+      '@birthub/llm-client':
+        specifier: workspace:*
+        version: link:../../packages/llm-client
       '@birthub/logger':
         specifier: workspace:*
         version: link:../../packages/logger
