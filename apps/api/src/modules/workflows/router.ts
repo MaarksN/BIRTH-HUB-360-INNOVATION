@@ -7,10 +7,7 @@ import type { Request, Response } from "express";
 import { Router } from "express";
 import { z } from "zod";
 
-import {
-  RequireRole,
-  requireAuthenticatedSession
-} from "../../common/guards/index.js";
+import { RequireFeature, RequireRole, requireAuthenticatedSession } from "../../common/guards/index.js";
 import { asyncHandler, ProblemDetailsError } from "../../lib/problem-details.js";
 import { validateBody } from "../../middleware/validate-body.js";
 import { workflowQueueAdapter } from "./service.shared.js";
@@ -115,6 +112,7 @@ function registerCreateWorkflowRoute(router: Router, config: ApiConfig): void {
     "/api/v1/workflows",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
+    RequireFeature("workflows"),
     validateBody(workflowCreateSchema),
     asyncHandler(async (request, response) => {
       const tenantId = requireTenantId(request);
@@ -259,6 +257,7 @@ function registerRunWorkflowRoute(router: Router, config: ApiConfig): void {
     "/api/v1/workflows/:id/run",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
+    RequireFeature("workflows"),
     validateBody(workflowRunSchema),
     asyncHandler(async (request, response) => {
       const tenantId = requireTenantId(request);
@@ -344,6 +343,7 @@ function registerWorkflowEventRoute(router: Router, config: ApiConfig): void {
     "/api/v1/workflows/events/:topic",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
+    RequireFeature("workflows"),
     validateBody(workflowTopicEventSchema),
     asyncHandler(async (request, response) => {
       const tenantId = requireTenantId(request);
