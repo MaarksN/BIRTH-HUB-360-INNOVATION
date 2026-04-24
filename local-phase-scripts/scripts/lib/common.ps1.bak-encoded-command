@@ -74,8 +74,7 @@ function Invoke-PhaseCommand {
     Write-Host $Command
 
     $outFile = Join-Path $script:ReportDir (($Step -replace '[^a-zA-Z0-9\-]+','-') + ".log")
-    $encodedCommand = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($Command))
-    $output = & powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -EncodedCommand $encodedCommand 2>&1
+    $output = & powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command $Command 2>&1
     $exitCode = if ($null -ne $LASTEXITCODE) { [int]$LASTEXITCODE } else { 0 }
 
     $output | Tee-Object -FilePath $outFile | Out-Null
@@ -146,5 +145,4 @@ function Invoke-RgOrSkip {
     Invoke-PhaseCommand -Step $Step -Command $cmd -AllowFail | Out-Null
   }
 }
-
 

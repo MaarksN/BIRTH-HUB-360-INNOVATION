@@ -3,6 +3,52 @@
 import { createLogger } from "@birthub/logger";
 
 const logger = createLogger("integrations-http");
+const SENSITIVE_QUERY_PARAM_NAMES = new Set([
+  "access_token",
+  "api_key",
+  "api_secret",
+  "api_token",
+  "authorization",
+  "client_secret",
+  "code",
+  "key",
+  "password",
+  "refresh_token",
+  "secret",
+  "signature",
+  "token"
+]);
+
+function isSensitiveQueryParamName(name: string): boolean {
+  const normalized = name.trim().toLowerCase();
+  return SENSITIVE_QUERY_PARAM_NAMES.has(normalized) || normalized.endsWith("_token") || normalized.endsWith("_secret");
+}
+
+export function redactUrlForLog(url: string): string {
+  try {
+    const parsed = new URL(url);
+
+    if (parsed.username) {
+      parsed.username = "redacted";
+    }
+    if (parsed.password) {
+      parsed.password = "redacted";
+    }
+
+    for (const key of Array.from(parsed.searchParams.keys())) {
+      if (isSensitiveQueryParamName(key)) {
+        parsed.searchParams.set(key, "[redacted]");
+      }
+    }
+
+    return parsed.toString();
+  } catch {
+    return url.replace(
+      /([?&](?:access_token|api_key|api_secret|api_token|authorization|client_secret|key|password|refresh_token|secret|signature|token)=)[^&\s]+/gi,
+      "$1[redacted]"
+    );
+  }
+}
 
 export interface HttpRequestOptions {
   idempotencyKey?: string;
@@ -35,9 +81,10 @@ export async function postJson<T>(
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     const abortController = new AbortController();
     const timeout = setTimeout(() => abortController.abort(), timeoutMs);
+    const logUrl = redactUrlForLog(url);
 
 
-    logger.info({ url, attempt, provider: options.providerName ?? "unknown" }, "Starting external API call");
+    logger.info({ url: logUrl, attempt, provider: options.providerName ?? "unknown" }, "Starting external API call");
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -65,7 +112,7 @@ export async function postJson<T>(
       return response.json() as Promise<T>;
     } catch (error) {
 
-      logger.error({ url, attempt, error: error instanceof Error ? error.message : "Unknown error", provider: options.providerName ?? "unknown" }, "External API call failed");
+      logger.error({ url: logUrl, attempt, error: error instanceof Error ? error.message : "Unknown error", provider: options.providerName ?? "unknown" }, "External API call failed");
 
       lastError = error;
       if (attempt < retries) {

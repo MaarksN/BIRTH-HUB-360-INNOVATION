@@ -1,5 +1,7 @@
 import { prisma } from "@birthub/database";
 
+import { toJsonValue } from "./runtime.shared.js";
+
 export type AgentRuntimeEventName =
   | "agent.plan.created"
   | "agent.tool.started"
@@ -28,7 +30,7 @@ export async function emitAgentRuntimeEvent(input: {
     data: {
       action: `AGENT_RUNTIME_${input.event.toUpperCase().replace(/\./g, "_")}`,
       actorId: null,
-      diff: {
+      diff: toJsonValue({
         agentId: input.agentId,
         costBrl: input.costBrl ?? 0,
         durationMs: input.durationMs ?? 0,
@@ -40,7 +42,7 @@ export async function emitAgentRuntimeEvent(input: {
         status: input.status,
         tenantId: input.tenantId,
         tool: input.tool ?? null
-      } as unknown,
+      }),
       entityId: input.executionId,
       entityType: "agent_execution",
       tenantId: input.tenantId

@@ -595,14 +595,7 @@ function registerWebhookIngestRoute(router: Router, config: ApiConfig): void {
         config,
         payload,
         provider,
-        signature: readOptionalString(request.header("x-birthhub-signature")),
-        trustedContext:
-          request.context.organizationId && request.context.tenantId
-            ? {
-                organizationId: request.context.organizationId,
-                tenantId: request.context.tenantId
-              }
-            : undefined
+        signature: readOptionalString(request.header("x-birthhub-signature"))
       });
 
       response.status(202).json({

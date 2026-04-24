@@ -4,6 +4,8 @@ import { prisma } from "@birthub/database";
 import { getAgentQueueName } from "@birthub/queue";
 import type { Queue } from "bullmq";
 
+import { toJsonValue } from "./runtime.shared.js";
+
 export async function enqueueSpecialistAgent(input: {
   agentQueue: Queue;
   context: Record<string, unknown>;
@@ -24,15 +26,15 @@ export async function enqueueSpecialistAgent(input: {
     data: {
       agentId: input.targetAgentId,
       id: childExecutionId,
-      input: {
+      input: toJsonValue({
         ...input.context,
         correlationId,
         parentExecutionId: input.executionId
-      } as unknown,
-      metadata: {
+      }),
+      metadata: toJsonValue({
         correlationId,
         parentExecutionId: input.executionId
-      } as unknown,
+      }),
       organizationId: input.organizationId,
       source: "WORKFLOW",
       status: "RUNNING",
@@ -66,13 +68,13 @@ export async function enqueueSpecialistAgent(input: {
     data: {
       action: "AGENT_HANDOFF_QUEUED",
       actorId: input.userId ?? null,
-      diff: {
+      diff: toJsonValue({
         childExecutionId,
         correlationId,
         parentExecutionId: input.executionId,
         queueName,
         targetAgentId: input.targetAgentId
-      } as unknown,
+      }),
       entityId: childExecutionId,
       entityType: "agent_execution",
       tenantId: input.tenantId

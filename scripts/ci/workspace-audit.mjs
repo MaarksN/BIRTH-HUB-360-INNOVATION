@@ -112,6 +112,9 @@ function collectScriptPathIssues(rootPackage) {
       if (!relativePath) {
         continue;
       }
+      if (/[*?[\]{}]/u.test(relativePath)) {
+        continue;
+      }
 
       const absolutePath = path.join(projectRoot, relativePath);
       if (!existsSync(absolutePath)) {

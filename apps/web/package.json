@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "next start -p 3001",
     "start:ci": "next start",
-    "test": "sh -c 'files=$(find tests -name \"*.test.ts\" -print 2>/dev/null); if [ -n \"$files\" ]; then node --import tsx --test $files; else echo \"No tests found\"; fi'",
+    "test": "node ../../scripts/testing/run-node-tests.mjs tests",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
