@@ -1,4 +1,4 @@
-﻿Set-StrictMode -Version Latest
+Set-StrictMode -Version Latest
 $ErrorActionPreference = "Continue"
 
 function Initialize-Phase {
@@ -11,12 +11,12 @@ function Initialize-Phase {
 
   $script:PhaseId = $PhaseId
   $script:PhaseName = $PhaseName
-  try {
-    $script:RepoRoot = Convert-Path -LiteralPath $RepoRoot -ErrorAction Stop
-  } catch {
+  $script:RepoRoot = (Resolve-Path -LiteralPath $RepoRoot -ErrorAction SilentlyContinue)
+  if (-not $script:RepoRoot) {
     Write-Host "ERRO: RepoRoot nao encontrado: $RepoRoot" -ForegroundColor Red
     exit 2
   }
+  $script:RepoRoot = $script:RepoRoot.Path
 
   if ([string]::IsNullOrWhiteSpace($ReportRoot)) {
     $ReportRoot = Join-Path $script:RepoRoot "artifacts\local-remediation"
@@ -145,4 +145,3 @@ function Invoke-RgOrSkip {
     Invoke-PhaseCommand -Step $Step -Command $cmd -AllowFail | Out-Null
   }
 }
-
