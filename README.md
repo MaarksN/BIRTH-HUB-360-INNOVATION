@@ -43,7 +43,6 @@ Base tecnica do BirthHub 360 com aplicacoes, servicos e pacotes compartilhados n
 - `apps/api`: API principal.
 - `apps/web`: aplicação web.
 - `apps/worker`: workers assíncronos.
-- `apps/webhook-receiver`: receptor dedicado de webhooks.
 - `packages/*`: bibliotecas de domínio, infraestrutura, contratos e utilitários.
 
 ## Comandos raiz (Fase 1)
