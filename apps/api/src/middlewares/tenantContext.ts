@@ -1,4 +1,4 @@
-import { runWithTenantContext } from "@birthub/database";
+import { runWithTenantContext, type Role } from "@birthub/database";
 import { updateLogContext } from "@birthub/logger";
 import type { NextFunction, Request, Response } from "express";
 
@@ -8,6 +8,7 @@ import { annotateTenantSpan } from "../observability/otel.js";
 
 type BoundTenantContext = {
   organizationId: string;
+  role: Role | null;
   source: "active-header" | "authenticated";
   tenantId: string;
   tenantSlug: string | null;
@@ -60,6 +61,7 @@ async function resolveTenantFromRequest(request: Request): Promise<BoundTenantCo
 
     return {
       organizationId: authorizedTenant.organizationId,
+      role: authorizedTenant.role,
       source: "active-header",
       tenantId: authorizedTenant.tenantId,
       tenantSlug: authorizedTenant.tenantSlug,
@@ -73,6 +75,7 @@ async function resolveTenantFromRequest(request: Request): Promise<BoundTenantCo
 
   return {
     organizationId,
+    role: request.context.role,
     source: "authenticated",
     tenantId,
     tenantSlug: request.context.tenantSlug ?? null,
@@ -101,6 +104,7 @@ export function tenantContextMiddleware(
       });
 
       request.context.organizationId = tenantContext.organizationId;
+      request.context.role = tenantContext.role;
       request.context.tenantId = tenantContext.tenantId;
       request.context.tenantSlug = tenantContext.tenantSlug;
       request.context.userId = tenantContext.userId;

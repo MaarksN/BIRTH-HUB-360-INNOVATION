@@ -189,6 +189,34 @@ void test("authenticated tenant switch succeeds when membership is valid", async
   }
 });
 
+void test("tenant switch rebinds RBAC role to the target tenant membership", async () => {
+  const restores = [
+    ...createSessionStubs({
+      memberships: {
+        org_1: Role.ADMIN,
+        org_2: Role.MEMBER
+      }
+    }),
+    stubMethod(prisma.workflow, "findMany", () => {
+      assert.fail("Workflow listing must not run when target tenant role is below ADMIN.");
+    })
+  ];
+
+  try {
+    const app = createSecurityApp();
+
+    await request(app)
+      .get("/api/v1/workflows")
+      .set("Authorization", "Bearer atk_valid")
+      .set("x-active-tenant", "tenant_2")
+      .expect(403);
+  } finally {
+    for (const restore of restores.reverse()) {
+      restore();
+    }
+  }
+});
+
 void test("administrative organization exports reject insufficient role", async () => {
   const restores = [
     ...createSessionStubs({
