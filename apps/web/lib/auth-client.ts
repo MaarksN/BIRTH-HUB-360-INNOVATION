@@ -1,9 +1,6 @@
-import { getWebConfig } from "@birthub/config/web";
-import {
-  fetchWithTimeout,
-  type FetchWithTimeoutInit
-} from "@birthub/utils/fetch";
+import { fetchWithTimeout, type FetchWithTimeoutInit } from "./fetch-with-timeout";
 import { resolveBrowserBffPath } from "./bff-policy";
+import { getWebConfig } from "./web-config";
 import {
   ACTIVE_TENANT_COOKIE_NAME,
   API_CSRF_COOKIE_NAME,
@@ -15,7 +12,7 @@ import {
   normalizeStoredSession,
   readCookieValueFromHeader,
   type StoredSession,
-  USER_ID_COOKIE_NAME
+  USER_ID_COOKIE_NAME,
 } from "./session-context";
 
 const SESSION_FETCH_TIMEOUT_MS = 10_000;
@@ -47,7 +44,7 @@ function getBrowserStorage(): Pick<Storage, "getItem" | "removeItem" | "setItem"
 export function resolveApiBaseUrl(env: NodeJS.ProcessEnv = process.env): string {
   return getWebConfig({
     ...env,
-    NEXT_PUBLIC_ENVIRONMENT: env.NEXT_PUBLIC_ENVIRONMENT ?? "development"
+    NEXT_PUBLIC_ENVIRONMENT: env.NEXT_PUBLIC_ENVIRONMENT ?? "development",
   }).NEXT_PUBLIC_API_URL;
 }
 
@@ -70,12 +67,10 @@ export function getStoredSession(): StoredSession | null {
     storage?.getItem(LEGACY_TENANT_STORAGE_KEY) ??
     null;
   const userId =
-    getCookieValue(USER_ID_COOKIE_NAME) ??
-    storage?.getItem(LEGACY_USER_ID_STORAGE_KEY) ??
-    null;
+    getCookieValue(USER_ID_COOKIE_NAME) ?? storage?.getItem(LEGACY_USER_ID_STORAGE_KEY) ?? null;
   const normalizedSession = normalizeStoredSession({
     ...(tenantId ? { tenantId } : {}),
-    ...(userId ? { userId } : {})
+    ...(userId ? { userId } : {}),
   });
 
   if (normalizedSession) {
@@ -201,12 +196,11 @@ export async function fetchWithSession(
     ...init,
     credentials: "include",
     headers,
-    timeoutMs: init.timeoutMs ?? SESSION_FETCH_TIMEOUT_MS
+    timeoutMs: init.timeoutMs ?? SESSION_FETCH_TIMEOUT_MS,
   };
 
   if (typeof input === "string") {
-    const runtimeUrl =
-      typeof window !== "undefined" ? resolveBrowserBffPath(input) : input;
+    const runtimeUrl = typeof window !== "undefined" ? resolveBrowserBffPath(input) : input;
     return fetchWithTimeout(toApiUrl(runtimeUrl), nextInit);
   }
 

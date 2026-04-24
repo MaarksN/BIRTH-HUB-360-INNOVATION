@@ -3,25 +3,11 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { isInstallableManifest, loadManifestCatalog } from "@birthub/agents-core";
-
-const REQUIRED_PROMPT_SECTIONS = [
-  "IDENTIDADE E MISSAO",
-  "QUANDO ACIONAR",
-  "ENTRADAS OBRIGATORIAS",
-  "RACIOCINIO OPERACIONAL ESPERADO",
-  "MODO DE OPERACAO AUTONOMA",
-  "ROTINA DE MONITORAMENTO E ANTECIPACAO",
-  "CRITERIOS DE PRIORIZACAO",
-  "CRITERIOS DE ESCALACAO",
-  "OBJETIVOS PRIORITARIOS",
-  "FERRAMENTAS ESPERADAS",
-  "SAIDAS OBRIGATORIAS",
-  "GUARDRAILS",
-  "CHECKLIST DE QUALIDADE",
-  "APRENDIZADO COMPARTILHADO",
-  "FORMATO DE SAIDA"
-] as const;
+import {
+  REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS,
+  isInstallableManifest,
+  loadManifestCatalog
+} from "@birthub/agents-core";
 
 void test("official installable packs keep the required readiness contract", async () => {
   const currentFile = fileURLToPath(import.meta.url);
@@ -39,11 +25,10 @@ void test("official installable packs keep the required readiness contract", asy
     assert.ok(manifest.tools.length > 0, `${manifest.agent.id} must declare at least one tool.`);
     assert.ok(manifest.policies.length > 0, `${manifest.agent.id} must declare at least one policy.`);
 
-    for (const section of REQUIRED_PROMPT_SECTIONS) {
-      assert.match(
-        manifest.agent.prompt,
-        new RegExp(section),
-        `${manifest.agent.id} is missing prompt section '${section}'.`
+    for (const sectionGroup of REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS) {
+      assert.ok(
+        sectionGroup.anyOf.some((section) => manifest.agent.prompt.includes(section)),
+        `${manifest.agent.id} is missing prompt section '${sectionGroup.label}'.`
       );
     }
   }

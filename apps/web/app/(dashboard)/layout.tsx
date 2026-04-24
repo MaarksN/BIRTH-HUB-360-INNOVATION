@@ -13,7 +13,7 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
       <header className="dashboard-topbar">
         <Navbar />
       </header>
-      <main className="dashboard-content">
+      <main className="dashboard-main">
         <DashboardBillingGate>{children}</DashboardBillingGate>
       </main>
     </div>

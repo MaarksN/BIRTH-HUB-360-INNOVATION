@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-04-18T14:44:26.455Z",
+  "cycle": "1",
+  "policy": "quarantine-not-delete",
+  "gate": [
+    {
+      "path": ".ops/snapshots/snapshot.json",
+      "ok": true
+    },
+    {
+      "path": ".ops/analysis/core-vs-noise-matrix.json",
+      "ok": true
+    },
+    {
+      "path": ".ops/analysis/build-runtime-map.json",
+      "ok": true
+    },
+    {
+      "path": ".ops/inventory/scripts-map.json",
+      "ok": true
+    }
+  ],
+  "moves": [
+    {
+      "from": "auditoria birthub 360.html",
+      "to": ".ops/quarantine/runtime-noise/root-files/auditoria birthub 360.html",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    },
+    {
+      "from": "fix-turbopack-root-only.py",
+      "to": ".ops/quarantine/runtime-noise/root-files/fix-turbopack-root-only.py",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    },
+    {
+      "from": "fix_file.js",
+      "to": ".ops/quarantine/runtime-noise/root-files/fix_file.js",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    },
+    {
+      "from": "fix_final.mjs",
+      "to": ".ops/quarantine/runtime-noise/root-files/fix_final.mjs",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    },
+    {
+      "from": "fix_final.ts",
+      "to": ".ops/quarantine/runtime-noise/root-files/fix_final.ts",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    },
+    {
+      "from": "make_factory_properly_finally.mjs",
+      "to": ".ops/quarantine/runtime-noise/root-files/make_factory_properly_finally.mjs",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    },
+    {
+      "from": "use_any.js",
+      "to": ".ops/quarantine/runtime-noise/root-files/use_any.js",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    },
+    {
+      "from": "very_final.js",
+      "to": ".ops/quarantine/runtime-noise/root-files/very_final.js",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    },
+    {
+      "from": "very_final.mjs",
+      "to": ".ops/quarantine/runtime-noise/root-files/very_final.mjs",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    },
+    {
+      "from": "very_final2.mjs",
+      "to": ".ops/quarantine/runtime-noise/root-files/very_final2.mjs",
+      "runtime_refs_outside_audit_artifacts": [],
+      "safe_to_quarantine": true
+    }
+  ]
+}

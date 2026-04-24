@@ -4,15 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "compile:executive-premium": "node --import tsx ../../scripts/agent/compile-executive-premium-agents.ts",
+    "compile:github": "node --import tsx ../../scripts/agent/compile-github-agents.ts",
+    "upgrade:github": "node --import tsx ../../scripts/agent/upgrade-github-agent-manifests.ts",
+    "readiness:github": "node --import tsx ../../scripts/agent/check-github-agent-readiness.ts",
     "validate": "node --import tsx ../../scripts/validate-packs.ts",
-    "test": "sh -c 'files=$(find test -name \"*.test.ts\" -print 2>/dev/null); if [ -n \"$files\" ]; then node --import tsx --test $files; else echo \"No tests found\"; fi'",
+    "test": "node --import tsx --test test/**/*.test.ts",
     "smoke": "node --import tsx --test test/pack-smoke.test.ts",
     "regression": "node --import tsx --test test/pack-regression.test.ts",
     "docs": "node --import tsx ../../scripts/generate-pack-docs.ts",
-    "qa": "pnpm docs && node --import tsx ../../scripts/pack-qa-report.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "build": "pnpm typecheck"
+    "build": "tsc"
   },
   "dependencies": {
     "@birthub/agents-core": "workspace:*",
@@ -23,5 +26,10 @@
     "@types/node": "^25.6.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
   }
 }

@@ -9,7 +9,8 @@ import {
   type AgentManifest,
   type ManagedAgentPolicy,
   type ManifestCatalogEntry,
-  type ManifestSearchFilters
+  type ManifestSearchFilters,
+  rehydrateManifestWithPremiumProtocol
 } from "@birthub/agents-core";
 
 export interface AgentConfigSnapshot {
@@ -172,7 +173,7 @@ export async function resolveRuntimeAgent(input: {
 
   return {
     installedAgentId: installedAgent?.id ?? null,
-    manifest: catalogEntry.manifest,
+    manifest: rehydrateManifestWithPremiumProtocol(catalogEntry.manifest),
     organizationId: installedAgent?.organizationId ?? null,
     runtimeAgentId: installedAgent?.id ?? input.agentId
   };

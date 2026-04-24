@@ -14,7 +14,6 @@ import {
 } from "./page.sections";
 import {
   DashboardAttributionSection,
-  DashboardClinicalSection,
   DashboardCustomerHealthSection,
   DashboardIntegrationActivitySection,
   DashboardSalesOsSection,
@@ -37,7 +36,7 @@ export default async function DashboardHomePage() {
   const usageEntries = Object.entries(data.billing.usage ?? {});
 
   return (
-    <main className="dashboard-content">
+    <main className="dashboard-content dashboard-home">
       <ProductPageHeader
         actions={
           <div className="hero-actions">
@@ -66,7 +65,7 @@ export default async function DashboardHomePage() {
         staticCopy={staticCopy}
       />
 
-      <section className="stats-grid">
+      <section className="stats-grid dashboard-signal-band">
         {data.metrics.finance.map((item) => (
           <article key={item.label}>
             <span className="badge">{item.label}</span>
@@ -90,7 +89,6 @@ export default async function DashboardHomePage() {
         salesOsToolCount={salesOsToolCount}
         staticCopy={staticCopy}
       />
-      <DashboardClinicalSection copy={copy.dashboardHome} data={data} locale={locale} />
       <DashboardWorkflowUsageSection
         copy={copy.dashboardHome}
         data={data}

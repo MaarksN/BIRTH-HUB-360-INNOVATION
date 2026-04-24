@@ -1,8 +1,8 @@
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "./web-config";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "./fetch-with-timeout";
 import { ACTIVE_TENANT_COOKIE_NAME } from "./session-context";
 
 const PRODUCT_API_TIMEOUT_MS = 8_000;
@@ -34,7 +34,7 @@ export async function fetchProductJson<T>(path: string, init?: RequestInit): Pro
     cache: "no-store",
     headers: requestHeaders,
     timeoutMessage: `Product API exceeded the ${PRODUCT_API_TIMEOUT_MS}ms timeout budget for ${path}.`,
-    timeoutMs: PRODUCT_API_TIMEOUT_MS
+    timeoutMs: PRODUCT_API_TIMEOUT_MS,
   });
 
   if (response.status === 401) {

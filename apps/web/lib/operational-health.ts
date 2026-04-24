@@ -1,4 +1,4 @@
-import { getWebConfig, type WebConfig } from "@birthub/config/web";
+import { getWebConfig, type WebConfig } from "./web-config";
 
 type DependencyStatus = "up" | "down";
 
@@ -40,7 +40,7 @@ export async function evaluateWebOperationalHealth(input?: {
       try {
         const response = await fetchImpl(dependency.url, {
           cache: "no-store",
-          signal: AbortSignal.timeout(timeoutMs)
+          signal: AbortSignal.timeout(timeoutMs),
         });
 
         return {
@@ -53,8 +53,8 @@ export async function evaluateWebOperationalHealth(input?: {
           ...(response.ok
             ? {}
             : {
-                message: `Dependency responded with non-success status code ${response.status}.`
-              })
+                message: `Dependency responded with non-success status code ${response.status}.`,
+              }),
         };
       } catch (error) {
         const message = error instanceof Error ? error.message : "Unknown dependency error";
@@ -64,19 +64,20 @@ export async function evaluateWebOperationalHealth(input?: {
           message,
           name: dependency.name,
           status: "down",
-          url: dependency.url
+          url: dependency.url,
         };
       }
     })
   );
 
-  const isHealthy = checks.every((dependency) => !dependency.mandatory || dependency.status === "up");
+  const isHealthy = checks.every(
+    (dependency) => !dependency.mandatory || dependency.status === "up"
+  );
 
   return {
     checkedAt: new Date().toISOString(),
     dependencies: checks,
     service: "web",
-    status: isHealthy ? "ok" : "degraded"
+    status: isHealthy ? "ok" : "degraded",
   };
 }
-

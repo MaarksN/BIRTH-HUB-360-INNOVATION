@@ -11,15 +11,14 @@ import {
   summarizeNumericSignals
 } from "@birthub/agents-core";
 import { PolicyEngine } from "@birthub/agents-core/policy";
-import { BaseTool, DbReadTool, DbWriteTool, HttpTool, SendEmailTool } from "@birthub/agents-core/tools";
-import { createLogger } from "@birthub/logger";
+import { BaseTool } from "@birthub/agents-core/tools";
 import { z } from "zod";
 
 import { buildToolCostTable } from "./runtime.budget.js";
 import { getRuntimeManifestCatalog } from "./runtime.catalog.js";
 import { AGENT_MESH_ORCHESTRATOR_ID, buildAgentMeshExecutionBlueprint } from "./runtime.mesh.js";
+import { createRuntimeToolRegistry } from "./runtime.tool-registry.js";
 
-const logger = createLogger("agent-runtime");
 const TENANT_SCOPE_COMMENT_PREFIX = "-- tenant_scope:";
 
 type DbReadQueryTemplate = {
@@ -313,42 +312,13 @@ export function createRuntimeTools(
     defaultToolCostBrl,
     manifest
   });
-  const tools: Record<string, BaseTool<unknown, unknown>> = {
-    "db-read": new DbReadTool({
-      executor: async ({ query, params, tenantId }) => {
-        const { Prisma, prisma } = await import("@birthub/database");
-        const template = buildDbReadQueryTemplate(query, params, tenantId);
-        const results = await prisma.$queryRaw(
-          Prisma.sql(toTemplateStringsArray(template.strings), ...template.values)
-        );
-        return (Array.isArray(results) ? results : Array.from(results as Iterable<unknown>)) as Record<string, unknown>[];
-      },
-      policyEngine
-    }) as BaseTool<unknown, unknown>,
-    "db-write": new DbWriteTool({
-      auditPublisher: (event) => {
-        logger.info({ event }, "agent-runtime db-write audit");
-        return Promise.resolve();
-      },
-      executor: () => Promise.resolve(1),
-      policyEngine
-    }) as BaseTool<unknown, unknown>,
-    http: new HttpTool({ policyEngine }) as BaseTool<unknown, unknown>,
-    "send-email": new SendEmailTool({
-      policyEngine,
-      ...(options.sendEmailApiKey !== undefined ? { apiKey: options.sendEmailApiKey } : {}),
-      ...(options.sendEmailFromEmail !== undefined ? { fromEmail: options.sendEmailFromEmail } : {})
-    }) as BaseTool<unknown, unknown>,
-    handoff: new ManifestCapabilityTool(
-      {
-        description: "Delega a execucao para outro especialista ou transfere o controle.",
-        id: "handoff",
-        name: "Handoff"
-      },
-      manifest.tags,
-      { policyEngine }
-    ) as BaseTool<unknown, unknown>
-  };
+
+  const tools = createRuntimeToolRegistry({
+    defaultToolCostBrl,
+    manifest,
+    options,
+    policyEngine
+  });
 
   for (const tool of manifest.tools) {
     tools[tool.id] = new ManifestCapabilityTool(
@@ -370,3 +340,4 @@ export function createRuntimeTools(
     tools
   };
 }
+

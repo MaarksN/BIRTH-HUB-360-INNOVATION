@@ -125,7 +125,7 @@ function registerRequestLoggingMiddleware(app: Express): void {
         method: request.method,
         organizationId: request.context.organizationId,
         path: request.originalUrl,
-        remoteAddress: request.ip ?? request.header("x-forwarded-for") ?? null,
+        remoteAddress: request.ip ?? null,
         requestId: request.context.requestId,
         role: request.context.role,
         statusCode: response.statusCode,
@@ -332,6 +332,7 @@ export function configureAppInfrastructure(app: Express, config: ApiConfig): voi
   }
   initializeWorkflowInternalEventBridge(config);
 
+  app.set("trust proxy", config.API_TRUST_PROXY);
   app.disable("x-powered-by");
   const registrations = createInfrastructurePipelineRegistrations(config);
   applyContextPipeline(app, registrations);

@@ -1,15 +1,11 @@
-
 "use client";
 
 import "reactflow/dist/style.css";
 
 import { use, useEffect, useMemo, useState, useTransition, type ReactNode } from "react";
 
-import { getWebConfig } from "@birthub/config/web";
-import {
-  WORKFLOW_CONNECTOR_ACTIONS,
-  WORKFLOW_EVENT_TOPICS
-} from "@birthub/workflows-core/nextjs";
+import { getWebConfig } from "../../../../../lib/web-config";
+import { WORKFLOW_CONNECTOR_ACTIONS, WORKFLOW_EVENT_TOPICS } from "@birthub/workflows-core/nextjs";
 import { Play, Save, Shuffle, Zap } from "lucide-react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import ReactFlow, {
@@ -23,7 +19,7 @@ import ReactFlow, {
   type Edge,
   type Node,
   type OnEdgesChange,
-  type OnNodesChange
+  type OnNodesChange,
 } from "reactflow";
 
 import {
@@ -37,7 +33,7 @@ import {
   saveWorkflowDefinition,
   startWorkflowDryRun,
   type BuilderNodeData,
-  type SidebarValues
+  type SidebarValues,
 } from "./workflow-editor-helpers";
 
 type WorkflowStatus = "ARCHIVED" | "DRAFT" | "PUBLISHED";
@@ -47,14 +43,14 @@ function useWorkflowForm(selectedNode: Node<BuilderNodeData> | null): UseFormRet
   const form = useForm<SidebarValues>({
     defaultValues: {
       configJson: JSON.stringify(selectedNode?.data.config ?? {}, null, 2),
-      label: selectedNode?.data.label ?? ""
-    }
+      label: selectedNode?.data.label ?? "",
+    },
   });
 
   useEffect(() => {
     form.reset({
       configJson: JSON.stringify(selectedNode?.data.config ?? {}, null, 2),
-      label: selectedNode?.data.label ?? ""
+      label: selectedNode?.data.label ?? "",
     });
   }, [form, selectedNode]);
 
@@ -68,7 +64,7 @@ function useWorkflowLoader({
   setNodes,
   setSelectedNodeId,
   setWorkflowName,
-  setWorkflowStatus
+  setWorkflowStatus,
 }: {
   id: string;
   setEdges: (edges: Edge[]) => void;
@@ -102,14 +98,22 @@ function useWorkflowLoader({
     return () => {
       cancelled = true;
     };
-  }, [id, setEdges, setLoadingError, setNodes, setSelectedNodeId, setWorkflowName, setWorkflowStatus]);
+  }, [
+    id,
+    setEdges,
+    setLoadingError,
+    setNodes,
+    setSelectedNodeId,
+    setWorkflowName,
+    setWorkflowStatus,
+  ]);
 }
 
 function StatusNotice({
   background,
   border,
   children,
-  color
+  color,
 }: {
   background: string;
   border: string;
@@ -125,7 +129,7 @@ function StatusNotice({
         color,
         fontSize: 12,
         marginTop: 6,
-        padding: "0.65rem"
+        padding: "0.65rem",
       }}
     >
       {children}
@@ -150,7 +154,7 @@ function WorkflowEditorCanvas({
   workflowStatus,
   setWorkflowName,
   simulating,
-  onSimulate
+  onSimulate,
 }: {
   decoratedNodes: Node<BuilderNodeData>[];
   edges: Edge[];
@@ -179,7 +183,7 @@ function WorkflowEditorCanvas({
         borderRadius: 16,
         display: "grid",
         gridTemplateRows: "auto 1fr",
-        overflow: "hidden"
+        overflow: "hidden",
       }}
     >
       <header
@@ -189,7 +193,7 @@ function WorkflowEditorCanvas({
           color: "#fff",
           display: "flex",
           justifyContent: "space-between",
-          padding: "0.7rem 0.9rem"
+          padding: "0.7rem 0.9rem",
         }}
       >
         <div style={{ display: "grid", gap: 4 }}>
@@ -202,7 +206,7 @@ function WorkflowEditorCanvas({
               color: "#fff",
               fontSize: 16,
               fontWeight: 700,
-              padding: "0.4rem 0.55rem"
+              padding: "0.4rem 0.55rem",
             }}
             value={workflowName}
           />
@@ -212,7 +216,7 @@ function WorkflowEditorCanvas({
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <button
-            onClick={() => window.location.href = `/workflows/${workflowId}/revisions`}
+            onClick={() => (window.location.href = `/workflows/${workflowId}/revisions`)}
             style={{ alignItems: "center", display: "inline-flex", gap: 6 }}
             type="button"
           >
@@ -276,7 +280,7 @@ function WorkflowBuilderControls({
   onAddConnectorStep,
   onConnectorActionChange,
   onTriggerTopicChange,
-  triggerTopic
+  triggerTopic,
 }: {
   connectorAction: (typeof WORKFLOW_CONNECTOR_ACTIONS)[number];
   onAddConnectorStep: () => void;
@@ -293,7 +297,7 @@ function WorkflowBuilderControls({
         borderRadius: 10,
         display: "flex",
         gap: "0.6rem",
-        padding: "0.55rem"
+        padding: "0.55rem",
       }}
     >
       <select
@@ -310,9 +314,7 @@ function WorkflowBuilderControls({
       </select>
       <select
         onChange={(event) =>
-          onConnectorActionChange(
-            event.target.value as (typeof WORKFLOW_CONNECTOR_ACTIONS)[number]
-          )
+          onConnectorActionChange(event.target.value as (typeof WORKFLOW_CONNECTOR_ACTIONS)[number])
         }
         value={connectorAction}
       >
@@ -334,7 +336,7 @@ function WorkflowSidebar({
   loadingError,
   onSubmit,
   saveMessage,
-  validationErrors
+  validationErrors,
 }: {
   form: UseFormReturn<SidebarValues>;
   loadingError: string | null;
@@ -351,12 +353,13 @@ function WorkflowSidebar({
         display: "grid",
         gap: "0.75rem",
         gridTemplateRows: "auto auto 1fr",
-        padding: "0.9rem"
+        padding: "0.9rem",
       }}
     >
       <h3 style={{ margin: 0 }}>Node Sidebar</h3>
       <div style={{ color: "#455a64", fontSize: 13 }}>
-        Esta tela agora carrega e salva o canvas real do workflow. Edite um node e publique sem depender de `initialNodes`.
+        Esta tela agora carrega e salva o canvas real do workflow. Edite um node e publique sem
+        depender de `initialNodes`.
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} style={{ display: "grid", gap: "0.55rem" }}>
@@ -422,10 +425,12 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
   const [simulating, setSimulating] = useState(false);
   const [simulationPayload, setSimulationPayload] = useState("{}");
   const [showSimulationModal, setShowSimulationModal] = useState(false);
-  const [simulatedResults, setSimulatedResults] = useState<Record<string, "SUCCESS" | "FAILED" | "WAITING">>({});
-  const [connectorAction, setConnectorAction] = useState<(typeof WORKFLOW_CONNECTOR_ACTIONS)[number]>(
-    WORKFLOW_CONNECTOR_ACTIONS[0]
-  );
+  const [simulatedResults, setSimulatedResults] = useState<
+    Record<string, "SUCCESS" | "FAILED" | "WAITING">
+  >({});
+  const [connectorAction, setConnectorAction] = useState<
+    (typeof WORKFLOW_CONNECTOR_ACTIONS)[number]
+  >(WORKFLOW_CONNECTOR_ACTIONS[0]);
 
   useWorkflowLoader({
     id,
@@ -434,7 +439,7 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
     setNodes,
     setSelectedNodeId,
     setWorkflowName,
-    setWorkflowStatus
+    setWorkflowStatus,
   });
 
   const selectedNode = useMemo(
@@ -455,9 +460,15 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
       return {
         ...node,
         style: {
-          background: simStatus === "FAILED" ? "#fff5f5" : simStatus === "SUCCESS" ? "#ecfff5" : "#f8fafc",
-          border: simStatus === "FAILED" ? "2px solid #c1121f" : simStatus === "SUCCESS" ? "2px solid #1b4332" : "1px solid #cbd5e1"
-        }
+          background:
+            simStatus === "FAILED" ? "#fff5f5" : simStatus === "SUCCESS" ? "#ecfff5" : "#f8fafc",
+          border:
+            simStatus === "FAILED"
+              ? "2px solid #c1121f"
+              : simStatus === "SUCCESS"
+                ? "2px solid #1b4332"
+                : "1px solid #cbd5e1",
+        },
       };
     });
   }, [nodes, validation.invalidNodeIds, simulatedResults]);
@@ -468,7 +479,9 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
       void saveWorkflowDefinition(apiBaseUrl, id, workflowName, nodes, edges, status)
         .then((payload) => {
           setWorkflowStatus(payload.workflow.status);
-          setSaveMessage(status === "PUBLISHED" ? "Workflow publicado." : "Workflow salvo em draft.");
+          setSaveMessage(
+            status === "PUBLISHED" ? "Workflow publicado." : "Workflow salvo em draft."
+          );
         })
         .catch((error) => {
           setLoadingError(error instanceof Error ? error.message : "Falha ao salvar.");
@@ -512,7 +525,6 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
           setLoadingError(e instanceof Error ? e.message : "Falha ao carregar simulacao.");
         }
       }, 1000);
-
     } catch (e) {
       setSimulating(false);
       setLoadingError(e instanceof Error ? e.message : "Payload invalido");
@@ -528,7 +540,7 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
       setNodes((currentNodes) => applySidebarValues(currentNodes, selectedNodeId, values));
     } catch {
       form.setError("configJson", {
-        message: "JSON invalido."
+        message: "JSON invalido.",
       });
     }
   }
@@ -544,13 +556,13 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
               config: { topic },
               label: `Trigger ${topic}`,
               status: workflowStatus === "PUBLISHED" ? "published" : "draft",
-              stepType: "TRIGGER_EVENT"
+              stepType: "TRIGGER_EVENT",
             },
             id: "trigger_event",
             position: { x: 0, y: 0 },
-            type: "trigger"
+            type: "trigger",
           },
-          ...currentNodes
+          ...currentNodes,
         ];
       }
 
@@ -563,9 +575,9 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
                 category: "trigger",
                 config: { topic },
                 label: `Trigger ${topic}`,
-                stepType: "TRIGGER_EVENT"
+                stepType: "TRIGGER_EVENT",
               },
-              type: "trigger"
+              type: "trigger",
             }
           : node
       );
@@ -584,8 +596,8 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
             id: `edge_${currentEdges.length + 1}`,
             source: previousStep.id,
             target: stepKey,
-            type: "smoothstep"
-          }
+            type: "smoothstep",
+          },
         ]);
       }
 
@@ -596,16 +608,16 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
             category: "action",
             config: {
               action: connectorAction,
-              payload: {}
+              payload: {},
             },
             label: connectorAction,
             status: workflowStatus === "PUBLISHED" ? "published" : "draft",
-            stepType: "CONNECTOR_ACTION"
+            stepType: "CONNECTOR_ACTION",
           },
           id: stepKey,
           position: { x: 0, y: 0 },
-          type: "action"
-        }
+          type: "action",
+        },
       ]);
     });
   }
@@ -616,7 +628,7 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
         display: "grid",
         gap: "0.75rem",
         gridTemplateColumns: "minmax(0, 1fr) 340px",
-        height: "calc(100vh - 110px)"
+        height: "calc(100vh - 110px)",
       }}
     >
       <div style={{ display: "grid", gap: "0.55rem", minHeight: 0 }}>
@@ -631,7 +643,9 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
           decoratedNodes={decoratedNodes}
           edges={edges}
           isPending={isPending}
-          onConnectEdge={(connection) => setEdges((currentEdges) => addEdge(connection, currentEdges))}
+          onConnectEdge={(connection) =>
+            setEdges((currentEdges) => addEdge(connection, currentEdges))
+          }
           onEdgesChange={onEdgesChange}
           onNodesChange={onNodesChange}
           onPickNode={setSelectedNodeId}
@@ -656,15 +670,34 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
       />
 
       {showSimulationModal && (
-        <div style={{
-          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-          background: "rgba(0,0,0,0.5)", zIndex: 1000,
-          display: "flex", alignItems: "center", justifyContent: "center"
-        }}>
-          <div style={{ background: "#fff", padding: "2rem", borderRadius: 16, width: 400, display: "grid", gap: "1rem" }}>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.5)",
+            zIndex: 1000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              padding: "2rem",
+              borderRadius: 16,
+              width: 400,
+              display: "grid",
+              gap: "1rem",
+            }}
+          >
             <h3 style={{ margin: 0 }}>Simular Dry Run</h3>
             <p style={{ margin: 0, fontSize: 13, color: "#455a64" }}>
-              Insira o payload JSON de entrada. Side-effects (como chamadas HTTP reais) serão pulados. O resultado será projetado no canvas!
+              Insira o payload JSON de entrada. Side-effects (como chamadas HTTP reais) serão
+              pulados. O resultado será projetado no canvas!
             </p>
             <textarea
               rows={8}
@@ -673,8 +706,20 @@ export default function WorkflowEditPage({ params }: { params: Promise<{ id: str
               style={{ fontFamily: "monospace", width: "100%", padding: "0.5rem" }}
             />
             <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
-              <button onClick={() => setShowSimulationModal(false)} type="button" style={{ background: "#e2e8f0", color: "#1e293b" }}>Cancelar</button>
-              <button onClick={runSimulation} type="button" style={{ background: "#0284c7", color: "#fff" }}>Executar</button>
+              <button
+                onClick={() => setShowSimulationModal(false)}
+                type="button"
+                style={{ background: "#e2e8f0", color: "#1e293b" }}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={runSimulation}
+                type="button"
+                style={{ background: "#0284c7", color: "#fff" }}
+              >
+                Executar
+              </button>
             </div>
           </div>
         </div>

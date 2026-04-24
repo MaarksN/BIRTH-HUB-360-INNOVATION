@@ -265,12 +265,12 @@ const PLATFORM_CATALOG: PlatformCatalogEntry[] = [
     title: "Tickets e mensagens do cliente"
   },
   {
-    href: "/patients",
-    id: "cliente-acme-materna",
+    href: "/sales-os",
+    id: "cliente-acme-growth",
     kind: "cadastro",
     keywords: [
       "acme",
-      "materna",
+      "growth",
       "cliente",
       "economia",
       "plano",
@@ -285,22 +285,22 @@ const PLATFORM_CATALOG: PlatformCatalogEntry[] = [
       annualVolume: 920,
       currentMonthlyCost: 18400,
       currentPlan: "Growth Lite",
-      name: "Acme Materna",
+      name: "Acme Growth",
       onboardingBacklog: 17,
       recommendedPlan: "Growth Assistido"
     },
     sourceLabel: "Cadastro do cliente",
     summary:
-      "Conta com 42 usuarios ativos, plano Growth Lite, backlog de onboarding alto e forte uso de automacoes.",
-    title: "Cliente Acme Materna"
+      "Conta com 42 usuarios ativos, plano Growth Lite, backlog de onboarding alto e forte uso de automacoes comerciais.",
+    title: "Cliente Acme Growth"
   },
   {
-    href: "/patients",
-    id: "cliente-aurora-clinica",
+    href: "/conversations",
+    id: "cliente-aurora-saas",
     kind: "cadastro",
     keywords: [
       "aurora",
-      "clinica",
+      "saas",
       "cliente",
       "financeiro",
       "orcamento",
@@ -313,14 +313,14 @@ const PLATFORM_CATALOG: PlatformCatalogEntry[] = [
       annualVolume: 470,
       currentMonthlyCost: 9600,
       currentPlan: "Starter Pro",
-      name: "Clinica Aurora",
+      name: "Aurora SaaS",
       onboardingBacklog: 6,
       recommendedPlan: "Starter Plus"
     },
     sourceLabel: "Cadastro do cliente",
     summary:
-      "Conta media com operacao enxuta, sensivel a preco e bom potencial para padronizacao de processos.",
-    title: "Cliente Clinica Aurora"
+      "Conta media com operacao enxuta, sensivel a preco e bom potencial para padronizacao de processos comerciais.",
+    title: "Cliente Aurora SaaS"
   }
 ];
 
@@ -337,15 +337,15 @@ const WEB_REFERENCE_CATALOG: WebCatalogEntry[] = [
     title: "Guias de gestao e produtividade"
   },
   {
-    href: "https://www.gov.br/ans",
-    id: "web-ans-regulatorio",
-    kind: "regulatorio",
-    keywords: ["ans", "legislacao", "regulatorio", "saude", "plano", "norma", "validacao"],
-    module: "ANS",
-    sourceLabel: "Portal oficial ANS",
+    href: "https://www.hubspot.com",
+    id: "web-hubspot-revops",
+    kind: "benchmark",
+    keywords: ["crm", "revops", "vendas", "pipeline", "receita", "automacao", "validacao"],
+    module: "HubSpot",
+    sourceLabel: "HubSpot",
     summary:
-      "Base oficial para validar pontos regulatorios, comunicados e referencias publicas do setor.",
-    title: "Referencias oficiais do setor de saude"
+      "Referencias publicas para CRM, RevOps, automacao comercial e boas praticas de pipeline.",
+    title: "Benchmarks de CRM e RevOps"
   },
   {
     href: "https://www.ibge.gov.br",
@@ -701,7 +701,7 @@ function buildSimulation(
 ): ChatbookSimulation {
   const matchedProfile =
     platformMatches.find((entry) => entry.simulationProfile)?.simulationProfile ??
-    PLATFORM_CATALOG.find((entry) => entry.id === "cliente-acme-materna")?.simulationProfile;
+    PLATFORM_CATALOG.find((entry) => entry.id === "cliente-acme-growth")?.simulationProfile;
 
   const hintedMonthlyCost = parseCurrencyHint(message);
   const hintedUsers = parseUserHint(message);

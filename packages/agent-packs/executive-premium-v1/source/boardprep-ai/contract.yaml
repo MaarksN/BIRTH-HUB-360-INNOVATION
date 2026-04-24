@@ -1,0 +1,192 @@
+# [SOURCE] BirthHub360_Agentes_Parallel_Plan - BoardPrepAI
+name: BoardPrepAI
+domain: executivos
+cycle: 1
+description: Consolida contexto executivo, KPIs, riscos e decisoes pendentes para preparar material de board com lacunas explicitadas e recomendacoes acionaveis.
+
+preconditions:
+  - Input valido validado contra BoardPrepAIInputSchema.
+  - Fontes executivas e adapters de consolidacao configurados.
+
+postconditions:
+  - Output strict retornado aderente ao BoardPrepAIOutputSchema.
+  - Eventos de observabilidade emitidos para request, tools, fallback e resposta.
+
+input_schema:
+  type: object
+  strict: true
+  properties:
+    tenantId:
+      type: string
+    requestId:
+      type: string
+    dateRange:
+      type: object
+      strict: true
+      properties:
+        label:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+    focusAreas:
+      type: array
+      items:
+        type: string
+    requiredMetrics:
+      type: array
+      items:
+        type: string
+    meetingContext:
+      type: string
+    kpis:
+      type: array
+      items:
+        type: object
+    risks:
+      type: array
+      items:
+        type: object
+    decisionsPending:
+      type: array
+      items:
+        type: object
+    constraints:
+      type: object
+      strict: true
+      properties:
+        maxActions:
+          type: number
+        language:
+          type: string
+        currency:
+          type: string
+
+output_schema:
+  type: object
+  strict: true
+  properties:
+    agent:
+      type: string
+      value: BoardPrepAI
+    domain:
+      type: string
+      value: executivos
+    status:
+      type: string
+      enum: [success, fallback, error]
+    summary:
+      type: string
+    generatedAt:
+      type: string
+    boardBrief:
+      type: object
+      strict: true
+      properties:
+        headline:
+          type: string
+        readinessScorePct:
+          type: number
+        resumo_executivo:
+          type: string
+        kpis_chave:
+          type: array
+          items:
+            type: object
+        riscos:
+          type: array
+          items:
+            type: object
+        decisoes_requeridas:
+          type: array
+          items:
+            type: object
+        recomendacoes:
+          type: array
+          items:
+            type: object
+        lacunas_de_informacao:
+          type: array
+          items:
+            type: string
+        summary_report:
+          type: string
+        data_tables:
+          type: array
+          items:
+            type: object
+        presentation_outline:
+          type: array
+          items:
+            type: string
+    observability:
+      type: object
+      strict: true
+      properties:
+        metrics:
+          type: object
+          strict: true
+          properties:
+            durationMs:
+              type: number
+            toolCalls:
+              type: number
+            toolFailures:
+              type: number
+            retries:
+              type: number
+        events:
+          type: array
+          items:
+            type: object
+    fallback:
+      type: object
+      strict: true
+      properties:
+        applied:
+          type: boolean
+        mode:
+          type: string
+        reasons:
+          type: array
+          items:
+            type: string
+
+failure_behavior: degraded_report
+
+fallback:
+  strategy: canonical
+  retry:
+    maxAttempts: 3
+    baseDelayMs: 500
+
+raci:
+  responsible: BoardPrepAI
+  accountable: Chief of Staff
+  consulted: CFO
+  informed: CEO
+
+security:
+  access_level: executive-only
+  pii_handled: true
+  data_retention: transient
+
+observability:
+  events:
+    - boardprepai.request.received
+    - boardprepai.contract.loaded
+    - boardprepai.tool.call.started
+    - boardprepai.tool.call.succeeded
+    - boardprepai.tool.call.failed
+    - boardprepai.retry.scheduled
+    - boardprepai.fallback.applied
+    - boardprepai.response.generated
+  metrics:
+    - duration_ms
+    - tool_calls
+    - tool_failures
+    - retries
+  alerts:
+    - tool_failures > 5
+    - duration_ms > 15000

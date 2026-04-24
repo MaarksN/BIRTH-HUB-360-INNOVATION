@@ -1,10 +1,7 @@
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "../../../lib/web-config";
 import Link from "next/link";
 
-import {
-  ProductEmptyState,
-  ProductPageHeader
-} from "../../../components/dashboard/page-fragments";
+import { ProductEmptyState, ProductPageHeader } from "../../../components/dashboard/page-fragments";
 import { fetchOutputDetail, fetchOutputs } from "../../../lib/marketplace-api.server";
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -14,11 +11,11 @@ function readParam(value: string | string[] | undefined): string {
     return "";
   }
 
-  return Array.isArray(value) ? value[0] ?? "" : value;
+  return Array.isArray(value) ? (value[0] ?? "") : value;
 }
 
 export default async function ReportsPage({
-  searchParams
+  searchParams,
 }: Readonly<{
   searchParams?: Promise<SearchParams>;
 }>) {
@@ -30,7 +27,7 @@ export default async function ReportsPage({
 
   const data = await fetchOutputs({
     ...(executionId ? { executionId } : {}),
-    ...(typeFilter ? { type: typeFilter } : {})
+    ...(typeFilter ? { type: typeFilter } : {}),
   }).catch(() => ({ outputs: [] }));
   const selectedOutput = outputId ? await fetchOutputDetail(outputId).catch(() => null) : null;
 
@@ -53,7 +50,12 @@ export default async function ReportsPage({
       />
 
       <form className="panel" style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
-        <input defaultValue={typeFilter} name="type" placeholder="technical-log ou executive-report" type="text" />
+        <input
+          defaultValue={typeFilter}
+          name="type"
+          placeholder="technical-log ou executive-report"
+          type="text"
+        />
         <button className="action-button" type="submit">
           Filtrar
         </button>
@@ -118,7 +120,7 @@ export default async function ReportsPage({
               alignItems: "center",
               display: "flex",
               justifyContent: "space-between",
-              marginBottom: "0.85rem"
+              marginBottom: "0.85rem",
             }}
           >
             <div>
@@ -134,7 +136,7 @@ export default async function ReportsPage({
             style={{
               display: "grid",
               gap: "0.85rem",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))"
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
             }}
           >
             <div>
@@ -143,7 +145,9 @@ export default async function ReportsPage({
             </div>
             <div>
               <strong>Hash recalculado</strong>
-              <pre style={{ whiteSpace: "pre-wrap" }}>{selectedOutput.integrity.recalculatedHash}</pre>
+              <pre style={{ whiteSpace: "pre-wrap" }}>
+                {selectedOutput.integrity.recalculatedHash}
+              </pre>
             </div>
           </div>
 
@@ -156,7 +160,7 @@ export default async function ReportsPage({
                 marginBottom: 0,
                 overflowX: "auto",
                 padding: "1rem",
-                whiteSpace: "pre-wrap"
+                whiteSpace: "pre-wrap",
               }}
             >
               {selectedOutput.output.content}
@@ -167,4 +171,3 @@ export default async function ReportsPage({
     </main>
   );
 }
-

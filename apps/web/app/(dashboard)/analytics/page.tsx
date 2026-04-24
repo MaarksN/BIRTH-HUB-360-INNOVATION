@@ -1,10 +1,7 @@
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "../../../lib/web-config";
 import Link from "next/link";
 
-import {
-  ProductEmptyState,
-  ProductPageHeader
-} from "../../../components/dashboard/page-fragments";
+import { ProductEmptyState, ProductPageHeader } from "../../../components/dashboard/page-fragments";
 import { fetchProductJson } from "../../../lib/product-api.server";
 
 type ExecutivePayload = {
@@ -48,7 +45,7 @@ function toPercent(value: number): string {
 function toCurrency(cents: number): string {
   return new Intl.NumberFormat("pt-BR", {
     currency: "USD",
-    style: "currency"
+    style: "currency",
   }).format(cents / 100);
 }
 
@@ -58,7 +55,7 @@ export default async function AnalyticsPage() {
     fetchProductJson<ExecutivePayload>("/api/v1/analytics/executive"),
     fetchProductJson<CohortPayload>("/api/v1/analytics/cohort"),
     fetchProductJson<ActivePayload>("/api/v1/analytics/active-tenants"),
-    fetchProductJson<UsagePayload>("/api/v1/analytics/usage")
+    fetchProductJson<UsagePayload>("/api/v1/analytics/usage"),
   ]);
 
   const lineHeights =
@@ -74,7 +71,9 @@ export default async function AnalyticsPage() {
       <ProductPageHeader
         actions={
           <div className="hero-actions">
-            <a href={`${config.NEXT_PUBLIC_API_URL}/api/v1/analytics/billing/export`}>Exportar CSV</a>
+            <a href={`${config.NEXT_PUBLIC_API_URL}/api/v1/analytics/billing/export`}>
+              Exportar CSV
+            </a>
             <Link className="ghost-button" href="/reports">
               Ir para reports
             </Link>
@@ -105,7 +104,8 @@ export default async function AnalyticsPage() {
         <article>
           <span className="badge">DAU / MAU</span>
           <strong>
-            {active.metrics.dau.toLocaleString("pt-BR")} / {active.metrics.mau.toLocaleString("pt-BR")}
+            {active.metrics.dau.toLocaleString("pt-BR")} /{" "}
+            {active.metrics.mau.toLocaleString("pt-BR")}
           </strong>
         </article>
       </section>
@@ -114,7 +114,7 @@ export default async function AnalyticsPage() {
         style={{
           display: "grid",
           gap: "1rem",
-          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)"
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
         }}
       >
         <article className="panel">
@@ -143,7 +143,7 @@ export default async function AnalyticsPage() {
                     borderRadius: 18,
                     display: "grid",
                     gap: "0.25rem",
-                    padding: "0.85rem"
+                    padding: "0.85rem",
                   }}
                 >
                   <strong>{item.label ?? item.metric ?? "Metrica"}</strong>
@@ -182,7 +182,7 @@ export default async function AnalyticsPage() {
                     <td>
                       {new Date(item.cohortMonth).toLocaleDateString("pt-BR", {
                         month: "short",
-                        year: "numeric"
+                        year: "numeric",
                       })}
                     </td>
                     <td>{item.cohortSize}</td>
@@ -199,4 +199,3 @@ export default async function AnalyticsPage() {
     </main>
   );
 }
-

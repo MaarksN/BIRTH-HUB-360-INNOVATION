@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Finalização Plataforma</title>
+    <style>
+      :root {
+        --bg: #070b16;
+        --glass: rgba(255, 255, 255, 0.08);
+        --text: #e9f0ff;
+        --muted: #9fb0d6;
+        --ok: #35d07f;
+        --warn: #f6c94f;
+        --bad: #ff5d7c;
+        --info: #4ea1ff;
+        --illus: #ad6dff;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at 20% 20%, #1d315f 0, transparent 40%),
+                    radial-gradient(circle at 80% 10%, #2a174f 0, transparent 35%),
+                    var(--bg);
+      }
+      .wrap { max-width: 1200px; margin: 24px auto; padding: 0 16px 48px; }
+      .glass { background: var(--glass); border: 1px solid rgba(255,255,255,.15); border-radius: 14px; backdrop-filter: blur(8px); }
+      h1 { margin: 0 0 12px; }
+      .muted { color: var(--muted); }
+      .grid { display: grid; gap: 12px; }
+      .kpis { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: 12px 0; }
+      .card { padding: 14px; }
+      .value { font-size: 1.6rem; font-weight: 700; }
+      .filters { grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); margin: 12px 0; }
+      input, select {
+        width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,.2);
+        background: rgba(0,0,0,.25); color: var(--text);
+      }
+      .badge { padding: 3px 8px; border-radius: 999px; font-size: .75rem; font-weight: 700; }
+      .b-ok { background: rgba(53,208,127,.2); color: var(--ok);}
+      .b-warn { background: rgba(246,201,79,.2); color: var(--warn);}
+      .b-bad { background: rgba(255,93,124,.2); color: var(--bad);}
+      .b-info { background: rgba(78,161,255,.2); color: var(--info);}
+      .b-illus { background: rgba(173,109,255,.2); color: var(--illus);}
+      table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+      th, td { text-align: left; padding: 10px; border-bottom: 1px solid rgba(255,255,255,.1); vertical-align: top; }
+      .progress { height: 10px; border-radius: 999px; background: rgba(255,255,255,.12); overflow: hidden; }
+      .bar { height: 100%; background: linear-gradient(90deg, #4ea1ff, #35d07f); }
+      .timeline { display: grid; gap: 8px; }
+      .phase { padding: 10px; border-left: 3px solid #4ea1ff; background: rgba(0,0,0,.2); border-radius: 8px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Dashboard de Finalização da Plataforma</h1>
+      <div class="muted">Status executivo: <strong>NÃO PRONTA</strong></div>
+
+      <div class="grid kpis">
+        <div class="glass card"><div class="muted">Score Dívida</div><div class="value">58</div></div>
+        <div class="glass card"><div class="muted">Score Maturidade</div><div class="value">63</div></div>
+        <div class="glass card"><div class="muted">Score Prontidão</div><div class="value">46</div></div>
+        <div class="glass card"><div class="muted">Score Risco</div><div class="value">72</div></div>
+      </div>
+
+      <div class="glass card" style="margin-bottom:12px;">
+        <div class="muted">Progresso geral de finalização</div>
+        <div class="progress" style="margin-top:8px;"><div class="bar" style="width:46%"></div></div>
+        <div class="muted" style="margin-top:6px;">46%</div>
+      </div>
+
+      <div class="grid filters">
+        <div class="glass card"><input id="search" placeholder="Busca textual" /></div>
+        <div class="glass card">
+          <select id="sev">
+            <option value="">Severidade (todas)</option>
+            <option>Crítico</option><option>Alto</option><option>Médio</option><option>Baixo</option>
+          </select>
+        </div>
+        <div class="glass card">
+          <select id="status">
+            <option value="">Status (todos)</option>
+            <option>Implementado</option><option>Parcial</option><option>Quebrado</option><option>Inexistente</option><option>Falso-pronto</option>
+          </select>
+        </div>
+        <div class="glass card">
+          <select id="domain">
+            <option value="">Domínio (todos)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="glass card" style="margin-bottom:12px;">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Título</th><th>Domínio</th><th>Severidade</th><th>Status</th><th>Honestidade</th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+
+      <div class="glass card">
+        <h3 style="margin-top:0;">Roadmap (timeline)</h3>
+        <div class="timeline" id="timeline"></div>
+      </div>
+    </div>
+
+    <script>
+      const data = {
+        achados: [
+          {id:"TD-001",titulo:"Refresh token em memória",dominio:"Autenticação / Autorização",severidade:"Crítico",status:"Parcial",honestidade:"BLOQUEADOR_DE_PRODUCAO"},
+          {id:"TD-002",titulo:"RLS cross-tenant falhando",dominio:"Banco de Dados",severidade:"Crítico",status:"Quebrado",honestidade:"BLOQUEADOR_DE_PRODUCAO"},
+          {id:"TD-003",titulo:"Schema drift check falhando",dominio:"Banco de Dados",severidade:"Alto",status:"Quebrado",honestidade:"BLOQUEADOR_DE_PRODUCAO"},
+          {id:"TD-004",titulo:"Teste integração sem DB gerava falso negativo",dominio:"Testes",severidade:"Alto",status:"Parcial",honestidade:"REAL"},
+          {id:"TD-005",titulo:"Threshold DLQ divergente",dominio:"DevOps / Observabilidade",severidade:"Alto",status:"Parcial",honestidade:"PARCIAL_REAL"},
+          {id:"TD-006",titulo:"Setup local sem readiness gate",dominio:"DevOps / Entrega",severidade:"Médio",status:"Parcial",honestidade:"PARCIAL_REAL"},
+          {id:"TD-007",titulo:"IaC incompleta",dominio:"Arquitetura",severidade:"Médio",status:"Parcial",honestidade:"PARCIAL_REAL"},
+          {id:"TD-008",titulo:"Deploy com gate manual de rollback",dominio:"DevOps / Entrega",severidade:"Médio",status:"Parcial",honestidade:"PARCIAL_REAL"},
+          {id:"TD-009",titulo:"Isolamento tenant não comprovado",dominio:"Segurança",severidade:"Crítico",status:"Parcial",honestidade:"BLOQUEADOR_DE_PRODUCAO"},
+          {id:"TD-010",titulo:"Doc x alerta com verdades diferentes",dominio:"Produto / Operação",severidade:"Médio",status:"Parcial",honestidade:"ILUSAO_TECNICA"}
+        ],
+        fases: [
+          {fase:"F0",nome:"Baseline Forense",progresso:100},
+          {fase:"F1",nome:"Relatório de Dívida",progresso:100},
+          {fase:"F2",nome:"Roadmap",progresso:100},
+          {fase:"F3",nome:"Correção Fundamentos",progresso:35},
+          {fase:"F4",nome:"Eliminação de Ilusões",progresso:20},
+          {fase:"F5",nome:"Consolidação Fluxos",progresso:10},
+          {fase:"F6",nome:"Prontidão Operacional",progresso:10},
+          {fase:"F7",nome:"Go-Live Readiness",progresso:5}
+        ]
+      };
+
+      const els = {
+        rows: document.getElementById("rows"),
+        timeline: document.getElementById("timeline"),
+        search: document.getElementById("search"),
+        sev: document.getElementById("sev"),
+        status: document.getElementById("status"),
+        domain: document.getElementById("domain")
+      };
+
+      const storageKey = "birthub-dashboard-filters";
+      const domains = [...new Set(data.achados.map(a => a.dominio))];
+      domains.forEach(d => {
+        const o = document.createElement("option"); o.value = d; o.textContent = d; els.domain.appendChild(o);
+      });
+
+      function badgeClass(v) {
+        if (v === "Crítico" || v === "Quebrado") return "b-bad";
+        if (v === "Alto" || v === "Parcial") return "b-warn";
+        if (v === "Implementado") return "b-ok";
+        if (String(v).includes("ILUSAO")) return "b-illus";
+        if (String(v).includes("BLOQUEADOR")) return "b-bad";
+        return "b-info";
+      }
+
+      function render() {
+        const q = els.search.value.toLowerCase().trim();
+        const sev = els.sev.value;
+        const st = els.status.value;
+        const dm = els.domain.value;
+        localStorage.setItem(storageKey, JSON.stringify({q, sev, st, dm}));
+
+        const list = data.achados.filter(a =>
+          (!q || JSON.stringify(a).toLowerCase().includes(q)) &&
+          (!sev || a.severidade === sev) &&
+          (!st || a.status === st) &&
+          (!dm || a.dominio === dm)
+        );
+
+        els.rows.innerHTML = list.map(a => `
+          <tr>
+            <td>${a.id}</td>
+            <td>${a.titulo}</td>
+            <td>${a.dominio}</td>
+            <td><span class="badge ${badgeClass(a.severidade)}">${a.severidade}</span></td>
+            <td><span class="badge ${badgeClass(a.status)}">${a.status}</span></td>
+            <td><span class="badge ${badgeClass(a.honestidade)}">${a.honestidade}</span></td>
+          </tr>
+        `).join("");
+
+        els.timeline.innerHTML = data.fases.map(f => `
+          <div class="phase">
+            <strong>${f.fase} — ${f.nome}</strong>
+            <div class="progress" style="margin-top:6px;"><div class="bar" style="width:${f.progresso}%"></div></div>
+            <div class="muted">${f.progresso}%</div>
+          </div>
+        `).join("");
+      }
+
+      [els.search, els.sev, els.status, els.domain].forEach(el => el.addEventListener("input", render));
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+      if (saved.q) els.search.value = saved.q;
+      if (saved.sev) els.sev.value = saved.sev;
+      if (saved.st) els.status.value = saved.st;
+      if (saved.dm) els.domain.value = saved.dm;
+      render();
+    </script>
+  </body>
+</html>

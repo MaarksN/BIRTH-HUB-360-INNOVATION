@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "../../../../../lib/web-config";
 
 import { ExecutivePremiumAgentCallout } from "../../../../../components/agents/ExecutivePremiumAgentCallout";
 import { AgentRunPanel } from "../../../../../components/agents/agent-run-panel";
@@ -22,7 +22,8 @@ export default async function AgentRunPage(props: { params: Promise<{ id: string
       <header>
         <h2 style={{ margin: 0 }}>Run Agent</h2>
         <p style={{ color: "var(--muted)", marginBottom: 0 }}>
-          Execucao live governada com logs persistidos, replay SSE, memoria compartilhada e output automatico.
+          Execucao live governada com logs persistidos, replay SSE, memoria compartilhada e output
+          automatico.
         </p>
       </header>
       {isExecutivePremiumPack(agent.catalogAgentId) ? (

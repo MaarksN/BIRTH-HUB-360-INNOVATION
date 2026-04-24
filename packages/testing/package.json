@@ -9,15 +9,17 @@
     ".": "./dist/index.js"
   },
   "scripts": {
+    "prebuild": "pnpm --filter @birthub/database build",
+    "pretest": "pnpm --filter @birthub/database build",
+    "pretypecheck": "pnpm --filter @birthub/database build",
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint .",
-    "test": "sh -c 'files=$(find src -name \"*.test.ts\" -print); if [ -n \"$files\" ]; then node --import tsx --test $files; else echo \"No tests found\"; fi'",
+    "lint": "node ../../node_modules/eslint/bin/eslint.js .",
+    "test": "node --import tsx --test src/**/*.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@birthub/database": "workspace:*",
-    "@birthub/integrations": "workspace:^"
+    "@birthub/database": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatorio 12 - Divida de Produto</title>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;line-height:1.5;margin:32px;max-width:1100px}
+    code,pre{font-family:Consolas,monospace} pre{white-space:pre-wrap;background:#f6f8fa;padding:12px;border:1px solid #d0d7de}
+    .item{border:1px solid #d0d7de;border-radius:10px;padding:18px;margin:18px 0} .gravidade{font-weight:700;color:#9a3412}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Relatorio 12 - Divida de Produto</h1>
+    <p><strong>Projeto:</strong> BirthHub 360 Innovation</p>
+    <p><strong>Data:</strong> 2026-04-12</p>
+    <p><strong>Escopo:</strong> Coerencia entre direcao de produto, flags de capacidade e superficies clinicas ainda presentes no codigo.</p>
+  </header>
+  <main>
+    <section id="metodo">
+      <h2>Metodo</h2>
+      <p>Foi confrontada a configuracao de capacidades do produto com mensagens exibidas no dashboard e com a existencia real das rotas clinicas, para identificar desalinhamentos entre estrategia ativa e implementacao preservada.</p>
+    </section>
+    <section id="resultado">
+      <h2>Resultado</h2>
+      <article class="item">
+        <h3>Item 1 - Workspace clinico permanece como capacidade dormente atras de flag default-off</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> O produto conserva uma superficie clinica implementada, mas a capacidade esta desligada por padrao, o que sinaliza indefinicao entre remocao strategica e preservacao para reativacao futura.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>packages/config/src/product-capabilities.ts:11</code> define <code>NEXT_PUBLIC_ENABLE_CLINICAL_WORKSPACE</code> como <code>false</code> por padrao.</li>
+          <li><code>packages/config/src/product-capabilities.ts:45</code> expoe a capacidade <code>clinicalWorkspaceEnabled</code>.</li>
+          <li><code>.env.example:17</code> mantem <code>NEXT_PUBLIC_ENABLE_CLINICAL_WORKSPACE=false</code>.</li>
+          <li>As rotas <code>apps/web/app/(dashboard)/patients/page.tsx</code> e <code>apps/web/app/(dashboard)/patients/[id]/page.tsx</code> continuam implementadas.</li>
+        </ul>
+        <p><strong>Impacto:</strong> O produto carrega custo de manutencao e ambiguidade estrategica sobre uma capacidade relevante que nao esta claramente ativa nem claramente aposentada.</p>
+        <p><strong>Plano sequencial:</strong> 1. Decidir status oficial da frente clinica. 2. Se ativa, promover e testar. 3. Se inativa, isolar ou remover da navegacao e manutencao corrente. 4. Atualizar sinalizacao de produto e roadmap.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Clarifique o status de produto do workspace clinico. Se a frente continuar prevista, alinhe flags, navegacao, testes e comunicacao para uma capacidade oficialmente suportada; se tiver sido retirada da estrategia principal, isole ou arquive a superficie remanescente para eliminar ambiguidade entre codigo preservado e funcionalidade ativa.</pre>
+        </details>
+      </article>
+      <article class="item">
+        <h3>Item 2 - Mensagens de produto entram em conflito sobre remocao versus disponibilidade do fluxo clinico</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> Diferentes pontos da interface comunicam narrativas incompatíveis: parte do produto diz que o fluxo clinico saiu do main path, enquanto outra parte apresenta a rota de pacientes como fluxo real e ainda oferece link condicional.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>apps/web/components/dashboard/ClinicalWorkspaceDisabledState.tsx:20-22</code> informa que pacientes, agenda, prontuarios e FHIR foram removidos do fluxo principal.</li>
+          <li><code>apps/web/app/(dashboard)/dashboard/page.tsx:97</code> repete que clinico, FHIR e privacidade avancada sairam do fluxo principal.</li>
+          <li><code>apps/web/app/(dashboard)/dashboard/page.tsx:270</code> ainda liga para <code>/patients</code> quando a capacidade esta habilitada.</li>
+          <li><code>apps/web/app/(dashboard)/patients/page.tsx:112</code> descreve a pagina como <code>fluxo real de paciente, gestacao, agenda e nota clinica</code>.</li>
+        </ul>
+        <p><strong>Impacto:</strong> O usuario e o time interno recebem sinais contraditorios sobre o posicionamento do produto, prejudicando decisao de roadmap, suporte e experiencia.</p>
+        <p><strong>Plano sequencial:</strong> 1. Unificar narrativa de produto. 2. Revisar copy de dashboard e rota clinica. 3. Refletir decisao nas flags e navegacao. 4. Sincronizar documentacao comercial e tecnica.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Resolva a contradicao entre a narrativa de produto sobre a remocao do fluxo clinico e a existencia de rotas e textos que o apresentam como caminho real. Unifique a mensagem em dashboard, estados desabilitados, paginas clinicas e configuracao de capacidades para que o posicionamento do produto fique inequivoco.</pre>
+        </details>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

@@ -8,47 +8,29 @@ export const defaultLocale: SupportedLocale = "pt-BR";
 type LabelMap = Record<string, string>;
 type NavbarItem = { href: string; label: string };
 type ConsentBannerDictionary = { accept: string; description: string; reject: string; settings: string; title: string };
-type DashboardHomeDictionary = { alertSeverityLabels: LabelMap; attributionHeading: string; badge: string; cacColumn: string; clinicalDescription: string; clinicalHeading: string; clinicalRiskLabels: LabelMap; clinicalStatusLabels: LabelMap; consentAttentionTitle: string; consentBadge: string; consentLegalBasisLabels: LabelMap; consentStatusLabels: LabelMap; continueLabel: string; continueOnboarding: string; conversionColumn: string; customerColumn: string; customerHealthHeading: string; description: string; executionsLabel: string; gestationalAgeUnknown: string; goLiveAlertsHeading: string; highlightedWorkflowsDescription: string; highlightedWorkflowsHeading: string; leadsColumn: string; noAttributionDescription: string; noAttributionTitle: string; noClinicalAlertsDescription: string; noClinicalAlertsTitle: string; noClinicalNote: string; noClinicalSpotlightDescription: string; noClinicalSpotlightTitle: string; noCustomerHealthDescription: string; noCustomerHealthTitle: string; noRecentContractsDescription: string; noRecentContractsTitle: string; noReturnScheduled: string; noUsageDescription: string; noUsageTitle: string; noWorkflowsDescription: string; noWorkflowsTitle: string; npsColumn: string; onboardingBadge: string; openClinicalModule: string; openEditor: string; openPatient: string; openQueue: string; openWorkflows: string; planStatusLabel: string; recentContractsHeading: string; reviewConsents: string; returnPrefix: string; riskColumn: string; scoreColumn: string; sourceColumn: string; stepsLabel: string; title: string; usageHeading: string; viewExecutions: string; viewFullWorkflowList: string; viewReports: string; viewSchedule: string; workflowStatusLabels: LabelMap; workflowTriggerLabels: LabelMap };
+type DashboardHomeDictionary = { attributionHeading: string; badge: string; cacColumn: string; consentAttentionTitle: string; consentBadge: string; consentLegalBasisLabels: LabelMap; consentStatusLabels: LabelMap; continueLabel: string; continueOnboarding: string; conversionColumn: string; customerColumn: string; customerHealthHeading: string; description: string; executionsLabel: string; highlightedWorkflowsDescription: string; highlightedWorkflowsHeading: string; leadsColumn: string; noAttributionDescription: string; noAttributionTitle: string; noCustomerHealthDescription: string; noCustomerHealthTitle: string; noRecentContractsDescription: string; noRecentContractsTitle: string; noUsageDescription: string; noUsageTitle: string; noWorkflowsDescription: string; noWorkflowsTitle: string; npsColumn: string; onboardingBadge: string; openEditor: string; openWorkflows: string; planStatusLabel: string; recentContractsHeading: string; reviewConsents: string; riskColumn: string; scoreColumn: string; sourceColumn: string; stepsLabel: string; title: string; usageHeading: string; viewExecutions: string; viewFullWorkflowList: string; viewReports: string; workflowStatusLabels: LabelMap; workflowTriggerLabels: LabelMap };
 type LoadingDictionary = { badge: string; dashboardDescription: string; dashboardTitle: string; workflowsDescription: string; workflowsTitle: string };
 type NotificationPreferencesDictionary = { acceptCookies: string; activeThemeLabel: string; badge: string; cookieConsentDescription: string; cookieConsentHeading: string; cookieStatusLabel: string; darkThemeLabel: string; description: string; emailNotificationsDescription: string; emailNotificationsLabel: string; emptyFeed: string; feedDescription: string; feedHeading: string; inAppNotificationsDescription: string; inAppNotificationsLabel: string; interfaceLanguageDescription: string; interfaceLanguageHeading: string; interfaceLanguageLabel: string; lightThemeLabel: string; loadMore: string; loadingMore: string; localeLabels: Record<SupportedLocale, string>; markAllRead: string; markAsRead: string; marketingEmailsDescription: string; marketingEmailsLabel: string; openLink: string; pushNotificationsDescription: string; pushNotificationsLabel: string; rejectCookies: string; signInDescription: string; signInTitle: string; themeDescription: string; themeHeading: string; title: string };
 type NavbarDictionary = { activateDarkTheme: string; activateLightTheme: string; darkModeLabel: string; emptyDescription: string; emptyTitle: string; feedLabel: string; identityDescription: string; identityTitle: string; items: NavbarItem[]; lightModeLabel: string; markAllRead: string; navigationAriaLabel: string; notificationsDescription: string; notificationsDisabledDescription: string; notificationsDisabledTitle: string; notificationsTitle: string; openDetail: string; openNotifications: string; preferences: string; premiumLinkLabel: string; premiumLinkTitle: string; today: string; viewCenter: string; yesterday: string };
 type WorkflowsPageDictionary = { backHome: string; badge: string; continueEditing: string; description: string; emptyDescription: string; emptyTitle: string; executionsLabel: string; openEditor: string; revisions: string; statusLabels: LabelMap; stepsLabel: string; title: string; triggerLabels: LabelMap; updatedAtLabel: string; viewExecutions: string };
 export type Dictionary = { consentBanner: ConsentBannerDictionary; dashboardHome: DashboardHomeDictionary; loading: LoadingDictionary; notificationPreferencesPage: NotificationPreferencesDictionary; navbar: NavbarDictionary; workflowsPage: WorkflowsPageDictionary };
 
-const sharedNavbarItems = [{ href: "/dashboard", label: { "en-US": "Dashboard", "pt-BR": "Dashboard" } }, { href: "/patients", label: { "en-US": "Patients", "pt-BR": "Pacientes" } }, { href: "/appointments", label: { "en-US": "Appointments", "pt-BR": "Agenda" } }, { href: "/workflows", label: { "en-US": "Workflows", "pt-BR": "Workflows" } }, { href: "/marketplace", label: { "en-US": "Marketplace", "pt-BR": "Marketplace" } }, { href: "/notifications", label: { "en-US": "Notifications", "pt-BR": "Notificacoes" } }, { href: "/analytics", label: { "en-US": "Analytics", "pt-BR": "Analytics" } }, { href: "/conversations", label: { "en-US": "Conversations", "pt-BR": "Conversas" } }, { href: "/reports", label: { "en-US": "Reports", "pt-BR": "Relatorios" } }, { href: "/onboarding", label: { "en-US": "Onboarding", "pt-BR": "Onboarding" } }, { href: "/agents/chatbook-inteligentissimo", label: { "en-US": "ChatBook", "pt-BR": "ChatBook" } }, { href: "/sales-os", label: { "en-US": "Sales OS", "pt-BR": "Sales OS" } }] as const;
+const sharedNavbarItems = [{ href: "/dashboard", label: { "en-US": "Dashboard", "pt-BR": "Dashboard" } }, { href: "/sales-os", label: { "en-US": "Sales OS", "pt-BR": "Sales OS" } }, { href: "/workflows", label: { "en-US": "Workflows", "pt-BR": "Workflows" } }, { href: "/agents/chatbook-inteligentissimo", label: { "en-US": "ChatBook", "pt-BR": "ChatBook" } }, { href: "/marketplace", label: { "en-US": "Marketplace", "pt-BR": "Marketplace" } }, { href: "/conversations", label: { "en-US": "Conversations", "pt-BR": "Conversas" } }, { href: "/analytics", label: { "en-US": "Analytics", "pt-BR": "Analytics" } }, { href: "/reports", label: { "en-US": "Reports", "pt-BR": "Relatorios" } }, { href: "/notifications", label: { "en-US": "Notifications", "pt-BR": "Notificacoes" } }, { href: "/onboarding", label: { "en-US": "Onboarding", "pt-BR": "Onboarding" } }] as const;
 
 const dictionaries: Record<SupportedLocale, Dictionary> = {
   "pt-BR": {
-    consentBanner: { accept: "Aceitar analytics", description: "Usamos telemetria sem PII para medir pageviews, saude do produto e execucao de agentes. Se voce rejeitar, o tracker externo permanece desligado.", reject: "Rejeitar", settings: "Abrir central LGPD", title: "Consentimento de analytics" },
+    consentBanner: { accept: "Aceitar analytics", description: "Usamos telemetria sem PII para medir pageviews, qualidade do produto e execucao de agentes. Se voce rejeitar, o tracker externo permanece desligado.", reject: "Rejeitar", settings: "Abrir central LGPD", title: "Consentimento de analytics" },
     dashboardHome: {
-      alertSeverityLabels: {
-        high: "Alta",
-        low: "Baixa",
-        medium: "Media"
-      },
       attributionHeading: "Attribution",
       badge: "Home do produto",
       cacColumn: "CAC",
-      clinicalDescription:
-        "Baseline materno-infantil com gestacoes ativas, agenda e spotlight operacional.",
-      clinicalHeading: "Resumo clinico",
-      clinicalRiskLabels: {
-        HIGH: "Alto",
-        LOW: "Baixo",
-        MODERATE: "Moderado"
-      },
-      clinicalStatusLabels: {
-        ACTIVE: "Ativa",
-        CLOSED: "Encerrada",
-        DELIVERED: "Parto concluido"
-      },
       consentAttentionTitle:
         "O centro de consentimento ainda precisa de atencao antes do go-live.",
       consentBadge: "LGPD pendente",
       consentLegalBasisLabels: {
         CONSENT: "consentimento",
         CONTRACT: "contrato",
-        HEALTH_PROTECTION: "protecao da saude",
+        HEALTH_PROTECTION: "protecao operacional",
         LEGAL_OBLIGATION: "obrigacao legal",
         LEGITIMATE_INTEREST: "legitimo interesse"
       },
@@ -61,12 +43,10 @@ const dictionaries: Record<SupportedLocale, Dictionary> = {
       continueOnboarding: "Continuar onboarding",
       conversionColumn: "Conversao",
       customerColumn: "Cliente",
-      customerHealthHeading: "Saude de clientes",
+      customerHealthHeading: "Status de clientes",
       description:
-        "Resumo operacional da conta com acesso direto para as jornadas principais, sem depender de URL manual.",
+        "Sistema operacional de receita com agentes autonomos, workflows e contexto comercial em um unico lugar.",
       executionsLabel: "execucoes",
-      gestationalAgeUnknown: "Idade gestacional nao calculada",
-      goLiveAlertsHeading: "Alertas de go-live",
       highlightedWorkflowsDescription:
         "Acesso rapido para editar ou executar os fluxos mais recentes.",
       highlightedWorkflowsHeading: "Workflows em destaque",
@@ -74,19 +54,12 @@ const dictionaries: Record<SupportedLocale, Dictionary> = {
       noAttributionDescription:
         "A origem dos leads aparecera aqui assim que a organizacao tiver dados de atribuicao.",
       noAttributionTitle: "Sem atribuicao suficiente",
-      noClinicalAlertsDescription: "Nenhum alerta clinico critico detectado no tenant ativo.",
-      noClinicalAlertsTitle: "Sem alertas clinicos",
-      noClinicalNote: "Sem nota clinica versionada",
-      noClinicalSpotlightDescription:
-        "Assim que o tenant tiver pacientes, consultas e notas clinicas, o spotlight aparece aqui.",
-      noClinicalSpotlightTitle: "Sem spotlight clinico",
       noCustomerHealthDescription:
-        "Assim que houver clientes vinculados, a saude operacional aparecera aqui.",
-      noCustomerHealthTitle: "Sem saude calculada",
+        "Assim que houver clientes vinculados, a pontuacao operacional aparecera aqui.",
+      noCustomerHealthTitle: "Sem status calculado",
       noRecentContractsDescription:
         "Quando a organizacao tiver clientes ou contratos, eles aparecerao nesta lista.",
       noRecentContractsTitle: "Sem contratos recentes",
-      noReturnScheduled: "sem retorno agendado",
       noUsageDescription: "Ainda nao ha metricas de uso para a organizacao ativa.",
       noUsageTitle: "Sem consumo registrado",
       noWorkflowsDescription:
@@ -94,25 +67,20 @@ const dictionaries: Record<SupportedLocale, Dictionary> = {
       noWorkflowsTitle: "Sem workflows ativos",
       npsColumn: "NPS",
       onboardingBadge: "Onboarding guiado",
-      openClinicalModule: "Abrir modulo clinico",
       openEditor: "Abrir editor",
-      openPatient: "Abrir paciente",
-      openQueue: "Abrir fila correspondente",
       openWorkflows: "Abrir workflows",
       planStatusLabel: "status",
       recentContractsHeading: "Contratos recentes",
       reviewConsents: "Revisar consentimentos",
-      returnPrefix: "retorno",
       riskColumn: "Risco",
       scoreColumn: "Score",
       sourceColumn: "Origem",
       stepsLabel: "etapas",
-      title: "Central diaria de operacao",
+      title: "Sistema operacional de receita",
       usageHeading: "Uso e plano",
       viewExecutions: "Ver execucoes",
       viewFullWorkflowList: "Ver lista completa",
       viewReports: "Ver reports",
-      viewSchedule: "Ver agenda",
       workflowStatusLabels: { ARCHIVED: "Arquivado", DRAFT: "Rascunho", PUBLISHED: "Publicado" },
       workflowTriggerLabels: { EVENT: "Evento", MANUAL: "Manual", SCHEDULE: "Agendado", WEBHOOK: "Webhook" }
     },
@@ -167,8 +135,8 @@ const dictionaries: Record<SupportedLocale, Dictionary> = {
       emptyDescription: "Nenhuma notificacao recente para este usuario.",
       emptyTitle: "Feed vazio",
       feedLabel: "Feed",
-      identityDescription: "Experiencia conectada ao produto",
-      identityTitle: "Central de Operacao",
+      identityDescription: "Operacao comercial com agentes autonomos",
+      identityTitle: "Revenue OS",
       items: sharedNavbarItems.map((item) => ({
         href: item.href,
         label: item.label["pt-BR"]
@@ -211,35 +179,17 @@ const dictionaries: Record<SupportedLocale, Dictionary> = {
     }
   },
   "en-US": {
-    consentBanner: { accept: "Allow analytics", description: "We use telemetry without PII to measure pageviews, product health, and agent execution. If you reject it, the external tracker stays off.", reject: "Reject", settings: "Open LGPD center", title: "Analytics consent" },
+    consentBanner: { accept: "Allow analytics", description: "We use telemetry without PII to measure pageviews, product quality, and agent execution. If you reject it, the external tracker stays off.", reject: "Reject", settings: "Open LGPD center", title: "Analytics consent" },
     dashboardHome: {
-      alertSeverityLabels: {
-        high: "High",
-        low: "Low",
-        medium: "Medium"
-      },
       attributionHeading: "Attribution",
       badge: "Product home",
       cacColumn: "CAC",
-      clinicalDescription:
-        "Maternal-infant baseline with active pregnancies, scheduling, and operational spotlight.",
-      clinicalHeading: "Clinical summary",
-      clinicalRiskLabels: {
-        HIGH: "High",
-        LOW: "Low",
-        MODERATE: "Moderate"
-      },
-      clinicalStatusLabels: {
-        ACTIVE: "Active",
-        CLOSED: "Closed",
-        DELIVERED: "Delivered"
-      },
       consentAttentionTitle: "The consent center still needs attention before go-live.",
       consentBadge: "LGPD pending",
       consentLegalBasisLabels: {
         CONSENT: "consent",
         CONTRACT: "contract",
-        HEALTH_PROTECTION: "health protection",
+        HEALTH_PROTECTION: "operational protection",
         LEGAL_OBLIGATION: "legal obligation",
         LEGITIMATE_INTEREST: "legitimate interest"
       },
@@ -252,31 +202,22 @@ const dictionaries: Record<SupportedLocale, Dictionary> = {
       continueOnboarding: "Continue onboarding",
       conversionColumn: "Conversion",
       customerColumn: "Customer",
-      customerHealthHeading: "Customer health",
+      customerHealthHeading: "Customer status",
       description:
-        "Operational account summary with direct entry points into the main journeys, without relying on manual URLs.",
+        "Revenue operating system with autonomous agents, workflows, and commercial context in one place.",
       executionsLabel: "executions",
-      gestationalAgeUnknown: "Gestational age not calculated",
-      goLiveAlertsHeading: "Go-live alerts",
       highlightedWorkflowsDescription: "Quick access to edit or run the latest flows.",
       highlightedWorkflowsHeading: "Featured workflows",
       leadsColumn: "Leads",
       noAttributionDescription:
         "Lead origin will appear here as soon as the organization has attribution data.",
       noAttributionTitle: "Not enough attribution data",
-      noClinicalAlertsDescription: "No critical clinical alerts detected for the active tenant.",
-      noClinicalAlertsTitle: "No clinical alerts",
-      noClinicalNote: "No versioned clinical note",
-      noClinicalSpotlightDescription:
-        "As soon as the tenant has patients, appointments, and clinical notes, the spotlight will appear here.",
-      noClinicalSpotlightTitle: "No clinical spotlight",
       noCustomerHealthDescription:
-        "Once customers are linked, operational health will appear here.",
-      noCustomerHealthTitle: "No health score available",
+        "Once customers are linked, the operational score will appear here.",
+      noCustomerHealthTitle: "No status score available",
       noRecentContractsDescription:
         "When the organization has customers or contracts, they will appear in this list.",
       noRecentContractsTitle: "No recent contracts",
-      noReturnScheduled: "no follow-up scheduled",
       noUsageDescription: "There are still no usage metrics for the active organization.",
       noUsageTitle: "No recorded usage",
       noWorkflowsDescription:
@@ -284,25 +225,20 @@ const dictionaries: Record<SupportedLocale, Dictionary> = {
       noWorkflowsTitle: "No active workflows",
       npsColumn: "NPS",
       onboardingBadge: "Guided onboarding",
-      openClinicalModule: "Open clinical module",
       openEditor: "Open editor",
-      openPatient: "Open patient",
-      openQueue: "Open matching queue",
       openWorkflows: "Open workflows",
       planStatusLabel: "status",
       recentContractsHeading: "Recent contracts",
       reviewConsents: "Review consents",
-      returnPrefix: "follow-up",
       riskColumn: "Risk",
       scoreColumn: "Score",
       sourceColumn: "Source",
       stepsLabel: "steps",
-      title: "Daily operations hub",
+      title: "Revenue operating system",
       usageHeading: "Usage and plan",
       viewExecutions: "View executions",
       viewFullWorkflowList: "View full list",
       viewReports: "View reports",
-      viewSchedule: "View schedule",
       workflowStatusLabels: { ARCHIVED: "Archived", DRAFT: "Draft", PUBLISHED: "Published" },
       workflowTriggerLabels: { EVENT: "Event", MANUAL: "Manual", SCHEDULE: "Scheduled", WEBHOOK: "Webhook" }
     },
@@ -357,8 +293,8 @@ const dictionaries: Record<SupportedLocale, Dictionary> = {
       emptyDescription: "There are no recent notifications for this user.",
       emptyTitle: "Empty feed",
       feedLabel: "Feed",
-      identityDescription: "Product-connected experience",
-      identityTitle: "Operations Hub",
+      identityDescription: "Commercial operation with autonomous agents",
+      identityTitle: "Revenue OS",
       items: sharedNavbarItems.map((item) => ({
         href: item.href,
         label: item.label["en-US"]

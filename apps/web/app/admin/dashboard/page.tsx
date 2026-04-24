@@ -237,12 +237,16 @@ function ImpersonationPanel({
   impersonation,
   onGenerate,
   onTenantChange,
-  tenantToImpersonate
+  tenantToImpersonate,
+  impersonationReason,
+  onReasonChange
 }: {
   impersonation: ImpersonationResult | null;
   onGenerate: () => void;
   onTenantChange: (value: string) => void;
   tenantToImpersonate: string;
+  impersonationReason: string;
+  onReasonChange: (value: string) => void;
 }) {
   return (
     <section className="panel">
@@ -272,12 +276,19 @@ function ImpersonationPanel({
           gridTemplateColumns: "2fr auto"
         }}
       >
-        <input
+        <div style={{ display: "flex", gap: "0.5rem" }}><input
           onChange={(event) => onTenantChange(event.target.value)}
           placeholder="tenantId, slug ou organizationId"
           type="text"
           value={tenantToImpersonate}
-        />
+          style={{ flex: 1 }}
+        /><input
+          onChange={(event) => onReasonChange(event.target.value)}
+          placeholder="Motivo (ex: Chamado #1234)"
+          type="text"
+          value={impersonationReason}
+          style={{ flex: 1 }}
+        /></div>
         <button className="action-button" onClick={onGenerate} type="button">
           Gerar sessao
         </button>
@@ -344,6 +355,7 @@ export default function MasterAdminDashboardPage() {
   const [qualityRows, setQualityRows] = useState<QualityRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [tenantToImpersonate, setTenantToImpersonate] = useState("");
+  const [impersonationReason, setImpersonationReason] = useState("");
   const [impersonation, setImpersonation] = useState<ImpersonationResult | null>(null);
 
   useEffect(() => {
@@ -394,7 +406,8 @@ export default function MasterAdminDashboardPage() {
     try {
       const response = await fetchWithSession("/api/bff/api/v1/admin/impersonations", {
         body: JSON.stringify({
-          tenantReference: tenantToImpersonate
+          tenantReference: tenantToImpersonate,
+          reason: impersonationReason
         }),
         headers: {
           "content-type": "application/json"
@@ -437,6 +450,8 @@ export default function MasterAdminDashboardPage() {
         onGenerate={() => void handleImpersonation()}
         onTenantChange={setTenantToImpersonate}
         tenantToImpersonate={tenantToImpersonate}
+        impersonationReason={impersonationReason}
+        onReasonChange={setImpersonationReason}
       />
       <QualityTable error={error} qualityRows={qualityRows} />
     </main>

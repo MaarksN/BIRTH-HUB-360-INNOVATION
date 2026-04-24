@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatorio 06 - Divida de Infra e DevOps</title>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;line-height:1.5;margin:32px;max-width:1100px}
+    code,pre{font-family:Consolas,monospace} pre{white-space:pre-wrap;background:#f6f8fa;padding:12px;border:1px solid #d0d7de}
+    .item{border:1px solid #d0d7de;border-radius:10px;padding:18px;margin:18px 0} .gravidade{font-weight:700;color:#9a3412}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Relatorio 06 - Divida de Infra e DevOps</h1>
+    <p><strong>Projeto:</strong> BirthHub 360 Innovation</p>
+    <p><strong>Data:</strong> 2026-04-12</p>
+    <p><strong>Escopo:</strong> Provisionamento local, compose de desenvolvimento e robustez operacional de bootstrap.</p>
+  </header>
+  <main>
+    <section id="metodo">
+      <h2>Metodo</h2>
+      <p>Foram lidos scripts de setup e compose local para identificar acoplamentos operacionais, dependencias de timing e configuracoes que funcionam apenas em cenarios felizes.</p>
+    </section>
+    <section id="resultado">
+      <h2>Resultado</h2>
+      <article class="item">
+        <h3>Item 1 - Setup local assume prontidao imediata dos servicos</h3>
+        <p class="gravidade">Gravidade: alta</p>
+        <p><strong>Diagnostico:</strong> O fluxo de bootstrap local sobe containers e dispara migracoes sem esperar healthchecks ou disponibilidade efetiva das dependencias.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>scripts/setup/setup-local.sh:17</code> executa <code>docker compose up -d postgres redis</code>.</li>
+          <li><code>scripts/setup/setup-local.sh:19</code> chama <code>pnpm db:migrate:deploy</code> logo em seguida.</li>
+          <li>O script nao implementa espera por readiness entre subir servicos e aplicar migracoes.</li>
+        </ul>
+        <p><strong>Impacto:</strong> O bootstrap fica sujeito a falhas intermitentes, especialmente em maquinas mais lentas ou ambientes recem-provisionados.</p>
+        <p><strong>Plano sequencial:</strong> 1. Adicionar espera por healthcheck. 2. Diferenciar dependencia iniciada de dependencia pronta. 3. Tornar migracoes idempotentes no setup. 4. Registrar falhas com diagnostico claro.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Endureça scripts/setup/setup-local.sh para aguardar prontidao real de Postgres e Redis antes de rodar migracoes ou qualquer passo dependente. Use healthchecks ou uma verificacao ativa equivalente, trate timeouts explicitamente e produza mensagens de erro acionaveis para o desenvolvedor local.</pre>
+        </details>
+      </article>
+      <article class="item">
+        <h3>Item 2 - Compose local embute nomes fixos e configuracoes inseguras de conveniencia</h3>
+        <p class="gravidade">Gravidade: media</p>
+        <p><strong>Diagnostico:</strong> O ambiente de desenvolvimento usa nomes de container fixos, senha hardcoded e desabilitacao de seguranca em Elasticsearch, o que reduz portabilidade e mascara diferencas entre dev e operacao mais realista.</p>
+        <p><strong>Evidencias:</strong></p>
+        <ul>
+          <li><code>docker-compose.yml:4</code>, <code>:22</code> e <code>:36</code> definem <code>container_name</code> fixo para Postgres, Redis e Elasticsearch.</li>
+          <li><code>docker-compose.yml:8</code> fixa <code>POSTGRES_PASSWORD: postgrespassword</code>.</li>
+          <li><code>docker-compose.yml:40</code> define <code>xpack.security.enabled=false</code>.</li>
+        </ul>
+        <p><strong>Impacto:</strong> Eleva chance de conflito entre stacks locais, perpetua defaults fracos e afasta o ambiente de desenvolvimento de uma topologia operacional mais fiel.</p>
+        <p><strong>Plano sequencial:</strong> 1. Remover nomes fixos. 2. Parametrizar segredos de dev. 3. Documentar diferencas aceitaveis. 4. Revisar compose para maior portabilidade.</p>
+        <details class="prompt-correcao">
+          <summary>Prompt de correcao</summary>
+          <pre>Revise docker-compose.yml para remover container_name fixo, parametrizar credenciais locais e explicitar as excecoes de seguranca apenas quando indispensaveis ao fluxo de desenvolvimento. Preserve a ergonomia do setup, mas aproxime o ambiente local de um baseline operacional mais seguro e portavel.</pre>
+        </details>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

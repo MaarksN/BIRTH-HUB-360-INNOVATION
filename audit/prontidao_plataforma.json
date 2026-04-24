@@ -1,0 +1,46 @@
+{
+  "gerado_em": "2026-04-02T12:27:02.028Z",
+  "status_executivo_final": "NÃO PRONTA",
+  "resumo_quantitativo": {
+    "total_achados": 10,
+    "total_criticos": 4,
+    "total_corrigido": 1,
+    "total_pendente": 9,
+    "total_ilusoes_removidas": 0,
+    "score_final_prontidao": 46,
+    "score_final_risco": 72
+  },
+  "validacoes_executadas": {
+    "install": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "test_sem_servicos": "FAIL (dependência de integração em DB/API)",
+    "test_com_postgres_redis": "FAIL (RLS test falhando)"
+  },
+  "bloqueadores_go_live": [
+    {
+      "id": "TD-001",
+      "descricao": "Refresh session store em memória sem persistência."
+    },
+    {
+      "id": "TD-002",
+      "descricao": "Teste RLS cross-tenant falha com banco real."
+    },
+    {
+      "id": "TD-003",
+      "descricao": "Schema drift check falha no checklist pós-migração."
+    },
+    {
+      "id": "TD-009",
+      "descricao": "Isolamento multi-tenant não comprovado operacionalmente."
+    }
+  ],
+  "pendencias_finais_reais": [
+    "Corrigir isolamento RLS e estabilizar teste `packages/database/test/rls.test.ts`.",
+    "Eliminar drift de schema e fazer `check-schema-drift` passar.",
+    "Persistir refresh token store fora de memória de processo.",
+    "Unificar thresholds de DLQ entre documentação e regra ativa."
+  ],
+  "parecer_tecnico_final": "A plataforma evoluiu em governança e build core, mas ainda falha em critérios essenciais de segurança e consistência de dados para go-live: isolamento de tenant não comprovado em runtime, drift de schema no checklist pós-migração e sessão de refresh não durável. Nessas condições, classifica-se como NÃO PRONTA para uso real."
+}

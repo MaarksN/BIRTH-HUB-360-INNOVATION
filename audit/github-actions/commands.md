@@ -1,0 +1,117 @@
+# GitHub Actions Commands
+
+- `Agent Packs Conformity` / `validate-agent-packs` / `Install dependencies` -> `corepack pnpm install --frozen-lockfile`
+- `Agent Packs Conformity` / `validate-agent-packs` / `Validate generated collection` -> `corepack pnpm --filter @birthub/agent-packs validate`
+- `Agent Packs Conformity` / `validate-agent-packs` / `Test generated collection` -> `corepack pnpm --filter @birthub/agent-packs test`
+- `CD` / `resolve-release-source` / `Resolve immutable release source` -> `set -euo pipefail event_name="${GITHUB_EVENT_NAME}" source_event="${event_name}" if [[ "${event_name}" == "workflow_run" ]]; then if [[ "${{ github.event.workflow_run.head_branch }}" != "main" ]]; then echo "::error title=Invalid release branch::workflow_run source must come from`
+- `CD` / `staging-preflight` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CD` / `staging-preflight` / `Mask configured secrets` -> `set -euo pipefail for key in AUTH_MFA_ENCRYPTION_KEY DATABASE_URL JOB_HMAC_GLOBAL_SECRET REDIS_URL RENDER_STAGING_DEPLOY_HOOK_URL SENTRY_DSN SESSION_SECRET STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET; do value="${!key:-}" if [[ -n "${value}" ]]; then echo "::add-mask::${value}" fi do`
+- `CD` / `staging-preflight` / `Validate required staging configuration` -> `set -euo pipefail required_secrets=( RENDER_STAGING_DEPLOY_HOOK_URL DATABASE_URL REDIS_URL SESSION_SECRET JOB_HMAC_GLOBAL_SECRET AUTH_MFA_ENCRYPTION_KEY STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET SENTRY_DSN ) required_vars=( API_CORS_ORIGINS WEB_BASE_URL NEXT_PUBLIC_API_URL NEXT_PUB`
+- `CD` / `staging-preflight` / `Run staging preflight` -> `pnpm release:preflight:staging`
+- `CD` / `release-sbom` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CD` / `release-sbom` / `Generate CycloneDX SBOM` -> `pnpm release:sbom`
+- `CD` / `release-sbom` / `Materialize release bundle manifests` -> `set -euo pipefail pnpm release:materialize -- \ --tag=v1.0.0 \ --source-event="${{ needs.resolve-release-source.outputs.source_event }}" \ --source-ref="${{ needs.resolve-release-source.outputs.source_ref }}" \ --source-sha="${{ needs.resolve-release-source.outputs.source_sha }}"`
+- `CD` / `production-preflight` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CD` / `production-preflight` / `Mask configured secrets` -> `set -euo pipefail for key in AUTH_MFA_ENCRYPTION_KEY DATABASE_URL JOB_HMAC_GLOBAL_SECRET REDIS_URL RENDER_PRODUCTION_DEPLOY_HOOK_URL SENTRY_DSN SESSION_SECRET STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET; do value="${!key:-}" if [[ -n "${value}" ]]; then echo "::add-mask::${value}" fi`
+- `CD` / `production-preflight` / `Validate required production configuration` -> `set -euo pipefail required_secrets=( RENDER_PRODUCTION_DEPLOY_HOOK_URL DATABASE_URL REDIS_URL SESSION_SECRET JOB_HMAC_GLOBAL_SECRET AUTH_MFA_ENCRYPTION_KEY STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET SENTRY_DSN ) required_vars=( API_CORS_ORIGINS WEB_BASE_URL NEXT_PUBLIC_API_URL NEXT_`
+- `CD` / `production-preflight` / `Run production preflight` -> `pnpm release:preflight:production`
+- `CD` / `build-staging-images` / `Compute image refs` -> `set -euo pipefail SHORT_SHA="${{ needs.resolve-release-source.outputs.source_sha }}" SHORT_SHA="${SHORT_SHA:0:12}" REGISTRY="${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REGISTRY_REPOSITORY }}" echo "api_image=${REGISTRY`
+- `CD` / `build-staging-images` / `Configure Artifact Registry auth` -> `gcloud auth configure-docker "${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev" --quiet`
+- `CD` / `build-staging-images` / `Build and push API image` -> `docker build -f apps/api/Dockerfile -t "${{ steps.refs.outputs.api_image }}" . docker push "${{ steps.refs.outputs.api_image }}"`
+- `CD` / `build-staging-images` / `Build and push Web image` -> `docker build -f apps/web/Dockerfile -t "${{ steps.refs.outputs.web_image }}" . docker push "${{ steps.refs.outputs.web_image }}"`
+- `CD` / `build-staging-images` / `Build and push Worker image` -> `docker build -f apps/worker/Dockerfile -t "${{ steps.refs.outputs.worker_image }}" . docker push "${{ steps.refs.outputs.worker_image }}"`
+- `CD` / `deploy-staging` / `Deploy staging revisions` -> `set -euo pipefail REGION="${{ vars.CLOUD_RUN_REGION }}" mkdir -p artifacts/release : > artifacts/release/staging-rollout.tsv while IFS='|' read -r component service image; do before_json="artifacts/release/${component}-before.json" after_json="artifacts/release/${component}-after`
+- `CD` / `backup-health-gate` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CD` / `backup-health-gate` / `Run backup health gate` -> `pnpm ops:backup:health`
+- `CD` / `release-smoke-gate` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CD` / `release-smoke-gate` / `Run release smoke gate` -> `pnpm release:smoke`
+- `CD` / `release-e2e-gate` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CD` / `release-e2e-gate` / `Run release E2E gate` -> `pnpm test:e2e:release`
+- `CD` / `rollback-rehearsal-evidence-gate` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CD` / `rollback-rehearsal-evidence-gate` / `Materialize rollback rehearsal evidence` -> `pnpm release:rollback:evidence:auto -- --target=production`
+- `CD` / `dr-readiness-gate` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CD` / `dr-readiness-gate` / `Rebuild backup and DR readiness evidence` -> `set -euo pipefail pnpm ops:backup:health pnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario="automated release readiness rehearsal" pnpm ops:dr:report`
+- `CD` / `deploy-production` / `Guard production deployment branch` -> `set -euo pipefail if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then echo "::error title=Invalid branch::Production deploy can only run from main." >&2 exit 1 fi`
+- `CD` / `deploy-production` / `Mask deploy hook` -> `set -euo pipefail if [[ -n "${RENDER_PRODUCTION_DEPLOY_HOOK_URL:-}" ]]; then echo "::add-mask::${RENDER_PRODUCTION_DEPLOY_HOOK_URL}" fi`
+- `CD` / `deploy-production` / `Trigger Render deploy hook (production)` -> `set -euo pipefail if [[ -z "${RENDER_PRODUCTION_DEPLOY_HOOK_URL:-}" ]]; then echo "::error title=Missing secret::RENDER_PRODUCTION_DEPLOY_HOOK_URL is not configured in Environment production secrets." >&2 exit 1 fi if ! [[ "${RENDER_PRODUCTION_DEPLOY_HOOK_URL}" =~ ^https://[^[:sp`
+- `CD` / `deploy-production` / `Generate deploy manifest` -> `mkdir -p artifacts/release cat > artifacts/release/deploy-manifest.json <<EOF { "status": "deployed", "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)", "sourceEvent": "${{ needs.resolve-release-source.outputs.source_event }}", "sourceSha": "${{ needs.resolve-release-source.outputs.s`
+- `CI` / `branch-name` / `reusable-input-command` -> `pnpm branch:check`
+- `CI` / `commit-messages` / `reusable-input-command` -> `pnpm ci:commitlint`
+- `CI` / `lockfile-integrity` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CI` / `lockfile-integrity` / `Enforce agent surface freeze` -> `node scripts/ci/check-agent-surface-freeze.mjs`
+- `CI` / `lockfile-integrity` / `Enforce legacy DB surface freeze` -> `node scripts/ci/check-legacy-db-surface-freeze.mjs`
+- `CI` / `lockfile-integrity` / `Enforce legacy runtime surface freeze` -> `node scripts/ci/check-legacy-runtime-surface-freeze.mjs`
+- `CI` / `lockfile-integrity` / `Enforce active product capability alignment` -> `pnpm ci:active-product-capabilities`
+- `CI` / `lockfile-integrity` / `Enforce default e2e surface freeze` -> `pnpm ci:default-e2e-surface-freeze`
+- `CI` / `lockfile-integrity` / `Enforce web inline style freeze` -> `node scripts/ci/check-web-inline-style-freeze.mjs`
+- `CI` / `lockfile-integrity` / `Enforce lockfile governance` -> `pnpm ci:lockfile`
+- `CI` / `lockfile-corruption-simulation` / `Corrupt lockfile fixture` -> `set -euo pipefail cp pnpm-lock.yaml pnpm-lock.yaml.bak printf '\n__corrupted_lockfile_marker: [\n' >> pnpm-lock.yaml`
+- `CI` / `lockfile-corruption-simulation` / `Assert frozen install fails on corrupted lockfile` -> `set +e pnpm install --frozen-lockfile > lockfile-corruption.log 2>&1 status=$? set -e if [[ "${status}" -eq 0 ]]; then echo "::error title=Lockfile corruption simulation failed::pnpm install unexpectedly succeeded." cat lockfile-corruption.log exit 1 fi if ! grep -Eiq "ERR_PNPM|l`
+- `CI` / `lockfile-corruption-simulation` / `Restore lockfile` -> `mv pnpm-lock.yaml.bak pnpm-lock.yaml`
+- `CI` / `inline-credentials` / `reusable-input-command` -> `pnpm security:inline-credentials`
+- `CI` / `documentation-links` / `reusable-input-command` -> `pnpm docs:check-links`
+- `CI` / `repo-hygiene` / `reusable-input-command` -> `pnpm hygiene:check`
+- `CI` / `security-guardrails` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CI` / `security-guardrails` / `Generate Prisma client` -> `pnpm db:generate`
+- `CI` / `security-guardrails` / `Enforce security guardrails` -> `pnpm ci:security-guardrails`
+- `CI` / `platform` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CI` / `platform` / `Generate Prisma client` -> `pnpm db:generate`
+- `CI` / `platform` / `Bootstrap CI database` -> `pnpm db:bootstrap:ci`
+- `CI` / `platform` / `Run ${{ matrix.task }}` -> `pnpm ci:task ${{ matrix.task }}`
+- `CI` / `satellites` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CI` / `satellites` / `Install Python test dependencies` -> `python -m pip install --upgrade pip python -m pip install -r requirements-test.txt -r apps/webhook-receiver/requirements.txt`
+- `CI` / `satellites` / `Run satellites lane` -> `pnpm ci:task satellites`
+- `CI` / `workflow-suite` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CI` / `workflow-suite` / `Generate Prisma client` -> `pnpm db:generate`
+- `CI` / `workflow-suite` / `Bootstrap CI database` -> `pnpm db:bootstrap:ci`
+- `CI` / `workflow-suite` / `Run workflow suite` -> `pnpm ci:task workflow-suite`
+- `CI` / `integration-db` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CI` / `integration-db` / `Generate Prisma client` -> `pnpm db:generate`
+- `CI` / `integration-db` / `Run integration lane with real database` -> `pnpm test:integration`
+- `CI` / `coverage-quality` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `CI` / `coverage-quality` / `Install Python coverage dependencies` -> `python -m pip install --upgrade pip python -m pip install -r requirements-test.txt -r apps/webhook-receiver/requirements.txt`
+- `CI` / `coverage-quality` / `Generate Prisma client` -> `pnpm db:generate`
+- `CI` / `coverage-quality` / `Bootstrap coverage database` -> `pnpm db:bootstrap:ci`
+- `CI` / `coverage-quality` / `Enforce TypeScript coverage baseline` -> `pnpm coverage:check`
+- `CI` / `coverage-quality` / `Enforce Python coverage baseline` -> `pnpm test:python:coverage`
+- `CI` / `coverage-quality` / `Detect dead code` -> `pnpm quality:dead-code`
+- `CI` / `mutation-testing` / `reusable-input-command` -> `pnpm test:mutation`
+- `CI` / `pack-tests` / `reusable-input-command` -> `pnpm ci:task pack-tests`
+- `CI` / `governance-gates` / `reusable-input-command` -> `pnpm monorepo:doctor && RELEASE_SCORECARD_MIN_SCORE=100 pnpm release:scorecard && pnpm audit:ownership`
+- `CI` / `e2e-release` / `reusable-input-command` -> `pnpm test:e2e:release`
+- `CI` / `ci` / `Done` -> `echo "All required checks passed."`
+- `Dependabot Security Auto-Merge` / `auto-merge` / `Enable auto-merge for security patches` -> `gh pr merge --auto --squash "$PR_URL"`
+- `F4 Script Compliance` / `workspace-compliance` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `F4 Script Compliance` / `workspace-compliance` / `Run workspace audit` -> `pnpm workspace:audit`
+- `Materialize Doc-Only Controls` / `materialize-doc-only` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `Materialize Doc-Only Controls` / `materialize-doc-only` / `Run technical materialization controls` -> `pnpm audit:materialize:all`
+- `Release Rehearsal` / `cycle0-rehearsal` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `Release Rehearsal` / `cycle0-rehearsal` / `Run recurring release rehearsal` -> `pnpm release:verify:cycle0`
+- `Release Rehearsal` / `cycle0-rehearsal` / `Rebuild backup and DR readiness evidence` -> `set -euo pipefail pnpm ops:backup:health pnpm ops:dr:record:auto -- --environment=production --owner=platform-ops --scenario="scheduled release rehearsal" pnpm ops:dr:report`
+- `Repository Health` / `repository-health` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `Repository Health` / `repository-health` / `Clean stale untracked artifacts` -> `pnpm artifacts:clean -- --apply`
+- `Repository Health` / `repository-health` / `Generate repository health report` -> `pnpm monorepo:doctor`
+- `Reusable Node Check` / `run` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `Reusable Node Check` / `run` / `Install Playwright browsers` -> `pnpm exec playwright install --with-deps chromium`
+- `Reusable Node Check` / `run` / `Prisma diagnostics` -> `node -e "const pkg=require('./packages/database/package.json'); console.log('prisma(dev):', pkg.devDependencies?.prisma ?? 'missing'); console.log('@prisma/client(dep):', pkg.dependencies?.['@prisma/client'] ?? 'missing');" pnpm ls @prisma/client pnpm ls prisma cat packages/datab`
+- `Reusable Node Check` / `run` / `Run command` -> `case "$WORKFLOW_COMMAND" in "pnpm branch:check") pnpm branch:check ;; "pnpm ci:commitlint") pnpm ci:commitlint ;; "pnpm security:inline-credentials") pnpm security:inline-credentials ;; "pnpm docs:check-links") pnpm docs:check-links ;; "pnpm hygiene:check") pnpm hygiene:check ;; `
+- `Security Scan` / `dependency-audit` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `Security Scan` / `dependency-audit` / `Audit dependencies` -> `pnpm audit --audit-level=high`
+- `Security Scan` / `python-security` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `Security Scan` / `python-security` / `Install Python dependencies` -> `set -euo pipefail python -m pip install --upgrade pip python -m pip install -r requirements-test.txt bandit pip-audit "safety>=3.7.0"`
+- `Security Scan` / `python-security` / `Enforce Python workflow hard-fail policy` -> `python scripts/ci/check-python-workflow-hard-fail.py`
+- `Security Scan` / `python-security` / `Run Bandit` -> `python -m bandit -q -r agents apps/webhook-receiver -x "*/tests/*" -lll`
+- `Security Scan` / `python-security` / `Run pip-audit` -> `python -m pip_audit -r requirements-test.txt --ignore-vuln CVE-2026-4539`
+- `Security Scan` / `python-security` / `Run Safety` -> `python -m safety check --full-report -r requirements-test.txt`
+- `Security Scan` / `rbac-suite` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `Security Scan` / `rbac-suite` / `Generate Prisma client` -> `pnpm db:generate`
+- `Security Scan` / `rbac-suite` / `Run RBAC tests` -> `pnpm test:rbac`
+- `Security Scan` / `zap-baseline` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `Security Scan` / `zap-baseline` / `Build canonical web target` -> `pnpm --filter @birthub/web build`
+- `Security Scan` / `zap-baseline` / `Start canonical web target` -> `set -euo pipefail mkdir -p artifacts/security/zap pnpm --filter @birthub/web start > artifacts/security/zap/web-server.log 2>&1 & echo "$!" > artifacts/security/zap/web-server.pid`
+- `Security Scan` / `zap-baseline` / `Wait for canonical web target` -> `set -euo pipefail target_url="http://127.0.0.1:3001/login" for attempt in {1..60}; do if curl --silent --show-error --fail "$target_url" > /dev/null; then exit 0 fi sleep 2 done echo "Canonical web target did not become ready for ZAP baseline." >&2 exit 1`
+- `Security Scan` / `zap-baseline` / `ZAP baseline scan` -> `set -euo pipefail mkdir -p artifacts/security/zap docker run --rm --network host \ -v "${PWD}/artifacts/security/zap:/zap/wrk" \ ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \ -t http://127.0.0.1:3001/login \ -J zap-report.json \ -r zap-report.html \ -w zap-report.md \ -a`
+- `Security Scan` / `zap-baseline` / `Stop canonical web target` -> `set -euo pipefail if [[ -f artifacts/security/zap/web-server.pid ]]; then pid="$(cat artifacts/security/zap/web-server.pid)" kill "$pid" 2>/dev/null || true fi`
+- `Security Scan` / `security-report` / `Install dependencies` -> `pnpm install --frozen-lockfile`
+- `Security Scan` / `security-report` / `Verify auth guards` -> `pnpm security:guards`
+- `Security Scan` / `security-report` / `Generate security report` -> `pnpm security:report`

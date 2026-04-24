@@ -1,0 +1,191 @@
+[
+  {
+    "path": "apps/api",
+    "category": "CORE CANÔNICO",
+    "centrality": "CORE",
+    "evidence": "apps/api/package.json existe; scripts raiz referenciam o pacote",
+    "risk": "P1",
+    "decision": "SOBREVIVE",
+    "notes": "Módulo do núcleo canônico."
+  },
+  {
+    "path": "apps/web",
+    "category": "CORE CANÔNICO",
+    "centrality": "CORE",
+    "evidence": "apps/web/package.json existe; scripts raiz referenciam o pacote",
+    "risk": "P1",
+    "decision": "SOBREVIVE",
+    "notes": "Módulo do núcleo canônico."
+  },
+  {
+    "path": "apps/worker",
+    "category": "CORE CANÔNICO",
+    "centrality": "CORE",
+    "evidence": "apps/worker/package.json existe; scripts raiz referenciam o pacote",
+    "risk": "P1",
+    "decision": "SOBREVIVE",
+    "notes": "Módulo do núcleo canônico."
+  },
+  {
+    "path": "packages/config",
+    "category": "CORE CANÔNICO",
+    "centrality": "CORE",
+    "evidence": "packages/config/package.json existe; scripts raiz referenciam o pacote",
+    "risk": "P1",
+    "decision": "SOBREVIVE",
+    "notes": "Módulo do núcleo canônico."
+  },
+  {
+    "path": "packages/database",
+    "category": "CORE CANÔNICO",
+    "centrality": "CORE",
+    "evidence": "packages/database/package.json existe; scripts raiz referenciam o pacote",
+    "risk": "P1",
+    "decision": "SOBREVIVE",
+    "notes": "Módulo do núcleo canônico."
+  },
+  {
+    "path": "packages/logger",
+    "category": "CORE CANÔNICO",
+    "centrality": "CORE",
+    "evidence": "packages/logger/package.json existe; scripts raiz referenciam o pacote",
+    "risk": "P1",
+    "decision": "SOBREVIVE",
+    "notes": "Módulo do núcleo canônico."
+  },
+  {
+    "path": "packages/agents-core",
+    "category": "SUSPEITO ATÉ PROVA",
+    "centrality": "PERIPHERAL",
+    "evidence": "packages/agents-core existe no disco.",
+    "risk": "P2",
+    "decision": "INCONCLUSIVO",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "packages/workflows-core",
+    "category": "SUSPEITO ATÉ PROVA",
+    "centrality": "PERIPHERAL",
+    "evidence": "packages/workflows-core existe no disco.",
+    "risk": "P2",
+    "decision": "INCONCLUSIVO",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "packages/testing",
+    "category": "SUSPEITO ATÉ PROVA",
+    "centrality": "PERIPHERAL",
+    "evidence": "packages/testing existe no disco.",
+    "risk": "P2",
+    "decision": "INCONCLUSIVO",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "apps/legacy",
+    "category": "LEGADO",
+    "centrality": "PERIPHERAL",
+    "evidence": "apps/legacy existe fora da lista canônica.",
+    "risk": "P2",
+    "decision": "QUARENTENA",
+    "notes": "Superfície legada fora do caminho canônico."
+  },
+  {
+    "path": "apps/legacy/dashboard",
+    "category": "LEGADO",
+    "centrality": "PERIPHERAL",
+    "evidence": "apps/legacy/dashboard existe fora da lista canônica.",
+    "risk": "P2",
+    "decision": "QUARENTENA",
+    "notes": "Superfície legada fora do caminho canônico."
+  },
+  {
+    "path": "audit",
+    "category": "EVIDÊNCIA / DOCUMENTAÇÃO",
+    "centrality": "PERIPHERAL",
+    "evidence": "audit existe no disco.",
+    "risk": "P2",
+    "decision": "SOBREVIVE",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "artifacts",
+    "category": "EVIDÊNCIA / DOCUMENTAÇÃO",
+    "centrality": "PERIPHERAL",
+    "evidence": "artifacts existe no disco.",
+    "risk": "P2",
+    "decision": "SOBREVIVE",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "docs",
+    "category": "EVIDÊNCIA / DOCUMENTAÇÃO",
+    "centrality": "PERIPHERAL",
+    "evidence": "docs existe no disco.",
+    "risk": "P2",
+    "decision": "SOBREVIVE",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "scripts",
+    "category": "SATÉLITE ÚTIL",
+    "centrality": "SUPPORT",
+    "evidence": "scripts existe no disco.",
+    "risk": "P2",
+    "decision": "INVESTIGAR",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "tests",
+    "category": "SATÉLITE ÚTIL",
+    "centrality": "SUPPORT",
+    "evidence": "tests existe no disco.",
+    "risk": "P2",
+    "decision": "INVESTIGAR",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "infra",
+    "category": "SATÉLITE ÚTIL",
+    "centrality": "SUPPORT",
+    "evidence": "infra existe no disco.",
+    "risk": "P2",
+    "decision": "INVESTIGAR",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "releases",
+    "category": "SATÉLITE ÚTIL",
+    "centrality": "SUPPORT",
+    "evidence": "releases existe no disco.",
+    "risk": "P2",
+    "decision": "INVESTIGAR",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": "ops",
+    "category": "SATÉLITE ÚTIL",
+    "centrality": "SUPPORT",
+    "evidence": "ops existe no disco.",
+    "risk": "P2",
+    "decision": "INVESTIGAR",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": ".tools",
+    "category": "SUSPEITO ATÉ PROVA",
+    "centrality": "PERIPHERAL",
+    "evidence": ".tools existe no disco.",
+    "risk": "P2",
+    "decision": "INVESTIGAR",
+    "notes": "Classificação baseada em centralidade observável."
+  },
+  {
+    "path": ".ops/quarantine/runtime-noise/root-files",
+    "category": "RUÍDO OPERACIONAL",
+    "centrality": "ORPHAN",
+    "evidence": ".ops/quarantine/runtime-noise/root-files existe e contém ruído removido da raiz.",
+    "risk": "P3",
+    "decision": "QUARENTENA",
+    "notes": "Itens já isolados."
+  }
+]

@@ -70,30 +70,6 @@ export type DashboardIntegrationActivityPayload = {
   }>;
 };
 
-export type DashboardClinicalSummaryPayload = {
-  alerts: Array<{
-    description: string;
-    href: string;
-    id: string;
-    severity: "high" | "low" | "medium";
-    title: string;
-  }>;
-  metrics: Array<{
-    delta: string;
-    label: string;
-    value: number;
-  }>;
-  spotlight: Array<{
-    gestationalAgeLabel: string | null;
-    latestNoteTitle: string | null;
-    nextAppointmentAt: string | null;
-    patientId: string;
-    patientName: string;
-    riskLevel: "HIGH" | "LOW" | "MODERATE";
-    status: "ACTIVE" | "CLOSED" | "DELIVERED";
-  }>;
-};
-
 export type WorkflowListPayload = {
   items: Array<{
     _count: {
@@ -155,27 +131,23 @@ export function formatRiskTone(risk: string): "status-green" | "status-red" | "s
 
 export async function loadDashboardHomePage() {
   const capabilities = getProductCapabilities();
-  const [metrics, health, recent, billing, workflows, onboarding, integrationActivity, clinical, consents] =
+  const [metrics, health, recent, billing, workflows, onboarding, integrationActivity, consents] =
     await Promise.all([
-    fetchProductJson<DashboardMetricsPayload>("/api/v1/dashboard/metrics"),
-    fetchProductJson<DashboardHealthPayload>("/api/v1/dashboard/agent-statuses"),
-    fetchProductJson<DashboardRecentPayload>("/api/v1/dashboard/recent-tasks"),
-    fetchProductJson<BillingUsagePayload>("/api/v1/billing/usage"),
-    fetchProductJson<WorkflowListPayload>("/api/v1/workflows"),
-    fetchProductJson<OnboardingPayload>("/api/v1/dashboard/onboarding"),
-    fetchProductJson<DashboardIntegrationActivityPayload>("/api/v1/dashboard/integration-activity"),
-    capabilities.clinicalWorkspaceEnabled
-      ? fetchProductJson<DashboardClinicalSummaryPayload>("/api/v1/dashboard/clinical-summary")
-      : Promise.resolve(null),
-    capabilities.privacyAdvancedEnabled
-      ? fetchProductJson<PrivacyConsentPayload>("/api/v1/privacy/consents")
-      : Promise.resolve(null)
-  ]);
+      fetchProductJson<DashboardMetricsPayload>("/api/v1/dashboard/metrics"),
+      fetchProductJson<DashboardHealthPayload>("/api/v1/dashboard/agent-statuses"),
+      fetchProductJson<DashboardRecentPayload>("/api/v1/dashboard/recent-tasks"),
+      fetchProductJson<BillingUsagePayload>("/api/v1/billing/usage"),
+      fetchProductJson<WorkflowListPayload>("/api/v1/workflows"),
+      fetchProductJson<OnboardingPayload>("/api/v1/dashboard/onboarding"),
+      fetchProductJson<DashboardIntegrationActivityPayload>("/api/v1/dashboard/integration-activity"),
+      capabilities.privacyAdvancedEnabled
+        ? fetchProductJson<PrivacyConsentPayload>("/api/v1/privacy/consents")
+        : Promise.resolve(null)
+    ]);
 
   return {
     billing,
     capabilities,
-    clinical,
     consents,
     health,
     integrationActivity,

@@ -1,0 +1,406 @@
+# Lista por nivel de prioridade
+
+## Core (46)
+
+- account-manager-pack (corporate-v1) - vendas - CRO / VP Sales - Ajudar na gestão de carteira, expansão e retenção da base. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- admin-ops-pack (corporate-v1) - ops - COO / RevOps - Ajudar admins a configurar a plataforma, usuários, integrações e governança. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- agent-mesh-orchestrator-pack (corporate-v1) - ops - COO / Platform Ops - Orquestrar malhas de agentes por segmento, tipo de problema e prioridade operacional, decidindo qual especialista entra, em que ordem, com qual contexto e a partir de gatilhos reais de entrada.
+- call-review-pack (corporate-v1) - vendas - CRO / VP Sales - Transformar calls em inteligência operacional, coaching e registro. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- ceo-pack (corporate-v1) - executivo - CEO - Corporate strategic agent for growth and board-level prioritization.
+- cfo-pack (corporate-v1) - financeiro - CFO - Finance leadership agent for margin protection and cash planning.
+- closer-copilot-pack (corporate-v1) - vendas - CRO / VP Sales - Ajudar o closer a avançar oportunidades com contexto, estratégia e próximos passos. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- closing-forecast-pack (corporate-v1) - vendas - CRO / VP Sales - Estimar chance de fechamento por oportunidade. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- cmo-pack (corporate-v1) - marketing - CMO - Marketing leadership agent for demand generation and brand efficiency.
+- communication-pack (corporate-v1) - ops - COO / RevOps - Centralizar composição e rastreamento de comunicações multicanal. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- context-memory-pack (corporate-v1) - ops - COO / Platform Ops - Armazenar e recuperar memória útil do tenant, das contas, dos deals e dos usuários. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- coo-pack (corporate-v1) - ops - COO - Operations leadership agent for process scale and efficiency.
+- crm-sync-pack (corporate-v1) - ops - COO / RevOps - Sincronizar dados entre BirthHub e CRMs externos sem quebrar consistência. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- cro-pack (corporate-v1) - vendas - CRO - Revenue leadership agent focused on pipeline velocity and conversion.
+- cs-pack (corporate-v1) - CS - VP Customer Success - CS agent focused on retention, expansion and account health.
+- cto-pack (corporate-v1) - ops - CTO - Technology leadership agent for architecture, reliability and delivery.
+- customer-health-pack (corporate-v1) - CS - VP Customer Success - Medir saúde da conta e prevenir churn. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- deal-risk-pack (corporate-v1) - vendas - CRO / VP Sales - Identificar deals em risco e sugerir ações corretivas. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- enablement-coach-pack (corporate-v1) - vendas - CRO / VP Sales - Treinar o time comercial com base em gaps reais. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- finance-pack (corporate-v1) - financeiro - CFO / Finance Ops - Departmental finance agent for controls, reconciliation and reporting.
+- follow-up-pack (corporate-v1) - vendas - CRO / VP Sales - Recuperar conversas mornas e manter consistência de follow-up. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- forecast-intelligence-pack (corporate-v1) - vendas - CRO / VP Sales - Projetar receita futura por time, período e cenário. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- knowledge-pack (corporate-v1) - ops - COO / Platform Ops - Consultar e responder com base na base interna do tenant. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- kpi-analyst-pack (corporate-v1) - ops - COO / RevOps - Traduzir métricas em narrativa operacional útil. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- lead-enrichment-pack (corporate-v1) - vendas - CRO / VP Sales - Enriquecer leads e contas com dados úteis para abordagem e qualificação. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- lead-hunter-pack (corporate-v1) - vendas - CRO / VP Sales - Encontrar contas e leads aderentes ao ICP. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- legal-pack (corporate-v1) - compliance - General Counsel - Legal operations agent for contracts and compliance workflows.
+- maestro-orchestrator-pack (corporate-v1) - ops - COO / Platform Ops - Orquestrar toda a plataforma, decidir qual agente atua, consolidar contexto e garantir fluxo sem conflitos. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- meeting-booker-pack (corporate-v1) - vendas - CRO / VP Sales - Agendar reuniões com o menor atrito possível. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- objection-handling-pack (corporate-v1) - vendas - CRO / VP Sales - Mapear, classificar e responder objeções comerciais. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- onboarding-sales-pack (corporate-v1) - vendas - CRO / VP Sales - Acelerar onboarding de novos vendedores. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- ops-pack (corporate-v1) - ops - COO / RevOps - Operations agent for process control and incident response.
+- pipeline-auditor-pack (corporate-v1) - vendas - CRO / VP Sales - Auditar higiene e consistência do pipeline. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- policy-and-approval-guard-pack (corporate-v1) - compliance - Compliance Officer - Autorizar, bloquear ou exigir dupla checagem para ações sensíveis. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- productivity-pack (corporate-v1) - ops - COO / RevOps - Medir ganho operacional, tempo economizado e desperdício de esforço. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- proposal-pack (corporate-v1) - vendas - CRO / VP Sales - Montar propostas comerciais consistentes e contextualizadas. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- qualification-pack (corporate-v1) - vendas - CRO / VP Sales - Avaliar fit, urgência, dor, autoridade e oportunidade real. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- revops-intelligence-pack (corporate-v1) - ops - COO / RevOps - Analisar estrutura operacional, conversão, gargalos e inconsistências do funil. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- rh-pack (corporate-v1) - ops - Head of People - Human resources agent for people operations and talent lifecycle.
+- roleplay-trainer-pack (corporate-v1) - vendas - CRO / VP Sales - Simular situações comerciais para treinamento prático. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- sales-manager-pack (corporate-v1) - vendas - CRO / VP Sales - Ajudar gestores a entender time, pipeline e gargalos. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- sales-pack (corporate-v1) - vendas - CRO / VP Sales - Sales execution agent for lead qualification and conversion.
+- sdr-outreach-pack (corporate-v1) - vendas - CRO / VP Sales - Criar mensagens de abordagem inicial e follow-ups personalizados. Opera de forma autonoma, preventiva e orientada a antecipacao de decisoes criticas.
+- implementer-github-pack (github-agents-v1) - ops - COO / Platform Ops - Use when implementing or updating instructions, custom agents, skills, prompts, and hooks from an approved plan.
+- planner-github-pack (github-agents-v1) - ops - COO / Platform Ops - Use when planning multi-step implementation of custom agents, skills, instructions, and hooks with sequencing, risks, and acceptance criteria.
+- reviewer-github-pack (github-agents-v1) - ops - COO / Platform Ops - Use when auditing custom agents, skills, prompts, and hooks for syntax, safety, discoverability, and policy compliance before release.
+
+## Especialistas (164)
+
+- boardprep-ai-premium-pack (executive-premium-v1) - executivo - CEO / Chief of Staff - Consolida contexto executivo, KPIs, riscos e decisoes pendentes para preparar material de board com lacunas explicitadas e recomendacoes acionaveis.
+- brand-guardian-premium-pack (executive-premium-v1) - marketing - CMO / Growth - Analisa a exposição de marca, consistência narrativa e incidentes de reputação para garantir a saúde da marca executiva.
+- budget-fluid-premium-pack (executive-premium-v1) - financeiro - CFO / Finance Ops - Analisa a telemetria de gastos, desvio de previsão e alocações de cenário para otimizar a eficiência orçamentária.
+- capital-allocator-premium-pack (executive-premium-v1) - executivo - CEO / Chief of Staff - Analisa a telemetria de gastos, desvio de previsão e alocações de cenário para otimizar a eficiência orçamentária.
+- churn-deflector-premium-pack (executive-premium-v1) - CS - VP Customer Success - Monitora saude de contas, risco de renovacao e cobertura executiva para priorizar acoes de retencao e reduzir churn evitavel.
+- competitor-xray-premium-pack (executive-premium-v1) - marketing - CMO / Growth - Analisa inteligencia de concorrentes, gaps de features e benchmarks de preco para sugerir campos de batalha otimizados e aumentar taxas de conversao.
+- crisis-navigator-premium-pack (executive-premium-v1) - executivo - CEO / Chief of Staff - Orquestra resposta executiva a crises operacionais, reputacionais e de compliance, priorizando mitigacao, comunicacao e recuperacao.
+- culture-pulse-premium-pack (executive-premium-v1) - ops - COO / RevOps - Monitora saude cultural interna, riscos de engajamento e alinhamento de lideranca para orientar acoes de people e comunicacao executiva.
+- expansion-mapper-premium-pack (executive-premium-v1) - CS - VP Customer Success - Detecta sinais de crescimento emergentes, aceleracao de categorias e clusters de mercado para indicar areas focais recomendadas.
+- market-sentinel-premium-pack (executive-premium-v1) - executivo - CEO / Chief of Staff - Detecta sinais de crescimento emergentes, aceleracao de categorias e clusters de mercado para indicar areas focais recomendadas.
+- narrative-weaver-premium-pack (executive-premium-v1) - executivo - CEO / Chief of Staff - Harmoniza narrativas estrategicas e operacionais para stakeholders diferentes garantindo consistencia da mensagem.
+- pipeline-oracle-premium-pack (executive-premium-v1) - vendas - CRO / VP Sales - Analisa cobertura de pipeline, capacidade comercial e qualidade de forecast para orientar redistribuicoes de cobertura e reduzir risco de conversao.
+- pricing-optimizer-premium-pack (executive-premium-v1) - vendas - CRO / VP Sales - Analisa elasticidade, realizacao de preco e gaps de empacotamento para recomendar movimentos de pricing com melhor retorno comercial.
+- quota-architect-premium-pack (executive-premium-v1) - vendas - CRO / VP Sales - Analisa a cobertura de territorio e performance de vendas para sugerir realocacoes de metas e maximizar o atingimento de cotas.
+- trend-catcher-premium-pack (executive-premium-v1) - executivo - CEO / Chief of Staff - Detecta sinais de crescimento emergentes, aceleracao de categorias e clusters de mercado para indicar areas focais recomendadas.
+- ab-test-automator-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para AB Test Automator.
+- ab-test-synthesizer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para AB Test Synthesizer.
+- access-right-auditor-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Access Right Auditor.
+- activation-optimizer-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Activation Optimizer.
+- activity-analyzer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when analyzing sales activity patterns, identifying productivity gaps, and recommending behavior-level pipeline improvements.
+- adoption-metric-analyzer-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Adoption Metric Analyzer.
+- agency-auditor-github-pack (github-agents-v1) - marketing - CMO / Growth - Use when auditing agency performance, contract delivery quality, and ROI alignment for executive oversight.
+- aging-report-sender-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Aging Report Sender.
+- api-integration-builder-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para API Integration Builder.
+- api-key-configurator-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para API Key Configurator.
+- approval-workflow-router-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Approval Workflow Router.
+- arr-bridge-builder-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para ARR Bridge Builder.
+- audit-bot-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Use when preparing audit readiness, control evidence organization, and executive visibility over compliance gaps.
+- audit-prep-engine-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Audit Prep Engine.
+- audit-trail-builder-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Audit Trail Builder.
+- bank-reconciliation-bot-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Bank Reconciliation Bot.
+- bankruptcy-risk-monitor-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Bankruptcy Risk Monitor.
+- board-prep-ai-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when preparing board packs, executive meeting briefs, and decision-ready summaries for C-level leadership.
+- brand-guardian-github-pack (github-agents-v1) - marketing - CMO / Growth - Use when assessing brand consistency, narrative coherence, and reputational risk across strategic communications.
+- brand-guideline-enforcer-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Brand Guideline Enforcer.
+- budget-fluid-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Use when rebalancing budget allocation, adapting spend to strategy changes, and preserving efficiency under constraints.
+- budget-variance-pinger-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Budget Variance Pinger.
+- campaign-decay-predictor-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Campaign Decay Predictor.
+- campaign-orchestrator-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Campaign Orchestrator.
+- cap-table-manager-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Use when reviewing cap table implications, dilution scenarios, and ownership-impact decisions for leadership.
+- capital-allocator-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when evaluating investment options, capital distribution trade-offs, and prioritization under budget constraints.
+- cash-app-matcher-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Cash App Matcher.
+- central-bank-xml-generator-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Central Bank XML Generator.
+- churn-cohort-isolator-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Churn Cohort Isolator.
+- churn-deflector-github-pack (github-agents-v1) - CS - VP Customer Success - Use when diagnosing churn drivers, segmenting retention risk, and proposing executive retention interventions.
+- churn-win-back-sequencer-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Churn Win Back Sequencer.
+- collection-agency-router-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Collection Agency Router.
+- competitor-x-ray-github-pack (github-agents-v1) - marketing - CMO / Growth - Use when analyzing competitor positioning, product moves, and go-to-market threats for strategic response.
+- compliance-checklist-enforcer-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Compliance Checklist Enforcer.
+- compliance-enforcer-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Use when enforcing policy adherence, identifying compliance breaches, and preparing executive remediation priorities.
+- content-to-lead-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when converting content signals into qualified lead actions and improving handoff from content engagement to sales motion.
+- contract-drafter-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when drafting contract structures, aligning commercial terms, and preparing negotiation-ready agreement baselines.
+- contract-redliner-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Contract Redliner.
+- conversion-forecaster-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when forecasting conversion outcomes, analyzing stage leakage, and estimating expected yield from pipeline initiatives.
+- credit-hold-releaser-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Credit Hold Releaser.
+- credit-limit-recommender-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Credit Limit Recommender.
+- credit-score-fetcher-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Credit Score Fetcher.
+- crisis-navigator-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when triaging incidents, structuring executive crisis response, and defining communication priorities under pressure.
+- crm-cleanser-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para CRM Cleanser.
+- csatnps-aggregator-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para CSATNPS Aggregator.
+- culture-pulse-github-pack (github-agents-v1) - ops - COO / RevOps - Use when assessing organizational culture signals, alignment risks, and people-impact indicators for executive action.
+- custom-crm-ui-builder-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Custom CRMUI Builder.
+- dashboard-auto-freshener-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Dashboard Auto Freshener.
+- dashboard-automator-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Dashboard Automator.
+- data-cleaner-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when cleaning sales data, resolving duplicates, and improving CRM data quality for reliable pipeline operations.
+- data-cleaning-bot-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Data Cleaning Bot.
+- data-enrichment-automator-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Data Enrichment Automator.
+- data-hygiene-monitor-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Data Hygiene Monitor.
+- data-migration-validator-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Data Migration Validator.
+- data-silo-bridger-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Data Silo Bridger.
+- deal-at-risk-alerter-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Deal At Risk Alerter.
+- deal-desk-autopilot-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Deal Desk Autopilot.
+- deck-customizer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when tailoring sales decks for specific accounts, decision committees, and deal-stage narrative requirements.
+- discount-approver-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when evaluating discount requests, preserving margin guardrails, and supporting approval decisions with deal context.
+- discount-leak-guard-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Discount Leak Guard.
+- discount-waterfall-modeler-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Discount Waterfall Modeler.
+- drip-campaign-trigger-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Drip Campaign Trigger.
+- dunning-automator-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Dunning Automator.
+- early-adopter-nurturer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when nurturing early adopters, increasing activation confidence, and converting champions into scalable references.
+- enrichment-bot-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when enriching lead and account profiles, filling critical fields, and improving context quality for outbound and inbound workflows.
+- escalation-predictor-github-pack (github-agents-v1) - CS - VP Customer Success - Use when predicting escalation risks, early-warning patterns, and executive intervention triggers for critical accounts or operations.
+- event-qualifier-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when qualifying event-driven opportunities, ranking event leads, and defining post-event conversion actions.
+- exec-summary-generator-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when generating executive deal summaries, consolidating key terms, and highlighting approval-critical decision points.
+- executive-summary-bot-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when producing concise executive summaries, highlighting decisions, risks, and actions from complex operational context.
+- expansion-mapper-github-pack (github-agents-v1) - CS - VP Customer Success - Use when evaluating expansion opportunities, geographic or segment growth paths, and market-entry prioritization.
+- failed-payment-retrier-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Failed Payment Retrier.
+- fast-quoter-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when accelerating quote generation, standardizing pricing components, and reducing quote turnaround in active deals.
+- forecast-rollup-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when consolidating multi-team forecasts, reconciling assumptions, and preparing executive forecast confidence views.
+- forecasting-modeler-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Forecasting Modeler.
+- fx-risk-manager-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Use when assessing foreign exchange exposure, hedging trade-offs, and executive FX risk mitigation strategy.
+- gamification-master-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when designing sales gamification mechanics, incentive loops, and engagement systems aligned with revenue goals.
+- global-brand-localizer-github-pack (github-agents-v1) - marketing - CMO / Growth - Use when adapting global brand strategy to local markets while preserving core positioning and governance standards.
+- health-score-architect-github-pack (github-agents-v1) - CS - VP Customer Success - Use when designing health score frameworks, risk indicators, and executive intervention triggers for account stability.
+- health-score-trigger-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Health Score Trigger.
+- high-risk-jurisdiction-pinger-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para High Risk Jurisdiction Pinger.
+- icp-refiner-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when refining ICP definitions, tightening qualification boundaries, and improving target-fit precision across sales motions.
+- inbound-scorer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when scoring inbound leads, prioritizing qualification queues, and improving conversion focus for sales teams.
+- invoice-generator-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Invoice Generator.
+- lead-magnet-creator-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Lead Magnet Creator.
+- lead-routing-troubleshooter-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Lead Routing Troubleshooter.
+- lead-scoring-modeler-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Lead Scoring Modeler.
+- leaderboard-broadcaster-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Leaderboard Broadcaster.
+- margin-calculator-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Margin Calculator.
+- market-sentinel-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when monitoring market shifts, competitor moves, and external signals that impact executive strategy.
+- multi-year-deal-modeller-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when modeling multi-year deal scenarios, commitment structures, and revenue-risk trade-offs across contract horizons.
+- mutual-action-tracker-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when defining and tracking mutual action plans, ownership commitments, and timeline adherence in active deals.
+- narrative-weaver-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when building executive narrative, aligning strategic messaging, and translating complex context into clear leadership communication.
+- net-retention-modeler-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Net Retention Modeler.
+- objection-crusher-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when mapping sales objections, identifying root concerns, and preparing high-confidence rebuttal strategies.
+- objection-flashcard-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when creating objection flashcards, preparing concise rebuttal training, and standardizing rapid-response sales enablement.
+- onboarding-ramp-tracker-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Onboarding Ramp Tracker.
+- org-nav-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when navigating organizational structures, identifying decision pathways, and planning multi-level influence in complex deals.
+- payment-link-sender-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Use when orchestrating payment link flows, reducing payment friction, and improving close-to-cash speed.
+- payment-plan-negotiator-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Payment Plan Negotiator.
+- personalization-engine-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when tailoring outreach messaging, offer framing, and contextual value propositions for specific prospects.
+- pipeline-inspector-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Pipeline Inspector.
+- pipeline-oracle-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when analyzing sales pipeline quality, forecasting reliability, and executive pipeline risk exposure.
+- pipeline-velocity-tracker-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Pipeline Velocity Tracker.
+- playbook-creator-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when creating repeatable sales playbooks, codifying winning motions, and scaling execution consistency across teams.
+- playbook-generator-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when generating operational playbooks, standardizing execution patterns, and improving leadership alignment across teams.
+- playbook-updater-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Playbook Updater.
+- price-discount-impact-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Price Discount Impact.
+- pricing-elasticity-tester-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Pricing Elasticity Tester.
+- pricing-optimizer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when reviewing pricing strategy, package structure, and monetization trade-offs for executive decisions.
+- pricing-tester-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when testing pricing hypotheses, measuring conversion sensitivity, and validating monetization experiments.
+- pricing-tier-recommender-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Pricing Tier Recommender.
+- process-bottleneck-alerter-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Process Bottleneck Alerter.
+- process-flow-mapper-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Process Flow Mapper.
+- process-walkthrough-automator-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Process Walkthrough Automator.
+- procurement-policy-bot-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Use when reviewing procurement policy adherence, approval paths, and compliance controls for purchasing decisions.
+- product-feedback-looper-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when closing product feedback loops from deals, prioritizing recurrent requests, and aligning GTM-to-product signals.
+- qbr-deck-builder-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para QBR Deck Builder.
+- quota-architect-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when designing quota strategy, attainment balance, and target allocation for revenue leadership.
+- quota-attainment-tracker-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Quota Attainment Tracker.
+- quota-setter-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Quota Setter.
+- ramp-up-assistant-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when accelerating rep ramp-up, structuring onboarding milestones, and reducing time-to-productivity in sales teams.
+- refund-processor-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Refund Processor.
+- regulatory-change-alerter-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Regulatory Change Alerter.
+- regulatory-training-tracker-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Regulatory Training Tracker.
+- renewal-contract-generator-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Renewal Contract Generator.
+- renewal-forecast-engine-github-pack (github-agents-v1) - CS - VP Customer Success - Use when forecasting renewals, retention exposure, and executive intervention opportunities for recurring revenue stability.
+- rep-coach-ai-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when coaching sales reps, identifying execution gaps, and improving conversion behavior with actionable guidance.
+- resource-balancer-github-pack (github-agents-v1) - ops - COO / RevOps - Use when balancing team capacity, budget constraints, and strategic priorities across competing initiatives.
+- risk-exposure-quantifier-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Risk Exposure Quantifier.
+- roi-calculator-builder-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when building ROI calculators, validating value assumptions, and supporting executive business-case justification.
+- roi-scenario-modeler-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para ROI Scenario Modeler.
+- routing-traffic-cop-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when improving lead routing rules, reducing assignment delays, and enforcing fair distribution across sales capacity.
+- saas-license-auditor-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Saa S License Auditor.
+- sanctions-screener-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Sanctions Screener.
+- scenario-modeler-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when modeling strategic scenarios, testing assumptions, and supporting executive decision-making under uncertainty.
+- seo-draft-writer-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para SEO Draft Writer.
+- sla-escalator-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para SLA Escalator.
+- sla-monitor-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para SLA Monitor.
+- tax-exemption-verifier-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Tax Exemption Verifier.
+- tax-optimizer-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Use when assessing tax efficiency scenarios, fiscal risk exposure, and executive tax planning priorities.
+- tech-stack-auditor-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Tech Stack Auditor.
+- territory-balancer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Territory Balancer.
+- territory-mapper-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when redesigning sales territories, coverage models, and executive territory allocation decisions.
+- ticket-backlog-analyzer-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Ticket Backlog Analyzer.
+- ticket-classifier-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Ticket Classifier.
+- tool-roi-analyzer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Tool ROI Analyzer.
+- trend-catcher-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when identifying strategic trends, weak signals, and emerging opportunities relevant to executive planning.
+- vendor-negotiator-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Use when preparing supplier negotiation strategy, contract leverage points, and executive trade-off scenarios.
+- webinar-nurturer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when nurturing webinar leads, segmenting follow-up streams, and increasing conversion from event engagement.
+
+## Long tail (162)
+
+- account-mapper-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when mapping account stakeholders, influence paths, and buying committee structures for strategic outreach.
+- accrual-engine-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Accrual Engine.
+- acv-growth-tracker-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para ACV Growth Tracker.
+- ad-copy-machine-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Ad Copy Machine.
+- ad-fatigue-monitor-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Ad Fatigue Monitor.
+- address-proof-validator-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Address Proof Validator.
+- advocacy-finder-github-pack (github-agents-v1) - CS - VP Customer Success - Use when identifying customer advocates, reference candidates, and executive-led advocacy opportunities.
+- aha-moment-tracker-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Aha Moment Tracker.
+- angry-customer-escalator-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Angry Customer Escalator.
+- annual-report-analyzer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when extracting strategic signals from annual reports to guide account intelligence and executive-level outreach.
+- anomaly-detector-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Anomaly Detector.
+- architecture-diagrammer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Architecture Diagrammer.
+- attribution-modeler-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Attribution Modeler.
+- audience-segment-discoverer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Audience Segment Discoverer.
+- auto-decision-engine-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Auto Decision Engine.
+- bad-debt-predictor-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Bad Debt Predictor.
+- battlecard-updater-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Battlecard Updater.
+- best-practice-recommender-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Best Practice Recommender.
+- bid-auto-adjuster-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Bid Auto Adjuster.
+- board-reporting-automator-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when automating board reporting structure, KPI narratives, and executive governance communication cycles.
+- bottleneck-detector-github-pack (github-agents-v1) - ops - COO / RevOps - Use when diagnosing operational bottlenecks, identifying throughput constraints, and prioritizing executive interventions.
+- burn-rate-monitor-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Use when monitoring burn rate trends, runway pressure, and executive mitigation actions for financial resilience.
+- cacltv-modeler-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para CACLTV Modeler.
+- cannibalization-detector-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Cannibalization Detector.
+- capacity-modeler-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Capacity Modeler.
+- capacity-planner-github-pack (github-agents-v1) - ops - COO / RevOps - Use when planning operational capacity, balancing demand projections, and avoiding overcommitment in executive plans.
+- capital-adequacy-calculator-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Capital Adequacy Calculator.
+- channel-attrition-predictor-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Channel Attrition Predictor.
+- channel-mixer-github-pack (github-agents-v1) - marketing - CMO / Growth - Use when optimizing channel mix, balancing acquisition sources, and improving executive visibility on channel efficiency.
+- chargeback-dispute-automator-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Chargeback Dispute Automator.
+- cloud-spend-optimizer-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Cloud Spend Optimizer.
+- cohort-analyzer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Cohort Analyzer.
+- cold-call-scripter-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when drafting cold call scripts, opening hooks, and objection paths tailored to specific ICP and context.
+- comms-surveillance-bot-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Comms Surveillance Bot.
+- comp-plan-calculator-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Comp Plan Calculator.
+- competitor-displacement-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when planning competitor displacement strategies, identifying switch triggers, and positioning replacement narratives.
+- competitor-intel-broadcaster-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Competitor Intel Broadcaster.
+- content-repurposer-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Content Repurposer.
+- creative-asset-tester-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Creative Asset Tester.
+- crisis-comms-drafter-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Crisis Comms Drafter.
+- cross-sell-mapper-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Cross Sell Mapper.
+- crypto-tracing-bot-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Crypto Tracing Bot.
+- custom-script-generator-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Custom Script Generator.
+- deadline-tracker-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Deadline Tracker.
+- default-probability-modeler-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Default Probability Modeler.
+- delay-escalator-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Delay Escalator.
+- demo-sandboxer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Demo Sandboxer.
+- demo-scripter-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when scripting tailored product demos, sequencing proof points, and aligning demo narrative to buyer priorities.
+- device-fingerprint-matcher-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Device Fingerprint Matcher.
+- disputed-charge-aggregator-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Disputed Charge Aggregator.
+- distribution-automator-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Distribution Automator.
+- duplicate-merger-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Duplicate Merger.
+- executive-demo-curator-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Executive Demo Curator.
+- executive-sponsor-tracker-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Executive Sponsor Tracker.
+- false-positive-reducer-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para False Positive Reducer.
+- faq-auto-responder-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para FAQ Auto Responder.
+- feature-heatmapper-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Feature Heatmapper.
+- financial-ratio-calculator-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Financial Ratio Calculator.
+- funnel-leak-detector-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Funnel Leak Detector.
+- geospatial-expansion-mapper-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Geospatial Expansion Mapper.
+- gl-anomaly-detector-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para GL Anomaly Detector.
+- gtm-alignment-scorer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para GTM Alignment Scorer.
+- id-verification-matcher-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para ID Verification Matcher.
+- incident-post-mortem-drafter-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Incident Post Mortem Drafter.
+- influencer-vettor-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Influencer Vettor.
+- instance-right-sizer-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Instance Right Sizer.
+- intent-decoder-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when decoding buyer intent signals, prioritizing outreach urgency, and clarifying intent confidence levels.
+- journey-architect-github-pack (github-agents-v1) - CS - VP Customer Success - Use when redesigning customer journey, reducing friction points, and aligning executive priorities for lifecycle outcomes.
+- journey-drop-off-locator-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Journey Drop Off Locator.
+- kb-gap-identifier-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para KB Gap Identifier.
+- keyword-opportunity-spotter-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Keyword Opportunity Spotter.
+- l1-auto-resolver-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para L1 Auto Resolver.
+- l3-bug-replicator-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para L3 Bug Replicator.
+- launch-planner-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Launch Planner.
+- legal-clause-matcher-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Legal Clause Matcher.
+- limit-decrease-recommender-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Limit Decrease Recommender.
+- liquidity-ratio-monitor-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Liquidity Ratio Monitor.
+- liveness-check-analyzer-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Liveness Check Analyzer.
+- ltv-by-channel-calculator-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para LT Vby Channel Calculator.
+- macro-factor-tracker-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Macro Factor Tracker.
+- mapeia-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Mapeia.
+- mar-tech-sync-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Mar Tech Sync.
+- market-expansion-modeler-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Market Expansion Modeler.
+- market-share-estimator-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Market Share Estimator.
+- marketing-tech-architect-github-pack (github-agents-v1) - marketing - CMO / Growth - Use when designing martech architecture, integration priorities, and capability roadmaps for scalable growth operations.
+- media-mix-optimizer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Media Mix Optimizer.
+- micro-learning-creator-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Micro Learning Creator.
+- milestone-chaser-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Milestone Chaser.
+- money-mule-detector-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Money Mule Detector.
+- month-end-close-automator-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Month End Close Automator.
+- multi-cloud-cost-modeler-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Multi Cloud Cost Modeler.
+- multi-threader-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when orchestrating multi-thread prospecting across stakeholders and coordinating parallel outreach tracks in complex accounts.
+- nda-auto-signer-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para NDA Auto Signer.
+- newsletter-curator-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Newsletter Curator.
+- non-standard-flag-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Non Standard Flag.
+- on-page-optimizer-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para On Page Optimizer.
+- one-on-one-prep-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para One On One Prep.
+- outage-communicator-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Outage Communicator.
+- patch-update-alerter-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Patch Update Alerter.
+- pep-screener-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para PEP Screener.
+- persona-sync-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Persona Sync.
+- plagiarism-tone-checker-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Plagiarism Tone Checker.
+- poc-tracker-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Po C Tracker.
+- policy-mapping-bot-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Policy Mapping Bot.
+- positioning-tester-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Positioning Tester.
+- project-plan-tracker-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Project Plan Tracker.
+- promise-to-pay-tracker-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Promise To Pay Tracker.
+- proration-calculator-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Proration Calculator.
+- relationship-matrix-builder-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Relationship Matrix Builder.
+- release-note-writer-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Release Note Writer.
+- remediation-plan-tracker-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Remediation Plan Tracker.
+- remittance-extractor-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Remittance Extractor.
+- requirements-gatherer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Requirements Gatherer.
+- rfp-auto-responder-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para RFP Auto Responder.
+- roas-maximizer-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para ROAS Maximizer.
+- sar-drafter-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para SAR Drafter.
+- scalability-predictor-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Scalability Predictor.
+- schema-markup-generator-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Schema Markup Generator.
+- scope-creep-detector-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Scope Creep Detector.
+- security-questionnaire-filler-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Security Questionnaire Filler.
+- semantic-search-kb-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Semantic Search KB.
+- sentiment-aggregator-github-pack (github-agents-v1) - CS - VP Customer Success - Use when aggregating sentiment signals from customers, market, and stakeholders to inform executive decisions.
+- sentiment-shift-alerter-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Sentiment Shift Alerter.
+- session-replay-summarizer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Session Replay Summarizer.
+- shift-scheduler-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Shift Scheduler.
+- spend-controller-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Use when controlling spend efficiency, identifying leakage, and enforcing executive prioritization of costs.
+- sql-query-generator-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para SQL Query Generator.
+- stakeholder-persona-generator-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when generating stakeholder personas, influence profiles, and communication angles for account-based outreach.
+- stakeholder-update-automator-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Stakeholder Update Automator.
+- stat-significance-tester-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Stat Significance Tester.
+- stickiness-tracker-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Stickiness Tracker.
+- strategic-kpi-aggregator-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Estruturar analise, decisao e plano de execucao para Strategic KPI Aggregator.
+- stress-test-modeler-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Stress Test Modeler.
+- subject-line-tester-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Subject Line Tester.
+- supply-chain-sync-github-pack (github-agents-v1) - ops - COO / RevOps - Use when aligning supply chain priorities, mitigating disruptions, and improving executive visibility across logistics dependencies.
+- tech-objection-resolver-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Tech Objection Resolver.
+- tiering-optimizer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when optimizing customer tiering models, segment thresholds, and service-level differentiation for scalable operations.
+- topic-cluster-planner-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Topic Cluster Planner.
+- trade-reference-checker-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para Trade Reference Checker.
+- training-video-recommender-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Training Video Recommender.
+- transaction-hold-reviewer-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Transaction Hold Reviewer.
+- transaction-link-analyzer-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Transaction Link Analyzer.
+- transcript-coach-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when coaching from call transcripts, improving conversational quality, and identifying winning language patterns.
+- trigger-event-watcher-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when tracking trigger events, identifying outreach timing opportunities, and prioritizing action windows for prospecting.
+- ubo-mapper-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para UBO Mapper.
+- unsubscribe-predictor-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Unsubscribe Predictor.
+- upsell-prompt-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Upsell Prompt.
+- use-case-generator-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Use Case Generator.
+- user-story-writer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para User Story Writer.
+- utm-builder-bot-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para UTM Builder Bot.
+- validation-rule-enforcer-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Validation Rule Enforcer.
+- value-aligner-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Value Aligner.
+- velocity-rule-engine-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Velocity Rule Engine.
+- vertical-translator-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when translating value proposition into vertical-specific language, proof points, and sector-relevant business outcomes.
+- vip-concierge-github-pack (github-agents-v1) - CS - VP Customer Success - Use when orchestrating executive handling of high-value accounts, escalation prevention, and premium relationship plans.
+- voice-pitch-grader-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Voice Pitch Grader.
+- voicemail-dropper-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when crafting concise voicemail scripts, callback triggers, and follow-up paths for outbound sequencing.
+- webhook-monitor-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Webhook Monitor.
+- webinar-promoter-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Webinar Promoter.
+- welcome-sequencer-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para Welcome Sequencer.
+- white-space-analyzer-github-pack (github-agents-v1) - CS - VP Customer Success - Estruturar analise, decisao e plano de execucao para White Space Analyzer.
+- win-loss-analyzer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Win Loss Analyzer.
+
+## Experimentais (20)
+
+- alt-data-scorer-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Alt Data Scorer.
+- backlink-scouter-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Backlink Scouter.
+- calendar-sniper-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when optimizing meeting scheduling opportunities, reducing booking friction, and increasing qualified calendar conversion.
+- cash-flow-clairvoyant-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Use when evaluating cashflow outlook, liquidity pressure points, and executive mitigation scenarios.
+- competitor-financial-scraper-github-pack (github-agents-v1) - ops - COO / RevOps - Estruturar analise, decisao e plano de execucao para Competitor Financial Scraper.
+- follow-up-ghost-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when planning follow-up cadence, reducing lead stagnation, and improving response rates in active pipelines.
+- gatekeeper-bypass-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when designing respectful access strategies to decision-makers while navigating gatekeeper and process barriers.
+- ghosting-preventer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when preventing deal ghosting, detecting engagement drop-off, and defining proactive reactivation strategies.
+- ip-infringement-scraper-github-pack (github-agents-v1) - financeiro - CFO / Finance Ops - Estruturar analise, decisao e plano de execucao para IP Infringement Scraper.
+- landing-page-morpher-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Landing Page Morpher.
+- niche-explorer-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when discovering high-potential niche segments, validating fit hypotheses, and prioritizing focused go-to-market bets.
+- partner-ecosystem-scout-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when mapping partner ecosystems, identifying co-sell opportunities, and prioritizing ecosystem-led growth motions.
+- pr-scraper-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para PR Scraper.
+- procurement-hacker-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when navigating procurement processes, reducing approval friction, and structuring compliant deal progression paths.
+- serp-volatility-tracker-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para SERP Volatility Tracker.
+- strategic-alliance-scout-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Estruturar analise, decisao e plano de execucao para Strategic Alliance Scout.
+- strategic-partner-scout-github-pack (github-agents-v1) - executivo - CEO / Chief of Staff - Use when scouting strategic partnerships, assessing fit, and prioritizing alliance opportunities for executive growth plans.
+- synthetic-identity-detector-github-pack (github-agents-v1) - compliance - General Counsel / Compliance Officer - Estruturar analise, decisao e plano de execucao para Synthetic Identity Detector.
+- target-scraper-github-pack (github-agents-v1) - vendas - CRO / VP Sales - Use when collecting target account signals, enriching prospect context, and preparing structured outbound targeting inputs.
+- viral-loop-tracker-github-pack (github-agents-v1) - marketing - CMO / Growth - Estruturar analise, decisao e plano de execucao para Viral Loop Tracker.
+

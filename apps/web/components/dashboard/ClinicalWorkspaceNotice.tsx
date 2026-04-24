@@ -7,16 +7,16 @@ export function ClinicalWorkspaceNotice() {
   const copy =
     locale === "pt-BR"
       ? {
-          badge: "Superficie preservada",
+          badge: "Area legada",
           description:
-            "Este workspace clinico permanece fora do produto ativo e aparece aqui apenas para avaliacao controlada quando a flag de capacidade e habilitada.",
-          title: "Uso restrito a validacao dirigida"
+            "Esta area nao pertence ao foco ativo do produto. O caminho principal e comercial: Sales OS, agentes, workflows e integracoes.",
+          title: "Fora do fluxo comercial principal"
         }
       : {
-          badge: "Preserved surface",
+          badge: "Legacy area",
           description:
-            "This clinical workspace remains outside the active product and appears here only for controlled evaluation when the capability flag is enabled.",
-          title: "Restricted to directed validation"
+            "This area is outside the active product focus. The main path is commercial: Sales OS, agents, workflows, and integrations.",
+          title: "Outside the main commercial flow"
         };
 
   return (

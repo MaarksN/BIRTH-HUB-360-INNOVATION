@@ -1,0 +1,202 @@
+{
+  "generatedAt": "2026-04-09T01:16:04.625Z",
+  "sourceReport": "audit\\auditor-prime-2026-04-08.json",
+  "top15Ids": [
+    "TD-054",
+    "TD-055",
+    "TD-001",
+    "TD-002",
+    "TD-003",
+    "TD-004",
+    "TD-005",
+    "TD-006",
+    "TD-007",
+    "TD-008",
+    "TD-089",
+    "TD-015",
+    "TD-056",
+    "TD-057",
+    "TD-058"
+  ],
+  "sprints": [
+    {
+      "sprint": 1,
+      "theme": "Segurança + multi-tenancy",
+      "items": [
+        {
+          "id": "TD-089",
+          "title": "Drill de disaster recovery não registrado no ciclo atual",
+          "owner": "@platform-architecture",
+          "effort": "0.5-2 dias",
+          "dependencies": [],
+          "acceptanceCriteria": "Capacidade operacional/multi-tenant materializada com evidência versionada, critério técnico validado e item rebaixado/removido na próxima auditoria.",
+          "path": "artifacts/dr/latest-drill.json"
+        }
+      ]
+    },
+    {
+      "sprint": 2,
+      "theme": "Qualidade + observabilidade",
+      "items": [
+        {
+          "id": "TD-015",
+          "title": "Uso recorrente de any em index.ts",
+          "owner": "@platform-architecture",
+          "effort": "2-5 dias",
+          "dependencies": [],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "packages/shared-types/src/index.ts"
+        }
+      ]
+    },
+    {
+      "sprint": 3,
+      "theme": "Performance + UX técnica",
+      "items": [
+        {
+          "id": "TD-054",
+          "title": "Consulta findMany sem paginação explícita",
+          "owner": "@platform-api",
+          "effort": "0.5-2 dias",
+          "dependencies": [],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/clinical/service.ts"
+        },
+        {
+          "id": "TD-055",
+          "title": "Consulta findMany sem paginação explícita",
+          "owner": "@platform-api",
+          "effort": "0.5-2 dias",
+          "dependencies": [
+            "TD-054"
+          ],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/clinical/service.ts"
+        },
+        {
+          "id": "TD-001",
+          "title": "Complexidade acima do limiar em ConversationsPage",
+          "owner": "@product-frontend",
+          "effort": "2-5 dias",
+          "dependencies": [],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/web/app/(dashboard)/conversations/page.tsx"
+        },
+        {
+          "id": "TD-002",
+          "title": "Complexidade acima do limiar em deriveClinicalAlerts",
+          "owner": "@platform-api",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/api/src/modules/clinical/service.ts"
+        },
+        {
+          "id": "TD-003",
+          "title": "Complexidade acima do limiar em Navbar",
+          "owner": "@product-frontend",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/web/components/layout/Navbar.tsx"
+        },
+        {
+          "id": "TD-004",
+          "title": "Complexidade acima do limiar em PatientDetailPage",
+          "owner": "@product-frontend",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/web/app/(dashboard)/patients/[id]/page.tsx"
+        },
+        {
+          "id": "TD-005",
+          "title": "Complexidade acima do limiar em PatientsPage",
+          "owner": "@product-frontend",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/web/app/(dashboard)/patients/page.tsx"
+        },
+        {
+          "id": "TD-006",
+          "title": "Complexidade acima do limiar em updateUserPreference",
+          "owner": "@platform-data",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "packages/database/src/repositories/engagement.ts"
+        },
+        {
+          "id": "TD-007",
+          "title": "Complexidade acima do limiar em WorkflowRevisionsPage",
+          "owner": "@product-frontend",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/web/app/(dashboard)/workflows/[id]/revisions/page.tsx"
+        },
+        {
+          "id": "TD-008",
+          "title": "Complexidade acima do limiar em WorkflowRunsPage",
+          "owner": "@product-frontend",
+          "effort": "2-5 dias",
+          "dependencies": [
+            "TD-001"
+          ],
+          "acceptanceCriteria": "Correção aplicada, dependências fechadas, evidência regenerada e item reavaliado pelo auditor-prime no próximo ciclo.",
+          "path": "apps/web/app/(dashboard)/workflows/[id]/runs/page.tsx"
+        },
+        {
+          "id": "TD-056",
+          "title": "Await serial em loop de runtime",
+          "owner": "@platform-api",
+          "effort": "1-3 dias",
+          "dependencies": [],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/billing/sync-plans.ts"
+        },
+        {
+          "id": "TD-057",
+          "title": "Await serial em loop de runtime",
+          "owner": "@platform-api",
+          "effort": "1-3 dias",
+          "dependencies": [
+            "TD-056"
+          ],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/packs/pack-installer.service.ts"
+        },
+        {
+          "id": "TD-058",
+          "title": "Await serial em loop de runtime",
+          "owner": "@platform-api",
+          "effort": "1-3 dias",
+          "dependencies": [
+            "TD-056"
+          ],
+          "acceptanceCriteria": "Hotspot segmentado sem regressão funcional, com baseline atualizada e critério de experiência/performance validado.",
+          "path": "apps/api/src/modules/packs/pack-installer.service.ts"
+        }
+      ]
+    },
+    {
+      "sprint": 4,
+      "theme": "Inovação somente após estabilização do core",
+      "items": [],
+      "gate": "Iniciar inovação apenas depois que os critérios de aceite dos sprints 1-3 estiverem fechados e os itens VDI 4.0+ tiverem sido eliminados ou rebaixados."
+    }
+  ]
+}

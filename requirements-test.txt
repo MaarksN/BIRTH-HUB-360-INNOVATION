@@ -1,0 +1,13 @@
+fastapi
+pydantic
+pytest
+pytest-cov
+pytest-asyncio
+pytest-xdist
+httpx
+langgraph
+google-generativeai
+asyncpg
+python-dotenv
+cuid2
+svix

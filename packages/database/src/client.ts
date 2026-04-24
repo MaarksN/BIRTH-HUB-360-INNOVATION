@@ -4,78 +4,17 @@ import {
   isProductionEnvironment,
   readTrimmedEnvironmentValue,
   resolveNodeEnvironment,
-  type RuntimeEnvironment,
+  type RuntimeEnvironment
 } from "@birthub/config";
 import { createLogger } from "@birthub/logger";
 import { PrismaPg } from "@prisma/adapter-pg";
-import prismaClientModule, {
-  type Prisma as PrismaNamespace,
-  type PrismaClient as PrismaClientType,
-} from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 import { PrismaQueryTimeoutError } from "./errors/prisma-query-timeout.error.js";
 import { createPrismaProxy } from "./prisma-proxy.js";
-import { getTenantContext, requireTenantId } from "./tenant-context.js";
-import { scopePrismaArgs } from "./tenant-scope.js";
+import { requireTenantId } from "./tenant-context.js";
 
-const prismaRuntime = prismaClientModule as typeof import("@prisma/client");
-
-export const Prisma = prismaRuntime.Prisma;
-export const PrismaClient = prismaRuntime.PrismaClient;
-export type PrismaClient = PrismaClientType;
-
-export namespace Prisma {
-  export type AuditLogCreateArgs = PrismaNamespace.AuditLogCreateArgs;
-  export type AuditLogCreateManyInput = PrismaNamespace.AuditLogCreateManyInput;
-  export type AuditLogDefaultArgs = PrismaNamespace.AuditLogDefaultArgs;
-  export type AuditLogGetPayload<
-    S extends boolean | null | undefined | AuditLogDefaultArgs
-  > = PrismaNamespace.AuditLogGetPayload<S>;
-  export type BatchPayload = PrismaNamespace.BatchPayload;
-  export type BillingCreditUncheckedCreateInput =
-    PrismaNamespace.BillingCreditUncheckedCreateInput;
-  export type InputJsonObject = PrismaNamespace.InputJsonObject;
-  export type InputJsonValue = PrismaNamespace.InputJsonValue;
-  export type InvoiceUncheckedCreateInput = PrismaNamespace.InvoiceUncheckedCreateInput;
-  export type InvoiceUncheckedUpdateInput = PrismaNamespace.InvoiceUncheckedUpdateInput;
-  export type JsonValue = PrismaNamespace.JsonValue;
-  export type LogLevel = PrismaNamespace.LogLevel;
-  export type MembershipDefaultArgs = PrismaNamespace.MembershipDefaultArgs;
-  export type MembershipFindManyArgs = PrismaNamespace.MembershipFindManyArgs;
-  export type MembershipGetPayload<
-    S extends boolean | null | undefined | MembershipDefaultArgs
-  > = PrismaNamespace.MembershipGetPayload<S>;
-  export type NotificationCreateArgs = PrismaNamespace.NotificationCreateArgs;
-  export type NotificationCreateManyArgs = PrismaNamespace.NotificationCreateManyArgs;
-  export type NotificationCreateManyInput = PrismaNamespace.NotificationCreateManyInput;
-  export type NotificationDefaultArgs = PrismaNamespace.NotificationDefaultArgs;
-  export type NotificationGetPayload<
-    S extends boolean | null | undefined | NotificationDefaultArgs
-  > = PrismaNamespace.NotificationGetPayload<S>;
-  export type NotificationUncheckedCreateInput =
-    PrismaNamespace.NotificationUncheckedCreateInput;
-  export type NullableJsonNullValueInput = PrismaNamespace.NullableJsonNullValueInput;
-  export type OrganizationWhereInput = PrismaNamespace.OrganizationWhereInput;
-  export type PlanUncheckedCreateInput = PrismaNamespace.PlanUncheckedCreateInput;
-  export type PrismaPromise<T> = PrismaNamespace.PrismaPromise<T>;
-  export type Sql = PrismaNamespace.Sql;
-  export type SubscriptionUncheckedCreateInput =
-    PrismaNamespace.SubscriptionUncheckedCreateInput;
-  export type SubscriptionUncheckedUpdateInput =
-    PrismaNamespace.SubscriptionUncheckedUpdateInput;
-  export type TransactionClient = PrismaNamespace.TransactionClient;
-  export type UserPreferenceDefaultArgs = PrismaNamespace.UserPreferenceDefaultArgs;
-  export type UserPreferenceGetPayload<
-    S extends boolean | null | undefined | UserPreferenceDefaultArgs
-  > = PrismaNamespace.UserPreferenceGetPayload<S>;
-  export type UserPreferenceUncheckedCreateInput =
-    PrismaNamespace.UserPreferenceUncheckedCreateInput;
-  export type UserPreferenceUncheckedUpdateInput =
-    PrismaNamespace.UserPreferenceUncheckedUpdateInput;
-  export type UserPreferenceUpsertArgs = PrismaNamespace.UserPreferenceUpsertArgs;
-  export type UserWhereInput = PrismaNamespace.UserWhereInput;
-  export type WorkflowUpdateInput = PrismaNamespace.WorkflowUpdateInput;
-}
+export { Prisma, PrismaClient } from "@prisma/client";
 
 const DEFAULT_QUERY_TIMEOUT_MS = 5_000;
 const DEFAULT_DATABASE_CONNECTION_LIMIT = 10;
@@ -110,7 +49,12 @@ interface ResolvedPrismaClientOptions {
 type MetricLabels = Record<string, string | number | boolean | null | undefined>;
 
 type GlobalMetricsApi = {
-  incrementCounter: (name: string, labels?: MetricLabels, amount?: number, help?: string) => void;
+  incrementCounter: (
+    name: string,
+    labels?: MetricLabels,
+    amount?: number,
+    help?: string
+  ) => void;
   observeHistogram: (
     name: string,
     value: number,
@@ -161,7 +105,7 @@ function raceWithConfiguredTimeout<T>(
           clearTimeout(timer);
         }
       );
-    }),
+    })
   ]);
 }
 
@@ -178,18 +122,14 @@ export function resolveConnectionLimit(
   databaseUrl: string,
   env: RuntimeEnvironment = getEnvironmentSource()
 ): number {
-  const explicit = parsePositiveNumber(
-    readTrimmedEnvironmentValue("DATABASE_CONNECTION_LIMIT", env)
-  );
+  const explicit = parsePositiveNumber(readTrimmedEnvironmentValue("DATABASE_CONNECTION_LIMIT", env));
   if (explicit) {
     return explicit;
   }
 
   try {
     const parsed = new URL(databaseUrl);
-    const connectionLimit = parsePositiveNumber(
-      parsed.searchParams.get("connection_limit") ?? undefined
-    );
+    const connectionLimit = parsePositiveNumber(parsed.searchParams.get("connection_limit") ?? undefined);
     if (connectionLimit) {
       return connectionLimit;
     }
@@ -256,7 +196,7 @@ function createPrismaAdapter(databaseUrl: string, connectionLimit: number): Pris
   return new PrismaPg(
     {
       connectionString: parsed.toString(),
-      max: connectionLimit,
+      max: connectionLimit
     },
     schema ? { schema } : undefined
   );
@@ -290,7 +230,7 @@ function createBasePrismaClient(
   try {
     return new PrismaClient({
       adapter: createPrismaAdapter(normalizedDatabaseUrl, connectionLimit),
-      log,
+      log
     });
   } catch (error) {
     if (!shouldFallbackToDatasourceClient(error, nodeEnv)) {
@@ -302,14 +242,14 @@ function createBasePrismaClient(
         connectionLimit,
         databaseUrl: normalizedDatabaseUrl,
         event: "database.prisma.adapter_fallback",
-        nodeEnv,
+        nodeEnv
       },
       "Prisma adapter unavailable in local runtime; falling back to datasourceUrl client."
     );
 
     return new PrismaClient({
       datasourceUrl: normalizedDatabaseUrl,
-      log,
+      log
     });
   }
 }
@@ -326,13 +266,12 @@ function resolvePrismaClientOptions(
   const normalizedDatabaseUrl = normalizeDatabaseUrl(runtimeDatabaseUrl, env) ?? runtimeDatabaseUrl;
 
   return {
-    connectionLimit:
-      config.DATABASE_CONNECTION_LIMIT ?? resolveConnectionLimit(normalizedDatabaseUrl, env),
+    connectionLimit: config.DATABASE_CONNECTION_LIMIT ?? resolveConnectionLimit(normalizedDatabaseUrl, env),
     databaseUrl: normalizedDatabaseUrl,
     logger: options.logger ?? createLogger("database-runtime"),
     nodeEnv: resolveNodeEnvironment(env),
     queryTimeoutMs: config.PRISMA_QUERY_TIMEOUT_MS ?? resolveQueryTimeoutMs(env),
-    slowQueryThresholdMs: config.DB_SLOW_QUERY_MS ?? resolveSlowQueryThresholdMs(env),
+    slowQueryThresholdMs: config.DB_SLOW_QUERY_MS ?? resolveSlowQueryThresholdMs(env)
   };
 }
 
@@ -353,19 +292,13 @@ export function createPrismaClient(options: CreatePrismaClientOptions = {}): Pri
           const metrics = getMetricsApi();
           const queryModel = model ?? "raw";
           const startedAt = Date.now();
-          const scopedArgs = scopePrismaArgs({
-            args,
-            model,
-            operation,
-            tenantId: getTenantContext()?.tenantId,
-          });
 
           activeQueries += 1;
           updateDatabaseGauges(resolvedOptions.connectionLimit);
 
           try {
             const result = await raceWithConfiguredTimeout(
-              query(scopedArgs as typeof args),
+              query(args),
               operation,
               resolvedOptions.queryTimeoutMs,
               model
@@ -378,7 +311,7 @@ export function createPrismaClient(options: CreatePrismaClientOptions = {}): Pri
                 {
                   model: queryModel,
                   operation,
-                  outcome: "success",
+                  outcome: "success"
                 },
                 1,
                 "Total database queries grouped by model, operation and outcome."
@@ -388,10 +321,10 @@ export function createPrismaClient(options: CreatePrismaClientOptions = {}): Pri
                 durationMs,
                 {
                   model: queryModel,
-                  operation,
+                  operation
                 },
                 {
-                  help: "Database query latency in milliseconds.",
+                  help: "Database query latency in milliseconds."
                 }
               );
               if (durationMs >= resolvedOptions.slowQueryThresholdMs) {
@@ -399,7 +332,7 @@ export function createPrismaClient(options: CreatePrismaClientOptions = {}): Pri
                   "birthub_db_slow_queries_total",
                   {
                     model: queryModel,
-                    operation,
+                    operation
                   },
                   1,
                   "Total slow database queries grouped by model and operation."
@@ -417,7 +350,7 @@ export function createPrismaClient(options: CreatePrismaClientOptions = {}): Pri
                 {
                   model: queryModel,
                   operation,
-                  outcome: "error",
+                  outcome: "error"
                 },
                 1,
                 "Total database queries grouped by model, operation and outcome."
@@ -427,10 +360,10 @@ export function createPrismaClient(options: CreatePrismaClientOptions = {}): Pri
                 durationMs,
                 {
                   model: queryModel,
-                  operation,
+                  operation
                 },
                 {
-                  help: "Database query latency in milliseconds.",
+                  help: "Database query latency in milliseconds."
                 }
               );
             }
@@ -440,9 +373,9 @@ export function createPrismaClient(options: CreatePrismaClientOptions = {}): Pri
             activeQueries = Math.max(0, activeQueries - 1);
             updateDatabaseGauges(resolvedOptions.connectionLimit);
           }
-        },
-      },
-    },
+        }
+      }
+    }
   }) as PrismaClient;
 }
 
@@ -532,7 +465,7 @@ export async function pingDatabase(
   } catch (error) {
     return {
       message: error instanceof Error ? error.message : "Unknown database error",
-      status: "down",
+      status: "down"
     };
   }
 }
@@ -555,12 +488,12 @@ export async function pingDatabaseDeep(
 
     return {
       message: `query-ok:${Date.now() - startedAt}ms`,
-      status: "up",
+      status: "up"
     };
   } catch (error) {
     return {
       message: error instanceof Error ? error.message : "Unknown deep database error",
-      status: "down",
+      status: "down"
     };
   }
 }

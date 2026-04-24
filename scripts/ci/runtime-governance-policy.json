@@ -1,0 +1,382 @@
+{
+  "formatVersion": 1,
+  "runtimeCanonical": {
+    "sourceOfTruth": [
+      "apps/api/src/app.ts",
+      "apps/api/src/app/core.ts",
+      "apps/api/src/app/module-routes.ts"
+    ],
+    "mounted": {
+      "httpModules": [
+        {
+          "mountPaths": [
+            "config-defined"
+          ],
+          "name": "admin",
+          "path": "apps/api/src/modules/admin/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/auth"
+          ],
+          "name": "auth",
+          "path": "apps/api/src/modules/auth/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "sessions",
+          "path": "apps/api/src/modules/sessions/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "profile",
+          "path": "apps/api/src/modules/profile/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "tasks",
+          "path": "apps/api/src/modules/tasks/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/apikeys"
+          ],
+          "name": "apikeys",
+          "path": "apps/api/src/modules/apikeys/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "break-glass",
+          "path": "apps/api/src/modules/break-glass/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/agents"
+          ],
+          "name": "agents",
+          "path": "apps/api/src/modules/agents/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/analytics"
+          ],
+          "name": "analytics",
+          "path": "apps/api/src/modules/analytics/router.ts"
+        },
+        {
+          "mountPaths": [
+            "config-defined"
+          ],
+          "name": "dashboard",
+          "path": "apps/api/src/modules/dashboard/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/connectors"
+          ],
+          "name": "connectors",
+          "path": "apps/api/src/modules/connectors/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "conversations",
+          "path": "apps/api/src/modules/conversations/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/agents",
+            "/api/v1/marketplace"
+          ],
+          "name": "marketplace",
+          "path": "apps/api/src/modules/marketplace/marketplace-routes.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/billing"
+          ],
+          "name": "billing",
+          "path": "apps/api/src/modules/billing/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/budgets"
+          ],
+          "name": "budget",
+          "path": "apps/api/src/modules/budget/budget-routes.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "feedback",
+          "path": "apps/api/src/modules/feedback/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "invites",
+          "path": "apps/api/src/modules/invites/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "notifications",
+          "path": "apps/api/src/modules/notifications/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "organizations",
+          "path": "apps/api/src/modules/organizations/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/packs"
+          ],
+          "name": "packs",
+          "path": "apps/api/src/modules/packs/pack-installer-routes.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/outputs"
+          ],
+          "name": "outputs",
+          "path": "apps/api/src/modules/outputs/output-routes.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1/privacy"
+          ],
+          "name": "privacy",
+          "path": "apps/api/src/modules/privacy/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "search",
+          "path": "apps/api/src/modules/search/router.ts"
+        },
+        {
+          "mountPaths": [
+            "/api/v1"
+          ],
+          "name": "users",
+          "path": "apps/api/src/modules/users/router.ts"
+        },
+        {
+          "mountPaths": [
+            "config-defined"
+          ],
+          "name": "workflows",
+          "path": "apps/api/src/modules/workflows/router.ts"
+        },
+        {
+          "mountPaths": [
+            "config-defined"
+          ],
+          "name": "webhooks",
+          "path": "apps/api/src/modules/webhooks/router.ts"
+        }
+      ],
+      "operationalRoutes": [
+        "/api/openapi.json",
+        "/api/docs",
+        "/metrics",
+        "/api/v1/metrics",
+        "/health",
+        "/api/v1/health",
+        "/health/deep",
+        "/api/v1/health/deep",
+        "/health/readiness",
+        "/api/v1/health/readiness"
+      ]
+    },
+    "compatOnly": [
+      {
+        "kind": "delegating-wrapper",
+        "path": "apps/api/src/app/auth-routes.ts",
+        "reason": "Legacy registration helper that delegates to modular auth mounting and remains outside createApp() runtime."
+      },
+      {
+        "kind": "delegating-wrapper",
+        "path": "apps/api/src/app/auth-and-core-routes.ts",
+        "reason": "Internal compatibility wrapper preserved outside the real bootstrap path."
+      }
+    ],
+    "parked": [
+      {
+        "kind": "not-mounted-module",
+        "path": "apps/api/src/modules/clinical/router.ts",
+        "reason": "Clinical domain remains outside the real bootstrap and may only be reactivated by explicit decision."
+      },
+      {
+        "kind": "not-mounted-module",
+        "path": "apps/api/src/modules/fhir/router.ts",
+        "reason": "FHIR facade remains outside the real bootstrap and may only be reactivated by explicit decision."
+      }
+    ],
+    "operationalOnly": [
+      {
+        "kind": "entrypoint",
+        "path": "apps/api/src/server.ts",
+        "reason": "Thin process entrypoint that starts the API runtime."
+      },
+      {
+        "kind": "lifecycle",
+        "path": "apps/api/src/app.ts",
+        "reason": "Owns listen, shutdown and observability initialization, not modular route ownership."
+      },
+      {
+        "kind": "side-effect-registration",
+        "path": "apps/api/src/app/core.ts",
+        "reason": "Owns cache initialization, tenant cache invalidation, privacy retention scheduling and workflow internal event bridge setup."
+      },
+      {
+        "kind": "special-route-pipeline",
+        "path": "apps/api/src/app/core.ts",
+        "reason": "Owns webhook-special handling for Stripe before the main application route surface."
+      }
+    ]
+  },
+  "typedExceptionGovernance": {
+    "primaryBaseline": {
+      "description": "The primary baseline tracks only debt that matters to the mounted runtime and explicitly classified exceptions.",
+      "runtimeMountedSourceRoots": [
+        "apps/api/src"
+      ],
+      "runtimeMountedSourceExemptions": [
+        "apps/api/src/app/auth-routes.ts",
+        "apps/api/src/app/auth-and-core-routes.ts",
+        "apps/api/src/modules/clinical/**",
+        "apps/api/src/modules/fhir/**"
+      ],
+      "rules": {
+        "allowClassifiedCompatOnlyDebt": true,
+        "allowClassifiedParkedDebt": true,
+        "forbidNewDirectivesInMountedRuntime": true
+      }
+    },
+    "secondaryOperationalLayers": [
+      {
+        "classification": "operational-second-layer",
+        "path": "packages/database/src/**",
+        "reason": "Operationally important source, but outside the mounted API hot path."
+      },
+      {
+        "classification": "operational-second-layer",
+        "path": "packages/queue/src/**",
+        "reason": "Operationally important source, but outside the mounted API hot path."
+      }
+    ],
+    "separateTracks": [
+      {
+        "classification": "test",
+        "path": "apps/api/test/**"
+      },
+      {
+        "classification": "test",
+        "path": "apps/api/tests/**"
+      },
+      {
+        "classification": "test",
+        "path": "packages/**/test/**"
+      },
+      {
+        "classification": "test",
+        "path": "packages/**/tests/**"
+      },
+      {
+        "classification": "test",
+        "path": "tests/**"
+      },
+      {
+        "classification": "script",
+        "path": "scripts/**"
+      },
+      {
+        "classification": "script",
+        "path": "packages/database/scripts/**"
+      },
+      {
+        "classification": "script",
+        "path": "packages/queue/scripts/**"
+      },
+      {
+        "classification": "script",
+        "path": "packages/queue/load-test/**"
+      }
+    ],
+    "excludedFromPrimaryBaseline": [
+      "**/dist/**",
+      "**/generated/**",
+      "**/gen/**",
+      "**/coverage/**",
+      "artifacts/**"
+    ]
+  },
+  "loggingGovernance": {
+    "categories": [
+      "request",
+      "error",
+      "operation",
+      "domain"
+    ],
+    "minimumContext": {
+      "domain": [
+        "component"
+      ],
+      "error": [
+        "error.name",
+        "error.message"
+      ],
+      "operation": [
+        "component",
+        "action",
+        "status"
+      ],
+      "request": [
+        "requestId",
+        "traceId",
+        "method",
+        "path",
+        "statusCode",
+        "durationMs"
+      ]
+    },
+    "rules": {
+      "compatibilityScriptsMustAvoidConsole": true,
+      "errorLogMustClassifyFailure": true,
+      "healthLogsOnlyOnDegradedOrDown": true,
+      "loggerNameMustReflectOwningComponent": true,
+      "requestAndErrorLogsMustNotOverlapRoles": true
+    }
+  },
+  "ciIntent": {
+    "requiredChecks": [
+      "typecheck:policy",
+      "ci:runtime-governance"
+    ],
+    "plannedScripts": [
+      "ci:runtime-governance"
+    ],
+    "rules": {
+      "blockSilentPromotionOfParkedSurfaces": true,
+      "blockWrappersEnteringMountedBootstrap": true,
+      "preserveRuntimeCanonicalSourceOfTruth": true
+    }
+  }
+}

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "../../../../lib/web-config";
 
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "../../../../lib/fetch-with-timeout";
 
 import { isBffPathAllowed } from "../policy";
 
@@ -24,7 +24,7 @@ function buildProxyHeaders(request: NextRequest): Headers {
     "x-active-tenant",
     "x-correlation-id",
     "x-csrf-token",
-    "x-request-id"
+    "x-request-id",
   ];
 
   for (const headerName of forwardedHeaderNames) {
@@ -45,7 +45,7 @@ async function proxy(request: NextRequest, path: string): Promise<NextResponse> 
 
   const requestInit: RequestInit = {
     headers: buildProxyHeaders(request),
-    method: request.method
+    method: request.method,
   };
 
   if (request.method !== "GET" && request.method !== "HEAD") {
@@ -55,7 +55,7 @@ async function proxy(request: NextRequest, path: string): Promise<NextResponse> 
   const response = await fetchWithTimeout(`${webConfig.NEXT_PUBLIC_API_URL}/${path}`, {
     ...requestInit,
     timeoutMessage: `BFF proxy exceeded the ${BFF_PROXY_TIMEOUT_MS}ms timeout budget.`,
-    timeoutMs: BFF_PROXY_TIMEOUT_MS
+    timeoutMs: BFF_PROXY_TIMEOUT_MS,
   });
 
   const nextResponse = new NextResponse(await response.text(), { status: response.status });

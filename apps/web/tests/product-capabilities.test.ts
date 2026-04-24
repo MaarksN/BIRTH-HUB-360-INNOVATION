@@ -19,7 +19,7 @@ void test("web product capabilities default to the supported product surface", (
   assert.equal(capabilities.privacySelfServiceEnabled, true);
 });
 
-void test("dashboard navigation hides clinical entries while the workspace is disabled", () => {
+void test("dashboard navigation hides legacy non-commercial entries", () => {
   const capabilities = getProductCapabilities({
     NODE_ENV: "test",
     NEXT_PUBLIC_ENABLE_CLINICAL_WORKSPACE: "false",

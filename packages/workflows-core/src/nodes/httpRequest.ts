@@ -42,6 +42,10 @@ function assertSafeUrl(rawUrl: string): URL {
     throw new Error("SSRF_GUARD_BLOCKED_INTERNAL_DOMAIN");
   }
 
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    throw new Error("SSRF_GUARD_BLOCKED_PROTOCOL");
+  }
+
   return parsed;
 }
 

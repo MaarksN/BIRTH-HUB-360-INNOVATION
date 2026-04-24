@@ -1,8 +1,8 @@
-import { getWebConfig } from "@birthub/config/web";
+import { getWebConfig } from "./web-config";
 import type { WorkflowCanvas } from "@birthub/workflows-core/nextjs";
 import { cookies } from "next/headers";
 
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "./fetch-with-timeout";
 
 type WorkflowStatus = "ARCHIVED" | "DRAFT" | "PUBLISHED";
 
@@ -101,12 +101,12 @@ async function fetchJson<T>(path: string): Promise<T> {
   const requestInit: RequestInit = {
     cache: "no-store",
     ...(typeof window === "undefined" ? {} : { credentials: "include" }),
-    ...(cookieStore ? { headers: { cookie: cookieStore.toString() } } : {})
+    ...(cookieStore ? { headers: { cookie: cookieStore.toString() } } : {}),
   };
   const response = await fetchWithTimeout(`${config.NEXT_PUBLIC_API_URL}${path}`, {
     ...requestInit,
     timeoutMessage: `Workflows API exceeded the ${WORKFLOWS_REQUEST_TIMEOUT_MS}ms timeout budget for ${path}.`,
-    timeoutMs: WORKFLOWS_REQUEST_TIMEOUT_MS
+    timeoutMs: WORKFLOWS_REQUEST_TIMEOUT_MS,
   });
 
   if (!response.ok) {

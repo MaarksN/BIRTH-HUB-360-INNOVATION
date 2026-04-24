@@ -1,4 +1,4 @@
-import { fetchWithTimeout } from "@birthub/utils/fetch";
+import { fetchWithTimeout } from "../fetch-with-timeout";
 
 import { findSalesOsTool, salesOsModuleMap } from "./catalog";
 import { resolveGeminiVisionConfig, resolveSalesOsProviders } from "./config";
@@ -78,7 +78,7 @@ async function callJson<T>(
   const response = await fetchWithTimeout(url, {
     ...init,
     timeoutMessage: `Sales OS provider request exceeded the ${SALES_OS_PROVIDER_TIMEOUT_MS}ms timeout budget.`,
-    timeoutMs: SALES_OS_PROVIDER_TIMEOUT_MS
+    timeoutMs: SALES_OS_PROVIDER_TIMEOUT_MS,
   });
 
   if (!response.ok) {
@@ -101,13 +101,13 @@ async function generateWithOpenAi(messages: LlmMessage[], model: string, apiKey:
       max_tokens: 1400,
       messages,
       model,
-      temperature: 0.4
+      temperature: 0.4,
     }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`
+      Authorization: `Bearer ${apiKey}`,
     },
-    method: "POST"
+    method: "POST",
   });
 
   return response.choices?.[0]?.message?.content?.trim() ?? "";
@@ -119,7 +119,7 @@ async function generateWithAnthropic(messages: LlmMessage[], model: string, apiK
     .filter((message) => message.role !== "system")
     .map((message) => ({
       content: message.content,
-      role: message.role === "assistant" ? "assistant" : "user"
+      role: message.role === "assistant" ? "assistant" : "user",
     }));
 
   const response = await callJson<{
@@ -132,17 +132,22 @@ async function generateWithAnthropic(messages: LlmMessage[], model: string, apiK
       messages: conversation,
       model,
       system,
-      temperature: 0.4
+      temperature: 0.4,
     }),
     headers: {
       "Content-Type": "application/json",
       "anthropic-version": "2023-06-01",
-      "x-api-key": apiKey
+      "x-api-key": apiKey,
     },
-    method: "POST"
+    method: "POST",
   });
 
-  return response.content?.map((entry) => entry.text ?? "").join("\n").trim() ?? "";
+  return (
+    response.content
+      ?.map((entry) => entry.text ?? "")
+      .join("\n")
+      .trim() ?? ""
+  );
 }
 
 async function generateWithGemini(messages: LlmMessage[], model: string, apiKey: string) {
@@ -161,24 +166,24 @@ async function generateWithGemini(messages: LlmMessage[], model: string, apiKey:
         .filter((message) => message.role !== "system")
         .map((message) => ({
           parts: [{ text: message.content }],
-          role: message.role === "assistant" ? "model" : "user"
+          role: message.role === "assistant" ? "model" : "user",
         })),
       generationConfig: {
         maxOutputTokens: 1400,
-        temperature: 0.4
+        temperature: 0.4,
       },
       ...(systemMessage
         ? {
             systemInstruction: {
-              parts: [{ text: systemMessage }]
-            }
+              parts: [{ text: systemMessage }],
+            },
           }
-        : {})
+        : {}),
     }),
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    method: "POST"
+    method: "POST",
   });
 
   return (
@@ -209,27 +214,27 @@ async function generateWithGeminiVision(
         {
           parts: [
             {
-              text: prompt
+              text: prompt,
             },
             {
               inlineData: {
                 data: image.data,
-                mimeType: image.mimeType
-              }
-            }
+                mimeType: image.mimeType,
+              },
+            },
           ],
-          role: "user"
-        }
+          role: "user",
+        },
       ],
       generationConfig: {
         maxOutputTokens: 1400,
-        temperature: 0.4
-      }
+        temperature: 0.4,
+      },
     }),
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    method: "POST"
+    method: "POST",
   });
 
   return (
@@ -248,20 +253,20 @@ async function generateText(messages: LlmMessage[]): Promise<TextGenerationResul
       if (provider.name === "openai") {
         return {
           provider: provider.name,
-          text: await generateWithOpenAi(messages, provider.model, provider.apiKey)
+          text: await generateWithOpenAi(messages, provider.model, provider.apiKey),
         };
       }
 
       if (provider.name === "anthropic") {
         return {
           provider: provider.name,
-          text: await generateWithAnthropic(messages, provider.model, provider.apiKey)
+          text: await generateWithAnthropic(messages, provider.model, provider.apiKey),
         };
       }
 
       return {
         provider: provider.name,
-        text: await generateWithGemini(messages, provider.model, provider.apiKey)
+        text: await generateWithGemini(messages, provider.model, provider.apiKey),
       };
     } catch {
       continue;
@@ -270,11 +275,15 @@ async function generateText(messages: LlmMessage[]): Promise<TextGenerationResul
 
   return {
     provider: "fallback",
-    text: ""
+    text: "",
   };
 }
 
-function buildExecutionFallback(tool: SalesOsTool, fieldSummary: string, imageProvided: boolean): string {
+function buildExecutionFallback(
+  tool: SalesOsTool,
+  fieldSummary: string,
+  imageProvided: boolean
+): string {
   const lines = [
     `Ferramenta: ${tool.name}`,
     `Objetivo: ${tool.desc}`,
@@ -286,7 +295,7 @@ function buildExecutionFallback(tool: SalesOsTool, fieldSummary: string, imagePr
     tool.prompt,
     "",
     "Contexto recebido:",
-    fieldSummary
+    fieldSummary,
   ];
 
   if (imageProvided) {
@@ -316,7 +325,7 @@ function buildChatFallback(input: ChatExecutionInput, tool?: SalesOsTool): strin
       "Resposta simulada:",
       "Entendi o contexto e vou pressionar sua argumentacao com uma objecao realista.",
       "Quero evidencias concretas de ROI, risco reduzido e urgencia para seguir na conversa.",
-      "Tente responder em 3 partes: dor atual, impacto financeiro e proximo passo."
+      "Tente responder em 3 partes: dor atual, impacto financeiro e proximo passo.",
     ].join("\n");
   }
 
@@ -328,7 +337,7 @@ function buildChatFallback(input: ChatExecutionInput, tool?: SalesOsTool): strin
     "1. Defina o resultado de negocio que voce quer mover.",
     "2. Traduza isso para uma mensagem curta e uma prova de valor.",
     "3. Escolha um unico CTA para o proximo contato.",
-    "4. Se quiser, cole mais contexto e eu estruturo um roteiro completo."
+    "4. Se quiser, cole mais contexto e eu estruturo um roteiro completo.",
   ].join("\n");
 }
 
@@ -357,19 +366,19 @@ export async function executeSalesOsTool(input: ToolExecutionInput) {
       "5. Variacoes para teste",
       "",
       "Contexto:",
-      fieldSummary
+      fieldSummary,
     ].join("\n");
 
     const result = await generateText([
       {
         content:
           "Responda como um diretor de criacao conciso, visual e orientado a conversao. Evite floreios.",
-        role: "system"
+        role: "system",
       },
       {
         content: imageBriefPrompt,
-        role: "user"
-      }
+        role: "user",
+      },
     ]);
 
     return {
@@ -378,7 +387,7 @@ export async function executeSalesOsTool(input: ToolExecutionInput) {
         result.text.length > 0
           ? normalizeWhitespace(result.text)
           : buildExecutionFallback(tool, fieldSummary, imageProvided),
-      provider: result.provider
+      provider: result.provider,
     };
   }
 
@@ -390,7 +399,7 @@ export async function executeSalesOsTool(input: ToolExecutionInput) {
       "Analise a imagem anexada e responda em portugues com estrutura profissional, bullets e recomendacoes praticas.",
       "",
       "Contexto adicional:",
-      fieldSummary
+      fieldSummary,
     ].join("\n");
 
     try {
@@ -404,13 +413,13 @@ export async function executeSalesOsTool(input: ToolExecutionInput) {
       return {
         mode: "text" as const,
         output: normalizeWhitespace(text),
-        provider: "gemini"
+        provider: "gemini",
       };
     } catch {
       return {
         mode: "text" as const,
         output: buildExecutionFallback(tool, fieldSummary, imageProvided),
-        provider: "fallback"
+        provider: "fallback",
       };
     }
   }
@@ -426,19 +435,19 @@ export async function executeSalesOsTool(input: ToolExecutionInput) {
       : "Nao invente fatos especificos; quando houver lacuna, assuma explicitamente.",
     "",
     "Contexto recebido:",
-    fieldSummary
+    fieldSummary,
   ].join("\n");
 
   const result = await generateText([
     {
       content:
         "Voce e um operador senior do BirthHub Sales OS. Entregue respostas densas em valor e economicas em palavras.",
-      role: "system"
+      role: "system",
     },
     {
       content: instruction,
-      role: "user"
-    }
+      role: "user",
+    },
   ]);
 
   return {
@@ -447,7 +456,7 @@ export async function executeSalesOsTool(input: ToolExecutionInput) {
       result.text.length > 0
         ? normalizeWhitespace(result.text)
         : buildExecutionFallback(tool, fieldSummary, imageProvided),
-    provider: result.provider
+    provider: result.provider,
   };
 }
 
@@ -458,26 +467,26 @@ export async function executeSalesOsChat(input: ChatExecutionInput) {
     ? [
         `Voce e o Mentor ${salesOsModuleMap[input.currentModule]?.title ?? input.currentModule} do BirthHub Sales OS.`,
         "Responda sempre em pt-BR, com orientacao pratica, clareza executiva e tom direto.",
-        "Quando faltar contexto, faca uma melhor proxima recomendacao e liste o que falta."
+        "Quando faltar contexto, faca uma melhor proxima recomendacao e liste o que falta.",
       ].join(" ")
     : [
         tool?.persona ?? `Voce representa o papel ${tool?.name ?? "Sales OS"}.`,
-        "Permaneça no personagem, responda em pt-BR e pressione o usuario com realismo comercial."
+        "Permaneça no personagem, responda em pt-BR e pressione o usuario com realismo comercial.",
       ].join(" ");
 
   const messages: LlmMessage[] = [
     {
       content: systemPrompt,
-      role: "system"
+      role: "system",
     },
     ...history.map((message) => ({
       content: message.text,
-      role: message.role
+      role: message.role,
     })),
     {
       content: input.input,
-      role: "user"
-    }
+      role: "user",
+    },
   ];
 
   const result = await generateText(messages);
@@ -486,6 +495,6 @@ export async function executeSalesOsChat(input: ChatExecutionInput) {
     output:
       result.text.length > 0 ? normalizeWhitespace(result.text) : buildChatFallback(input, tool),
     provider: result.provider,
-    transcript: formatHistory(history)
+    transcript: formatHistory(history),
   };
 }

@@ -121,14 +121,14 @@ const zenviaStatusWebhookMessageSchema = z
     id: z.string().min(1).optional(),
     to: z.string().min(1).optional()
   })
-  .passthrough();
+  .strip();
 
 const zenviaStatusWebhookMessageStatusSchema = z
   .object({
     code: z.string().min(1),
     description: z.string().min(1).optional()
   })
-  .passthrough();
+  .strip();
 
 export const zenviaStatusWebhookSchema = z
   .object({
@@ -139,7 +139,7 @@ export const zenviaStatusWebhookSchema = z
     timestamp: z.string().min(1).optional(),
     type: z.string().min(1)
   })
-  .passthrough();
+  .strip();
 
 export type ConnectPayload = z.infer<typeof connectSchema>;
 export type CallbackPayload = z.infer<typeof callbackSchema>;

@@ -123,7 +123,7 @@ function logRateLimitExceeded(request: Request, scope: RateLimitScope): void {
   logger.warn(
     {
       endpoint: resolveEndpointKey(request),
-      ipAddress: request.ip ?? request.header("x-forwarded-for") ?? null,
+      ipAddress: request.ip ?? null,
       organizationId: request.context.organizationId,
       requestId: request.context.requestId,
       routeGroup: scope === "api" ? resolveApiRouteGroup(request) : null,
@@ -170,7 +170,7 @@ async function recordBruteForceAlert(request: Request): Promise<void> {
 
   await prisma.loginAlert.create({
     data: {
-      ipAddress: request.ip ?? request.header("x-forwarded-for") ?? null,
+      ipAddress: request.ip ?? null,
       organizationId: membership.organizationId,
       tenantId: membership.tenantId,
       userAgent: request.header("user-agent") ?? null,
@@ -214,7 +214,7 @@ function setStandardRateLimitHeaders(
 }
 
 function resolveIpKey(request: Request): string {
-  const rawIp = request.ip ?? request.header("x-forwarded-for") ?? "anonymous";
+  const rawIp = request.ip ?? "anonymous";
   return rawIp.trim().toLowerCase().replace(/[^a-z0-9:.,_-]/gi, "_");
 }
 

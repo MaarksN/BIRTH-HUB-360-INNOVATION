@@ -1,0 +1,175 @@
+{
+  "packages": [
+    {
+      "name": "@birthub/api",
+      "path": "apps/api",
+      "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "dev": "tsx watch src/server.ts",
+        "start": "node dist/apps/api/src/server.js"
+      },
+      "entrypoints": {
+        "main": null,
+        "module": null,
+        "types": null,
+        "exports": null
+      },
+      "dist_exists": true,
+      "dist_populated": true,
+      "docker_cmd": "CMD [\"pnpm\", \"start\"]",
+      "docker_entrypoint": null,
+      "compose_command": null,
+      "ci_command": null,
+      "incoherences": [],
+      "circular_deps_detected": false
+    },
+    {
+      "name": "@birthub/web",
+      "path": "apps/web",
+      "scripts": {
+        "build": "next build --webpack",
+        "dev": "next dev -p 3001",
+        "start": "next start -p 3001"
+      },
+      "entrypoints": {
+        "main": null,
+        "module": null,
+        "types": null,
+        "exports": null
+      },
+      "dist_exists": false,
+      "dist_populated": false,
+      "docker_cmd": "CMD [\"node\", \"server.js\"]",
+      "docker_entrypoint": null,
+      "compose_command": null,
+      "ci_command": ".github/workflows/ci.yml: node scripts/ci/check-web-inline-style-freeze.mjs",
+      "incoherences": [],
+      "circular_deps_detected": false
+    },
+    {
+      "name": "@birthub/worker",
+      "path": "apps/worker",
+      "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "dev": "tsx watch src/index.ts",
+        "start": "node dist/apps/worker/src/index.js"
+      },
+      "entrypoints": {
+        "main": null,
+        "module": null,
+        "types": null,
+        "exports": null
+      },
+      "dist_exists": true,
+      "dist_populated": true,
+      "docker_cmd": "CMD [\"pnpm\", \"start\"]",
+      "docker_entrypoint": null,
+      "compose_command": null,
+      "ci_command": null,
+      "incoherences": [],
+      "circular_deps_detected": false
+    },
+    {
+      "name": "@birthub/config",
+      "path": "packages/config",
+      "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "dev": null,
+        "start": null
+      },
+      "entrypoints": {
+        "main": "./dist/index.js",
+        "module": null,
+        "types": "./dist/index.d.ts",
+        "exports": {
+          ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "default": "./dist/index.js"
+          },
+          "./web": {
+            "types": "./dist/web.d.ts",
+            "import": "./dist/web.js",
+            "default": "./dist/web.js"
+          },
+          "./nextjs": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "default": "./dist/index.js"
+          },
+          "./prettier": "./prettier/index.cjs"
+        }
+      },
+      "dist_exists": true,
+      "dist_populated": true,
+      "docker_cmd": null,
+      "docker_entrypoint": null,
+      "compose_command": null,
+      "ci_command": ".github/workflows/cd.yml: gcloud auth configure-docker \"${{ vars.GCP_ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev\" --quiet",
+      "incoherences": [],
+      "circular_deps_detected": false
+    },
+    {
+      "name": "@birthub/database",
+      "path": "packages/database",
+      "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "dev": null,
+        "start": null
+      },
+      "entrypoints": {
+        "main": "./dist/src/index.js",
+        "module": null,
+        "types": "./dist/src/index.d.ts",
+        "exports": {
+          ".": {
+            "types": "./dist/src/index.d.ts",
+            "import": "./dist/src/index.js"
+          }
+        }
+      },
+      "dist_exists": false,
+      "dist_populated": false,
+      "docker_cmd": null,
+      "docker_entrypoint": null,
+      "compose_command": null,
+      "ci_command": null,
+      "incoherences": [],
+      "circular_deps_detected": false
+    },
+    {
+      "name": "@birthub/logger",
+      "path": "packages/logger",
+      "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "dev": null,
+        "start": null
+      },
+      "entrypoints": {
+        "main": "./dist/logger/index.js",
+        "module": null,
+        "types": "./dist/logger/index.d.ts",
+        "exports": {
+          ".": {
+            "types": "./dist/logger/index.d.ts",
+            "import": "./dist/logger/index.js",
+            "default": "./dist/logger/index.js"
+          },
+          "./nextjs": {
+            "types": "./dist/logger/index.d.ts",
+            "import": "./dist/logger/index.js",
+            "default": "./dist/logger/index.js"
+          }
+        }
+      },
+      "dist_exists": true,
+      "dist_populated": true,
+      "docker_cmd": null,
+      "docker_entrypoint": null,
+      "compose_command": null,
+      "ci_command": null,
+      "incoherences": [],
+      "circular_deps_detected": false
+    }
+  ]
+}

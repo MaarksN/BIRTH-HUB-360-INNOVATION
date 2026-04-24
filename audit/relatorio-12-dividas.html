@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auditoria das 12 Dívidas - BirthHub 360</title>
+  <style>
+    :root {
+      color-scheme: light;
+    }
+    body {
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      margin: 0;
+      padding: 24px;
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+      padding: 20px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4);
+      margin-bottom: 24px;
+    }
+    header h1 {
+      margin: 0 0 4px;
+      font-size: 24px;
+      letter-spacing: 0.4px;
+    }
+    header p {
+      margin: 0;
+      font-size: 14px;
+      color: #e0f2fe;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+    .card {
+      background: #0b1224;
+      border: 1px solid #1f2a44;
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 18px;
+      color: #93c5fd;
+      letter-spacing: 0.3px;
+    }
+    .finding-title {
+      font-weight: 700;
+      margin: 6px 0 4px;
+      color: #e2e8f0;
+    }
+    .evidence, .prompt {
+      margin: 0;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+    .label {
+      font-weight: 700;
+      color: #a5b4fc;
+    }
+    .no-data {
+      margin: 4px 0 0;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+    code {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 5px;
+      border-radius: 6px;
+      color: #c7d2fe;
+      font-size: 13px;
+    }
+    .prompt {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px dashed #38bdf8;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Auditoria das 12 Dívidas</h1>
+    <p>BirthHub 360 — evidências objetivas e prompts de correção por categoria.</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Código</h2>
+      <p class="no-data">Não há dados suficientes para avaliar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Arquitetura</h2>
+      <p class="no-data">Não há dados suficientes para avaliar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Convergência</h2>
+      <div class="section">
+        <div>
+          <div class="finding-title">Preflight de produção não carrega ambiente selado</div>
+          <p class="evidence"><span class="label">Evidência:</span> Em <code>package.json:112-114</code> o script <code>release:preflight:production</code> roda <code>scripts/release/preflight-env.ts</code> sem <code>--env-file</code>, enquanto <code>release:preflight:staging</code> usa <code>--env-file=ops/release/sealed/.env.staging.sealed</code>, impedindo validação reproduzível das variáveis de produção.</p>
+          <p class="prompt"><span class="label">Prompt de Correção:</span> Ajustar <code>package.json</code> para que <code>release:preflight:production</code> aponte para um arquivo selado de produção (ex.: <code>ops/release/sealed/.env.production.sealed</code>) e recuse execução sem ele. Garantir que <code>scripts/release/preflight-env.ts</code> valide ausência/presença das variáveis e falhe quando o arquivo não existir. Critérios de aceite: script de produção exige caminho explícito, falha se variáveis obrigatórias estiverem ausentes e loga quais chaves faltam; execução documentada em <code>docs/release/release-process.md</code> alinhada ao novo fluxo.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Dados</h2>
+      <p class="no-data">Não há dados suficientes para avaliar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Teste</h2>
+      <p class="no-data">Não há dados suficientes para avaliar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Infraestrutura e DevOps</h2>
+      <p class="no-data">Não há dados suficientes para avaliar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Documentação</h2>
+      <p class="no-data">Não há dados suficientes para avaliar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Segurança</h2>
+      <div class="section">
+        <div>
+          <div class="finding-title">Webhook de entrada do Twilio sem validação de assinatura</div>
+          <p class="evidence"><span class="label">Evidência:</span> Em <code>apps/voice-engine/src/server.ts:143-153</code> o endpoint <code>POST /twilio/inbound</code> aceita payloads sem checar assinatura <code>X-Twilio-Signature</code> nem origem; qualquer caller consegue publicar <code>call.started</code> no Redis via <code>publish</code>, criando eventos falsos.</p>
+          <p class="prompt"><span class="label">Prompt de Correção:</span> Implementar verificação de assinatura Twilio no handler (usar <code>twilio</code> helper ou HMAC manual) e retornar 403 quando a assinatura faltar ou divergir. Registrar a falha sem publicar eventos. Adicionar testes em <code>apps/voice-engine/src/server.test.ts</code> cobrindo cenários de assinatura ausente/errada e assinatura válida. Critérios de aceite: requisições sem assinatura não gravam eventos em <code>voice_events</code> e respondem 403; testes automatizados cobrindo sucesso e bloqueio passam em <code>pnpm --filter @birthub/voice-engine test</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Dependência</h2>
+      <div class="section">
+        <div>
+          <div class="finding-title">Entrypoints do pacote workflows-core apontam para pasta inexistente</div>
+          <p class="evidence"><span class="label">Evidência:</span> <code>packages/workflows-core/package.json:6-18</code> exporta <code>./dist/workflows-core/src</code>, mas o build (<code>tsconfig.json:4-15</code>) gera saídas em <code>dist/src</code> e o diretório <code>packages/workflows-core/dist</code> não existe no repositório, quebrando a resolução dos consumidores.</p>
+          <p class="prompt"><span class="label">Prompt de Correção:</span> Alinhar os caminhos de saída: definir <code>rootDir</code> em <code>tsconfig.json</code> ou atualizar <code>main</code>/<code>types</code>/<code>exports</code> para <code>./dist/src/*</code>. Excluir testes do build se não forem parte do bundle (ajustar <code>include</code> ou mover para configuração separada). Gerar o build com <code>pnpm --filter @birthub/workflows-core build</code> e publicar o diretório <code>dist</code> resultante. Critérios de aceite: <code>node -e "require('@birthub/workflows-core')"</code> ou import ESM resolvem sem erro de módulo e os arquivos exportados existem.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Automação</h2>
+      <p class="no-data">Não há dados suficientes para avaliar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Design/UX</h2>
+      <p class="no-data">Não há dados suficientes para avaliar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Produto</h2>
+      <p class="no-data">Não há dados suficientes para avaliar.</p>
+    </div>
+  </div>
+</body>
+</html>
