@@ -7,10 +7,7 @@ import type { Request, Response } from "express";
 import { Router } from "express";
 import { z } from "zod";
 
-import {
-  RequireRole,
-  requireAuthenticatedSession
-} from "../../common/guards/index.js";
+import { RequireFeature, RequireRole, requireAuthenticatedSession } from "../../common/guards/index.js";
 import { asyncHandler, ProblemDetailsError } from "../../lib/problem-details.js";
 import { validateBody } from "../../middleware/validate-body.js";
 import { workflowQueueAdapter } from "./service.shared.js";
@@ -31,6 +28,7 @@ import {
   runWorkflowNow,
   updateWorkflow
 } from "./service.js";
+import { registerWorkflowMarketplaceRoutes } from "./router.marketplace.js";
 
 type WorkflowRouteRegistrar = (router: Router, config: ApiConfig) => void;
 
@@ -38,7 +36,7 @@ function isWorkflowNotPublishedError(cause: unknown): boolean {
   return cause instanceof Error && cause.message === "WORKFLOW_NOT_PUBLISHED";
 }
 
-function requireTenantId(request: Request): string {
+export function requireTenantId(request: Request): string {
   const tenantId = request.context.tenantId;
   if (!tenantId) {
     throw new ProblemDetailsError({
@@ -114,6 +112,7 @@ function registerCreateWorkflowRoute(router: Router, config: ApiConfig): void {
     "/api/v1/workflows",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
+    RequireFeature("workflows"),
     validateBody(workflowCreateSchema),
     asyncHandler(async (request, response) => {
       const tenantId = requireTenantId(request);
@@ -258,6 +257,7 @@ function registerRunWorkflowRoute(router: Router, config: ApiConfig): void {
     "/api/v1/workflows/:id/run",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
+    RequireFeature("workflows"),
     validateBody(workflowRunSchema),
     asyncHandler(async (request, response) => {
       const tenantId = requireTenantId(request);
@@ -343,6 +343,7 @@ function registerWorkflowEventRoute(router: Router, config: ApiConfig): void {
     "/api/v1/workflows/events/:topic",
     requireAuthenticatedSession,
     RequireRole(Role.ADMIN),
+    RequireFeature("workflows"),
     validateBody(workflowTopicEventSchema),
     asyncHandler(async (request, response) => {
       const tenantId = requireTenantId(request);
@@ -412,6 +413,7 @@ export function createWorkflowsRouter(config: ApiConfig): Router {
   applyWorkflowRegistrars(router, config, registerCrudWorkflowRoutes);
   applyWorkflowRegistrars(router, config, registerWorkflowExecutionRoutes);
   applyWorkflowRegistrars(router, config, registerWorkflowEventRoutes);
+  registerWorkflowMarketplaceRoutes(router, config);
 
   return router;
 }

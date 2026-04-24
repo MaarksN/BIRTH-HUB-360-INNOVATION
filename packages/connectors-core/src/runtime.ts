@@ -124,6 +124,16 @@ export function createHubspotContactUpsertHandler(
         throw new MissingConnectorCredentialError("hubspot", "accessToken");
       }
 
+      if (request.sandboxMode) {
+        return {
+          action: request.action,
+          externalId: "sandbox_external_id",
+          provider: request.provider,
+          status: "success",
+          statusCode: 200
+        };
+      }
+
       const adapter = new HubspotCrmAdapter({
         accessToken,
         ...(request.credentials.baseUrl ? { baseUrl: request.credentials.baseUrl } : {}),
@@ -154,6 +164,16 @@ export function createHubspotCompanyUpsertHandler(
       const accessToken = request.credentials.accessToken ?? request.credentials.apiKey;
       if (!accessToken) {
         throw new MissingConnectorCredentialError("hubspot", "accessToken");
+      }
+
+      if (request.sandboxMode) {
+        return {
+          action: request.action,
+          externalId: "sandbox_external_id",
+          provider: request.provider,
+          status: "success",
+          statusCode: 200
+        };
       }
 
       const adapter = new HubspotCrmAdapter({
@@ -191,6 +211,16 @@ export function createSlackMessageSendHandler(
         throw new MissingConnectorCredentialError("slack", "botToken");
       }
 
+      if (request.sandboxMode) {
+        return {
+          action: request.action,
+          externalId: "sandbox_external_id",
+          provider: request.provider,
+          status: "success",
+          statusCode: 200
+        };
+      }
+
       const adapter = new SlackMessageAdapter({
         accessToken,
         ...(request.credentials.baseUrl ? { baseUrl: request.credentials.baseUrl } : {}),
@@ -226,6 +256,16 @@ export function createOmieCustomerUpsertHandler(
 
       if (!appSecret) {
         throw new MissingConnectorCredentialError("omie", "appSecret");
+      }
+
+      if (request.sandboxMode) {
+        return {
+          action: request.action,
+          externalId: "sandbox_external_id",
+          provider: request.provider,
+          status: "success",
+          statusCode: 200
+        };
       }
 
       const adapter = new OmieErpAdapter({
@@ -266,6 +306,16 @@ export function createOmieSalesOrderCreateHandler(
         throw new MissingConnectorCredentialError("omie", "appSecret");
       }
 
+      if (request.sandboxMode) {
+        return {
+          action: request.action,
+          externalId: "sandbox_external_id",
+          provider: request.provider,
+          status: "success",
+          statusCode: 200
+        };
+      }
+
       const adapter = new OmieErpAdapter({
         appKey,
         appSecret,
@@ -299,6 +349,16 @@ export function createStripePaymentReadHandler(
         throw new MissingConnectorCredentialError("stripe", "apiKey");
       }
 
+      if (request.sandboxMode) {
+        return {
+          action: request.action,
+          externalId: "sandbox_external_id",
+          provider: request.provider,
+          status: "success",
+          statusCode: 200
+        };
+      }
+
       const adapter = new StripePaymentAdapter({
         apiKey,
         ...(request.credentials.baseUrl ? { baseUrl: request.credentials.baseUrl } : {}),
@@ -329,6 +389,16 @@ export function createZenviaMessageSendHandler(
       const apiToken = request.credentials.apiKey ?? request.credentials.accessToken;
       if (!apiToken) {
         throw new MissingConnectorCredentialError("zenvia", "apiKey");
+      }
+
+      if (request.sandboxMode) {
+        return {
+          action: request.action,
+          externalId: "sandbox_external_id",
+          provider: request.provider,
+          status: "success",
+          statusCode: 200
+        };
       }
 
       const adapter = new ZenviaMessageAdapter({
