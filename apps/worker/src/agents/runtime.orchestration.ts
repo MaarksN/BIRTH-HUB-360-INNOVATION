@@ -9,22 +9,23 @@ import {
 import { PolicyEngine } from "@birthub/agents-core/policy";
 import { getWorkerConfig } from "@birthub/config";
 import { Prisma, prisma } from "@birthub/database";
+import { getAgentQueueName } from "@birthub/queue";
+import { Queue } from "bullmq";
 
 import { PlanExecutor } from "../executors/planExecutor.js";
 import { runtimeMemory } from "./runtime.memory.js";
-import type {
-  RuntimeExecutionInput,
-  RuntimeExecutionResult
-} from "./runtime.types.js";
+import type { RuntimeExecutionInput, RuntimeExecutionResult } from "./runtime.types.js";
 import { readSessionId, roundCurrency } from "./runtime.shared.js";
 import { resolveRuntimeAgent, resolveManagedPolicies } from "./runtime.catalog.js";
 import { querySharedLearning, appendConversationMessage, buildLearningRecord, createOutputArtifact } from "./runtime.telemetry.js";
 import { createRuntimeTools } from "./runtime.tools.js";
 import { ensureBudgetHeadroom, consumeBudget } from "./runtime.budget.js";
+import { LLMPlanner } from "./runtime.planner.js";
+import { emitAgentRuntimeEvent } from "./runtime.observability.js";
+import { enqueueSpecialistAgent } from "./runtime.handoff-queue.js";
 
-export async function executeManifestAgentRuntime(
-  input: RuntimeExecutionInput
-): Promise<RuntimeExecutionResult> {
+export async function executeManifestAgentRuntime(input: RuntimeExecutionInput): Promise<RuntimeExecutionResult> {
+  const startedAt = Date.now();
   const resolved = await resolveRuntimeAgent({
     agentId: input.agentId,
     ...(input.catalogAgentId !== undefined ? { catalogAgentId: input.catalogAgentId } : {}),
@@ -49,9 +50,7 @@ export async function executeManifestAgentRuntime(
   const workerConfig = getWorkerConfig();
   const sessionId = readSessionId(input.input);
   const segmentProfile = inferSegmentProfile(input.input, resolved.manifest.tags);
-  const sharedLearningKeywords = Array.from(
-    new Set([...resolved.manifest.keywords, ...buildSegmentKeywords(segmentProfile)])
-  );
+  const sharedLearningKeywords = Array.from(new Set([...resolved.manifest.keywords, ...buildSegmentKeywords(segmentProfile)]));
   const sharedLearning = await querySharedLearning({
     keywords: sharedLearningKeywords,
     tenantId: input.tenantId
@@ -61,29 +60,35 @@ export async function executeManifestAgentRuntime(
     tenantId: input.tenantId
   });
   const policyEngine = new PolicyEngine(buildRuntimePolicyRules(resolved.manifest, managedPolicies));
-  const plan = buildAgentRuntimePlan({
+  const staticPlan = buildAgentRuntimePlan({
     input: input.input,
     manifest: resolved.manifest,
     sharedLearning,
     tenantId: input.tenantId,
     ...(input.contextSummary !== undefined ? { contextSummary: input.contextSummary } : {})
   });
-  const logs = [...plan.logs];
+
   const actorId = input.userId ?? "system";
   const { costs: toolCostTable, tools: runtimeTools } = createRuntimeTools(
     resolved.manifest,
     policyEngine,
     workerConfig.AGENT_DEFAULT_TOOL_COST_BRL,
     {
-      ...(workerConfig.SENDGRID_API_KEY !== undefined
-        ? { sendEmailApiKey: workerConfig.SENDGRID_API_KEY }
-        : {}),
-      ...(workerConfig.EMAIL_FROM_ADDRESS !== undefined
-        ? { sendEmailFromEmail: workerConfig.EMAIL_FROM_ADDRESS }
-        : {})
+      ...(workerConfig.SENDGRID_API_KEY !== undefined ? { sendEmailApiKey: workerConfig.SENDGRID_API_KEY } : {}),
+      ...(workerConfig.EMAIL_FROM_ADDRESS !== undefined ? { sendEmailFromEmail: workerConfig.EMAIL_FROM_ADDRESS } : {})
     }
   );
 
+  const planner = new LLMPlanner({
+    contextSummary: input.contextSummary,
+    input: input.input,
+    manifest: resolved.manifest,
+    policyEngine,
+    sharedLearning,
+    tenantId: input.tenantId
+  });
+
+  const logs = [...staticPlan.logs];
   const persistLogs = async (): Promise<void> => {
     await prisma.agentExecution.updateMany({
       data: {
@@ -107,10 +112,24 @@ export async function executeManifestAgentRuntime(
     tenantId: input.tenantId
   }).catch(() => undefined);
 
-  await persistLogs();
+  const plannedCalls = await planner.build({
+    agentId: resolved.manifest.agent.id,
+    executionId: input.executionId,
+    input: input.input,
+    tenantId: input.tenantId
+  });
+  await emitAgentRuntimeEvent({
+    agentId: resolved.runtimeAgentId,
+    event: "agent.plan.created",
+    executionId: input.executionId,
+    organizationId,
+    requestId: input.executionId,
+    status: "IN_PROGRESS",
+    tenantId: input.tenantId
+  });
 
   const plannedCostBrl = roundCurrency(
-    plan.toolCalls.reduce((total, call) => total + (toolCostTable[call.tool] ?? workerConfig.AGENT_DEFAULT_TOOL_COST_BRL), 0)
+    plannedCalls.reduce((total, call) => total + (toolCostTable[call.tool] ?? workerConfig.AGENT_DEFAULT_TOOL_COST_BRL), 0)
   );
   await ensureBudgetHeadroom({
     actorId,
@@ -120,6 +139,7 @@ export async function executeManifestAgentRuntime(
     organizationId,
     tenantId: input.tenantId
   });
+
   logs.push(`Budget preflight aprovado para custo estimado de R$ ${plannedCostBrl.toFixed(2)}.`);
   await persistLogs();
 
@@ -130,43 +150,49 @@ export async function executeManifestAgentRuntime(
     },
     executionTimeoutMs: workerConfig.AGENT_EXECUTION_TIMEOUT_MS,
     hooks: {
-      onPlanBuilt: async (toolCalls) => {
-        logs.push(`Planner confirmou ${toolCalls.length} chamada(s) de ferramenta.`);
-        await persistLogs();
-      },
       onStepCompleted: async (step, context) => {
-        logs.push(
-          `Step ${context.index}/${context.total} concluido com ${step.call.tool} (R$ ${step.estimatedCostBrl.toFixed(2)}).`
-        );
+        await emitAgentRuntimeEvent({
+          agentId: resolved.runtimeAgentId,
+          event: "agent.tool.completed",
+          executionId: input.executionId,
+          organizationId,
+          requestId: input.executionId,
+          status: "IN_PROGRESS",
+          tenantId: input.tenantId,
+          tool: step.call.tool
+        });
+        logs.push(`Step ${context.index}/${context.total} concluido com ${step.call.tool} (R$ ${step.estimatedCostBrl.toFixed(2)}).`);
         await persistLogs();
       }
     },
     maxCostBrl: workerConfig.AGENT_MAX_COST_BRL,
     maxPlanSteps: workerConfig.AGENT_MAX_PLAN_STEPS,
+    planner,
     redis: input.redis,
     retryAttempts: workerConfig.AGENT_TOOL_RETRY_ATTEMPTS,
-    toolCostEstimator: ({ call }) =>
-      toolCostTable[call.tool] ?? workerConfig.AGENT_DEFAULT_TOOL_COST_BRL,
+    toolCostEstimator: ({ call }) => toolCostTable[call.tool] ?? workerConfig.AGENT_DEFAULT_TOOL_COST_BRL,
     tools: runtimeTools
   });
+
   const execution = await executor.execute({
     agentId: resolved.manifest.agent.id,
     executionId: input.executionId,
     input: input.input,
-    tenantId: input.tenantId,
-    toolCalls: plan.toolCalls.map((call) => ({
-      input: call.input,
-      tool: call.tool
-    }))
+    tenantId: input.tenantId
   });
+
   const output = buildAgentRuntimeOutput({
     input: input.input,
     logs,
     manifest: resolved.manifest,
-    plan,
+    plan: {
+      ...staticPlan,
+      toolCalls: execution.steps.map((step) => ({ input: step.call.input as Record<string, unknown>, rationale: "executed step", tool: step.call.tool }))
+    },
     sharedLearning,
     steps: execution.steps
   });
+
   const budgetState = await consumeBudget({
     actorId,
     agentId: resolved.runtimeAgentId,
@@ -175,6 +201,7 @@ export async function executeManifestAgentRuntime(
     organizationId,
     tenantId: input.tenantId
   });
+
   const learningRecord = buildLearningRecord({
     agentId: resolved.runtimeAgentId,
     manifest: resolved.manifest,
@@ -183,6 +210,7 @@ export async function executeManifestAgentRuntime(
     segmentKeywords: buildSegmentKeywords(segmentProfile),
     tenantId: input.tenantId
   });
+
   const governanceRequireApproval = output.approvals_or_dependencies.length > 0;
   const outputType = governanceRequireApproval ? "executive-report" : "technical-log";
   const outputArtifactId = await createOutputArtifact({
@@ -196,6 +224,52 @@ export async function executeManifestAgentRuntime(
     userId: input.userId ?? null
   });
 
+  const handoffQueue = new Queue(getAgentQueueName("normal"), { connection: input.redis });
+  const queuedHandoffs: Array<{ childExecutionId: string; targetAgentId: string }> = [];
+  for (const handoff of output.suggested_handoffs.slice(0, 3)) {
+    if (governanceRequireApproval) {
+      await emitAgentRuntimeEvent({
+        agentId: resolved.runtimeAgentId,
+        event: "agent.approval.required",
+        executionId: input.executionId,
+        organizationId,
+        requestId: input.executionId,
+        status: "WAITING_APPROVAL",
+        tenantId: input.tenantId
+      });
+      break;
+    }
+
+    const queued = await enqueueSpecialistAgent({
+      agentQueue: handoffQueue,
+      context: {
+        contextSummary: input.contextSummary ?? output.summary,
+        payloadFocus: handoff.payload_focus,
+        reason: handoff.reason,
+        suggestedBy: resolved.runtimeAgentId
+      },
+      correlationId: input.executionId,
+      executionId: input.executionId,
+      organizationId,
+      parentAgentId: resolved.runtimeAgentId,
+      priority: "normal",
+      targetAgentId: handoff.target,
+      tenantId: input.tenantId,
+      userId: input.userId ?? null
+    });
+    queuedHandoffs.push({ childExecutionId: queued.childExecutionId, targetAgentId: handoff.target });
+    await emitAgentRuntimeEvent({
+      agentId: resolved.runtimeAgentId,
+      event: "agent.handoff.queued",
+      executionId: input.executionId,
+      organizationId,
+      requestId: input.executionId,
+      status: "IN_PROGRESS",
+      tenantId: input.tenantId
+    });
+  }
+  await handoffQueue.close();
+
   await prisma.auditLog.create({
     data: {
       action: "AGENT_LEARNING_PUBLISHED",
@@ -206,15 +280,10 @@ export async function executeManifestAgentRuntime(
       tenantId: input.tenantId
     }
   });
+
   await runtimeMemory.publishSharedLearning(input.tenantId, learningRecord);
   await Promise.allSettled([
-    runtimeMemory.store(
-      input.tenantId,
-      resolved.runtimeAgentId,
-      `segment-profile:${sessionId ?? input.executionId}`,
-      output.segment_profile,
-      30 * 24 * 60 * 60
-    ),
+    runtimeMemory.store(input.tenantId, resolved.runtimeAgentId, `segment-profile:${sessionId ?? input.executionId}`, output.segment_profile, 30 * 24 * 60 * 60),
     runtimeMemory.store(
       input.tenantId,
       resolved.runtimeAgentId,
@@ -222,61 +291,45 @@ export async function executeManifestAgentRuntime(
       {
         nextCheckpoint: output.next_checkpoint,
         outputArtifactId,
+        queuedHandoffs,
         segmentProfile: output.segment_profile,
         status: output.status,
         suggestedHandoffs: output.suggested_handoffs,
         summary: output.summary
       },
       30 * 24 * 60 * 60
-    ),
-    runtimeMemory.store(
-      input.tenantId,
-      resolved.runtimeAgentId,
-      output.memory_writeback.key,
-      {
-        objective: input.input.objective ?? input.input.task ?? null,
-        outputArtifactId,
-        segmentProfile: output.segment_profile,
-        specialistDeliverables: output.specialist_deliverables,
-        summary: output.summary,
-        toolResultsCount: execution.steps.length
-      },
-      output.memory_writeback.ttlHours * 60 * 60
     )
   ]);
-  await appendConversationMessage({
-    agentId: resolved.runtimeAgentId,
-    content: output.summary,
-    correlationId: input.executionId,
-    organizationId,
-    role: "assistant",
-    sessionId,
-    tenantId: input.tenantId
-  }).catch(() => undefined);
-
-  logs.push(`Shared learning ${learningRecord.id} publicado.`);
-  logs.push(`Segment memory persisted for ${output.segment_profile.industry}/${output.segment_profile.clientSegment}.`);
-  logs.push(`Output artifact ${outputArtifactId} criado automaticamente.`);
-  logs.push(
-    `Budget consumido: R$ ${execution.estimatedCostBrlTotal.toFixed(2)} (saldo ${budgetState.consumedBrl.toFixed(2)}/${budgetState.limitBrl.toFixed(2)}).`
-  );
-  await persistLogs();
 
   const toolCost = execution.estimatedCostBrlTotal;
   const runtimeStatus = governanceRequireApproval ? "WAITING_APPROVAL" : "SUCCESS";
+  await emitAgentRuntimeEvent({
+    agentId: resolved.runtimeAgentId,
+    costBrl: toolCost,
+    durationMs: Date.now() - startedAt,
+    event: runtimeStatus === "SUCCESS" ? "agent.execution.completed" : "agent.approval.required",
+    executionId: input.executionId,
+    organizationId,
+    requestId: input.executionId,
+    status: runtimeStatus === "SUCCESS" ? "COMPLETED" : "WAITING_APPROVAL",
+    tenantId: input.tenantId
+  });
+
   const metadata = {
     budgetConsumedBrl: budgetState.consumedBrl,
     budgetLimitBrl: budgetState.limitBrl,
-    budgetAlertLevel: budgetState.lastAlertLevel,
     catalogAgentId: resolved.manifest.agent.id,
     executionStatus: runtimeStatus,
     learningRecordId: learningRecord.id,
     logs,
     managedPolicies,
     outputArtifactId,
-    runtimeProvider: "manifest-runtime",
     plannedCostBrl,
-    steps: execution.steps.length,
+    policies: resolved.manifest.policies,
+    queuedHandoffs,
+    runtimeProvider: "manifest-runtime",
+    suggested_handoffs: output.suggested_handoffs,
+    steps: execution.steps,
     toolCost,
     trace: execution.trace
   };

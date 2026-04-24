@@ -35,7 +35,7 @@ test("processWorkflowExecutionJob executes connector action", async () => {
         tenantId: "tenant_1",
         isDryRun: true,
         startedAt: new Date(),
-        workflowRevision: {
+        revision: {
             definition: {
                 steps: [
                     {

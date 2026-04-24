@@ -15,7 +15,7 @@ export async function processWorkflowExecutionJob(job: Job<{ executionId: string
   const execution: any = await prisma.workflowExecution.findUnique({
     where: { id: executionId },
     include: {
-      workflowRevision: true
+      revision: true
     }
   });
 
@@ -25,13 +25,13 @@ export async function processWorkflowExecutionJob(job: Job<{ executionId: string
   }
 
   // @ts-ignore
-  if (!execution.workflowRevision || !execution.workflowRevision.definition) {
+  if (!execution.revision || !execution.revision.definition) {
     logger.error({ executionId }, "WorkflowRevision definition not found");
     return { executed: false };
   }
 
   // @ts-ignore
-  const definition = execution.workflowRevision.definition as { steps?: any[], transitions?: any[] };
+  const definition = execution.revision.definition as { steps?: any[], transitions?: any[] };
   const steps = definition.steps ?? [];
 
   const sortedSteps = [...steps];
@@ -80,7 +80,7 @@ export async function processWorkflowExecutionJob(job: Job<{ executionId: string
             status: StepResultStatus.SUCCESS,
             stepId: step.id ?? step.key,
             tenantId: execution.tenantId,
-            workflowRevisionId: execution.workflowRevisionId,
+            workflowRevisionId: execution.revisionId,
             workflowId: execution.workflowId,
             input: step.config.payload as any,
             output: (result.response ?? {}) as any
@@ -103,7 +103,7 @@ export async function processWorkflowExecutionJob(job: Job<{ executionId: string
             status: StepResultStatus.FAILED,
             stepId: step.id ?? step.key,
             tenantId: execution.tenantId,
-            workflowRevisionId: execution.workflowRevisionId,
+            workflowRevisionId: execution.revisionId,
             workflowId: execution.workflowId,
             input: step.config.payload as any,
             output: {}
