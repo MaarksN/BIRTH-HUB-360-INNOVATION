@@ -97,6 +97,7 @@ export interface ConnectorExecutionRequest<Action extends ConnectorActionName = 
   metadata?: Record<string, unknown> | undefined;
   payload: ConnectorActionPayload[Action];
   provider: ConnectorProvider;
+  sandboxMode?: boolean | undefined;
 }
 
 export interface ConnectorExecutionResult {

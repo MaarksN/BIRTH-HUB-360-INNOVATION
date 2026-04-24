@@ -26,11 +26,9 @@ export * from "./contracts/canonical.js";
 export * from "./adapters/crm-adapter-factory.js";
 export * from "./adapters/email-adapter-factory.js";
 export * from "./adapters/hubspot-crm-adapter.js";
-export * from "./adapters/hubspot-webhooks.js";
 export * from "./adapters/omie-erp-adapter.js";
 export * from "./adapters/slack-message-adapter.js";
 export * from "./adapters/stripe-payment-adapter.js";
 export * from "./adapters/zenvia-message-adapter.js";
-export * from "./adapters/webhook-registry.js";
 
 export * from "./clients/circuit-breaker.js";

@@ -13,7 +13,6 @@ import {
   MakeClient,
   PagarmeClient,
   RDStationMarketingClient,
-  WebhookRegistry,
   buildIdempotencyKey,
   canonicalIntegrationDomains,
   executeAnalyticsAndAutomation,
@@ -48,21 +47,6 @@ void test("integrations entrypoint exposes critical clients and adapters", () =>
   assert.equal(typeof buildIdempotencyKey, "function");
   assert.equal(typeof ConnectorExecutionError, "function");
   assert.equal(typeof CRMAdapterFactory, "function");
-  assert.equal(typeof WebhookRegistry, "function");
-});
-
-void test("webhook registry signs and verifies payloads", () => {
-  const registry = new WebhookRegistry();
-  const endpoint = registry.register("tenant_1", {
-    eventTypes: ["billing.updated"],
-    secret: "test-secret-placeholder",
-    url: "https://birthhub.test/hooks"
-  });
-  const payload = JSON.stringify({ ok: true });
-  const signature = registry.createSignature(endpoint, payload);
-
-  assert.equal(registry.verifySignature(endpoint, payload, signature), true);
-  assert.equal(registry.verifySignature(endpoint, payload, "invalid"), false);
 });
 
 void test("provider catalog exposes implemented anchors and validates slugs", () => {
