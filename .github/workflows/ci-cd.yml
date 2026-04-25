@@ -158,8 +158,11 @@ jobs:
       - name: Audit high severity dependencies
         run: pnpm audit --audit-level high
 
-      - name: Scan inline credentials
-        run: node scripts/security/scan-inline-credentials.mjs
+      - name: Run security guardrails
+        run: pnpm security:guards
+
+      - name: Run critical regression gate
+        run: pnpm test:critical:coverage
 
       - name: Validate migration governance
         run: pnpm --filter @birthub/database db:check:governance
@@ -169,7 +172,7 @@ jobs:
     needs: [lint, test, integration-tests, security]
     runs-on: ubuntu-latest
     name: Build Docker Images
-    
+
     permissions:
       contents: read
       packages: write

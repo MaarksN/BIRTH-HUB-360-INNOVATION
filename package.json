@@ -24,6 +24,8 @@
     "security:guards": "node --import tsx --test scripts/security/check-auth-guards.test.ts && node scripts/security/scan-inline-credentials.mjs",
     "setup:dev": "node scripts/setup-dev.js",
     "test:isolation": "node scripts/testing/run-isolation-suite.mjs",
+    "test:critical": "node scripts/testing/run-critical-regression-suite.mjs",
+    "test:critical:coverage": "c8 --reporter=text-summary --reporter=json-summary --clean --all=false --include=\"apps/api/src/**/*.ts\" --include=\"apps/worker/src/**/*.ts\" --include=\"scripts/security/**/*.ts\" --check-coverage --statements=35 --branches=70 --functions=40 --lines=35 node scripts/testing/run-critical-regression-suite.mjs",
     "test:core": "turbo run test --concurrency=1 --filter=@birthub/web --filter=@birthub/api --filter=@birthub/worker --filter=@birthub/testing",
     "typecheck": "turbo run typecheck",
     "typecheck:core": "turbo run typecheck --filter=@birthub/web --filter=@birthub/api --filter=@birthub/worker --filter=@birthub/testing",

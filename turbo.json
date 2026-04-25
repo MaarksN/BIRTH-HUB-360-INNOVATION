@@ -37,7 +37,15 @@
       "dependsOn": [
         "^build"
       ],
-      "outputs": []
+      "outputs": [],
+      "cache": false,
+      "passThroughEnv": [
+        "BIRTHUB_ENABLE_DB_TESTS",
+        "BIRTHUB_REQUIRE_RLS_TESTS",
+        "DATABASE_URL",
+        "DB_APP_PASSWORD",
+        "DB_APP_ROLE"
+      ]
     },
     "@birthub/database#test": {
       "dependsOn": [
@@ -49,7 +57,15 @@
       "dependsOn": [
         "^build"
       ],
-      "outputs": []
+      "outputs": [],
+      "cache": false,
+      "passThroughEnv": [
+        "BIRTHUB_ENABLE_DB_TESTS",
+        "BIRTHUB_REQUIRE_RLS_TESTS",
+        "DATABASE_URL",
+        "DB_APP_PASSWORD",
+        "DB_APP_ROLE"
+      ]
     },
     "docs": {
       "dependsOn": [
