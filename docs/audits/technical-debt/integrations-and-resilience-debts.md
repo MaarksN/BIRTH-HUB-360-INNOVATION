@@ -1,49 +1,41 @@
-# Dividas de Integracoes e Resiliencia
+# Dívidas de Integração e Resiliência
 
-## Integracoes
 
-Achados confirmados:
+### [TD-111] DÍVIDAS DE CONCORRÊNCIA E CONSISTÊNCIA: Race conditions em filas
+- **Severidade:** CRÍTICO
+- **Prioridade:** P0 urgente
+- **Status:** Suspeita forte
+- **Impacto:** Jobs processados duas vezes
+- **Risco de não corrigir:** Corrupção de estado
+- **Recomendação:** Garantir idempotency key
+- **Esforço:** M
+- **Arquivo/Linha:** `packages/queue`
+- **Evidência/Como detectado:** Uso de BullMQ
+- **Correção sugerida:** Check de idempotência no worker
+- **Testes recomendados:** Teste concorrência
 
-- `TD-003` - segredos/tokens em query string para provedores externos.
-- `TD-016` - webhook receiver encaminha chamadas para API sem timeout.
+### [TD-112] DÍVIDAS DE INTEGRAÇÃO: Webhooks sem validação
+- **Severidade:** CRÍTICO
+- **Prioridade:** P0 urgente
+- **Status:** Verificação manual necessária
+- **Impacto:** Aceita payloads falsos
+- **Risco de não corrigir:** Ataque SSRF/Spoofing
+- **Recomendação:** Validar assinatura e assertSafeUrl
+- **Esforço:** M
+- **Arquivo/Linha:** `apps/api/src/webhooks`
+- **Evidência/Como detectado:** N/A
+- **Correção sugerida:** Adicionar middleware
+- **Testes recomendados:** Teste de integração falho
 
-Suspeitas fortes:
-
-- `TD-014` - isolamento tenant em webhook Zenvia depende de contexto/segredo e precisa de teste negativo.
-- `TD-015` - bypass de assinatura por `trustedContext` precisa de revisao de rotas internas.
-
-## Resiliencia operacional
-
-Pontos positivos:
-
-- Existem `fetchWithTimeout`, `AbortSignal.timeout` em parte dos clientes e `httpTool`.
-- Workflows-core tem circuit breaker para HTTP.
-- Queue runtime possui conceitos de backpressure, retry e DLQ.
-
-Dividas:
-
-- Nem todo `fetch` usa timeout. Exemplo confirmado: `apps/webhook-receiver/src/index.ts:562-569` e `:584-588`.
-- `BaseTool` usa `Promise.race` sem cancelar a operacao subjacente (`packages/agents-core/src/tools/baseTool.ts:70-80`).
-- Nao foi executado teste de chaos/falha externa para circuit breaker, DLQ ou retry storm.
-
-## Webhooks
-
-Arquivos revisados: `apps/webhook-receiver/src/index.ts`, `apps/api/src/modules/connectors/service.ts`, testes de billing/security.
-
-Riscos:
-
-- webhook falso se bypass interno for mal protegido
-- fila/processo preso por chamada externa sem timeout
-- processamento cross-tenant se identificador de conta externa for ambiguo
-
-## Ferramentas recomendadas
-
-Contract tests de payload externo, MSW/nock, fault injection, testes de idempotencia, Semgrep custom para `fetch(` sem timeout, testes de assinatura por provider.
-
-## Proximos passos
-
-1. Proibir `fetch` direto sem timeout em services/receivers.
-2. Criar suite de webhooks maliciosos e replay.
-3. Validar idempotency key e assinatura por provider.
-4. Testar DLQ/backoff/ack-nack em workers.
-5. Padronizar logs de integracao com requestId/tenantId mascarados.
+### [TD-118] DÍVIDAS DE RESILIÊNCIA OPERACIONAL: Falta de timeout em chamadas externas
+- **Severidade:** ALTO
+- **Prioridade:** P1 alta
+- **Status:** Verificação manual necessária
+- **Impacto:** Gargalo de I/O
+- **Risco de não corrigir:** Indisponibilidade API
+- **Recomendação:** Adicionar AbortController
+- **Esforço:** P
+- **Arquivo/Linha:** `packages/connectors-core`
+- **Evidência/Como detectado:** Uso de fetch solto
+- **Correção sugerida:** Timeout
+- **Testes recomendados:** Teste de timeout
