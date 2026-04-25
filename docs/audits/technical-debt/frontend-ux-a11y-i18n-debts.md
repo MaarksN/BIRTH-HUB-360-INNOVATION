@@ -1,50 +1,54 @@
-# Dividas de Frontend, UX, Acessibilidade e I18n
+# Dívidas de Frontend, UX, Acessibilidade e i18n
 
-## Frontend
 
-Achados confirmados: `TD-008`, `TD-035`.  
-Suspeitas: formularios e botoes em paginas clinicas/admin precisam de auditoria de acessibilidade e feedback async.
+### [TD-107] DÍVIDAS DE FRONTEND: Uso excessivo de useEffect
+- **Severidade:** MÉDIO
+- **Prioridade:** P2 média
+- **Status:** Verificação manual necessária
+- **Impacto:** Ciclos de renderização infinitos
+- **Risco de não corrigir:** Baixa performance
+- **Recomendação:** Revisar useEffect
+- **Esforço:** M
+- **Arquivo/Linha:** `apps/web`
+- **Evidência/Como detectado:** Não medido por script simples
+- **Correção sugerida:** Usar hooks do React Query/SWR
+- **Testes recomendados:** E2E
 
-Evidencias:
+### [TD-108] DÍVIDAS DE ACESSIBILIDADE: Falta de alt em imagens
+- **Severidade:** MÉDIO
+- **Prioridade:** P2 média
+- **Status:** Verificação manual necessária
+- **Impacto:** Dificulta leitores de tela
+- **Risco de não corrigir:** Violação de a11y
+- **Recomendação:** Rodar axe-core/eslint-plugin-jsx-a11y
+- **Esforço:** P
+- **Arquivo/Linha:** `apps/web`
+- **Evidência/Como detectado:** Axe não rodado
+- **Correção sugerida:** Adicionar alt tag
+- **Testes recomendados:** Testes a11y
 
-- `apps/web/tests/i18n.test.ts:18` e `:56` falham contra dicionario atual.
-- `apps/web/components/agents/chatbook-workspace.tsx` tem 1.380 linhas e concentra muitos handlers.
-- Busca por JSX encontrou muitos `button`, `input`, `select`, `textarea`, `onClick` e alguns `aria-*`.
+### [TD-109] DÍVIDAS DE INTERNACIONALIZAÇÃO: Textos hardcoded
+- **Severidade:** BAIXO
+- **Prioridade:** P3 baixa
+- **Status:** Verificação manual necessária
+- **Impacto:** Difícil traduzir no futuro
+- **Risco de não corrigir:** Retrabalho
+- **Recomendação:** Usar react-i18next
+- **Esforço:** M
+- **Arquivo/Linha:** `apps/web`
+- **Evidência/Como detectado:** Strings pt-BR pelo código
+- **Correção sugerida:** Mover strings para locai
+- **Testes recomendados:** N/A
 
-## UX verificavel no codigo
-
-Achado principal: `TD-036`.  
-`apps/web/app/admin/operations/executions/[id]/page.tsx:71` mostra botoes "Cancelar" e "Replay" lado a lado. Nao foi visto nesse trecho confirmacao modal, exigencia de motivo ou bloqueio contra duplo clique.
-
-Risco: acao operacional destrutiva ou repetida por engano.
-
-## Acessibilidade
-
-Achado: `TD-037`.  
-Trechos de formularios clinicos em `apps/web/app/(dashboard)/patients/[id]/page.parts.tsx` possuem muitos inputs/textarea/selects. A busca textual nao prova ausencia de label em todos os casos, por isso o status e verificacao manual necessaria.
-
-Ferramentas recomendadas: `eslint-plugin-jsx-a11y`, axe, Lighthouse, Playwright accessibility snapshot e navegacao por teclado.
-
-## Internacionalizacao
-
-Achado: `TD-008`.  
-O teste espera `Central de Operacao` e `Operations Hub`, mas o dicionario atual retorna `Revenue OS`. Isso pode ser mudanca intencional de marca, mas a suite esta quebrada e precisa ser alinhada.
-
-Verificacoes adicionais recomendadas:
-
-- extracao de strings hardcoded
-- datas com `Intl` e timezone explicito
-- moedas com locale
-- mensagens de erro traduziveis
-
-## Loading, error e empty states
-
-Foram encontrados componentes com `aria-live`, toasts e erro de rota, o que e positivo. Ainda assim, nao houve execucao visual ou E2E para comprovar cobertura de todos os fluxos assicronos.
-
-## Proximos passos
-
-1. Corrigir/alinha teste i18n.
-2. Rodar axe/Lighthouse no app local.
-3. Criar testes de componente para ChatBook, admin operations e pacientes.
-4. Confirmar modal/confirmacao para cancel/replay/delete.
-5. Adicionar lint de strings hardcoded se i18n for requisito do produto.
+### [TD-113] DÍVIDAS DE PRODUTO/UX VERIFICÁVEIS NO CÓDIGO: Falta de toast feedback
+- **Severidade:** BAIXO
+- **Prioridade:** P3 baixa
+- **Status:** Verificação manual necessária
+- **Impacto:** Usuário não sabe se salvou
+- **Risco de não corrigir:** Frustração
+- **Recomendação:** Adicionar react-hot-toast
+- **Esforço:** P
+- **Arquivo/Linha:** `apps/web`
+- **Evidência/Como detectado:** N/A
+- **Correção sugerida:** Toast onSuccess
+- **Testes recomendados:** E2E
