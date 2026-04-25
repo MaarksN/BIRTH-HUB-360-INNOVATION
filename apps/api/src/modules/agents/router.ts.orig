@@ -13,7 +13,7 @@ import { requireStringValue } from "../../lib/request-values.js";
 import { agentMetricsService } from "./metrics.service.js";
 import { installedAgentsService } from "./service.js";
 
-const runPayloadSchema = z.record(z.string(), z.unknown()).catch({ _error: true });
+const runPayloadSchema = z.record(z.string(), z.unknown()).catch({});
 const policyUpsertSchema = z
   .object({
     actions: z.array(z.string().min(1)).min(1),
@@ -379,4 +379,3 @@ export function createInstalledAgentsRouter(): Router {
 
   return router;
 }
-

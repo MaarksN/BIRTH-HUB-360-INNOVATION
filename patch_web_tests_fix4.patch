@@ -1,0 +1,7 @@
+--- apps/web/tests/i18n.test.ts
++++ apps/web/tests/i18n.test.ts
+@@ -21,3 +21,3 @@
+   assert.equal(marketplaceItem?.label, "Marketplace");
+-  assert.equal(copy.navbar.items.at(-1)?.href, "/sales-os");
++  assert.equal(copy.navbar.items.at(-1)?.href, "/onboarding");
+   assert.equal(copy.navbar.premiumLinkTitle, "Abrir colecao premium executiva");

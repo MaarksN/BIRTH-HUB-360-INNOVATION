@@ -1,6 +1,6 @@
 
 // 
-import { getJson, postJson } from "./http.js";
+import { postJson } from "./http.js";
 
 export class MetaCloudApiClient {
   constructor(
@@ -27,11 +27,9 @@ export class MetaAdsApiClient {
   ) {}
 
   listCampaigns(adAccountId: string) {
-    return getJson(`${this.baseUrl}/${adAccountId}/campaigns`, {
-      apiKey: this.token,
-      retries: 2,
-      timeoutMs: 10_000
-    });
+    return fetch(
+      `${this.baseUrl}/${adAccountId}/campaigns?access_token=${this.token}`,
+    ).then((r) => r.json());
   }
 }
 

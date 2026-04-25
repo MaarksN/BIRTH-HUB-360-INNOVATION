@@ -1,0 +1,43 @@
+--- apps/worker/src/agents/runtime.handoff-queue.ts
++++ apps/worker/src/agents/runtime.handoff-queue.ts
+@@ -26,3 +26,3 @@
+         state: job.data.context,
+-        metrics: job.data.metrics,
++        metrics: job.data.metrics as any,
+       },
+@@ -31,3 +31,3 @@
+         state: job.data.context,
+-        metrics: job.data.metrics,
++        metrics: job.data.metrics as any,
+       },
+@@ -68,3 +68,3 @@
+       state: job.data.context,
+-      metrics: job.data.metrics,
++      metrics: job.data.metrics as any,
+     },
+--- apps/worker/src/agents/runtime.observability.ts
++++ apps/worker/src/agents/runtime.observability.ts
+@@ -30,3 +30,3 @@
+       state: event.context,
+-      metrics: event.metrics,
++      metrics: event.metrics as any,
+     },
+--- apps/worker/src/agents/runtime.orchestration.ts
++++ apps/worker/src/agents/runtime.orchestration.ts
+@@ -94,3 +94,3 @@
+         status: "COMPLETED",
+-        metrics: result.metrics,
++        metrics: result.metrics as any,
+         completedAt: new Date(),
+@@ -276,3 +276,3 @@
+       status: "FAILED",
+-      metrics: errorMetrics,
++      metrics: errorMetrics as any,
+       error: String(error),
+--- apps/worker/src/agents/runtime.tool-registry.ts
++++ apps/worker/src/agents/runtime.tool-registry.ts
+@@ -152,3 +152,3 @@
+             state: context,
+-            metrics: metricsSnapshot,
++            metrics: metricsSnapshot as any,
+           },

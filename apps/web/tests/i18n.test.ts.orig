@@ -20,7 +20,7 @@ void test("pt-BR dictionary exposes canonical product navigation and consent cop
   assert.equal(conversationsItem?.label, "Conversas");
   assert.equal(chatbookItem?.label, "ChatBook");
   assert.equal(marketplaceItem?.label, "Marketplace");
-  assert.equal(copy.navbar.items.at(-1)?.href, "/onboarding");
+  assert.equal(copy.navbar.items.at(-1)?.href, "/sales-os");
   assert.equal(copy.navbar.premiumLinkTitle, "Abrir colecao premium executiva");
   assert.equal(copy.consentBanner.settings, "Abrir central LGPD");
   assert.equal(copy.dashboardHome.badge, "Home do produto");

@@ -40,7 +40,7 @@ export async function emitAgentRuntimeEvent(input: {
         status: input.status,
         tenantId: input.tenantId,
         tool: input.tool ?? null
-      } as any,
+      } as unknown,
       entityId: input.executionId,
       entityType: "agent_execution",
       tenantId: input.tenantId

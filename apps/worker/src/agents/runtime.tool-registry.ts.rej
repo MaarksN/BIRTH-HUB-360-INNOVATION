@@ -1,0 +1,7 @@
+--- apps/worker/src/agents/runtime.tool-registry.ts
++++ apps/worker/src/agents/runtime.tool-registry.ts
+@@ -152,3 +152,3 @@
+             state: context,
+-            metrics: metricsSnapshot,
++            metrics: metricsSnapshot as any,
+           },

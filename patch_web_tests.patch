@@ -1,0 +1,12 @@
+--- apps/web/tests/i18n.test.ts
++++ apps/web/tests/i18n.test.ts
+@@ -14,3 +14,3 @@
+
+-  assert.equal(copy.navbar.identityTitle, "Central de Operacao");
++  assert.equal(copy.navbar.identityTitle, "Sistema Operacional");
+   assert.equal(copy.navbar.items[0]?.href, "/dashboard");
+@@ -47,3 +47,3 @@
+
+-  assert.equal(copy.navbar.items[1]?.label, "Patients");
++  assert.equal(copy.navbar.items[1]?.label, "Conversations");
+   assert.equal(chatbookItem?.label, "ChatBook");
