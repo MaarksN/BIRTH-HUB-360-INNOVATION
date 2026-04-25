@@ -4,10 +4,14 @@
 import { access, copyFile } from 'node:fs/promises';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const clientPkgJson = require.resolve('@prisma/client/package.json');
+const clientPackageDir = path.dirname(clientPkgJson);
 const runtimeDir = path.join(path.dirname(clientPkgJson), 'runtime');
+const databaseRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const projectRoot = path.resolve(databaseRoot, '..', '..');
 
 const targets = [
   'cockroachdb',
@@ -28,6 +32,34 @@ async function ensureAlias(sourceName, targetName) {
     await copyFile(source, target);
     return true;
   }
+}
+
+async function pathExists(targetPath) {
+  try {
+    await access(targetPath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function ensureGeneratedClientPackageAlias() {
+  const virtualNodeModulesDir = path.resolve(clientPackageDir, '..', '..');
+  const generatedPrismaPackageDir = path.join(virtualNodeModulesDir, '.prisma');
+  const rootPrismaPackageDir = path.join(projectRoot, 'node_modules', '.prisma');
+
+  if (!(await pathExists(generatedPrismaPackageDir)) || (await pathExists(rootPrismaPackageDir))) {
+    return false;
+  }
+
+  await access(path.dirname(rootPrismaPackageDir));
+  await fsSymlink(generatedPrismaPackageDir, rootPrismaPackageDir);
+  return true;
+}
+
+async function fsSymlink(targetPath, aliasPath) {
+  const { symlink } = await import('node:fs/promises');
+  await symlink(targetPath, aliasPath, process.platform === 'win32' ? 'junction' : 'dir');
 }
 
 let created = 0;
@@ -56,4 +88,8 @@ for (const dialect of targets) {
   }
 }
 
-process.stdout.write(`[prisma-runtime-compat] runtime aliases ensured (created=${created})\n`);
+const linkedGeneratedClient = await ensureGeneratedClientPackageAlias();
+
+process.stdout.write(
+  `[prisma-runtime-compat] runtime aliases ensured (created=${created}, generatedClientAlias=${linkedGeneratedClient ? 'created' : 'ready'})\n`
+);
