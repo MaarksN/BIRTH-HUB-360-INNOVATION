@@ -70,7 +70,7 @@ async function main(): Promise<void> {
       `;
     } catch (error) {
       const message = `pg_stat_statements unavailable: ${error instanceof Error ? error.message : String(error)}`;
-      (disposableDatabase ? observations : issues).push(message);
+      issues.push(message);
     }
 
     unusedIndexes = await prisma.$queryRaw<UnusedIndexRow[]>`

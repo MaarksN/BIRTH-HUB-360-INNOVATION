@@ -54,66 +54,6 @@ const DEFAULT_INPUTS = [
   "tenant e escopo da decisao"
 ];
 
-const DEFAULT_GUARDRAILS = [
-  "nunca misturar dados entre tenants",
-  "nunca executar acao sensivel sem rastreabilidade",
-  "sempre explicitar premissas e incertezas",
-  "sempre registrar proximo passo e risco relevante"
-];
-
-const DEFAULT_CHECKLIST = [
-  "separar fato, inferencia e ausencia de informacao",
-  "deixar proximo passo objetivo",
-  "garantir rastreabilidade da recomendacao",
-  "preservar seguranca e governanca",
-  "adaptar a resposta ao segmento do cliente",
-  "salvar memoria operacional reutilizavel"
-];
-
-const DEFAULT_AUTONOMOUS_BLOCK = [
-  "operar de forma autonoma dentro do escopo permitido, sem degradar governanca",
-  "monitorar sinais, dependencias e riscos antes de agir",
-  "escalar quando a decisao exigir aprovacao humana",
-  "registrar memoria operacional e preparar handoff quando isso acelerar a resolucao"
-];
-
-const DEFAULT_REASONING_BLOCK = [
-  "interpretar o objetivo real antes de agir",
-  "consultar contexto disponivel e artefatos relevantes",
-  "processar sinais numericos e textuais para separar tendencia, outlier e urgencia",
-  "adaptar a analise para o segmento, maturidade e contexto do cliente",
-  "priorizar qualidade, rastreabilidade e proximo passo claro",
-  "agir somente dentro de ferramentas, politicas e aprovacoes permitidas"
-];
-
-const DEFAULT_MONITORING_BLOCK = [
-  "comparar baseline, tendencia e desvio observado",
-  "mapear gargalos, riscos emergentes e oportunidades",
-  "registrar o que deve ser salvo em memoria e o que precisa de handoff multiagente",
-  "nunca esperar um risco relevante virar incidente para alertar",
-  "reavaliar no checkpoint mais proximo com impacto material"
-];
-
-const DEFAULT_PRIORITY_BLOCK = [
-  "priorizar risco alto, prazo curto e alta irreversibilidade",
-  "elevar o que destrava dependencias criticas",
-  "reduzir prioridade quando a confianca for baixa e o custo de agir for alto"
-];
-
-const DEFAULT_ESCALATION_BLOCK = [
-  "escalar quando houver risco alto com confianca insuficiente",
-  "escalar quando a acao exigir aprovacao, excecao de policy ou comunicacao sensivel",
-  "escalar quando houver dependencia critica sem dono claro"
-];
-
-const DEFAULT_SHARED_LEARNING_BLOCK = [
-  "Todo agente aprende com todo agente.",
-  "Antes de responder, consulte aprendizados compartilhados relevantes do mesmo tenant.",
-  "Depois de concluir, publique um aprendizado estruturado com summary, evidence, confidence, keywords, appliesTo e approved.",
-  "Ao reaproveitar aprendizado, adaptar a recomendacao ao segmento atual do cliente.",
-  "Nunca reutilize aprendizado de outro tenant."
-];
-
 const MARKET_GRADE_KEYWORDS = [
   "data processing",
   "cross-signal fusion",
@@ -143,6 +83,66 @@ const MARKET_GRADE_SKILLS = [
   "Preparar handoff multiagente com contexto estruturado",
   "Transformar eventos reais de entrada em execucao governada"
 ];
+
+const COMMON_OBJECTIVE_PHRASES = [
+  "use when ",
+  "processar sinais com qualidade decisoria de mercado",
+  "sugerir a proxima melhor acao com justificativa e prioridade",
+  "operar com 10 camadas premium compartilhadas",
+  "alertas preventivos priorizados",
+  "decisoes que precisam ser antecipadas",
+  "plano preventivo com dono, prazo e checkpoint",
+  "proximo passo recomendado",
+  "perfil de segmento do cliente",
+  "recomendacoes prescritivas priorizadas",
+  "memoria operacional salva para reutilizacao",
+  "contexto pronto para handoff entre agentes",
+  "score premium consolidado"
+];
+
+const COMMON_GUARDRAIL_PHRASES = [
+  "nunca misturar dados entre tenants",
+  "nunca executar acao sensivel sem rastreabilidade",
+  "coordenar handoff com",
+  "nunca perder contexto critico",
+  "nunca reutilizar memoria ou aprendizado de outro tenant",
+  "nunca tratar evento real de entrada sem classificar prioridade",
+  "se faltar contexto critico",
+  "se houver risco alto sem autorizacao",
+  "se os dados forem conflitantes",
+  "nunca executar acao de alto risco sem confirmacao explicita",
+  "em caso de conflito entre velocidade e seguranca"
+];
+
+const COMMON_QUALITY_PHRASES = [
+  "basear decisoes em evidencias observaveis e hipoteses explicitas",
+  "priorizar acoes por impacto esperado, urgencia e risco",
+  "em conflito entre velocidade e seguranca, explicitar trade-off",
+  "sempre sugerir proximo passo de maior impacto com menor esforco",
+  "oferecer alternativa conservadora e alternativa otimizada",
+  "encerrar com plano de execucao curto",
+  "separar fato, inferencia e ausencia de informacao",
+  "deixar proximo passo objetivo",
+  "adaptar a recomendacao ao segmento do cliente antes de concluir",
+  "salvar memoria operacional e deixar handoff claro",
+  "validar se as 10 camadas premium foram acionadas"
+];
+
+function normalizePromptText(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/gu, "")
+    .toLowerCase()
+    .replace(/\s+/gu, " ")
+    .trim();
+}
+
+function filterCommonBullets(values: string[], phrases: string[]): string[] {
+  return values.filter((value) => {
+    const normalized = normalizePromptText(value);
+    return normalized.length > 0 && !phrases.some((phrase) => normalized.includes(phrase));
+  });
+}
 
 async function listGithubAgentMarkdownFiles(rootDir: string): Promise<string[]> {
   const entries = await readdir(rootDir, { withFileTypes: true });
@@ -317,18 +317,18 @@ function deriveWhenToUse(source: GithubAgentSource): string[] {
 function deriveInputs(source: GithubAgentSource): string[] {
   const values = [
     ...toBulletList(source.sections["Entradas Obrigatórias"] ?? ""),
-    ...splitSentences(source.sections["Foco de Domínio"] ?? "")
+    ...splitSentences(source.sections["Foco de Domínio"] ?? "").map((item) => item.replace(/^-+\s*/u, ""))
   ];
 
   return uniqueStrings([...DEFAULT_INPUTS, ...values]).slice(0, 8);
 }
 
 function deriveObjectives(source: GithubAgentSource): string[] {
-  const values = [
+  const values = filterCommonBullets([
     ...toBulletList(source.sections.Escopo ?? ""),
     ...toBulletList(source.sections["Saída Obrigatória"] ?? ""),
     ...splitSentences(source.description)
-  ].map((item) => item.replace(/\.$/u, ""));
+  ].map((item) => item.replace(/\.$/u, "")), COMMON_OBJECTIVE_PHRASES);
 
   if (values.length === 0) {
     values.push(`executar o objetivo principal de ${source.name}`);
@@ -339,40 +339,35 @@ function deriveObjectives(source: GithubAgentSource): string[] {
 
 function deriveOutputs(source: GithubAgentSource, objectives: string[]): string[] {
   const sectionOutputs = toBulletList(source.sections["Saída Obrigatória"] ?? "");
-  const collaboratorOutputs =
-    source.collaborators.length > 0
-      ? [`handoff governado para ${source.collaborators.join(", ")}`]
-      : [];
-
-  return uniqueStrings([
+  return uniqueStrings(filterCommonBullets([
     ...sectionOutputs,
-    ...collaboratorOutputs,
-    ...objectives.map((item) => item.replace(/^executar /iu, "")),
-    "alertas preventivos priorizados",
-    "decisoes que precisam ser antecipadas",
-    "plano preventivo com dono, prazo e checkpoint",
-    "proximo passo recomendado",
-    "perfil de segmento do cliente",
-    "recomendacoes prescritivas priorizadas",
-    "memoria operacional salva para reutilizacao"
-  ]).slice(0, 8);
+    ...objectives
+      .map((item) => item.replace(/^executar /iu, ""))
+      .filter((item) => !/^use when /iu.test(item))
+  ], COMMON_OBJECTIVE_PHRASES)).slice(0, 6);
 }
 
 function deriveGuardrails(source: GithubAgentSource): string[] {
-  return uniqueStrings([
+  return uniqueStrings(filterCommonBullets([
     ...toBulletList(source.sections.Restrições ?? ""),
     ...toBulletList(source.sections["Fallback e Recuperação"] ?? ""),
-    ...toBulletList(source.sections["Segurança de Execução"] ?? ""),
-    ...DEFAULT_GUARDRAILS
-  ]).slice(0, 10);
+    ...toBulletList(source.sections["Segurança de Execução"] ?? "")
+  ], COMMON_GUARDRAIL_PHRASES)).slice(0, 8);
 }
 
 function deriveQualityChecklist(source: GithubAgentSource): string[] {
-  return uniqueStrings([
+  return uniqueStrings(filterCommonBullets([
     ...toBulletList(source.sections["Critérios de Decisão"] ?? ""),
-    ...toBulletList(source.sections["Sugestões Proativas"] ?? ""),
-    ...DEFAULT_CHECKLIST
-  ]).slice(0, 8);
+    ...toBulletList(source.sections["Sugestões Proativas"] ?? "")
+  ], COMMON_QUALITY_PHRASES)).slice(0, 8);
+}
+
+function pushBulletSection(lines: string[], heading: string, bullets: string[]): void {
+  if (bullets.length === 0) {
+    return;
+  }
+
+  lines.push(heading, ...bullets.map((item) => `- ${item}`), "");
 }
 
 function buildSkills(agentId: string, objectives: string[]): AgentManifest["skills"] {
@@ -427,7 +422,6 @@ ${deliverables}
 
 function renderPrompt(input: {
   agentId: string;
-  collaborators: string[];
   guardrails: string[];
   inputs: string[];
   mission: string;
@@ -438,12 +432,7 @@ function renderPrompt(input: {
   toolNames: string[];
   whenToUse: string[];
 }): string {
-  const collaboratorGuardrail =
-    input.collaborators.length > 0
-      ? [`coordenar handoff com ${input.collaborators.join(", ")} quando houver especialidade complementar`]
-      : [];
-
-  return [
+  const lines = [
     `Voce e o ${input.name} da GitHub Agents Compiled Collection.`,
     "",
     "IDENTIDADE E MISSAO",
@@ -455,21 +444,6 @@ function renderPrompt(input: {
     "ENTRADAS OBRIGATORIAS",
     ...input.inputs.map((item) => `- ${item}`),
     "",
-    "RACIOCINIO OPERACIONAL ESPERADO",
-    ...DEFAULT_REASONING_BLOCK.map((item) => `- ${item}`),
-    "",
-    "MODO DE OPERACAO AUTONOMA",
-    ...DEFAULT_AUTONOMOUS_BLOCK.map((item) => `- ${item}`),
-    "",
-    "ROTINA DE MONITORAMENTO E ANTECIPACAO",
-    ...DEFAULT_MONITORING_BLOCK.map((item) => `- ${item}`),
-    "",
-    "CRITERIOS DE PRIORIZACAO",
-    ...DEFAULT_PRIORITY_BLOCK.map((item) => `- ${item}`),
-    "",
-    "CRITERIOS DE ESCALACAO",
-    ...DEFAULT_ESCALATION_BLOCK.map((item) => `- ${item}`),
-    "",
     "OBJETIVOS PRIORITARIOS",
     ...input.objectives.map((item) => `- ${item}`),
     "",
@@ -478,19 +452,18 @@ function renderPrompt(input: {
     "",
     "SAIDAS OBRIGATORIAS",
     ...input.outputs.map((item) => `- ${item}`),
-    "",
-    "GUARDRAILS",
-    ...uniqueStrings([...input.guardrails, ...collaboratorGuardrail]).map((item) => `- ${item}`),
-    "",
-    "CHECKLIST DE QUALIDADE",
-    ...input.qualityChecklist.map((item) => `- ${item}`),
-    "",
-    "APRENDIZADO COMPARTILHADO",
-    ...DEFAULT_SHARED_LEARNING_BLOCK.map((item) => `- ${item}`),
-    "",
+    ""
+  ];
+
+  pushBulletSection(lines, "GUARDRAILS ESPECIFICOS", input.guardrails);
+  pushBulletSection(lines, "CRITERIOS DE QUALIDADE ESPECIFICOS", input.qualityChecklist);
+
+  lines.push(
     "FORMATO DE SAIDA",
     buildOutputFormat(input.agentId, input.outputs)
-  ].join("\n");
+  );
+
+  return lines.join("\n");
 }
 
 function buildManifest(source: GithubAgentSource, agentId: string): AgentManifest {
@@ -506,7 +479,6 @@ function buildManifest(source: GithubAgentSource, agentId: string): AgentManifes
   const toolNames = tools.map((tool) => tool.name);
   const prompt = renderPrompt({
     agentId,
-    collaborators: source.collaborators,
     guardrails,
     inputs,
     mission,

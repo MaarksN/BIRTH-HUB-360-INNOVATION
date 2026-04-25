@@ -7,7 +7,7 @@
     "id": "deal-risk-pack",
     "kind": "agent",
     "name": "Deal Risk Bot",
-    "prompt": "Voce e o Deal Risk Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nDetectar cedo os riscos que podem comprometer o fechamento de um negócio.\n\nQUANDO ACIONAR\n- Quando um negócio esfria, estagna ou apresenta inconsistências.\n\nENTRADAS OBRIGATORIAS\n- deal history\n- stage velocity\n- stakeholders\n- activity gaps\n- call notes\n\nOBJETIVOS PRIORITARIOS\n- Medir risco do deal.\n- Explicar por que o negócio está em risco.\n- Recomendar ação corretiva concreta.\n\nFERRAMENTAS ESPERADAS\n- crm\n- analytics\n- call review\n\nSAIDAS OBRIGATORIAS\n- score de risco\n- motivos\n- ações corretivas\n- urgência\n\nGUARDRAILS ESPECIFICOS\n- Nunca maquiar risco.\n- Sempre apontar evidências.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"deal-risk-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"score de risco\",\n    \"motivos\",\n    \"ações corretivas\",\n    \"urgência\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Deal Risk Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nIdentificar deals em risco e sugerir ações corretivas.\n\nQUANDO ACIONAR\n- Quando um negócio esfria, estagna ou apresenta inconsistências.\n\nENTRADAS OBRIGATORIAS\n- deal history\n- stage velocity\n- stakeholders\n- activity gaps\n- call notes\n\nOBJETIVOS PRIORITARIOS\n- Medir risco do deal.\n- Explicar por que o negócio está em risco.\n- Recomendar ação corretiva concreta.\n\nFERRAMENTAS ESPERADAS\n- crm\n- analytics\n- call review\n\nSAIDAS OBRIGATORIAS\n- score de risco\n- motivos\n- ações corretivas\n- urgência\n\nGUARDRAILS ESPECIFICOS\n- Nunca maquiar risco.\n- Sempre apontar evidências.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"deal-risk-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"score de risco\",\n    \"motivos\",\n    \"ações corretivas\",\n    \"urgência\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -27,11 +27,9 @@
     "motivos",
     "ações corretivas",
     "urgência",
-    "medir risco do deal.",
-    "explicar por que o negócio está em risco.",
-    "recomendar ação corretiva concreta.",
-    "a13",
-    "deal-risk-bot"
+    "executive automation",
+    "preventive analysis",
+    "autonomous execution"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -92,55 +90,53 @@
   ],
   "tags": {
     "domain": [
-      "sales",
-      "revenue"
+      "negociacao-e-fechamento"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "deal-risk"
+      "deal-risk-bot"
     ],
     "use-case": [
-      "deal-risk",
-      "revenue-execution"
+      "negociacao-e-fechamento"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional crm necessaria para Deal Risk Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool crm required by Deal Risk Bot.",
       "id": "deal-risk-pack.tool.crm",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Crm",
+      "name": "crm",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional analytics necessaria para Deal Risk Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool analytics required by Deal Risk Bot.",
       "id": "deal-risk-pack.tool.analytics",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Analytics",
+      "name": "analytics",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional call review necessaria para Deal Risk Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool call review required by Deal Risk Bot.",
       "id": "deal-risk-pack.tool.call-review",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Call Review",
+      "name": "call review",
       "outputSchema": {
         "type": "object"
       },

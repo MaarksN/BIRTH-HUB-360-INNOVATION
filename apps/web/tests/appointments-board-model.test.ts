@@ -7,12 +7,12 @@ import {
   type AppointmentFormState
 } from "../app/(dashboard)/patients/appointments-board.model";
 
-void test.skip("appointments board model seeds the patient id into the initial form", () => {
+void test("appointments board model seeds the patient id into the initial form", () => {
   assert.equal(createInitialAppointmentForm("patient_123").patientId, "patient_123");
   assert.equal(createInitialAppointmentForm().type, "PRENATAL");
 });
 
-void test.skip("appointments board model builds payloads with numeric coercion and omits empty fields", () => {
+void test("appointments board model builds payloads with numeric coercion and omits empty fields", () => {
   const form = {
     ...createInitialAppointmentForm("patient_form"),
     bloodPressureDiastolic: "70",

@@ -28,6 +28,23 @@ function toBulletList(block: string): string[] {
     .filter(Boolean);
 }
 
+function uniqueStrings(values: string[]): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+
+  for (const value of values) {
+    const normalized = value.trim().toLowerCase();
+    if (!normalized || seen.has(normalized)) {
+      continue;
+    }
+
+    seen.add(normalized);
+    result.push(value);
+  }
+
+  return result;
+}
+
 async function main(): Promise<void> {
   const scriptsDir = path.dirname(fileURLToPath(import.meta.url));
   const root = path.resolve(scriptsDir, "..");
@@ -40,7 +57,10 @@ async function main(): Promise<void> {
   for (const entry of catalog) {
     const { manifest } = entry;
     const outputPath = path.join(outputDir, `${toDocSlug(manifest.agent.id)}.mdx`);
-    const guardrails = toBulletList(extractPromptSection(manifest.agent.prompt, "GUARDRAILS"));
+    const guardrails = uniqueStrings([
+      ...toBulletList(extractPromptSection(manifest.agent.prompt, "GUARDRAILS")),
+      ...toBulletList(extractPromptSection(manifest.agent.prompt, "GUARDRAILS ESPECIFICOS"))
+    ]);
     const learningContract = toBulletList(extractPromptSection(manifest.agent.prompt, "APRENDIZADO COMPARTILHADO"));
     const operatingReasoning = toBulletList(
       extractPromptSection(manifest.agent.prompt, "RACIOCINIO OPERACIONAL ESPERADO")
@@ -55,6 +75,11 @@ async function main(): Promise<void> {
     const escalationCriteria = toBulletList(
       extractPromptSection(manifest.agent.prompt, "CRITERIOS DE ESCALACAO")
     );
+    const qualityCriteria = uniqueStrings([
+      ...toBulletList(extractPromptSection(manifest.agent.prompt, "CRITERIOS DE QUALIDADE")),
+      ...toBulletList(extractPromptSection(manifest.agent.prompt, "CHECKLIST DE QUALIDADE")),
+      ...toBulletList(extractPromptSection(manifest.agent.prompt, "CRITERIOS DE QUALIDADE ESPECIFICOS"))
+    ]);
     const outputFormat = extractPromptSection(manifest.agent.prompt, "FORMATO DE SAIDA");
     const installable = isInstallableManifest(manifest);
 
@@ -110,6 +135,11 @@ async function main(): Promise<void> {
       ...(learningContract.length > 0
         ? learningContract.map((item) => `- ${item}`)
         : ["- No shared learning contract extracted from prompt."]),
+      "",
+      "## Quality Criteria",
+      ...(qualityCriteria.length > 0
+        ? qualityCriteria.map((item) => `- ${item}`)
+        : ["- No quality criteria extracted from prompt."]),
       "",
       "## Output Contract",
       outputFormat || "No explicit output contract extracted from prompt.",

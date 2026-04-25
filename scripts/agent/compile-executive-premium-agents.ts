@@ -4,7 +4,6 @@ import path from "node:path";
 import {
   PREMIUM_PILLARS,
   TOTAL_PREMIUM_LAYER_COUNT,
-  renderGlobalPremiumPromptAppendix,
   type AgentManifest
 } from "@birthub/agents-core";
 
@@ -60,75 +59,67 @@ const EXECUTIVE_PREMIUM_TOOL_DESCRIPTIONS: Record<string, string> = {
   "evidence-scorecard": "Pontuar qualidade de evidencia, confianca, lacunas e necessidade de escalacao."
 };
 
+const EXECUTION_HARNESS_PHRASES = [
+  "status `success`",
+  "status `fallback`",
+  "fallback aplicado",
+  "output `status=error`",
+  "todos eventos emitidos",
+  "output esperado",
+  "validar evento de observabilidade",
+  "executar teste com",
+  "simular falha",
+  "acompanhar `observability.events`",
+  "mode=human_handoff"
+];
+
+const EXECUTION_HARNESS_LABELS = [
+  "sucesso nominal",
+  "dados faltantes",
+  "falha parcial de tool",
+  "hard fail",
+  "observabilidade",
+  "output esperado",
+  "criterio",
+  "como verificar"
+];
+
+const EXECUTIVE_COMMON_PROMPT_PHRASES = [
+  "camadas premium",
+  "score premium consolidado",
+  "memoria operacional premium",
+  "handoff governado",
+  "recomendacoes prescritivas priorizadas",
+  "plano preventivo com dono, prazo e checkpoint",
+  "riscos priorizados com mitigacao",
+  "producir recomendacoes prescritivas"
+];
+
+function normalizePromptText(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/gu, "")
+    .toLowerCase()
+    .replace(/\s+/gu, " ")
+    .trim();
+}
+
+function filterCommonBullets(values: string[], phrases: string[]): string[] {
+  return values.filter((value) => {
+    const normalized = normalizePromptText(value);
+    return normalized.length > 0 && !phrases.some((phrase) => normalized.includes(phrase));
+  });
+}
+
+function isHarnessLabel(value: string): boolean {
+  return EXECUTION_HARNESS_LABELS.includes(normalizePromptText(value));
+}
+
 const DEFAULT_INPUTS = [
   "objetivo do usuario ou evento gatilho",
   "contexto operacional relevante",
   "restricoes e limites de execucao",
   "tenant e escopo da decisao executiva"
-];
-
-const DEFAULT_GUARDRAILS = [
-  "nunca misturar dados entre tenants",
-  "nunca executar acao sensivel sem rastreabilidade",
-  "sempre explicitar premissas, lacunas e nivel de confianca",
-  "sempre registrar proximo passo, checkpoint e risco relevante"
-];
-
-const DEFAULT_CHECKLIST = [
-  "separar fato, inferencia e ausencia de informacao",
-  "deixar proximo passo objetivo e priorizado",
-  "garantir rastreabilidade da recomendacao",
-  "preservar governanca e seguranca",
-  "adaptar a resposta ao contexto executivo e ao segmento do cliente",
-  "salvar memoria operacional premium para reutilizacao"
-];
-
-const DEFAULT_REASONING_BLOCK = [
-  "interpretar o objetivo real antes de agir",
-  "consultar contexto disponivel, contratos, evidencias e artefatos relevantes",
-  "processar sinais numericos e textuais para separar tendencia, desvio, outlier e urgencia",
-  "fundir sinais de varias fontes em uma unica leitura premium antes de concluir",
-  "pontuar evidencias, incertezas e dependencias criticas antes de recomendar",
-  "agir somente dentro de ferramentas, politicas e aprovacoes permitidas"
-];
-
-const DEFAULT_AUTONOMOUS_BLOCK = [
-  "operar de forma autonoma dentro do escopo permitido, sem degradar governanca",
-  "monitorar sinais, dependencias e riscos antes de agir",
-  "escalar quando a decisao exigir aprovacao humana ou houver risco alto com baixa confianca",
-  "salvar memoria operacional premium ao final de cada execucao relevante",
-  "preparar handoff estruturado para outros agentes quando isso elevar qualidade ou velocidade",
-  "transformar eventos reais em execucao governada quando houver trigger relevante"
-];
-
-const DEFAULT_MONITORING_BLOCK = [
-  "comparar baseline, tendencia e desvio observado",
-  "mapear gargalos, riscos emergentes, oportunidades e sinais lideres",
-  "nunca esperar um risco relevante virar incidente para alertar",
-  "registrar o que deve entrar em memoria, scorecard de evidencia e checkpoint seguinte",
-  "reavaliar o plano no proximo marco com impacto material"
-];
-
-const DEFAULT_PRIORITY_BLOCK = [
-  "priorizar risco alto, prazo curto e alta irreversibilidade",
-  "elevar o que destrava dependencias criticas",
-  "reduzir prioridade quando a confianca for baixa e o custo de agir for alto",
-  "privilegiar a menor acao segura que melhora a opcionalidade executiva"
-];
-
-const DEFAULT_ESCALATION_BLOCK = [
-  "escalar quando houver risco alto com confianca insuficiente",
-  "escalar quando a acao exigir aprovacao, excecao de policy ou comunicacao sensivel",
-  "escalar quando houver dependencia critica sem dono claro",
-  "escalar quando a evidencia for conflitante e houver decisao irreversivel em jogo"
-];
-
-const DEFAULT_SHARED_LEARNING_BLOCK = [
-  "Todo agente aprende com todo agente.",
-  "Antes de responder, consulte aprendizados compartilhados relevantes do mesmo tenant.",
-  "Depois de concluir, publique um aprendizado estruturado com summary, evidence, confidence, keywords, appliesTo e approved.",
-  "Nunca reutilize aprendizado de outro tenant.",
-  "Ao reaproveitar memoria ou aprendizado, adaptar linguagem, risco e recomendacao ao contexto executivo atual."
 ];
 
 async function listAgentSourceDirectories(rootDir: string): Promise<string[]> {
@@ -446,20 +437,19 @@ function deriveObjectives(input: {
     ...splitSentences(input.promptContext).map(normalizeSentence)
   ].filter((item) => item.length >= 12);
 
-  return uniqueStrings([...contextualObjectives, ...acceptanceObjectives]).slice(0, 8);
+  return uniqueStrings(
+    filterCommonBullets([...contextualObjectives, ...acceptanceObjectives], [
+      ...EXECUTION_HARNESS_PHRASES,
+      ...EXECUTIVE_COMMON_PROMPT_PHRASES
+    ])
+  ).slice(0, 6);
 }
 
 function deriveOutputs(agentLabel: string, objectives: string[]): string[] {
-  return uniqueStrings([
+  return uniqueStrings(filterCommonBullets([
     `${agentLabel} brief pronto para decisao`,
-    "riscos priorizados com mitigacao e nivel de confianca",
-    "recomendacoes prescritivas priorizadas",
-    "plano preventivo com dono, prazo e checkpoint",
-    `score premium consolidado em ${TOTAL_PREMIUM_LAYER_COUNT} camadas`,
-    "memoria operacional premium salva para reutilizacao",
-    "handoff governado quando houver dependencia critica",
     ...objectives
-  ]).slice(0, 8);
+  ], [...EXECUTION_HARNESS_PHRASES, ...EXECUTIVE_COMMON_PROMPT_PHRASES])).slice(0, 6);
 }
 
 function deriveGuardrails(promptSections: Record<string, string>): string[] {
@@ -469,9 +459,8 @@ function deriveGuardrails(promptSections: Record<string, string>): string[] {
       .map((line) => line.trim().replace(/^-+\s*/, ""))
       .filter(Boolean),
     ...splitSentences(promptSections["Anti-Hallucination Guardrail"] ?? ""),
-    ...splitSentences(promptSections["Fallback Instructions"] ?? ""),
-    ...DEFAULT_GUARDRAILS
-  ]).slice(0, 12);
+    ...splitSentences(promptSections["Fallback Instructions"] ?? "")
+  ]).slice(0, 10);
 }
 
 function deriveQualityChecklist(acceptanceRows: ReturnType<typeof parseAcceptanceRows>): string[] {
@@ -480,7 +469,20 @@ function deriveQualityChecklist(acceptanceRows: ReturnType<typeof parseAcceptanc
     normalizeSentence(row.verification)
   ]);
 
-  return uniqueStrings([...DEFAULT_CHECKLIST, ...acceptanceChecklist]).slice(0, 10);
+  return uniqueStrings(
+    filterCommonBullets(
+      acceptanceChecklist.filter((item) => item.length >= 8 && !isHarnessLabel(item)),
+      EXECUTION_HARNESS_PHRASES
+    )
+  ).slice(0, 10);
+}
+
+function pushBulletSection(lines: string[], heading: string, bullets: string[]): void {
+  if (bullets.length === 0) {
+    return;
+  }
+
+  lines.push(heading, ...bullets.map((item) => `- ${item}`), "");
 }
 
 function buildSkills(agentId: string, objectives: string[]): AgentManifest["skills"] {
@@ -581,7 +583,7 @@ function renderPrompt(input: {
   toolNames: string[];
   whenToUse: string[];
 }): string {
-  return [
+  const lines = [
     `Voce e o ${input.agentLabel} da ${EXECUTIVE_COLLECTION_NAME}.`,
     "",
     "IDENTIDADE E MISSAO",
@@ -595,48 +597,26 @@ function renderPrompt(input: {
     "ENTRADAS OBRIGATORIAS",
     ...input.inputs.map((item) => `- ${item}`),
     "",
-    "RACIOCINIO OPERACIONAL ESPERADO",
-    ...DEFAULT_REASONING_BLOCK.map((item) => `- ${item}`),
-    "",
-    "MODO DE OPERACAO AUTONOMA",
-    ...DEFAULT_AUTONOMOUS_BLOCK.map((item) => `- ${item}`),
-    "",
-    "ROTINA DE MONITORAMENTO E ANTECIPACAO",
-    ...DEFAULT_MONITORING_BLOCK.map((item) => `- ${item}`),
-    "",
-    "CRITERIOS DE PRIORIZACAO",
-    ...DEFAULT_PRIORITY_BLOCK.map((item) => `- ${item}`),
-    "",
-    "CRITERIOS DE ESCALACAO",
-    ...DEFAULT_ESCALATION_BLOCK.map((item) => `- ${item}`),
-    "",
     "OBJETIVOS PRIORITARIOS",
     ...input.objectives.map((item) => `- ${item}`),
-    ...[
-      `- ativar as ${TOTAL_PREMIUM_LAYER_COUNT} camadas premium para comunicacao, decisao, risco, oportunidade, memoria, governanca e execucao`,
-      "- produzir recomendacoes prescritivas com score de evidencia e checkpoint seguinte"
-    ],
     "",
     "FERRAMENTAS ESPERADAS",
     ...input.toolNames.map((item) => `- ${item}`),
     "",
     "SAIDAS OBRIGATORIAS",
     ...input.outputs.map((item) => `- ${item}`),
-    "",
-    "GUARDRAILS",
-    ...input.guardrails.map((item) => `- ${item}`),
-    "",
-    "CHECKLIST DE QUALIDADE",
-    ...input.qualityChecklist.map((item) => `- ${item}`),
-    "",
-    renderGlobalPremiumPromptAppendix(input.agentLabel),
-    "",
-    "APRENDIZADO COMPARTILHADO",
-    ...DEFAULT_SHARED_LEARNING_BLOCK.map((item) => `- ${item}`),
-    "",
+    ""
+  ];
+
+  pushBulletSection(lines, "GUARDRAILS ESPECIFICOS", input.guardrails);
+  pushBulletSection(lines, "CRITERIOS DE QUALIDADE ESPECIFICOS", input.qualityChecklist);
+
+  lines.push(
     "FORMATO DE SAIDA",
     buildOutputFormat(input.agentId, input.outputs)
-  ].join("\n");
+  );
+
+  return lines.join("\n");
 }
 
 function buildManifest(input: {
@@ -768,7 +748,7 @@ async function buildManifestFromSourceDir(sourceDir: string): Promise<{
     ...deriveGuardrails(prompt.sections),
     "nunca executar acao irreversivel sem score de evidencia suficiente",
     "nunca emitir recomendacao premium sem explicitar sinais, lacunas e dependencias"
-  ]).slice(0, 12);
+  ]).slice(0, 10);
   const qualityChecklist = uniqueStrings([
     ...deriveQualityChecklist(acceptanceRows),
     ...contractEvents.map((item) => `validar evento de observabilidade: ${item}`),
@@ -821,9 +801,9 @@ function buildCollectionManifest(): AgentManifest {
       kind: "catalog",
       name: EXECUTIVE_COLLECTION_NAME,
       prompt: [
-        "Coordinate and expose the Executive Premium Agents Collection, highlighting the canonical migration into agent-packs, the premium-100 operating model and the governed executive standard.",
+        "Coordinate and expose the Executive Premium Agents Collection, highlighting the canonical migration into agent-packs, the runtime premium protocol and the governed executive standard.",
         "",
-        renderGlobalPremiumPromptAppendix(EXECUTIVE_COLLECTION_NAME)
+        "Use the collection metadata to discover the right executive specialist, explain the domain fit and preserve the canonical source manifests in agent-packs."
       ].join("\n"),
       tenantId: "catalog",
       version: EXECUTIVE_COLLECTION_VERSION

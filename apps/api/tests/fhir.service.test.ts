@@ -16,7 +16,7 @@ function stubMethod(target: Record<string, unknown>, key: string, value: unknown
   };
 }
 
-void test.skip("fhirService.searchPatients keeps the explicit patient search limit", async () => {
+void test("fhirService.searchPatients keeps the explicit patient search limit", async () => {
   const calls: Array<Record<string, unknown>> = [];
   const restores = [
     injectPrismaDelegates(prisma, ["patient"]),
@@ -48,7 +48,7 @@ void test.skip("fhirService.searchPatients keeps the explicit patient search lim
   }
 });
 
-void test.skip("fhirService.getAppointment maps appointment status without Prisma runtime enums", async () => {
+void test("fhirService.getAppointment maps appointment status without Prisma runtime enums", async () => {
   const restores = [
     injectPrismaDelegates(prisma, ["appointment"]),
     stubMethod(prisma.appointment as unknown as Record<string, unknown>, "findFirst", async () => ({

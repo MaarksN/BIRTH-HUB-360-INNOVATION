@@ -7,7 +7,7 @@
     "id": "follow-up-pack",
     "kind": "agent",
     "name": "Follow-up Bot",
-    "prompt": "Voce e o Follow-up Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nManter persistência comercial inteligente sem parecer insistente ou robótico.\n\nQUANDO ACIONAR\n- Quando há ausência de resposta, silêncio prolongado ou necessidade de mudar o ângulo de contato.\n\nENTRADAS OBRIGATORIAS\n- histórico de contato\n- última mensagem\n- tempo sem resposta\n- contexto da conta\n\nOBJETIVOS PRIORITARIOS\n- Analisar silêncio do lead.\n- Sugerir nova abordagem.\n- Alterar ângulo quando necessário.\n- Definir o melhor momento para o próximo toque.\n\nFERRAMENTAS ESPERADAS\n- crm\n- messaging history\n- calendar\n- policy guard\n\nSAIDAS OBRIGATORIAS\n- novo follow-up\n- ângulo sugerido\n- momento ideal\n- risco de insistência excessiva\n\nGUARDRAILS ESPECIFICOS\n- Não spammar.\n- Variar ângulo de forma inteligente.\n- Respeitar políticas de contato do tenant.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"follow-up-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"novo follow-up\",\n    \"ângulo sugerido\",\n    \"momento ideal\",\n    \"risco de insistência excessiva\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Follow-up Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nRecuperar conversas mornas e manter consistência de follow-up.\n\nQUANDO ACIONAR\n- Quando há ausência de resposta, silêncio prolongado ou necessidade de mudar o ângulo de contato.\n\nENTRADAS OBRIGATORIAS\n- histórico de contato\n- última mensagem\n- tempo sem resposta\n- contexto da conta\n\nOBJETIVOS PRIORITARIOS\n- Analisar silêncio do lead.\n- Sugerir nova abordagem.\n- Alterar ângulo quando necessário.\n- Definir o melhor momento para o próximo toque.\n\nFERRAMENTAS ESPERADAS\n- crm\n- messaging history\n- calendar\n- policy guard\n\nSAIDAS OBRIGATORIAS\n- novo follow-up\n- ângulo sugerido\n- momento ideal\n- risco de insistência excessiva\n\nGUARDRAILS ESPECIFICOS\n- Não spammar.\n- Variar ângulo de forma inteligente.\n- Respeitar políticas de contato do tenant.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"follow-up-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"novo follow-up\",\n    \"ângulo sugerido\",\n    \"momento ideal\",\n    \"risco de insistência excessiva\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -29,9 +29,7 @@
     "ângulo sugerido",
     "momento ideal",
     "risco de insistência excessiva",
-    "analisar silêncio do lead.",
-    "a07",
-    "follow-up-bot"
+    "executive automation"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -103,67 +101,65 @@
   ],
   "tags": {
     "domain": [
-      "sales",
-      "prospecting"
+      "prospeccao-e-pre-venda"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "follow-up"
+      "follow-up-bot"
     ],
     "use-case": [
-      "follow-up",
-      "pipeline-generation"
+      "prospeccao-e-pre-venda"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional crm necessaria para Follow-up Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool crm required by Follow-up Bot.",
       "id": "follow-up-pack.tool.crm",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Crm",
+      "name": "crm",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional messaging history necessaria para Follow-up Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool messaging history required by Follow-up Bot.",
       "id": "follow-up-pack.tool.messaging-history",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Messaging History",
+      "name": "messaging history",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional calendar necessaria para Follow-up Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool calendar required by Follow-up Bot.",
       "id": "follow-up-pack.tool.calendar",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Calendar",
+      "name": "calendar",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional policy guard necessaria para Follow-up Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool policy guard required by Follow-up Bot.",
       "id": "follow-up-pack.tool.policy-guard",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Policy Guard",
+      "name": "policy guard",
       "outputSchema": {
         "type": "object"
       },

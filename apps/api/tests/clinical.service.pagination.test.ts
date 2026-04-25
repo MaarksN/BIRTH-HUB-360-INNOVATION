@@ -51,7 +51,7 @@ const clinicalContext = {
   userId: "user_alpha"
 } as const;
 
-void test.skip("getPatientDetail bounds pregnancy and neonatal history reads", async () => {
+void test("getPatientDetail bounds pregnancy and neonatal history reads", async () => {
   const pregnancyCalls: Array<Record<string, unknown>> = [];
   const neonatalCalls: Array<Record<string, unknown>> = [];
   const transactionClient = {
@@ -159,7 +159,7 @@ void test.skip("getPatientDetail bounds pregnancy and neonatal history reads", a
   }
 });
 
-void test.skip("listAppointments and getClinicalNoteHistory apply explicit limits", async () => {
+void test("listAppointments and getClinicalNoteHistory apply explicit limits", async () => {
   const appointmentCalls: Array<Record<string, unknown>> = [];
   const noteHistoryCalls: Array<Record<string, unknown>> = [];
   const transactionClient = {
@@ -223,6 +223,15 @@ void test.skip("listAppointments and getClinicalNoteHistory apply explicit limit
           }
         ]);
       }
+    },
+    neonatalRecord: {
+      findMany: () => Promise.resolve([])
+    },
+    patient: {
+      findFirst: () => Promise.resolve(null)
+    },
+    pregnancyRecord: {
+      findMany: () => Promise.resolve([])
     }
   };
   const restores = [
@@ -266,7 +275,7 @@ void test.skip("listAppointments and getClinicalNoteHistory apply explicit limit
   }
 });
 
-void test.skip("listPatients and listClinicalNotes respect requested limits", async () => {
+void test("listPatients and listClinicalNotes respect requested limits", async () => {
   const patientCalls: Array<Record<string, unknown>> = [];
   const noteCalls: Array<Record<string, unknown>> = [];
   const transactionClient = {

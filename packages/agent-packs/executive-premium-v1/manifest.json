@@ -8,7 +8,7 @@
     "id": "executive-premium-v1-catalog",
     "kind": "catalog",
     "name": "Executive Premium Agents Collection",
-    "prompt": "Coordinate and expose the Executive Premium Agents Collection, highlighting the canonical migration into agent-packs, the premium-100 operating model and the governed executive standard.",
+    "prompt": "Coordinate and expose the Executive Premium Agents Collection, highlighting the canonical migration into agent-packs, the runtime premium protocol and the governed executive standard.\n\nUse the collection metadata to discover the right executive specialist, explain the domain fit and preserve the canonical source manifests in agent-packs.",
     "tenantId": "catalog",
     "version": "1.0.0"
   },

@@ -7,7 +7,7 @@
     "id": "sales-manager-pack",
     "kind": "agent",
     "name": "Sales Manager Bot",
-    "prompt": "Voce e o Sales Manager Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nDar ao gestor comercial visão clara, acionável e orientada a resultado sobre equipe e pipeline.\n\nQUANDO ACIONAR\n- Em rituais de gestão, 1:1, forecast review, acompanhamento diário.\n\nENTRADAS OBRIGATORIAS\n- pipeline\n- metas\n- atividade por vendedor\n- calls\n- forecast\n- alerts\n\nOBJETIVOS PRIORITARIOS\n- Identificar gargalos.\n- Sugerir coaching.\n- Priorizar riscos.\n- Transformar métricas em decisões.\n\nFERRAMENTAS ESPERADAS\n- analytics\n- crm\n- call review\n- productivity\n\nSAIDAS OBRIGATORIAS\n- alertas gerenciais\n- insights\n- ações de coaching\n- prioridades\n\nGUARDRAILS ESPECIFICOS\n- Evite microgerenciamento bobo.\n- Priorize clareza e ação.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"sales-manager-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"alertas gerenciais\",\n    \"insights\",\n    \"ações de coaching\",\n    \"prioridades\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Sales Manager Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nAjudar gestores a entender time, pipeline e gargalos.\n\nQUANDO ACIONAR\n- Em rituais de gestão, 1:1, forecast review, acompanhamento diário.\n\nENTRADAS OBRIGATORIAS\n- pipeline\n- metas\n- atividade por vendedor\n- calls\n- forecast\n- alerts\n\nOBJETIVOS PRIORITARIOS\n- Identificar gargalos.\n- Sugerir coaching.\n- Priorizar riscos.\n- Transformar métricas em decisões.\n\nFERRAMENTAS ESPERADAS\n- analytics\n- crm\n- call review\n- productivity\n\nSAIDAS OBRIGATORIAS\n- alertas gerenciais\n- insights\n- ações de coaching\n- prioridades\n\nGUARDRAILS ESPECIFICOS\n- Evite microgerenciamento bobo.\n- Priorize clareza e ação.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"sales-manager-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"alertas gerenciais\",\n    \"insights\",\n    \"ações de coaching\",\n    \"prioridades\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -29,9 +29,7 @@
     "alertas gerenciais",
     "insights",
     "ações de coaching",
-    "prioridades",
-    "a15",
-    "sales-manager-bot"
+    "prioridades"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -103,67 +101,65 @@
   ],
   "tags": {
     "domain": [
-      "operations",
-      "enablement"
+      "gestao-analise-e-previsao"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "sales-manager"
+      "sales-manager-bot"
     ],
     "use-case": [
-      "sales-manager",
-      "commercial-operations"
+      "gestao-analise-e-previsao"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional analytics necessaria para Sales Manager Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool analytics required by Sales Manager Bot.",
       "id": "sales-manager-pack.tool.analytics",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Analytics",
+      "name": "analytics",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional crm necessaria para Sales Manager Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool crm required by Sales Manager Bot.",
       "id": "sales-manager-pack.tool.crm",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Crm",
+      "name": "crm",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional call review necessaria para Sales Manager Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool call review required by Sales Manager Bot.",
       "id": "sales-manager-pack.tool.call-review",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Call Review",
+      "name": "call review",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional productivity necessaria para Sales Manager Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool productivity required by Sales Manager Bot.",
       "id": "sales-manager-pack.tool.productivity",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Productivity",
+      "name": "productivity",
       "outputSchema": {
         "type": "object"
       },

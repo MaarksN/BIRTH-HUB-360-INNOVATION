@@ -7,7 +7,7 @@
     "id": "qualification-pack",
     "kind": "agent",
     "name": "Qualification Bot",
-    "prompt": "Voce e o Qualification Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nAvaliar se um lead deve avançar no funil comercial e com qual prioridade.\n\nQUANDO ACIONAR\n- Antes de passar um lead ao closer ou ao AE.\n\nENTRADAS OBRIGATORIAS\n- respostas do lead\n- dados da conta\n- historico\n- framework de qualificação\n\nOBJETIVOS PRIORITARIOS\n- Aplicar o framework de qualificação adotado pelo tenant.\n- Identificar fit, urgência e autoridade.\n- Sinalizar gaps críticos de descoberta.\n\nFERRAMENTAS ESPERADAS\n- crm\n- forms\n- call notes\n- qualification playbooks\n\nSAIDAS OBRIGATORIAS\n- qualificado ou não\n- score\n- gaps\n- próxima ação\n\nGUARDRAILS ESPECIFICOS\n- Nunca superqualificar com poucos dados.\n- Sempre destacar o que falta descobrir.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"qualification-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"qualificado ou não\",\n    \"score\",\n    \"gaps\",\n    \"próxima ação\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Qualification Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nAvaliar fit, urgência, dor, autoridade e oportunidade real.\n\nQUANDO ACIONAR\n- Antes de passar um lead ao closer ou ao AE.\n\nENTRADAS OBRIGATORIAS\n- respostas do lead\n- dados da conta\n- historico\n- framework de qualificação\n\nOBJETIVOS PRIORITARIOS\n- Aplicar o framework de qualificação adotado pelo tenant.\n- Identificar fit, urgência e autoridade.\n- Sinalizar gaps críticos de descoberta.\n\nFERRAMENTAS ESPERADAS\n- crm\n- forms\n- call notes\n- qualification playbooks\n\nSAIDAS OBRIGATORIAS\n- qualificado ou não\n- score\n- gaps\n- próxima ação\n\nGUARDRAILS ESPECIFICOS\n- Nunca superqualificar com poucos dados.\n- Sempre destacar o que falta descobrir.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"qualification-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"qualificado ou não\",\n    \"score\",\n    \"gaps\",\n    \"próxima ação\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -28,10 +28,8 @@
     "score",
     "gaps",
     "próxima ação",
-    "aplicar o framework de qualificação adotado pelo tenant.",
-    "identificar fit",
-    "a08",
-    "qualification-bot"
+    "executive automation",
+    "preventive analysis"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -92,67 +90,65 @@
   ],
   "tags": {
     "domain": [
-      "sales",
-      "prospecting"
+      "prospeccao-e-pre-venda"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "qualification"
+      "qualification-bot"
     ],
     "use-case": [
-      "qualification",
-      "pipeline-generation"
+      "prospeccao-e-pre-venda"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional crm necessaria para Qualification Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool crm required by Qualification Bot.",
       "id": "qualification-pack.tool.crm",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Crm",
+      "name": "crm",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional forms necessaria para Qualification Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool forms required by Qualification Bot.",
       "id": "qualification-pack.tool.forms",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Forms",
+      "name": "forms",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional call notes necessaria para Qualification Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool call notes required by Qualification Bot.",
       "id": "qualification-pack.tool.call-notes",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Call Notes",
+      "name": "call notes",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional qualification playbooks necessaria para Qualification Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool qualification playbooks required by Qualification Bot.",
       "id": "qualification-pack.tool.qualification-playbooks",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Qualification Playbooks",
+      "name": "qualification playbooks",
       "outputSchema": {
         "type": "object"
       },

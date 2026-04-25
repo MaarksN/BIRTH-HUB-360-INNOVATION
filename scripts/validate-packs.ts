@@ -5,7 +5,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  COMMON_PREMIUM_PROTOCOL_MARKER,
   AgentManifestParseError,
+  GLOBAL_PREMIUM_PROTOCOL_MARKER,
+  REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS,
+  REQUIRED_RUNTIME_PROTOCOL_CLAUSES,
+  enhanceManifestWithPremiumProtocol,
   isInstallableManifest,
   parseAgentManifest,
   type AgentManifest
@@ -14,27 +19,6 @@ import {
 const OFFICIAL_COLLECTION_DESCRIPTOR_ID = "corporate-v1-catalog";
 const OFFICIAL_INSTALLABLE_COUNT = 43;
 const OFFICIAL_TOTAL_COUNT = 44;
-const REQUIRED_PROMPT_SECTIONS = [
-  "IDENTIDADE E MISSAO",
-  "QUANDO ACIONAR",
-  "ENTRADAS OBRIGATORIAS",
-  "RACIOCINIO OPERACIONAL ESPERADO",
-  "MODO DE OPERACAO AUTONOMA",
-  "ROTINA DE MONITORAMENTO E ANTECIPACAO",
-  "CRITERIOS DE PRIORIZACAO",
-  "CRITERIOS DE ESCALACAO",
-  "OBJETIVOS PRIORITARIOS",
-  "FERRAMENTAS ESPERADAS",
-  "SAIDAS OBRIGATORIAS",
-  "GUARDRAILS",
-  "CHECKLIST DE QUALIDADE",
-  "APRENDIZADO COMPARTILHADO",
-  "FORMATO DE SAIDA"
-] as const;
-const SHARED_LEARNING_CLAUSE = "Todo agente aprende com todo agente.";
-const AUTONOMOUS_OPERATION_CLAUSE = "operar de forma autonoma dentro do escopo permitido";
-const PREVENTIVE_ALERT_CLAUSE = "nunca esperar um risco relevante virar incidente para alertar";
-
 async function findManifestFiles(rootDir: string): Promise<string[]> {
   const entries = await readdir(rootDir, { withFileTypes: true });
   const manifestFiles: string[] = [];
@@ -59,26 +43,28 @@ function normalizeToken(value: string): string {
   return value.trim().toLowerCase();
 }
 
-function validatePromptSections(manifest: AgentManifest): string[] {
+function validateRuntimePromptSections(manifest: AgentManifest): string[] {
   const issues: string[] = [];
-  const prompt = manifest.agent.prompt;
+  const prompt = enhanceManifestWithPremiumProtocol(manifest).agent.prompt;
 
-  for (const section of REQUIRED_PROMPT_SECTIONS) {
-    if (!prompt.includes(section)) {
-      issues.push(`Missing prompt section '${section}'.`);
+  for (const sectionGroup of REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS) {
+    if (!sectionGroup.anyOf.some((section) => prompt.includes(section))) {
+      issues.push(`Missing runtime prompt section '${sectionGroup.label}'.`);
     }
   }
 
-  if (!prompt.includes(SHARED_LEARNING_CLAUSE)) {
-    issues.push("Missing cross-agent shared learning clause.");
+  if (!prompt.includes(GLOBAL_PREMIUM_PROTOCOL_MARKER)) {
+    issues.push("Missing global premium protocol marker in runtime prompt.");
   }
 
-  if (!prompt.toLowerCase().includes(AUTONOMOUS_OPERATION_CLAUSE)) {
-    issues.push("Missing explicit autonomous operating clause.");
+  if (!prompt.includes(COMMON_PREMIUM_PROTOCOL_MARKER)) {
+    issues.push("Missing common premium protocol marker in runtime prompt.");
   }
 
-  if (!prompt.toLowerCase().includes(PREVENTIVE_ALERT_CLAUSE)) {
-    issues.push("Missing preventive escalation clause.");
+  for (const clause of REQUIRED_RUNTIME_PROTOCOL_CLAUSES) {
+    if (!prompt.toLowerCase().includes(clause.toLowerCase())) {
+      issues.push(`Missing runtime protocol clause '${clause}'.`);
+    }
   }
 
   return issues;
@@ -212,7 +198,7 @@ async function main(): Promise<void> {
       }
 
       const issues = [
-        ...validatePromptSections(entry.manifest),
+        ...validateRuntimePromptSections(entry.manifest),
         ...validateKeywords(entry.manifest),
         ...validateContractCoherence(entry.manifest)
       ];

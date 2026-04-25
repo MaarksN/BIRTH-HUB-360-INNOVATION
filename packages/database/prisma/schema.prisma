@@ -61,6 +61,11 @@ model Organization {
   conversationThreads   ConversationThread[]
   conversationMessages  ConversationMessage[]
   agentHandoffs         AgentHandoff[]
+  patients              Patient[]
+  pregnancyRecords      PregnancyRecord[]
+  appointments          Appointment[]
+  clinicalNotes         ClinicalNote[]
+  neonatalRecords       NeonatalRecord[]
   plan                  Plan?                  @relation(fields: [planId], references: [id], onDelete: SetNull)
 
   @@id([id], map: "Organization_pkey")
@@ -99,6 +104,7 @@ model User {
   agentExecutions         AgentExecution[]
   agentFeedback           AgentFeedback[]
   createdWebhookEndpoints WebhookEndpoint[] @relation("CreatedWebhookEndpoints")
+  authoredClinicalNotes   ClinicalNote[]    @relation("ClinicalNoteAuthor")
 
   @@id([id], map: "User_pkey")
   @@map("users")
@@ -1136,6 +1142,204 @@ model AgentHandoff {
   @@map("agent_handoffs")
 }
 
+model Patient {
+  id                  String            @id @default(cuid())
+  tenantId            String
+  organizationId      String
+  fullName            String
+  preferredName       String?
+  birthDate           DateTime?
+  documentId          String?
+  medicalRecordNumber String?
+  email               String?
+  phone               String?
+  bloodType           String?
+  allergies           String[]          @default([])
+  chronicConditions   String[]          @default([])
+  notes               String?
+  status              PatientStatus     @default(ACTIVE)
+  deletedAt           DateTime?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  organization        Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  pregnancyRecords    PregnancyRecord[]
+  appointments        Appointment[]
+  clinicalNotes       ClinicalNote[]
+  neonatalRecords     NeonatalRecord[]
+
+  @@unique([tenantId, medicalRecordNumber])
+  @@index([tenantId])
+  @@index([tenantId, id])
+  @@index([organizationId])
+  @@index([tenantId, organizationId])
+  @@index([tenantId, status])
+  @@index([tenantId, fullName])
+  @@index([deletedAt])
+  @@map("patients")
+}
+
+model PregnancyRecord {
+  id                    String             @id @default(cuid())
+  tenantId              String
+  organizationId        String
+  patientId             String
+  abortions             Int                @default(0)
+  complications         String[]           @default([])
+  estimatedDeliveryDate DateTime?
+  fetalCount            Int                @default(1)
+  gravidity             Int                @default(0)
+  lastMenstrualPeriod   DateTime?
+  notes                 String?
+  outcome               PregnancyOutcome?
+  outcomeDate           DateTime?
+  parity                Int                @default(0)
+  previousCesareans     Int                @default(0)
+  riskLevel             PregnancyRiskLevel @default(MODERATE)
+  status                PregnancyStatus    @default(ACTIVE)
+  deletedAt             DateTime?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  organization          Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patient               Patient            @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  appointments          Appointment[]
+  clinicalNotes         ClinicalNote[]
+  neonatalRecords       NeonatalRecord[]
+
+  @@index([tenantId])
+  @@index([tenantId, id])
+  @@index([organizationId])
+  @@index([patientId])
+  @@index([tenantId, patientId, status])
+  @@index([tenantId, organizationId, status])
+  @@index([estimatedDeliveryDate])
+  @@index([deletedAt])
+  @@map("pregnancy_records")
+}
+
+model Appointment {
+  id                     String            @id @default(cuid())
+  tenantId               String
+  organizationId         String
+  patientId              String
+  pregnancyRecordId      String?
+  scheduledAt            DateTime
+  durationMinutes        Int               @default(30)
+  status                 AppointmentStatus @default(SCHEDULED)
+  type                   AppointmentType   @default(PRENATAL)
+  providerName           String?
+  location               String?
+  chiefComplaint         String?
+  summary                String?
+  bloodPressureSystolic  Int?
+  bloodPressureDiastolic Int?
+  fetalHeartRateBpm      Int?
+  fetalWeightGrams       Int?
+  fundalHeightCm         Float?
+  temperatureC           Float?
+  weightKg               Float?
+  deletedAt              DateTime?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  organization           Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patient                Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  pregnancyRecord        PregnancyRecord?  @relation(fields: [pregnancyRecordId], references: [id], onDelete: SetNull)
+  clinicalNotes          ClinicalNote[]
+
+  @@index([tenantId])
+  @@index([tenantId, id])
+  @@index([organizationId])
+  @@index([patientId])
+  @@index([pregnancyRecordId])
+  @@index([tenantId, organizationId, scheduledAt])
+  @@index([tenantId, patientId, scheduledAt])
+  @@index([tenantId, status])
+  @@index([scheduledAt])
+  @@index([deletedAt])
+  @@map("appointments")
+}
+
+model ClinicalNote {
+  id                String           @id @default(cuid())
+  tenantId          String
+  organizationId    String
+  patientId         String
+  appointmentId     String?
+  pregnancyRecordId String?
+  authoredByUserId  String?
+  noteGroupId       String
+  previousVersionId String?
+  version           Int              @default(1)
+  isLatest          Boolean          @default(true)
+  kind              ClinicalNoteKind @default(SOAP)
+  title             String?
+  subjective        String?
+  objective         String?
+  assessment        String?
+  plan              String?
+  content           Json?
+  supersededAt      DateTime?
+  deletedAt         DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  organization      Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patient           Patient          @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  appointment       Appointment?     @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  pregnancyRecord   PregnancyRecord? @relation(fields: [pregnancyRecordId], references: [id], onDelete: SetNull)
+  author            User?            @relation("ClinicalNoteAuthor", fields: [authoredByUserId], references: [id], onDelete: SetNull)
+  previousVersion   ClinicalNote?    @relation("ClinicalNoteVersions", fields: [previousVersionId], references: [id], onDelete: SetNull)
+  nextVersions      ClinicalNote[]   @relation("ClinicalNoteVersions")
+
+  @@unique([tenantId, noteGroupId, version])
+  @@index([tenantId])
+  @@index([tenantId, id])
+  @@index([organizationId])
+  @@index([patientId])
+  @@index([appointmentId])
+  @@index([pregnancyRecordId])
+  @@index([authoredByUserId])
+  @@index([previousVersionId])
+  @@index([tenantId, noteGroupId, version])
+  @@index([tenantId, patientId, isLatest])
+  @@index([tenantId, organizationId, updatedAt])
+  @@index([deletedAt])
+  @@map("clinical_notes")
+}
+
+model NeonatalRecord {
+  id                  String           @id @default(cuid())
+  tenantId            String
+  organizationId      String
+  patientId           String
+  pregnancyRecordId   String?
+  bornAt              DateTime
+  newbornName         String?
+  outcome             NeonatalOutcome  @default(ALIVE)
+  sex                 NeonatalSex?
+  birthWeightGrams    Int?
+  birthLengthCm       Float?
+  headCircumferenceCm Float?
+  apgar1              Int?
+  apgar5              Int?
+  notes               String?
+  deletedAt           DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  organization        Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patient             Patient          @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  pregnancyRecord     PregnancyRecord? @relation(fields: [pregnancyRecordId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([tenantId, id])
+  @@index([organizationId])
+  @@index([patientId])
+  @@index([pregnancyRecordId])
+  @@index([tenantId, patientId, bornAt])
+  @@index([tenantId, organizationId, bornAt])
+  @@index([bornAt])
+  @@index([deletedAt])
+  @@map("neonatal_records")
+}
+
 enum Role {
   SUPER_ADMIN
   OWNER
@@ -1165,6 +1369,60 @@ enum AgentStatus {
   ACTIVE
   PAUSED
   ARCHIVED
+}
+
+enum PatientStatus {
+  ACTIVE
+  ARCHIVED
+  INACTIVE
+}
+
+enum PregnancyRiskLevel {
+  LOW
+  MODERATE
+  HIGH
+}
+
+enum PregnancyStatus {
+  ACTIVE
+  CLOSED
+  DELIVERED
+}
+
+enum PregnancyOutcome {
+  LIVE_BIRTH
+  STILLBIRTH
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CHECKED_IN
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AppointmentType {
+  PRENATAL
+  ULTRASOUND
+}
+
+enum ClinicalNoteKind {
+  SOAP
+  EVOLUTION
+}
+
+enum NeonatalOutcome {
+  ALIVE
+  ICU
+  STILLBIRTH
+  TRANSFERRED
+}
+
+enum NeonatalSex {
+  FEMALE
+  MALE
+  UNDETERMINED
 }
 
 enum WorkflowStatus {

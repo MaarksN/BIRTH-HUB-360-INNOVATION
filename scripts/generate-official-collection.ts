@@ -416,6 +416,7 @@ function buildCompiledPrompt(input: {
   category: string;
   mission: string;
   whenToUse: string[];
+  whenNotToUse?: string[];
   inputs: string[];
   outputs: string[];
   objectives: string[];
@@ -452,7 +453,7 @@ function buildCompiledPrompt(input: {
     "GUARDRAILS ESPECIFICOS",
     ...uniqueStrings([...input.rules, ...input.guardrails]).map((item) => `- ${item}`),
     "",
-    "CHECKLIST DE QUALIDADE ESPECIFICO",
+    "CRITERIOS DE QUALIDADE ESPECIFICOS",
     ...input.qualityChecklist.map((item) => `- ${item}`),
     "",
     "FORMATO DE SAIDA",
@@ -582,7 +583,7 @@ function buildFoundationAgent(
 }
 
 function buildHtmlAgent(record: HtmlAgentRecord, qualityChecklist: string[]): GeneratedAgentSource {
-  const agentId = slugify(record.title);
+  const agentId = inferHtmlAgentId(record);
   const enrichedGuardrails = enrichGuardrails(record.guardrails);
   const enrichedInputs = uniqueStrings([...record.inputs]);
   const enrichedOutputs = uniqueStrings([...record.outputs]);
@@ -598,12 +599,14 @@ function buildHtmlAgent(record: HtmlAgentRecord, qualityChecklist: string[]): Ge
     guardrails: enrichedGuardrails,
     id: agentId,
     inputs: enrichedInputs,
-    keywords: enrichKeywords([], [
-      slugify(record.title),
-      "executive automation",
-      "preventive analysis",
-      "autonomous execution"
-    ]),
+    keywords: buildKeywordSet({
+      title: record.title,
+      category: record.category,
+      expectedTools: record.expectedTools,
+      inputs: enrichedInputs,
+      outputs: enrichedOutputs,
+      extra: ["executive automation", "preventive analysis", "autonomous execution"]
+    }),
     mission: record.mission,
     name: record.title,
     origin: "birthhub-html",
@@ -751,9 +754,7 @@ function buildCollectionDescriptor(installableCount: number): AgentManifest {
 
 async function cleanGeneratedAgentDirs(rootDir: string, keepIds: Set<string>): Promise<void> {
   const entries = await readdir(rootDir, { withFileTypes: true });
-  const managedDirs = entries
-    .filter((entry) => entry.isDirectory() && entry.name.endsWith("-pack"))
-    .map((entry) => entry.name);
+  const managedDirs = entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name);
 
   await Promise.all(
     managedDirs
@@ -776,7 +777,7 @@ async function main(): Promise<void> {
       buildFoundationAgent(await resolveFoundationManifest(collectionRoot, override), override)
     )
   );
-  const htmlGeneratedAgents = htmlAgents.map(buildHtmlAgent);
+  const htmlGeneratedAgents = htmlAgents.map((record) => buildHtmlAgent(record, AUTONOMOUS_CHECKLIST));
   const combinedAgents = [...foundationAgents, ...htmlGeneratedAgents].sort((left, right) =>
     left.name.localeCompare(right.name)
   );

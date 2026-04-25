@@ -180,7 +180,7 @@ function createTransactionMock(overrides: Record<string, unknown>) {
   };
 }
 
-void test.skip("clinicalService.getPatientDetail paginates pregnancy and neonatal records", async () => {
+void test("clinicalService.getPatientDetail paginates pregnancy and neonatal records", async () => {
   const pregnancyCalls: Array<Record<string, unknown>> = [];
   const neonatalCalls: Array<Record<string, unknown>> = [];
   let pregnancyPageIndex = 0;
@@ -260,7 +260,7 @@ void test.skip("clinicalService.getPatientDetail paginates pregnancy and neonata
   }
 });
 
-void test.skip("clinicalService.listAppointments paginates the windowed appointment list", async () => {
+void test("clinicalService.listAppointments paginates the windowed appointment list", async () => {
   const appointmentCalls: Array<Record<string, unknown>> = [];
   let appointmentPageIndex = 0;
   const appointmentPages = [
@@ -322,7 +322,7 @@ void test.skip("clinicalService.listAppointments paginates the windowed appointm
   }
 });
 
-void test.skip("clinicalService.getClinicalNoteHistory paginates the note timeline", async () => {
+void test("clinicalService.getClinicalNoteHistory paginates the note timeline", async () => {
   const noteCalls: Array<Record<string, unknown>> = [];
   let notePageIndex = 0;
   const notePages = [

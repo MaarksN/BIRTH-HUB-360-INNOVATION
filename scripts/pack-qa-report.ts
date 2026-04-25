@@ -5,38 +5,24 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  COMMON_PREMIUM_PROTOCOL_MARKER,
+  GLOBAL_PREMIUM_PROTOCOL_MARKER,
+  REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS,
+  REQUIRED_RUNTIME_PROTOCOL_CLAUSES,
+  enhanceManifestWithPremiumProtocol,
   isInstallableManifest,
   loadManifestCatalog,
   runAgentDryRun
 } from "@birthub/agents-core";
-
-const REQUIRED_PROMPT_SECTIONS = [
-  "IDENTIDADE E MISSAO",
-  "QUANDO ACIONAR",
-  "ENTRADAS OBRIGATORIAS",
-  "RACIOCINIO OPERACIONAL ESPERADO",
-  "MODO DE OPERACAO AUTONOMA",
-  "ROTINA DE MONITORAMENTO E ANTECIPACAO",
-  "CRITERIOS DE PRIORIZACAO",
-  "CRITERIOS DE ESCALACAO",
-  "OBJETIVOS PRIORITARIOS",
-  "FERRAMENTAS ESPERADAS",
-  "SAIDAS OBRIGATORIAS",
-  "GUARDRAILS",
-  "CHECKLIST DE QUALIDADE",
-  "APRENDIZADO COMPARTILHADO",
-  "FORMATO DE SAIDA"
-] as const;
-const SHARED_LEARNING_CLAUSE = "Todo agente aprende com todo agente.";
-const AUTONOMOUS_OPERATION_CLAUSE = "operar de forma autonoma dentro do escopo permitido";
-const PREVENTIVE_ALERT_CLAUSE = "nunca esperar um risco relevante virar incidente para alertar";
 
 function toDocSlug(agentId: string): string {
   return agentId.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
 }
 
 function countCoveredSections(prompt: string): number {
-  return REQUIRED_PROMPT_SECTIONS.filter((section) => prompt.includes(section)).length;
+  return REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS.filter((sectionGroup) =>
+    sectionGroup.anyOf.some((section) => prompt.includes(section))
+  ).length;
 }
 
 function average(values: number[]): number {
@@ -80,14 +66,16 @@ async function main(): Promise<void> {
   const docsOkCount = docsCoverage.filter((item) => item.exists).length;
   const promptRichness = installableCatalog.map((entry) => ({
     agentId: entry.manifest.agent.id,
-    coveredSections: countCoveredSections(entry.manifest.agent.prompt),
-    hasLearningClause: entry.manifest.agent.prompt.includes(SHARED_LEARNING_CLAUSE),
-    hasAutonomousClause: entry.manifest.agent.prompt
-      .toLowerCase()
-      .includes(AUTONOMOUS_OPERATION_CLAUSE),
-    hasPreventiveClause: entry.manifest.agent.prompt
-      .toLowerCase()
-      .includes(PREVENTIVE_ALERT_CLAUSE),
+    coveredSections: countCoveredSections(enhanceManifestWithPremiumProtocol(entry.manifest).agent.prompt),
+    hasGlobalProtocol: enhanceManifestWithPremiumProtocol(entry.manifest).agent.prompt.includes(
+      GLOBAL_PREMIUM_PROTOCOL_MARKER
+    ),
+    hasCommonProtocol: enhanceManifestWithPremiumProtocol(entry.manifest).agent.prompt.includes(
+      COMMON_PREMIUM_PROTOCOL_MARKER
+    ),
+    hasAllRuntimeClauses: REQUIRED_RUNTIME_PROTOCOL_CLAUSES.every((clause) =>
+      enhanceManifestWithPremiumProtocol(entry.manifest).agent.prompt.toLowerCase().includes(clause.toLowerCase())
+    ),
     keywordCount: entry.manifest.keywords.length,
     promptLength: entry.manifest.agent.prompt.length
   }));
@@ -95,17 +83,24 @@ async function main(): Promise<void> {
     const docsExists = docsCoverage.find((item) => item.agentId === row.agentId)?.exists ?? false;
     const dryRun = dryRunResults.find((item) => item.agentId === row.agentId)?.dryRun;
 
-    const sectionScore = Math.round((row.coveredSections / REQUIRED_PROMPT_SECTIONS.length) * 30);
+    const sectionScore = Math.round((row.coveredSections / REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS.length) * 30);
     const keywordScore = Math.min(20, row.keywordCount);
-    const learningScore = row.hasLearningClause ? 15 : 0;
-    const autonomousScore = row.hasAutonomousClause ? 10 : 0;
-    const preventiveScore = row.hasPreventiveClause ? 5 : 0;
+    const globalProtocolScore = row.hasGlobalProtocol ? 8 : 0;
+    const commonProtocolScore = row.hasCommonProtocol ? 7 : 0;
+    const runtimeClauseScore = row.hasAllRuntimeClauses ? 15 : 0;
     const dryRunScore = dryRun?.logs.length ? 20 : 0;
     const docsScore = docsExists ? 10 : 0;
 
     return {
       agentId: row.agentId,
-      score: sectionScore + keywordScore + learningScore + autonomousScore + preventiveScore + dryRunScore + docsScore
+      score:
+        sectionScore +
+        keywordScore +
+        globalProtocolScore +
+        commonProtocolScore +
+        runtimeClauseScore +
+        dryRunScore +
+        docsScore
     };
   });
   const domainDistribution = installableCatalog.reduce<Record<string, number>>((bucket, entry) => {
@@ -128,22 +123,22 @@ async function main(): Promise<void> {
   console.log(`Dry-run success: ${allDryRunsOk ? "OK" : "FAIL"}`);
   console.log(`Docs coverage: ${docsOkCount}/${catalog.length}`);
   console.log(
-    `Average prompt section coverage: ${average(promptRichness.map((item) => item.coveredSections)).toFixed(2)}/${REQUIRED_PROMPT_SECTIONS.length}`
+    `Average runtime prompt section coverage: ${average(promptRichness.map((item) => item.coveredSections)).toFixed(2)}/${REQUIRED_RUNTIME_PROMPT_SECTION_GROUPS.length}`
   );
   console.log(`Average keyword count: ${average(promptRichness.map((item) => item.keywordCount)).toFixed(2)}`);
   console.log(
-    `Shared learning clause coverage: ${
-      promptRichness.filter((item) => item.hasLearningClause).length
+    `Global premium protocol coverage: ${
+      promptRichness.filter((item) => item.hasGlobalProtocol).length
     }/${installableCatalog.length}`
   );
   console.log(
-    `Autonomous operating clause coverage: ${
-      promptRichness.filter((item) => item.hasAutonomousClause).length
+    `Common premium protocol coverage: ${
+      promptRichness.filter((item) => item.hasCommonProtocol).length
     }/${installableCatalog.length}`
   );
   console.log(
-    `Preventive alert clause coverage: ${
-      promptRichness.filter((item) => item.hasPreventiveClause).length
+    `Runtime protocol clause coverage: ${
+      promptRichness.filter((item) => item.hasAllRuntimeClauses).length
     }/${installableCatalog.length}`
   );
   console.log(`Average prompt length: ${Math.round(average(promptRichness.map((item) => item.promptLength)))}`);

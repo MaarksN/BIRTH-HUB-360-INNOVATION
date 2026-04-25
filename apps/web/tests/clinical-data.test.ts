@@ -8,7 +8,7 @@ import {
   formatGestationalAgeFromDays
 } from "../app/(dashboard)/patients/clinical-data";
 
-void test.skip("clinical data helpers calculate DPP and gestational age labels", () => {
+void test("clinical data helpers calculate DPP and gestational age labels", () => {
   const dueDate = calculateDueDateFromLmp("2026-01-01T00:00:00.000Z");
 
   assert.equal(dueDate?.slice(0, 10), "2026-10-08");
@@ -16,7 +16,7 @@ void test.skip("clinical data helpers calculate DPP and gestational age labels",
   assert.equal(formatGestationalAgeFromDays(null), "Nao calculado");
 });
 
-void test.skip("clinical data helpers build svg path and agenda heading", () => {
+void test("clinical data helpers build svg path and agenda heading", () => {
   const path = buildGrowthCurvePath([
     {
       appointmentId: "appt_1",

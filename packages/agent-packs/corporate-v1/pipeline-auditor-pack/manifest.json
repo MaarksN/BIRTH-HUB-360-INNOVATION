@@ -7,7 +7,7 @@
     "id": "pipeline-auditor-pack",
     "kind": "agent",
     "name": "Pipeline Auditor Bot",
-    "prompt": "Voce e o Pipeline Auditor Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nAuditar consistência, qualidade e completude do pipeline comercial.\n\nQUANDO ACIONAR\n- Quando houver muitos deals mal preenchidos, forecast duvidoso ou CRM desorganizado.\n\nENTRADAS OBRIGATORIAS\n- opportunities\n- required fields\n- stage history\n- activities\n\nOBJETIVOS PRIORITARIOS\n- Verificar campos obrigatórios.\n- Detectar etapas incoerentes.\n- Identificar negócios sem atividade.\n- Sugerir saneamento do funil.\n\nFERRAMENTAS ESPERADAS\n- crm\n- audit rules\n- analytics\n\nSAIDAS OBRIGATORIAS\n- falhas de higiene\n- inconsistências\n- itens para correção\n\nGUARDRAILS ESPECIFICOS\n- Não inferir preenchimento inexistente.\n- Sempre apontar evidência.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"pipeline-auditor-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"falhas de higiene\",\n    \"inconsistências\",\n    \"itens para correção\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Pipeline Auditor Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nAuditar higiene e consistência do pipeline.\n\nQUANDO ACIONAR\n- Quando houver muitos deals mal preenchidos, forecast duvidoso ou CRM desorganizado.\n\nENTRADAS OBRIGATORIAS\n- opportunities\n- required fields\n- stage history\n- activities\n\nOBJETIVOS PRIORITARIOS\n- Verificar campos obrigatórios.\n- Detectar etapas incoerentes.\n- Identificar negócios sem atividade.\n- Sugerir saneamento do funil.\n\nFERRAMENTAS ESPERADAS\n- crm\n- audit rules\n- analytics\n\nSAIDAS OBRIGATORIAS\n- falhas de higiene\n- inconsistências\n- itens para correção\n\nGUARDRAILS ESPECIFICOS\n- Não inferir preenchimento inexistente.\n- Sempre apontar evidência.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"pipeline-auditor-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"falhas de higiene\",\n    \"inconsistências\",\n    \"itens para correção\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -26,12 +26,9 @@
     "falhas de higiene",
     "inconsistências",
     "itens para correção",
-    "verificar campos obrigatórios.",
-    "detectar etapas incoerentes.",
-    "identificar negócios sem atividade.",
-    "sugerir saneamento do funil.",
-    "a20",
-    "pipeline-auditor-bot"
+    "executive automation",
+    "preventive analysis",
+    "autonomous execution"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -103,55 +100,53 @@
   ],
   "tags": {
     "domain": [
-      "operations",
-      "enablement"
+      "gestao-analise-e-previsao"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "pipeline-auditor"
+      "pipeline-auditor-bot"
     ],
     "use-case": [
-      "pipeline-auditor",
-      "commercial-operations"
+      "gestao-analise-e-previsao"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional crm necessaria para Pipeline Auditor Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool crm required by Pipeline Auditor Bot.",
       "id": "pipeline-auditor-pack.tool.crm",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Crm",
+      "name": "crm",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional audit rules necessaria para Pipeline Auditor Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool audit rules required by Pipeline Auditor Bot.",
       "id": "pipeline-auditor-pack.tool.audit-rules",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Audit Rules",
+      "name": "audit rules",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional analytics necessaria para Pipeline Auditor Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool analytics required by Pipeline Auditor Bot.",
       "id": "pipeline-auditor-pack.tool.analytics",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Analytics",
+      "name": "analytics",
       "outputSchema": {
         "type": "object"
       },

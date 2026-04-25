@@ -5,10 +5,14 @@ import { dirname, resolve } from "node:path";
 
 import { artifactsRoot } from "./paths.js";
 
+function serializeReportValue(_key: string, value: unknown): unknown {
+  return typeof value === "bigint" ? value.toString() : value;
+}
+
 export async function writeJsonReport<T>(relativePath: string, payload: T): Promise<string> {
   const outputPath = resolve(artifactsRoot, relativePath);
   await mkdir(dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, JSON.stringify(payload, null, 2), "utf8");
+  await writeFile(outputPath, JSON.stringify(payload, serializeReportValue, 2), "utf8");
   return outputPath;
 }
 

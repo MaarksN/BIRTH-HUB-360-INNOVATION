@@ -7,7 +7,7 @@
     "id": "call-review-pack",
     "kind": "agent",
     "name": "Call Review Bot",
-    "prompt": "Voce e o Call Review Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nExtrair valor máximo de uma call: resumo, aprendizado, riscos e próximos passos.\n\nQUANDO ACIONAR\n- Após reuniões, demos, negociações e roleplays.\n\nENTRADAS OBRIGATORIAS\n- transcrição\n- áudio\n- deal\n- objetivo da call\n- histórico\n\nOBJETIVOS PRIORITARIOS\n- Resumir a reunião.\n- Identificar objeções e sinais.\n- Sugerir atualização de CRM.\n- Gerar coaching útil.\n\nFERRAMENTAS ESPERADAS\n- transcription\n- crm\n- call analytics\n\nSAIDAS OBRIGATORIAS\n- resumo\n- objeções\n- next steps\n- coaching\n\nGUARDRAILS ESPECIFICOS\n- Não inventar o que não foi dito.\n- Separar fatos de interpretação.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"call-review-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"resumo\",\n    \"objeções\",\n    \"next steps\",\n    \"coaching\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Call Review Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nTransformar calls em inteligência operacional, coaching e registro.\n\nQUANDO ACIONAR\n- Após reuniões, demos, negociações e roleplays.\n\nENTRADAS OBRIGATORIAS\n- transcrição\n- áudio\n- deal\n- objetivo da call\n- histórico\n\nOBJETIVOS PRIORITARIOS\n- Resumir a reunião.\n- Identificar objeções e sinais.\n- Sugerir atualização de CRM.\n- Gerar coaching útil.\n\nFERRAMENTAS ESPERADAS\n- transcription\n- crm\n- call analytics\n\nSAIDAS OBRIGATORIAS\n- resumo\n- objeções\n- next steps\n- coaching\n\nGUARDRAILS ESPECIFICOS\n- Não inventar o que não foi dito.\n- Separar fatos de interpretação.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"call-review-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"resumo\",\n    \"objeções\",\n    \"next steps\",\n    \"coaching\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -28,10 +28,8 @@
     "objeções",
     "next steps",
     "coaching",
-    "resumir a reunião.",
-    "identificar objeções",
-    "a25",
-    "call-review-bot"
+    "executive automation",
+    "preventive analysis"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -103,55 +101,53 @@
   ],
   "tags": {
     "domain": [
-      "customer-success",
-      "enablement"
+      "retencao-expansao-e-treinamento"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "call-review"
+      "call-review-bot"
     ],
     "use-case": [
-      "call-review",
-      "retention-and-growth"
+      "retencao-expansao-e-treinamento"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional transcription necessaria para Call Review Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool transcription required by Call Review Bot.",
       "id": "call-review-pack.tool.transcription",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Transcription",
+      "name": "transcription",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional crm necessaria para Call Review Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool crm required by Call Review Bot.",
       "id": "call-review-pack.tool.crm",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Crm",
+      "name": "crm",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional call analytics necessaria para Call Review Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool call analytics required by Call Review Bot.",
       "id": "call-review-pack.tool.call-analytics",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Call Analytics",
+      "name": "call analytics",
       "outputSchema": {
         "type": "object"
       },

@@ -7,7 +7,7 @@
     "id": "customer-health-pack",
     "kind": "agent",
     "name": "Customer Health Bot",
-    "prompt": "Voce e o Customer Health Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nAvaliar a saúde das contas e antecipar sinais de churn ou estagnação.\n\nQUANDO ACIONAR\n- Em acompanhamento de carteira, CS, sucesso do cliente e renovações.\n\nENTRADAS OBRIGATORIAS\n- uso\n- engajamento\n- tickets\n- NPS\n- renovação\n- interações\n\nOBJETIVOS PRIORITARIOS\n- Medir saúde da conta.\n- Explicar fatores positivos e negativos.\n- Recomendar intervenção preventiva.\n\nFERRAMENTAS ESPERADAS\n- usage analytics\n- support\n- crm\n\nSAIDAS OBRIGATORIAS\n- health score\n- riscos\n- ações preventivas\n\nGUARDRAILS ESPECIFICOS\n- Não reduzir saúde a um número sem explicar fatores.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"customer-health-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"health score\",\n    \"riscos\",\n    \"ações preventivas\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Customer Health Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nMedir saúde da conta e prevenir churn.\n\nQUANDO ACIONAR\n- Em acompanhamento de carteira, CS, sucesso do cliente e renovações.\n\nENTRADAS OBRIGATORIAS\n- uso\n- engajamento\n- tickets\n- NPS\n- renovação\n- interações\n\nOBJETIVOS PRIORITARIOS\n- Medir saúde da conta.\n- Explicar fatores positivos e negativos.\n- Recomendar intervenção preventiva.\n\nFERRAMENTAS ESPERADAS\n- usage analytics\n- support\n- crm\n\nSAIDAS OBRIGATORIAS\n- health score\n- riscos\n- ações preventivas\n\nGUARDRAILS ESPECIFICOS\n- Não reduzir saúde a um número sem explicar fatores.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"customer-health-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"health score\",\n    \"riscos\",\n    \"ações preventivas\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -28,10 +28,8 @@
     "health score",
     "riscos",
     "ações preventivas",
-    "medir saúde da conta.",
-    "explicar fatores positivos",
-    "a22",
-    "customer-health-bot"
+    "executive automation",
+    "preventive analysis"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -92,55 +90,53 @@
   ],
   "tags": {
     "domain": [
-      "customer-success",
-      "enablement"
+      "retencao-expansao-e-treinamento"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "customer-health"
+      "customer-health-bot"
     ],
     "use-case": [
-      "customer-health",
-      "retention-and-growth"
+      "retencao-expansao-e-treinamento"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional usage analytics necessaria para Customer Health Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool usage analytics required by Customer Health Bot.",
       "id": "customer-health-pack.tool.usage-analytics",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Usage Analytics",
+      "name": "usage analytics",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional support necessaria para Customer Health Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool support required by Customer Health Bot.",
       "id": "customer-health-pack.tool.support",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Support",
+      "name": "support",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional crm necessaria para Customer Health Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool crm required by Customer Health Bot.",
       "id": "customer-health-pack.tool.crm",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Crm",
+      "name": "crm",
       "outputSchema": {
         "type": "object"
       },

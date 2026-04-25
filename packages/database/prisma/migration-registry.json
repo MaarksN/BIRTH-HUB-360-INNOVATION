@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-24T00:00:00.000Z",
+  "generatedAt": "2026-04-25T00:00:00.000Z",
   "migrations": {
     "20260313000100_cycle1_foundation": {
       "environments": [
@@ -107,6 +107,126 @@
         ]
       },
       "severity": "P1",
+      "strategy": {
+        "backwardCompatible": true,
+        "batching": {
+          "required": false
+        },
+        "expandContract": true,
+        "transactional": true
+      },
+      "validation": {
+        "driftChecked": true,
+        "rlsReviewed": true,
+        "rollbackTested": true,
+        "viewsAndRoutinesReviewed": true
+      }
+    },
+    "20260425000100_phase0_schema_drift_alignment": {
+      "environments": [
+        "dev",
+        "staging",
+        "prod"
+      ],
+      "estimatedDurationMinutes": 5,
+      "impact": "low",
+      "maintenanceWindowSlaMinutes": 30,
+      "notes": "Records Prisma schema drift discovered during Phase 0: workflow connector action enum, workflow revision indexes, and deterministic index names.",
+      "owner": "Platform Data",
+      "postMigrationChecklist": [
+        "drift_check",
+        "fk_index_audit",
+        "integrity_health_check",
+        "migration_state_report",
+        "release_smoke",
+        "rls_audit"
+      ],
+      "preProductionChecklist": [
+        "backup_confirmed",
+        "maintenance_window",
+        "rollback_validated",
+        "stakeholder_notice"
+      ],
+      "review": {
+        "approverRoles": [
+          "DBA",
+          "DB_LEAD"
+        ],
+        "reviewer": "Database Lead"
+      },
+      "rollback": {
+        "strategy": "Restore the previous database snapshot if the enum/index alignment causes regression; enum value removal is not treated as an in-place rollback.",
+        "steps": [
+          "Pause deployment and background workers.",
+          "Validate the pre-migration backup or snapshot.",
+          "Restore the previous database snapshot if rollback is required.",
+          "Replay migration status, schema drift and tenant isolation checks before reopening traffic."
+        ],
+        "testedEnvironments": [
+          "local-isolated"
+        ]
+      },
+      "severity": "P1",
+      "strategy": {
+        "backwardCompatible": true,
+        "batching": {
+          "required": false
+        },
+        "expandContract": true,
+        "transactional": true
+      },
+      "validation": {
+        "driftChecked": true,
+        "rlsReviewed": true,
+        "rollbackTested": true,
+        "viewsAndRoutinesReviewed": true
+      }
+    },
+    "20260425000200_phase0_clinical_domain_schema": {
+      "environments": [
+        "dev",
+        "staging",
+        "prod"
+      ],
+      "estimatedDurationMinutes": 10,
+      "impact": "medium",
+      "maintenanceWindowSlaMinutes": 60,
+      "notes": "Publishes the tenant-scoped clinical domain schema required by the API runtime and maternal RLS isolation checks: patients, pregnancy records, appointments, clinical notes, and neonatal records.",
+      "owner": "Platform Data",
+      "postMigrationChecklist": [
+        "drift_check",
+        "fk_index_audit",
+        "integrity_health_check",
+        "migration_state_report",
+        "release_smoke",
+        "rls_audit"
+      ],
+      "preProductionChecklist": [
+        "backup_confirmed",
+        "maintenance_window",
+        "rollback_validated",
+        "stakeholder_notice"
+      ],
+      "review": {
+        "approverRoles": [
+          "DBA",
+          "DB_LEAD"
+        ],
+        "reviewer": "Database Lead"
+      },
+      "rollback": {
+        "strategy": "Rollback with a validated snapshot if clinical table creation or RLS enforcement regresses existing deploy flows; the migration introduces enums and tenant-scoped tables that should not be removed in-place after writes begin.",
+        "steps": [
+          "Pause deployment and clinical workers.",
+          "Validate the pre-migration backup or snapshot.",
+          "Restore the previous database snapshot if rollback is required.",
+          "Replay migration status, schema drift, FK, and tenant isolation checks before reopening traffic."
+        ],
+        "testedEnvironments": [
+          "local-isolated"
+        ]
+      },
+      "severity": "P0",
       "strategy": {
         "backwardCompatible": true,
         "batching": {

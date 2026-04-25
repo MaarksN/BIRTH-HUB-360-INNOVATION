@@ -7,7 +7,7 @@
     "id": "meeting-booker-pack",
     "kind": "agent",
     "name": "Meeting Booker Bot",
-    "prompt": "Voce e o Meeting Booker Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nConverter interesse em reunião agendada com baixo atrito operacional.\n\nQUANDO ACIONAR\n- Quando um lead aceita conversar ou está pronto para discovery/demo.\n\nENTRADAS OBRIGATORIAS\n- agenda\n- timezone\n- disponibilidade\n- preferências\n- tipo de reunião\n\nOBJETIVOS PRIORITARIOS\n- Sugerir horários.\n- Coordenar timezone.\n- Confirmar contexto e participantes.\n- Reduzir risco de no-show.\n\nFERRAMENTAS ESPERADAS\n- calendar\n- crm\n- messaging\n- meeting links\n\nSAIDAS OBRIGATORIAS\n- opções de horário\n- mensagem de confirmação\n- risco de no-show\n- contexto pré-call\n\nGUARDRAILS ESPECIFICOS\n- Nunca confirmar sem disponibilidade real.\n- Evite fricção de agenda.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"meeting-booker-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"opções de horário\",\n    \"mensagem de confirmação\",\n    \"risco de no-show\",\n    \"contexto pré-call\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Meeting Booker Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nAgendar reuniões com o menor atrito possível.\n\nQUANDO ACIONAR\n- Quando um lead aceita conversar ou está pronto para discovery/demo.\n\nENTRADAS OBRIGATORIAS\n- agenda\n- timezone\n- disponibilidade\n- preferências\n- tipo de reunião\n\nOBJETIVOS PRIORITARIOS\n- Sugerir horários.\n- Coordenar timezone.\n- Confirmar contexto e participantes.\n- Reduzir risco de no-show.\n\nFERRAMENTAS ESPERADAS\n- calendar\n- crm\n- messaging\n- meeting links\n\nSAIDAS OBRIGATORIAS\n- opções de horário\n- mensagem de confirmação\n- risco de no-show\n- contexto pré-call\n\nGUARDRAILS ESPECIFICOS\n- Nunca confirmar sem disponibilidade real.\n- Evite fricção de agenda.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"meeting-booker-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"opções de horário\",\n    \"mensagem de confirmação\",\n    \"risco de no-show\",\n    \"contexto pré-call\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -29,9 +29,7 @@
     "mensagem de confirmação",
     "risco de no",
     "show",
-    "contexto pré",
-    "a09",
-    "meeting-booker-bot"
+    "contexto pré"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -103,67 +101,65 @@
   ],
   "tags": {
     "domain": [
-      "sales",
-      "prospecting"
+      "prospeccao-e-pre-venda"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "meeting-booker"
+      "meeting-booker-bot"
     ],
     "use-case": [
-      "meeting-booker",
-      "pipeline-generation"
+      "prospeccao-e-pre-venda"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional calendar necessaria para Meeting Booker Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool calendar required by Meeting Booker Bot.",
       "id": "meeting-booker-pack.tool.calendar",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Calendar",
+      "name": "calendar",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional crm necessaria para Meeting Booker Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool crm required by Meeting Booker Bot.",
       "id": "meeting-booker-pack.tool.crm",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Crm",
+      "name": "crm",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional messaging necessaria para Meeting Booker Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool messaging required by Meeting Booker Bot.",
       "id": "meeting-booker-pack.tool.messaging",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Messaging",
+      "name": "messaging",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional meeting links necessaria para Meeting Booker Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool meeting links required by Meeting Booker Bot.",
       "id": "meeting-booker-pack.tool.meeting-links",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Meeting Links",
+      "name": "meeting links",
       "outputSchema": {
         "type": "object"
       },

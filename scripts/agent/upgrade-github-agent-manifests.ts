@@ -109,50 +109,7 @@ const MARKET_GRADE_USE_CASES = [
   "workflow-trigger-readiness"
 ];
 
-const SECTION_UPGRADES: Record<string, string[]> = {
-  "RACIOCINIO OPERACIONAL ESPERADO": [
-    "processar dados quantitativos e qualitativos para separar sinal, ruido, outlier e tendencia",
-    "fundir sinais de varias fontes em uma leitura premium unica antes da recomendacao final",
-    "moldar a recomendacao para o segmento, maturidade e contexto comercial do cliente"
-  ],
-  "MODO DE OPERACAO AUTONOMA": [
-    "salvar memoria operacional reutilizavel ao final de cada execucao relevante",
-    "preparar contexto de handoff para outros agentes quando isso aumentar a qualidade ou a velocidade",
-    "aceitar eventos reais de entrada e transformar isso em execucao governada quando houver trigger relevante"
-  ],
-  "ROTINA DE MONITORAMENTO E ANTECIPACAO": [
-    "observar variacao de comportamento, gargalos, riscos emergentes e oportunidades ocultas",
-    "reavaliar o plano conforme o segmento do cliente e os sinais mais recentes",
-    "ativar as 10 camadas premium de operacao para risco, oportunidade, memoria, recomendacao e governanca"
-  ],
-  "OBJETIVOS PRIORITARIOS": [
-    "processar sinais com qualidade decisoria de mercado",
-    "sugerir a proxima melhor acao com justificativa e prioridade",
-    "operar com 10 camadas premium compartilhadas entre inteligencia, memoria, handoff, risco e automacao"
-  ],
-  "SAIDAS OBRIGATORIAS": [
-    "perfil de segmento do cliente",
-    "recomendacoes prescritivas priorizadas",
-    "memoria operacional salva para reutilizacao",
-    "contexto pronto para handoff entre agentes",
-    "score premium consolidado e leitura das 10 camadas premium"
-  ],
-  GUARDRAILS: [
-    "nunca perder contexto critico entre uma etapa e outra",
-    "nunca reutilizar memoria ou aprendizado de outro tenant",
-    "nunca tratar evento real de entrada sem classificar prioridade, segmento e risco antes de agir"
-  ],
-  "CHECKLIST DE QUALIDADE": [
-    "adaptar a recomendacao ao segmento do cliente antes de concluir",
-    "salvar memoria operacional e deixar handoff claro quando fizer sentido",
-    "validar se as 10 camadas premium foram acionadas no nivel esperado para o caso"
-  ],
-  "APRENDIZADO COMPARTILHADO": [
-    "publicar memoria reutilizavel com foco em padroes validos para o mesmo segmento de cliente",
-    "ao reaproveitar aprendizado, ajustar linguagem, risco e recomendacao ao segmento atual",
-    "registrar sinais que melhoram a leitura futura das camadas premium e dos gatilhos de entrada"
-  ]
-};
+const SECTION_UPGRADES: Record<string, string[]> = {};
 
 function uniqueStrings(values: string[]): string[] {
   const seen = new Set<string>();

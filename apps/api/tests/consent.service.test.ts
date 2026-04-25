@@ -46,28 +46,32 @@ function isTransactionCallback<TClient>(
   return typeof input === "function";
 }
 
-void test.skip("ensurePrivacyConsents initializes the canonical consent purposes", async () => {
+void test("ensurePrivacyConsents initializes the canonical consent purposes", async () => {
   const organization = {
     id: "org_alpha",
     tenantId: "tenant_alpha"
   };
   const upsertCalls: PrivacyConsentUpsertCall[] = [];
-  const originalPrivacyConsentModel: unknown = Reflect.get(prisma, "privacyConsent");
-
-  Reflect.set(prisma, "privacyConsent", {
-    upsert: (args: PrivacyConsentUpsertCall) => {
-      upsertCalls.push(args);
-      return Promise.resolve({});
+  const transactionClient = {
+    privacyConsent: {
+      upsert: (args: PrivacyConsentUpsertCall) => {
+        upsertCalls.push(args);
+        return Promise.resolve({});
+      }
     }
-  });
+  };
 
   const restores = [
     stubMethod(prisma.organization as unknown as Record<string, unknown>, "findFirst", () =>
       Promise.resolve(organization)
     ),
-    stubMethod(prisma as unknown as Record<string, unknown>, "$transaction", (input: unknown) =>
-      Array.isArray(input) ? Promise.all(input) : Promise.resolve(input)
-    )
+    stubMethod(prisma as unknown as Record<string, unknown>, "$transaction", (input: unknown) => {
+      if (isTransactionCallback<typeof transactionClient>(input)) {
+        return input(transactionClient);
+      }
+
+      return Array.isArray(input) ? Promise.all(input) : Promise.resolve(input);
+    })
   ];
 
   try {
@@ -88,11 +92,10 @@ void test.skip("ensurePrivacyConsents initializes the canonical consent purposes
     );
   } finally {
     restores.reverse().forEach((restore) => restore());
-    Reflect.set(prisma, "privacyConsent", originalPrivacyConsentModel);
   }
 });
 
-void test.skip("savePrivacyConsentDecisions bounds the consent snapshot read for LGPD recompute", async () => {
+void test("savePrivacyConsentDecisions bounds the consent snapshot read for LGPD recompute", async () => {
   const organization = {
     id: "org_alpha",
     tenantId: "tenant_alpha"
@@ -109,6 +112,7 @@ void test.skip("savePrivacyConsentDecisions bounds the consent snapshot read for
       create: () => Promise.resolve({})
     },
     privacyConsent: {
+      upsert: () => Promise.resolve({}),
       findMany: (args: Record<string, unknown>) => {
         consentSnapshotCalls.push(args);
         return Promise.resolve([

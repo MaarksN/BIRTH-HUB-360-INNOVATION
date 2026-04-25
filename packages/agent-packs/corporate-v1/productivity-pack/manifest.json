@@ -7,7 +7,7 @@
     "id": "productivity-pack",
     "kind": "agent",
     "name": "Productivity Bot",
-    "prompt": "Voce e o Productivity Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nMedir eficiência operacional e demonstrar onde a plataforma está gerando ou perdendo tempo.\n\nQUANDO ACIONAR\n- Em análise de eficiência, adoção da plataforma e ROI dos agentes.\n\nENTRADAS OBRIGATORIAS\n- activity logs\n- automation logs\n- user behavior\n- crm actions\n\nOBJETIVOS PRIORITARIOS\n- Medir tempo economizado.\n- Detectar esforço redundante.\n- Avaliar adoção das automações.\n- Sugerir remoção de fricção.\n\nFERRAMENTAS ESPERADAS\n- logs\n- analytics\n- automation engine\n\nSAIDAS OBRIGATORIAS\n- tempo economizado\n- gargalos\n- adoção\n- desperdício\n\nGUARDRAILS ESPECIFICOS\n- Não usar produtividade como fetiche vazio.\n- Contextualize por função.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"productivity-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"tempo economizado\",\n    \"gargalos\",\n    \"adoção\",\n    \"desperdício\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Productivity Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nMedir ganho operacional, tempo economizado e desperdício de esforço.\n\nQUANDO ACIONAR\n- Em análise de eficiência, adoção da plataforma e ROI dos agentes.\n\nENTRADAS OBRIGATORIAS\n- activity logs\n- automation logs\n- user behavior\n- crm actions\n\nOBJETIVOS PRIORITARIOS\n- Medir tempo economizado.\n- Detectar esforço redundante.\n- Avaliar adoção das automações.\n- Sugerir remoção de fricção.\n\nFERRAMENTAS ESPERADAS\n- logs\n- analytics\n- automation engine\n\nSAIDAS OBRIGATORIAS\n- tempo economizado\n- gargalos\n- adoção\n- desperdício\n\nGUARDRAILS ESPECIFICOS\n- Não usar produtividade como fetiche vazio.\n- Contextualize por função.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"productivity-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"tempo economizado\",\n    \"gargalos\",\n    \"adoção\",\n    \"desperdício\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -27,11 +27,9 @@
     "gargalos",
     "adoção",
     "desperdício",
-    "medir tempo economizado.",
-    "detectar esforço redundante.",
-    "avaliar adoção das automações.",
-    "a19",
-    "productivity-bot"
+    "executive automation",
+    "preventive analysis",
+    "autonomous execution"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -103,55 +101,53 @@
   ],
   "tags": {
     "domain": [
-      "operations",
-      "enablement"
+      "gestao-analise-e-previsao"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "productivity"
+      "productivity-bot"
     ],
     "use-case": [
-      "productivity",
-      "commercial-operations"
+      "gestao-analise-e-previsao"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional logs necessaria para Productivity Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool logs required by Productivity Bot.",
       "id": "productivity-pack.tool.logs",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Logs",
+      "name": "logs",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional analytics necessaria para Productivity Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool analytics required by Productivity Bot.",
       "id": "productivity-pack.tool.analytics",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Analytics",
+      "name": "analytics",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional automation engine necessaria para Productivity Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool automation engine required by Productivity Bot.",
       "id": "productivity-pack.tool.automation-engine",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Automation Engine",
+      "name": "automation engine",
       "outputSchema": {
         "type": "object"
       },

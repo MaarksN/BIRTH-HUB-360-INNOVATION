@@ -133,17 +133,34 @@ void test("dashboard router disables the clinical summary route when the clinica
   assert.match(String(response.body.detail ?? ""), /clinical workspace is disabled/i);
 });
 
-void test("dashboard router still returns service unavailable when the clinical workspace is re-enabled without Prisma delegates", async () => {
-  const response = await request(
-    createDashboardTestApp({
-      ...createTestApiConfig(),
-      clinicalWorkspaceEnabled: true
-    })
-  )
-    .get("/api/v1/dashboard/clinical-summary")
-    .expect(503);
+void test("dashboard router returns the clinical summary when the clinical workspace is enabled", async () => {
+  const restores = [
+    stubMethod(prisma.patient, "count", () => Promise.resolve(0)),
+    stubMethod(prisma.patient, "findMany", () => Promise.resolve([])),
+    stubMethod(prisma.pregnancyRecord, "count", () => Promise.resolve(0)),
+    stubMethod(prisma.appointment, "count", () => Promise.resolve(0)),
+    stubMethod(prisma.neonatalRecord, "count", () => Promise.resolve(0))
+  ];
 
-  assert.equal(response.body.status, 503);
-  assert.equal(response.body.title, "Service Unavailable");
-  assert.match(String(response.body.detail ?? ""), /(appointment|patient|pregnancyrecord|neonatalrecord)/i);
+  try {
+    const response = await request(
+      createDashboardTestApp({
+        ...createTestApiConfig(),
+        clinicalWorkspaceEnabled: true
+      })
+    )
+      .get("/api/v1/dashboard/clinical-summary")
+      .expect(200);
+
+    assert.deepEqual(response.body.alerts, []);
+    assert.deepEqual(response.body.spotlight, []);
+    assert.deepEqual(
+      response.body.metrics.map((metric: { value: number }) => metric.value),
+      [0, 0, 0, 0]
+    );
+  } finally {
+    for (const restore of restores.reverse()) {
+      restore();
+    }
+  }
 });

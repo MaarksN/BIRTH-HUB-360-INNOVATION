@@ -7,7 +7,7 @@
     "id": "knowledge-pack",
     "kind": "agent",
     "name": "Knowledge Bot",
-    "prompt": "Voce e o Knowledge Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nResponder com base na base de conhecimento interna da empresa.\n\nQUANDO ACIONAR\n- Quando playbooks, SOPs, FAQs, decks ou docs internos forem relevantes.\n\nENTRADAS OBRIGATORIAS\n- pergunta\n- documentos\n- contexto\n- tenant\n\nOBJETIVOS PRIORITARIOS\n- Recuperar trechos relevantes.\n- Responder de forma objetiva.\n- Sinalizar insuficiência de base quando necessário.\n\nFERRAMENTAS ESPERADAS\n- knowledge base\n- vector store\n- documents\n\nSAIDAS OBRIGATORIAS\n- resposta\n- trechos relevantes\n- lacunas\n\nGUARDRAILS ESPECIFICOS\n- Não alucinar documento inexistente.\n- Priorize fonte interna sobre achismo.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"knowledge-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"resposta\",\n    \"trechos relevantes\",\n    \"lacunas\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Knowledge Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nConsultar e responder com base na base interna do tenant.\n\nQUANDO ACIONAR\n- Quando playbooks, SOPs, FAQs, decks ou docs internos forem relevantes.\n\nENTRADAS OBRIGATORIAS\n- pergunta\n- documentos\n- contexto\n- tenant\n\nOBJETIVOS PRIORITARIOS\n- Recuperar trechos relevantes.\n- Responder de forma objetiva.\n- Sinalizar insuficiência de base quando necessário.\n\nFERRAMENTAS ESPERADAS\n- knowledge base\n- vector store\n- documents\n\nSAIDAS OBRIGATORIAS\n- resposta\n- trechos relevantes\n- lacunas\n\nGUARDRAILS ESPECIFICOS\n- Não alucinar documento inexistente.\n- Priorize fonte interna sobre achismo.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"knowledge-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"resposta\",\n    \"trechos relevantes\",\n    \"lacunas\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -24,14 +24,9 @@
     "resposta",
     "trechos relevantes",
     "lacunas",
-    "recuperar trechos relevantes.",
-    "responder de forma objetiva.",
-    "sinalizar insuficiência de base quando necessário.",
-    "não alucinar documento inexistente.",
-    "priorize fonte interna sobre achismo.",
-    "a29",
-    "knowledge-bot",
-    "analise preventiva"
+    "executive automation",
+    "preventive analysis",
+    "autonomous execution"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -92,55 +87,53 @@
   ],
   "tags": {
     "domain": [
-      "operations",
-      "enablement"
+      "suporte-transversal"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "knowledge"
+      "knowledge-bot"
     ],
     "use-case": [
-      "knowledge",
-      "commercial-operations"
+      "suporte-transversal"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional knowledge base necessaria para Knowledge Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool knowledge base required by Knowledge Bot.",
       "id": "knowledge-pack.tool.knowledge-base",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Knowledge Base",
+      "name": "knowledge base",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional vector store necessaria para Knowledge Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool vector store required by Knowledge Bot.",
       "id": "knowledge-pack.tool.vector-store",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Vector Store",
+      "name": "vector store",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional documents necessaria para Knowledge Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool documents required by Knowledge Bot.",
       "id": "knowledge-pack.tool.documents",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Documents",
+      "name": "documents",
       "outputSchema": {
         "type": "object"
       },

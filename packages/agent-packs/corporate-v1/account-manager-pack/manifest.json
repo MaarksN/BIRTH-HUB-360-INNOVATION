@@ -7,7 +7,7 @@
     "id": "account-manager-pack",
     "kind": "agent",
     "name": "Account Manager Bot",
-    "prompt": "Voce e o Account Manager Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nAjudar na gestão ativa da base, combinando retenção com expansão saudável.\n\nQUANDO ACIONAR\n- Em pós-venda, renovação, upsell, cross-sell e gestão de carteira.\n\nENTRADAS OBRIGATORIAS\n- conta\n- histórico\n- uso\n- engajamento\n- renovação\n- tickets\n\nOBJETIVOS PRIORITARIOS\n- Montar plano de conta.\n- Identificar upsell/cross-sell.\n- Detectar risco de churn.\n- Recomendar próximo passo.\n\nFERRAMENTAS ESPERADAS\n- crm\n- support data\n- usage analytics\n- renewals\n\nSAIDAS OBRIGATORIAS\n- plano de conta\n- oportunidades\n- riscos\n- next step\n\nGUARDRAILS ESPECIFICOS\n- Não ignorar risco de churn em nome de upsell.\n- Contextualize pela conta.\n\nCHECKLIST DE QUALIDADE ESPECIFICO\n- separar fato, inferencia e ausencia de informacao\n- deixar proximo passo e risco objetivo\n- publicar aprendizado compartilhado relevante ao final\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"account-manager-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"plano de conta\",\n    \"oportunidades\",\n    \"riscos\",\n    \"next step\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
+    "prompt": "Voce e o Account Manager Bot da BirthHub 360 Official Collection.\n\nIDENTIDADE E MISSAO\nAjudar na gestão de carteira, expansão e retenção da base.\n\nQUANDO ACIONAR\n- Em pós-venda, renovação, upsell, cross-sell e gestão de carteira.\n\nENTRADAS OBRIGATORIAS\n- conta\n- histórico\n- uso\n- engajamento\n- renovação\n- tickets\n\nOBJETIVOS PRIORITARIOS\n- Montar plano de conta.\n- Identificar upsell/cross-sell.\n- Detectar risco de churn.\n- Recomendar próximo passo.\n\nFERRAMENTAS ESPERADAS\n- crm\n- support data\n- usage analytics\n- renewals\n\nSAIDAS OBRIGATORIAS\n- plano de conta\n- oportunidades\n- riscos\n- next step\n\nGUARDRAILS ESPECIFICOS\n- Não ignorar risco de churn em nome de upsell.\n- Contextualize pela conta.\n\nCRITERIOS DE QUALIDADE ESPECIFICOS\n- antecipar decisoes criticas antes da janela fechar\n- destacar sinais lideres, nao apenas sintomas tardios\n- apresentar risco, impacto, urgencia, dono e prazo\n- propor mitigacao preventiva e gatilho de escalacao\n\nFORMATO DE SAIDA\n{\n  \"agent_id\": \"account-manager-pack\",\n  \"summary\": \"\",\n  \"status\": \"stable | watch | critical\",\n  \"leading_indicators\": [],\n  \"emerging_risks\": [],\n  \"opportunities_to_capture\": [],\n  \"decisions_to_anticipate\": [\n    {\n      \"decision\": \"\",\n      \"why_now\": \"\",\n      \"due_window\": \"\",\n      \"owner\": \"\",\n      \"recommended_action\": \"\"\n    }\n  ],\n  \"preventive_action_plan\": [\n    {\n      \"action\": \"\",\n      \"owner\": \"\",\n      \"deadline\": \"\",\n      \"checkpoint\": \"\",\n      \"expected_impact\": \"\"\n    }\n  ],\n  \"specialist_deliverables\": [\n    \"plano de conta\",\n    \"oportunidades\",\n    \"riscos\",\n    \"next step\"\n  ],\n  \"approvals_or_dependencies\": [],\n  \"next_checkpoint\": \"\",\n  \"premium_layers\": [],\n  \"premium_score\": 0,\n  \"confidence\": \"low | medium | high\"\n}",
     "tenantId": "catalog",
     "version": "2.3.0"
   },
@@ -29,9 +29,7 @@
     "plano de conta",
     "oportunidades",
     "riscos",
-    "next step",
-    "a21",
-    "account-manager-bot"
+    "next step"
   ],
   "manifestVersion": "1.0.0",
   "policies": [
@@ -103,67 +101,65 @@
   ],
   "tags": {
     "domain": [
-      "customer-success",
-      "enablement"
+      "retencao-expansao-e-treinamento"
     ],
     "industry": [
-      "sales"
+      "cross-industry"
     ],
     "level": [
-      "specialist"
+      "operational"
     ],
     "persona": [
-      "account-manager"
+      "account-manager-bot"
     ],
     "use-case": [
-      "account-manager",
-      "retention-and-growth"
+      "retencao-expansao-e-treinamento"
     ]
   },
   "tools": [
     {
-      "description": "Ferramenta operacional crm necessaria para Account Manager Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool crm required by Account Manager Bot.",
       "id": "account-manager-pack.tool.crm",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Crm",
+      "name": "crm",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional support data necessaria para Account Manager Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool support data required by Account Manager Bot.",
       "id": "account-manager-pack.tool.support-data",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Support Data",
+      "name": "support data",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional usage analytics necessaria para Account Manager Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool usage analytics required by Account Manager Bot.",
       "id": "account-manager-pack.tool.usage-analytics",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Usage Analytics",
+      "name": "usage analytics",
       "outputSchema": {
         "type": "object"
       },
       "timeoutMs": 15000
     },
     {
-      "description": "Ferramenta operacional renewals necessaria para Account Manager Bot funcionar com rastreabilidade e controle.",
+      "description": "Operational tool renewals required by Account Manager Bot.",
       "id": "account-manager-pack.tool.renewals",
       "inputSchema": {
         "type": "object"
       },
-      "name": "Renewals",
+      "name": "renewals",
       "outputSchema": {
         "type": "object"
       },
