@@ -124,7 +124,7 @@ jobs:
 
       - name: Enable pg_stat_statements
         run: |
-          docker exec "${{ job.services.postgres.id }}" sh -lc "echo \"shared_preload_libraries = 'pg_stat_statements'\" >> \"$PGDATA/postgresql.conf\""
+          docker exec "${{ job.services.postgres.id }}" psql -U postgres -d birthub_test -c "ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements';"
           docker restart "${{ job.services.postgres.id }}"
           until docker exec "${{ job.services.postgres.id }}" pg_isready -U postgres -d birthub_test; do
             sleep 1

@@ -53,6 +53,10 @@ function toRepoRelativePath(absolutePath) {
   return path.relative(projectRoot, absolutePath).replaceAll("\\", "/");
 }
 
+function isGlobPattern(relativePath) {
+  return /[*?[\]{}]/u.test(relativePath);
+}
+
 function parsePnpmWorkspacePatterns() {
   const workspacePath = path.join(projectRoot, "pnpm-workspace.yaml");
   const raw = readFileSync(workspacePath, "utf8");
@@ -110,6 +114,9 @@ function collectScriptPathIssues(rootPackage) {
     for (const match of matches) {
       const relativePath = match[1];
       if (!relativePath) {
+        continue;
+      }
+      if (isGlobPattern(relativePath)) {
         continue;
       }
 
