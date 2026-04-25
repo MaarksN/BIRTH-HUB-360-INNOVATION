@@ -86,7 +86,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p reports
-          gitleaks git . \
+          gitleaks dir . \
             --config .gitleaks.toml \
             --redact \
             --report-format sarif \

@@ -1,0 +1,7 @@
+--- apps/worker/src/agents/runtime.orchestration.ts
++++ apps/worker/src/agents/runtime.orchestration.ts
+@@ -276,3 +276,3 @@
+       status: "FAILED",
+-      metrics: errorMetrics,
++      metrics: errorMetrics as any,
+       error: String(error),

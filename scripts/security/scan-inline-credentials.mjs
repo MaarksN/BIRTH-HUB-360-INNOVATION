@@ -50,7 +50,6 @@ const PLACEHOLDER_HINTS = [
   "secret_here",
   "api_key_here",
   "password123",
-  "redacted",
   "tenant-secret",
   "supersecret",
 ];
@@ -60,19 +59,6 @@ const SYNTHETIC_TEST_CREDENTIAL_PATTERNS = [
   /\btoken[:=]\s*["']token[-_][a-z0-9_-]{1,64}["']/i,
   /\bpassword[:=]\s*["']password[_-][a-z0-9_-]{1,64}["']/i,
   /\bapi[_-]?key[:=]\s*["']api[_-]?key[_-][a-z0-9_-]{1,64}["']/i
-];
-
-const REAL_CREDENTIAL_VALUE_PATTERNS = [
-  /\bsk-[A-Za-z0-9]{20,}\b/,
-  /\bsk_live_[A-Za-z0-9]{10,}\b/i,
-  /\bpk_live_[A-Za-z0-9]{10,}\b/i,
-  /\bwhsec_live_[A-Za-z0-9]{10,}\b/i,
-  /\bghp_[A-Za-z0-9]{20,}\b/,
-  /\bgithub_pat_[A-Za-z0-9_]{20,}\b/,
-  /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/,
-  /\bAKIA[0-9A-Z]{16}\b/,
-  /\bAIza[0-9A-Za-z_-]{30,}\b/,
-  /-----BEGIN [A-Z ]+PRIVATE KEY-----/
 ];
 
 function shouldSkipFile(filePath) {
@@ -118,25 +104,6 @@ function isSyntheticTestCredential(line) {
   return SYNTHETIC_TEST_CREDENTIAL_PATTERNS.some((pattern) => pattern.test(line));
 }
 
-function isTestFile(filePath) {
-  const rel = path.relative(ROOT, filePath);
-  return /(?:^|[\\/])(?:tests?|__tests__)[\\/]/i.test(rel) || /\.test\.[cm]?[jt]sx?$/i.test(rel);
-}
-
-function isLikelyTestFixtureCredential(filePath, line) {
-  if (!isTestFile(filePath)) {
-    return false;
-  }
-
-  const match = line.match(/\b(?:api[_-]?key|token|secret|password)\b\s*[:=]\s*["']([^"']{1,160})["']/i);
-  const value = match?.[1];
-  if (!value) {
-    return false;
-  }
-
-  return !REAL_CREDENTIAL_VALUE_PATTERNS.some((pattern) => pattern.test(value));
-}
-
 function scanFile(filePath) {
   let content;
   try {
@@ -148,7 +115,7 @@ function scanFile(filePath) {
   const findings = [];
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
-    if (!line || isPlaceholder(line) || isSyntheticTestCredential(line) || isLikelyTestFixtureCredential(filePath, line)) {
+    if (!line || isPlaceholder(line) || isSyntheticTestCredential(line)) {
       continue;
     }
     for (const pattern of CREDENTIAL_PATTERNS) {

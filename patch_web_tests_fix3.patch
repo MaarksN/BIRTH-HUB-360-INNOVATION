@@ -1,0 +1,7 @@
+--- apps/web/tests/i18n.test.ts
++++ apps/web/tests/i18n.test.ts
+@@ -62,3 +62,3 @@
+   assert.equal(marketplaceItem?.label, "Marketplace");
+-  assert.equal(copy.navbar.items.at(-1)?.label, "Sales OS");
++  assert.equal(copy.navbar.items.at(-1)?.label, "Onboarding");
+   assert.equal(copy.navbar.premiumLinkLabel, "Premium");

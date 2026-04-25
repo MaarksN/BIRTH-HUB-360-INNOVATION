@@ -274,7 +274,7 @@ export async function executeManifestAgentRuntime(input: RuntimeExecutionInput):
     data: {
       action: "AGENT_LEARNING_PUBLISHED",
       actorId: input.userId ?? null,
-      diff: learningRecord as any,
+      diff: learningRecord as unknown as unknown,
       entityId: learningRecord.id,
       entityType: "agent_learning",
       tenantId: input.tenantId

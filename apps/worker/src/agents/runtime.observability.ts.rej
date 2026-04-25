@@ -1,0 +1,7 @@
+--- apps/worker/src/agents/runtime.observability.ts
++++ apps/worker/src/agents/runtime.observability.ts
+@@ -30,3 +30,3 @@
+       state: event.context,
+-      metrics: event.metrics,
++      metrics: event.metrics as any,
+     },

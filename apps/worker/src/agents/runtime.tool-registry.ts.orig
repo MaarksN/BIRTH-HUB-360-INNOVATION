@@ -156,7 +156,7 @@ export function createRuntimeToolRegistry(input: {
               operation: payload.operation,
               table: payload.table,
               traceId: context.traceId
-            } as any,
+            } as unknown,
             entityId: entityId ?? context.traceId,
             entityType: payload.table,
             tenantId: context.tenantId

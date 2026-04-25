@@ -2,8 +2,7 @@ import { Role } from "@birthub/database";
 import {
   createOrganizationRequestSchema,
   createOrganizationResponseSchema,
-  cursorPaginationQuerySchema,
-  roleUpdateRequestSchema
+  cursorPaginationQuerySchema
 } from "@birthub/config";
 import { Router } from "express";
 import { z } from "zod";
@@ -29,7 +28,11 @@ type OrganizationRouteLogger = {
   info: (...args: unknown[]) => void;
 };
 
-const memberRoleSchema = roleUpdateRequestSchema;
+const memberRoleSchema = z
+  .object({
+    role: z.nativeEnum(Role)
+  })
+  .strict();
 
 const auditFilterSchema = cursorPaginationQuerySchema.extend({
   actorId: z.string().optional(),

@@ -178,7 +178,7 @@ export function readSessionId(input: Record<string, unknown>): string | null {
   return null;
 }
 
-export function toJsonValue(value: unknown): Prisma.InputJsonValue {
+export function toJsonValue(value: Record<string, unknown>): Prisma.InputJsonValue {
   return value as Prisma.InputJsonValue;
 }
 

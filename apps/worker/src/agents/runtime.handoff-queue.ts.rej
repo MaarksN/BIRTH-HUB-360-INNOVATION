@@ -1,0 +1,17 @@
+--- apps/worker/src/agents/runtime.handoff-queue.ts
++++ apps/worker/src/agents/runtime.handoff-queue.ts
+@@ -26,3 +26,3 @@
+         state: job.data.context,
+-        metrics: job.data.metrics,
++        metrics: job.data.metrics as any,
+       },
+@@ -31,3 +31,3 @@
+         state: job.data.context,
+-        metrics: job.data.metrics,
++        metrics: job.data.metrics as any,
+       },
+@@ -68,3 +68,3 @@
+       state: job.data.context,
+-      metrics: job.data.metrics,
++      metrics: job.data.metrics as any,
+     },
