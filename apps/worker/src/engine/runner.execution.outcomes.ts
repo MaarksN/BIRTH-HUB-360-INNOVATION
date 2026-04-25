@@ -31,38 +31,50 @@ function resolveErrorCode(error: unknown): string {
   return "STEP_EXECUTION_FAILED";
 }
 
+function isUniqueConstraintError(error: unknown): boolean {
+  return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002";
+}
+
 async function recordSuccessfulStep(
   context: ExecutionContext,
   payload: WorkflowExecutionJobPayload,
   output: unknown
-): Promise<void> {
+): Promise<boolean> {
   const normalizedOutput = context.normalizeOutput(output);
   const isDelayStep = context.step.type === "DELAY";
   const finishedAt = new Date();
 
-  await prisma.stepResult.create({
-    data: {
-      attempt: payload.attempt,
-      durationMs: finishedAt.getTime() - context.now.getTime(),
-      executionId: payload.executionId,
-      externalPayloadUrl: normalizedOutput.externalPayloadUrl,
-      finishedAt,
-      input: {
-        _cacheHash: context.stepInputHash,
-        triggerPayload: maskSensitivePayload(payload.triggerPayload)
-      } as Prisma.InputJsonValue,
-      organizationId: payload.organizationId,
-      output: normalizedOutput.output as Prisma.InputJsonValue,
-      outputPreview: normalizedOutput.outputPreview,
-      outputSize: normalizedOutput.outputSize,
-      startedAt: context.now,
-      status: isDelayStep ? StepResultStatus.WAITING : StepResultStatus.SUCCESS,
-      stepId: context.step.id,
-      tenantId: payload.tenantId,
-      workflowRevisionId: context.execution.workflowRevisionId,
-      workflowId: payload.workflowId
+  try {
+    await prisma.stepResult.create({
+      data: {
+        attempt: payload.attempt,
+        durationMs: finishedAt.getTime() - context.now.getTime(),
+        executionId: payload.executionId,
+        externalPayloadUrl: normalizedOutput.externalPayloadUrl,
+        finishedAt,
+        input: {
+          _cacheHash: context.stepInputHash,
+          triggerPayload: maskSensitivePayload(payload.triggerPayload)
+        } as Prisma.InputJsonValue,
+        organizationId: payload.organizationId,
+        output: normalizedOutput.output as Prisma.InputJsonValue,
+        outputPreview: normalizedOutput.outputPreview,
+        outputSize: normalizedOutput.outputSize,
+        startedAt: context.now,
+        status: isDelayStep ? StepResultStatus.WAITING : StepResultStatus.SUCCESS,
+        stepId: context.step.id,
+        tenantId: payload.tenantId,
+        workflowRevisionId: context.execution.workflowRevisionId,
+        workflowId: payload.workflowId
+      }
+    });
+  } catch (error) {
+    if (isUniqueConstraintError(error)) {
+      return false;
     }
-  });
+
+    throw error;
+  }
 
   await prisma.workflowExecution.update({
     data: {
@@ -72,6 +84,8 @@ async function recordSuccessfulStep(
       id: payload.executionId
     }
   });
+
+  return true;
 }
 
 async function markExecutionSuccess(context: ExecutionContext): Promise<void> {
@@ -150,12 +164,13 @@ async function enqueueTransitions(input: {
       continue;
     }
 
+    const nextAttempt = 1;
     await input.executionQueue.add(
       "workflow-step",
-      buildQueuedPayload(input.payload, nextStep.key, 1),
+      buildQueuedPayload(input.payload, nextStep.key, nextAttempt),
       {
         delay: resolveDelayMs(input.context, input.output),
-        jobId: `${input.payload.executionId}:${nextStep.key}:${Date.now()}`
+        jobId: `${input.payload.executionId}:${nextStep.key}:${nextAttempt}`
       }
     );
 
@@ -206,31 +221,42 @@ async function recordFailedStep(
   payload: WorkflowExecutionJobPayload,
   error: unknown,
   nextRetryAt: Date | null
-): Promise<void> {
+): Promise<boolean> {
   const finishedAt = new Date();
-  await prisma.stepResult.create({
-    data: {
-      attempt: payload.attempt,
-      durationMs: finishedAt.getTime() - context.now.getTime(),
-      errorCode: resolveErrorCode(error),
-      errorMessage: error instanceof Error ? error.message : "Unknown step execution error",
-      executionId: payload.executionId,
-      finishedAt,
-      input: {
-        _cacheHash: context.stepInputHash,
-        triggerPayload: maskSensitivePayload(payload.triggerPayload)
-      } as Prisma.InputJsonValue,
-      nextRetryAt,
-      organizationId: payload.organizationId,
-      outputSize: 0,
-      startedAt: context.now,
-      status: StepResultStatus.FAILED,
-      stepId: context.step.id,
-      tenantId: payload.tenantId,
-      workflowRevisionId: context.execution.workflowRevisionId,
-      workflowId: payload.workflowId
+
+  try {
+    await prisma.stepResult.create({
+      data: {
+        attempt: payload.attempt,
+        durationMs: finishedAt.getTime() - context.now.getTime(),
+        errorCode: resolveErrorCode(error),
+        errorMessage: error instanceof Error ? error.message : "Unknown step execution error",
+        executionId: payload.executionId,
+        finishedAt,
+        input: {
+          _cacheHash: context.stepInputHash,
+          triggerPayload: maskSensitivePayload(payload.triggerPayload)
+        } as Prisma.InputJsonValue,
+        nextRetryAt,
+        organizationId: payload.organizationId,
+        outputSize: 0,
+        startedAt: context.now,
+        status: StepResultStatus.FAILED,
+        stepId: context.step.id,
+        tenantId: payload.tenantId,
+        workflowRevisionId: context.execution.workflowRevisionId,
+        workflowId: payload.workflowId
+      }
+    });
+  } catch (error_) {
+    if (isUniqueConstraintError(error_)) {
+      return false;
     }
-  });
+
+    throw error_;
+  }
+
+  return true;
 }
 
 async function scheduleRetry(
@@ -315,7 +341,11 @@ export async function handleExecutionOutcome(input: {
   payload: WorkflowExecutionJobPayload;
 }): Promise<void> {
   if (input.error === undefined) {
-    await recordSuccessfulStep(input.context, input.payload, input.output);
+    const recorded = await recordSuccessfulStep(input.context, input.payload, input.output);
+    if (!recorded) {
+      return;
+    }
+
     await handleSuccessfulExecution({
       context: input.context,
       executionQueue: input.executionQueue,
@@ -330,7 +360,10 @@ export async function handleExecutionOutcome(input: {
       ? new Date(Date.now() + calculateBackoff(input.payload.attempt))
       : null;
 
-  await recordFailedStep(input.context, input.payload, input.error, nextRetryAt);
+  const recorded = await recordFailedStep(input.context, input.payload, input.error, nextRetryAt);
+  if (!recorded) {
+    return;
+  }
 
   if (nextRetryAt) {
     await scheduleRetry(input.executionQueue, input.payload, nextRetryAt);
