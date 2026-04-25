@@ -30,3 +30,7 @@ pnpm clean
 - Commits objetivos e descritivos.
 - Uma PR por objetivo técnico.
 - Preencher o template/checklist de PR.
+
+## Padrão de Commits
+
+Este projeto adota o padrão [Conventional Commits](https://www.conventionalcommits.org/). Todas as mensagens de commit são validadas pelo `commitlint` através do Husky.
