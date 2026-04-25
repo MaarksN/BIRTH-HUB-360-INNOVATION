@@ -1,18 +1,15 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+
+import { capturePnpm } from "./shared.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..", "..");
 const policyPath = path.join(__dirname, "license-policy.json");
 
 function runPnpmLicenses() {
-  const result = spawnSync("pnpm", ["licenses", "list", "--json"], {
-    cwd: projectRoot,
-    encoding: "utf8",
-    env: process.env
-  });
+  const result = capturePnpm(["licenses", "list", "--json"], { cwd: projectRoot });
 
   if (result.error) {
     throw result.error;

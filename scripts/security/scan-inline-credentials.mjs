@@ -58,7 +58,10 @@ const SYNTHETIC_TEST_CREDENTIAL_PATTERNS = [
   /\bsecret[:=]\s*["']secret[_-][a-z0-9_-]{1,64}["']/i,
   /\btoken[:=]\s*["']token[-_][a-z0-9_-]{1,64}["']/i,
   /\bpassword[:=]\s*["']password[_-][a-z0-9_-]{1,64}["']/i,
-  /\bapi[_-]?key[:=]\s*["']api[_-]?key[_-][a-z0-9_-]{1,64}["']/i
+  /\bapi[_-]?key[:=]\s*["']api[_-]?key[_-][a-z0-9_-]{1,64}["']/i,
+  /\bpassword[:=]\s*["'](?:p@ssw0rd|wrong-password|\[REDACTED\])["']/i,
+  /\bsecret[:=]\s*["'](?:session-legacy-secret|whsec_previous_signature)["']/i,
+  /\bapi[_-]?key[:=]\s*["'](?:zenvia-rate-limited|zenvia-invalid|sk_invalid|sk_rate_limit)["']/i
 ];
 
 function shouldSkipFile(filePath) {
@@ -104,6 +107,10 @@ function isSyntheticTestCredential(line) {
   return SYNTHETIC_TEST_CREDENTIAL_PATTERNS.some((pattern) => pattern.test(line));
 }
 
+function isTestFile(filePath) {
+  return /(?:^|[\\/])(?:test|tests|__tests__)(?:[\\/]|$)|\.(?:test|spec)\.[cm]?[jt]sx?$/i.test(filePath);
+}
+
 function scanFile(filePath) {
   let content;
   try {
@@ -115,7 +122,7 @@ function scanFile(filePath) {
   const findings = [];
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
-    if (!line || isPlaceholder(line) || isSyntheticTestCredential(line)) {
+    if (!line || isPlaceholder(line) || (isTestFile(filePath) && isSyntheticTestCredential(line))) {
       continue;
     }
     for (const pattern of CREDENTIAL_PATTERNS) {
