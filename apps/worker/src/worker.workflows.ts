@@ -70,7 +70,9 @@ function resolveWorkflowSteps(definition: Prisma.JsonValue): WorkflowStepDefinit
     return [];
   }
 
-  return definition.steps.filter((step): step is WorkflowStepDefinition => {
+  const rawSteps: unknown[] = definition.steps;
+
+  return rawSteps.filter((step): step is WorkflowStepDefinition => {
     if (!isRecord(step) || typeof step.type !== "string" || !isRecord(step.config)) {
       return false;
     }
@@ -123,7 +125,7 @@ function isUniqueConstraintError(error: unknown): boolean {
   return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002";
 }
 
-export async function processWorkflowExecutionJob(job: Job<{ executionId: string; attempt?: number }>): Promise<{ executed: boolean }> {
+export async function processWorkflowExecutionJob(job: Job<WorkflowExecutionJobData>): Promise<{ executed: boolean }> {
   const executionId = job.data.executionId;
   const attempt = job.data.attempt ?? 1;
 
