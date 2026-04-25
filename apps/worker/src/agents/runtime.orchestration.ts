@@ -15,7 +15,7 @@ import { Queue } from "bullmq";
 import { PlanExecutor } from "../executors/planExecutor.js";
 import { runtimeMemory } from "./runtime.memory.js";
 import type { RuntimeExecutionInput, RuntimeExecutionResult } from "./runtime.types.js";
-import { readSessionId, roundCurrency } from "./runtime.shared.js";
+import { readSessionId, roundCurrency, toJsonValue } from "./runtime.shared.js";
 import { resolveRuntimeAgent, resolveManagedPolicies } from "./runtime.catalog.js";
 import { querySharedLearning, appendConversationMessage, buildLearningRecord, createOutputArtifact } from "./runtime.telemetry.js";
 import { createRuntimeTools } from "./runtime.tools.js";
@@ -92,9 +92,9 @@ export async function executeManifestAgentRuntime(input: RuntimeExecutionInput):
   const persistLogs = async (): Promise<void> => {
     await prisma.agentExecution.updateMany({
       data: {
-        metadata: {
+        metadata: toJsonValue({
           logs
-        } as unknown
+        })
       },
       where: {
         id: input.executionId
@@ -274,7 +274,7 @@ export async function executeManifestAgentRuntime(input: RuntimeExecutionInput):
     data: {
       action: "AGENT_LEARNING_PUBLISHED",
       actorId: input.userId ?? null,
-      diff: learningRecord as unknown as unknown,
+      diff: toJsonValue(learningRecord),
       entityId: learningRecord.id,
       entityType: "agent_learning",
       tenantId: input.tenantId

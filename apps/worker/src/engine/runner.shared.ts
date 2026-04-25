@@ -108,16 +108,23 @@ export async function consumeSharedAgentBudget(tenantId: string): Promise<void> 
     throw new Error("SHARED_RATE_LIMIT_EXCEEDED");
   }
 
-  await prisma.quotaUsage.update({
+  const updated = await prisma.quotaUsage.updateMany({
     data: {
       count: {
         increment: 1
       }
     },
     where: {
+      count: {
+        lt: record.limit
+      },
       id: record.id
     }
   });
+
+  if (updated.count === 0) {
+    throw new Error("SHARED_RATE_LIMIT_EXCEEDED");
+  }
 }
 
 function isUniqueConstraintError(error: unknown): boolean {

@@ -425,11 +425,7 @@ void test("connectors router forwards raw Stripe webhook fields to the service",
         webhookSignature: "t=12345,v1=testsig"
       },
       provider: "stripe",
-      signature: "signed-by-receiver",
-      trustedContext: {
-        organizationId: "org_1",
-        tenantId: "tenant_1"
-      }
+      signature: "signed-by-receiver"
     });
     assert.deepEqual(response.body, {
       requestId: "req_1",

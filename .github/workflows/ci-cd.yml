@@ -63,9 +63,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run tests
-        run: pnpm test --coverage
+        run: pnpm test
 
       - name: Upload coverage to Codecov
+        if: ${{ hashFiles('coverage/coverage-final.json') != '' }}
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage/coverage-final.json
@@ -153,25 +154,19 @@ jobs:
 
       - name: Check licenses
         run: pnpm security:licenses
-        continue-on-error: true
 
-      - name: Run Trivy vulnerability scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+      - name: Audit high severity dependencies
+        run: pnpm audit --audit-level high
 
-      - name: Upload Trivy results
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
-        continue-on-error: true
+      - name: Scan inline credentials
+        run: node scripts/security/scan-inline-credentials.mjs
+
+      - name: Validate migration governance
+        run: pnpm --filter @birthub/database db:check:governance
 
   # ============ BUILD DOCKER IMAGES ============
   build:
-    needs: [lint, test, security]
+    needs: [lint, test, integration-tests, security]
     runs-on: ubuntu-latest
     name: Build Docker Images
     
@@ -223,7 +218,7 @@ jobs:
   # ============ NOTIFY ============
   notify:
     if: always()
-    needs: [lint, test, build]
+    needs: [lint, test, integration-tests, security, build]
     runs-on: ubuntu-latest
     name: Pipeline Status
 
@@ -232,6 +227,8 @@ jobs:
         run: |
           if [[ "${{ needs.lint.result }}" == "failure" ]] || \
              [[ "${{ needs.test.result }}" == "failure" ]] || \
+             [[ "${{ needs.integration-tests.result }}" == "failure" ]] || \
+             [[ "${{ needs.security.result }}" == "failure" ]] || \
              [[ "${{ needs.build.result }}" == "failure" ]]; then
             echo "Pipeline failed"
             exit 1

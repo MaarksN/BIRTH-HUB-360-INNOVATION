@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-19T00:00:00.000Z",
+  "generatedAt": "2026-04-24T00:00:00.000Z",
   "migrations": {
     "20260313000100_cycle1_foundation": {
       "environments": [
@@ -1082,6 +1082,127 @@
         "backwardCompatible": false,
         "batching": {
           "required": false
+        },
+        "expandContract": true,
+        "transactional": true
+      },
+      "validation": {
+        "driftChecked": true,
+        "rlsReviewed": true,
+        "rollbackTested": true,
+        "viewsAndRoutinesReviewed": true
+      }
+    },
+    "20260420000100_phase2_1_hubspot_hardening": {
+      "environments": [
+        "dev",
+        "staging",
+        "prod"
+      ],
+      "estimatedDurationMinutes": 5,
+      "impact": "low",
+      "maintenanceWindowSlaMinutes": 30,
+      "notes": "Adds external-event idempotency metadata and unique inbound de-duplication for HubSpot/CRM sync events.",
+      "owner": "Platform Data",
+      "postMigrationChecklist": [
+        "drift_check",
+        "fk_index_audit",
+        "integrity_health_check",
+        "migration_state_report",
+        "release_smoke",
+        "rls_audit"
+      ],
+      "preProductionChecklist": [
+        "backup_confirmed",
+        "maintenance_window",
+        "rollback_validated",
+        "stakeholder_notice"
+      ],
+      "review": {
+        "approverRoles": [
+          "DBA",
+          "DB_LEAD"
+        ],
+        "reviewer": "Database Lead"
+      },
+      "rollback": {
+        "strategy": "Drop the inbound external-event unique index, tenant/provider lookup index, and external_event_id column only after confirming CRM sync replay no longer depends on the field.",
+        "steps": [
+          "Pause deployment and confirm backup freshness plus migration-state evidence.",
+          "Disable inbound CRM webhook replay while rollback is evaluated.",
+          "Drop crm_sync_events_inbound_external_event_id_key and crm_sync_events_tenantId_provider_direction_external_event_id_idx, then drop external_event_id if no consumers remain.",
+          "Replay CRM sync idempotency and tenant isolation smoke tests before reopening webhook ingestion."
+        ],
+        "testedEnvironments": [
+          "staging"
+        ]
+      },
+      "severity": "P1",
+      "strategy": {
+        "backwardCompatible": true,
+        "batching": {
+          "required": false
+        },
+        "expandContract": true,
+        "transactional": true
+      },
+      "validation": {
+        "driftChecked": true,
+        "rlsReviewed": true,
+        "rollbackTested": true,
+        "viewsAndRoutinesReviewed": true
+      }
+    },
+    "20260422000100_phase3_workflow_events": {
+      "environments": [
+        "dev",
+        "staging",
+        "prod"
+      ],
+      "estimatedDurationMinutes": 15,
+      "impact": "medium",
+      "maintenanceWindowSlaMinutes": 60,
+      "notes": "Adds workflow revision lineage, trigger event metadata, retry timing metadata, and tenant-scoped idempotency indexes for workflow execution durability.",
+      "owner": "Platform Data",
+      "postMigrationChecklist": [
+        "drift_check",
+        "fk_index_audit",
+        "integrity_health_check",
+        "migration_state_report",
+        "release_smoke",
+        "rls_audit"
+      ],
+      "preProductionChecklist": [
+        "backup_confirmed",
+        "maintenance_window",
+        "rollback_validated",
+        "stakeholder_notice"
+      ],
+      "review": {
+        "approverRoles": [
+          "DBA",
+          "DB_LEAD"
+        ],
+        "reviewer": "Database Lead"
+      },
+      "rollback": {
+        "strategy": "Rollback with a validated snapshot if workflow execution lineage or idempotency constraints regress existing workflow processing.",
+        "steps": [
+          "Pause workflow execution workers and confirm backup freshness plus migration-state evidence.",
+          "Validate duplicate idempotency-key exposure before removing the new tenant-wide execution index.",
+          "Restore the previous snapshot or recreate previous workflow execution, step, and transition indexes before restarting workers.",
+          "Replay workflow trigger, retry, idempotency, and tenant isolation smoke tests before reopening traffic."
+        ],
+        "testedEnvironments": [
+          "staging"
+        ]
+      },
+      "severity": "P1",
+      "strategy": {
+        "backwardCompatible": false,
+        "batching": {
+          "required": true,
+          "strategy": "The step_results lineage backfill is bounded to rows with null workflowRevisionId and should run during the documented maintenance window."
         },
         "expandContract": true,
         "transactional": true

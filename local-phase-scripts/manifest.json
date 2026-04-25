@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-04-24T16:07:03.011355",
+  "repo_default": "C:\\Users\\Marks\\Documents\\GitHub\\BIRTH-HUB-360-INNOVATION",
+  "files": [
+    "README-EXECUCAO.md",
+    "scripts/Run-All-Phases.ps1",
+    "scripts/Run-Phase.ps1",
+    "scripts/lib/common.ps1",
+    "scripts/phases/phase-00-security-critical.ps1",
+    "scripts/phases/phase-01-multitenancy-rbac.ps1",
+    "scripts/phases/phase-02-database-concurrency.ps1",
+    "scripts/phases/phase-03-typecheck-quality.ps1",
+    "scripts/phases/phase-04-tests-coverage.ps1",
+    "scripts/phases/phase-05-architecture-boundaries.ps1",
+    "scripts/phases/phase-06-observability-operations.ps1",
+    "scripts/phases/phase-07-integrations-resilience.ps1",
+    "scripts/phases/phase-08-ai-agents-tool-calling.ps1",
+    "scripts/phases/phase-09-frontend-a11y-i18n.ps1",
+    "scripts/phases/phase-10-supply-chain-release.ps1",
+    "scripts/phases/phase-11-privacy-lgpd-data-quality.ps1",
+    "scripts/phases/phase-12-devex-maintenance.ps1",
+    "scripts/tools/detect-cycles.mjs"
+  ],
+  "phases": [
+    {
+      "phase": "00",
+      "script": "scripts/phases/phase-00-security-critical.ps1"
+    },
+    {
+      "phase": "01",
+      "script": "scripts/phases/phase-01-multitenancy-rbac.ps1"
+    },
+    {
+      "phase": "02",
+      "script": "scripts/phases/phase-02-database-concurrency.ps1"
+    },
+    {
+      "phase": "03",
+      "script": "scripts/phases/phase-03-typecheck-quality.ps1"
+    },
+    {
+      "phase": "04",
+      "script": "scripts/phases/phase-04-tests-coverage.ps1"
+    },
+    {
+      "phase": "05",
+      "script": "scripts/phases/phase-05-architecture-boundaries.ps1"
+    },
+    {
+      "phase": "06",
+      "script": "scripts/phases/phase-06-observability-operations.ps1"
+    },
+    {
+      "phase": "07",
+      "script": "scripts/phases/phase-07-integrations-resilience.ps1"
+    },
+    {
+      "phase": "08",
+      "script": "scripts/phases/phase-08-ai-agents-tool-calling.ps1"
+    },
+    {
+      "phase": "09",
+      "script": "scripts/phases/phase-09-frontend-a11y-i18n.ps1"
+    },
+    {
+      "phase": "10",
+      "script": "scripts/phases/phase-10-supply-chain-release.ps1"
+    },
+    {
+      "phase": "11",
+      "script": "scripts/phases/phase-11-privacy-lgpd-data-quality.ps1"
+    },
+    {
+      "phase": "12",
+      "script": "scripts/phases/phase-12-devex-maintenance.ps1"
+    }
+  ]
+}

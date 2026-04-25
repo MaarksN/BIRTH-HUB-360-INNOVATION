@@ -1,5 +1,6 @@
 import { getApiConfig } from "@birthub/config";
 import {
+  MembershipStatus,
   Prisma,
   prisma,
   type QuotaResourceType,
@@ -16,6 +17,12 @@ import { enqueueCrmSync } from "../engagement/queues.js";
 type DatabaseClient = {
   organization: {
     findFirst: typeof prisma.organization.findFirst;
+  };
+};
+
+type MembershipContinuityClient = {
+  membership: {
+    count: typeof prisma.membership.count;
   };
 };
 
@@ -113,6 +120,31 @@ async function resolveScopedOrganization(
   }
 
   return organization;
+}
+
+async function assertOwnerContinuity(
+  client: MembershipContinuityClient,
+  input: {
+    organizationId: string;
+    tenantId: string;
+  }
+): Promise<void> {
+  const activeOwnerCount = await client.membership.count({
+    where: {
+      organizationId: input.organizationId,
+      role: Role.OWNER,
+      status: MembershipStatus.ACTIVE,
+      tenantId: input.tenantId
+    }
+  });
+
+  if (activeOwnerCount <= 1) {
+    throw new ProblemDetailsError({
+      detail: "At least one active owner must remain in the tenant.",
+      status: 409,
+      title: "Conflict"
+    });
+  }
 }
 
 // @see ADR-007
@@ -297,6 +329,14 @@ export async function updateMemberRole(input: {
   role: Role;
   tenantId: string;
 }) {
+  if (input.role === Role.SUPER_ADMIN) {
+    throw new ProblemDetailsError({
+      detail: "Tenant member management cannot grant global roles.",
+      status: 403,
+      title: "Forbidden"
+    });
+  }
+
   return withTenantDatabaseContext(async (tx) => {
     await resolveScopedOrganization(tx, input.organizationId, input.tenantId);
 
@@ -313,6 +353,13 @@ export async function updateMemberRole(input: {
         detail: "Member not found for the active tenant.",
         status: 404,
         title: "Not Found"
+      });
+    }
+
+    if (membership.role === Role.OWNER && input.role !== Role.OWNER) {
+      await assertOwnerContinuity(tx, {
+        organizationId: input.organizationId,
+        tenantId: input.tenantId
       });
     }
 
@@ -361,6 +408,13 @@ export async function removeMember(input: {
         detail: "Member not found for the active tenant.",
         status: 404,
         title: "Not Found"
+      });
+    }
+
+    if (membership.role === Role.OWNER) {
+      await assertOwnerContinuity(tx, {
+        organizationId: input.organizationId,
+        tenantId: input.tenantId
       });
     }
 

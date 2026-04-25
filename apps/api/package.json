@@ -12,7 +12,7 @@
     "test:auth": "node --import tsx --test tests/auth.test.ts",
     "test:rbac": "node --import tsx --test tests/rbac.test.ts",
     "test:security": "node --import tsx --test tests/security.test.ts",
-    "test": "sh -c 'files=$(find tests test -name \"*.test.ts\" -print 2>/dev/null); if [ -n \"$files\" ]; then node --import tsx --test --test-concurrency=1 $files; else echo \"No tests found\"; fi'",
+    "test": "node ../../scripts/testing/run-node-tests.mjs tests test -- --test-concurrency=1",
     "test:isolation": "node --import tsx --test --test-concurrency=1 test/**/*.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

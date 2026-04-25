@@ -5,6 +5,7 @@ import { prisma } from "@birthub/database";
 import { z } from "zod";
 
 import { runtimeMemory } from "./runtime.memory.js";
+import { toJsonValue } from "./runtime.shared.js";
 import { createOutputArtifact } from "./runtime.telemetry.js";
 
 class ZodRuntimeTool<TInput, TOutput> extends BaseTool<TInput, TOutput> {
@@ -150,13 +151,13 @@ export function createRuntimeToolRegistry(input: {
           data: {
             action: "AGENT_DB_WRITE",
             actorId: null,
-            diff: {
+            diff: toJsonValue({
               affectedRows,
               entityId,
               operation: payload.operation,
               table: payload.table,
               traceId: context.traceId
-            } as unknown,
+            }),
             entityId: entityId ?? context.traceId,
             entityType: payload.table,
             tenantId: context.tenantId
