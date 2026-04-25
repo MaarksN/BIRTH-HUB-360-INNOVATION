@@ -42,6 +42,9 @@ jobs:
       - name: Type check
         run: pnpm typecheck
 
+      - name: Audit workspace contract
+        run: pnpm workspace:audit
+
   # ============ UNIT TESTS ============
   test:
     runs-on: ubuntu-latest
@@ -119,16 +122,32 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Enable pg_stat_statements
+        run: |
+          docker exec "${{ job.services.postgres.id }}" sh -lc "echo \"shared_preload_libraries = 'pg_stat_statements'\" >> \"$PGDATA/postgresql.conf\""
+          docker restart "${{ job.services.postgres.id }}"
+          until docker exec "${{ job.services.postgres.id }}" pg_isready -U postgres -d birthub_test; do
+            sleep 1
+          done
+          docker exec "${{ job.services.postgres.id }}" psql -U postgres -d birthub_test -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
+
       - name: Setup test database
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/birthub_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/birthub_test?schema=public
         run: |
           pnpm db:generate
           pnpm db:migrate:deploy
 
+      - name: Run database audit gate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/birthub_test?schema=public
+        run: pnpm db:check:all
+
       - name: Run integration tests
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/birthub_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/birthub_test?schema=public
+          DB_APP_ROLE: api_worker
+          DB_APP_PASSWORD: postgres
           REDIS_URL: redis://localhost:6379
         run: pnpm test:isolation
 
