@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 // 
 import { workspaceRoot } from "./lib/paths.js";
 import { collectRepoTextFiles } from "./lib/repo-scan.js";

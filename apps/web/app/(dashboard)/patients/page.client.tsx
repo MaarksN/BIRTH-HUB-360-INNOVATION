@@ -207,6 +207,7 @@ function PatientsPageEnabled() {
       <section className="panel" style={{ display: "grid", gap: "0.85rem" }}>
         <div className="filter-row">
           <input
+            aria-label="Buscar pacientes"
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Buscar por nome, email ou prontuario"
             value={search}

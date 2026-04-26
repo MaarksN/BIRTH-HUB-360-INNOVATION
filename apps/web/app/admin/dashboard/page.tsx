@@ -277,12 +277,14 @@ function ImpersonationPanel({
         }}
       >
         <div style={{ display: "flex", gap: "0.5rem" }}><input
+          aria-label="Tenant para impersonar"
           onChange={(event) => onTenantChange(event.target.value)}
           placeholder="tenantId, slug ou organizationId"
           type="text"
           value={tenantToImpersonate}
           style={{ flex: 1 }}
         /><input
+          aria-label="Motivo da impersonacao"
           onChange={(event) => onReasonChange(event.target.value)}
           placeholder="Motivo (ex: Chamado #1234)"
           type="text"

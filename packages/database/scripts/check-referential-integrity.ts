@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 // 
 import { createPrismaClient } from "../src/client.js";
 import { writeJsonReport, writeTextReport } from "./lib/report.js";

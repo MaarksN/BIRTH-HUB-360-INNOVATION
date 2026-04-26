@@ -165,7 +165,7 @@ export default function ApiKeysPage() {
         }}
       >
         <strong>Criar nova API key</strong>
-        <input onChange={(event) => setLabel(event.target.value)} value={label} />
+        <input aria-label="Nome da API key" onChange={(event) => setLabel(event.target.value)} value={label} />
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
           {allScopes.map((scope) => (
             <label key={scope} style={{ alignItems: "center", display: "flex", gap: "0.35rem" }}>

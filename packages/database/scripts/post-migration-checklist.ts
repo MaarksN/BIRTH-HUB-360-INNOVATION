@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 // 
 import { createScriptRuntime } from "./lib/runtime.js";
 import { createLogger } from "@birthub/logger";

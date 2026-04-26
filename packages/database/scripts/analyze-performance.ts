@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 // 
 import { Prisma } from "@prisma/client";
 import { F8_CONFIG } from "../f8.config.js";

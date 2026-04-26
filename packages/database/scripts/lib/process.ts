@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 // 
 import { Buffer } from "node:buffer";
 import { spawn } from "node:child_process";

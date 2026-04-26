@@ -198,6 +198,7 @@ function WorkflowEditorCanvas({
       >
         <div style={{ display: "grid", gap: 4 }}>
           <input
+            aria-label="Nome do workflow"
             onChange={(event) => setWorkflowName(event.target.value)}
             style={{
               background: "rgba(255,255,255,0.15)",

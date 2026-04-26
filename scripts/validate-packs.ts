@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 // 
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";

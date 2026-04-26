@@ -65,12 +65,14 @@ export function WebhookEndpointForm({
         }}
       >
         <input
+          aria-label="URL do webhook"
           onChange={(event) => onUrlChange(event.target.value)}
           placeholder="https://cliente.example.com/webhooks/birthhub"
           type="url"
           value={url}
         />
         <input
+          aria-label="Topicos do webhook"
           onChange={(event) => onTopicsChange(event.target.value)}
           placeholder={defaultTopics}
           type="text"

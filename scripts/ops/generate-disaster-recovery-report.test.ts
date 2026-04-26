@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";

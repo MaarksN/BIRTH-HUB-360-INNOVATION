@@ -79,6 +79,7 @@ function SalesOsChatComposer(input: {
         <Mic size={16} />
       </button>
       <input
+        aria-label={copy.composerPlaceholder}
         onChange={(event) => onInputChange(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
@@ -130,6 +131,7 @@ export function SalesOsModuleOverview(input: {
       <div className={styles.searchCard}>
         <Search size={16} />
         <input
+          aria-label="Buscar modulos"
           onChange={(event) => onModuleSearchChange(event.target.value)}
           placeholder={copy.moduleSearchPlaceholder}
           type="search"
@@ -188,6 +190,7 @@ export function SalesOsToolRail(input: {
       <div className={styles.searchCard}>
         <Search size={16} />
         <input
+          aria-label="Buscar ferramentas"
           onChange={(event) => onToolSearchChange(event.target.value)}
           placeholder={copy.toolSearchPlaceholder}
           type="search"

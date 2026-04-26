@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 // 
 import { hasIndexCoverage, parsePrismaSchema } from "./lib/prisma-schema.js";
 import { writeJsonReport, writeTextReport } from "./lib/report.js";

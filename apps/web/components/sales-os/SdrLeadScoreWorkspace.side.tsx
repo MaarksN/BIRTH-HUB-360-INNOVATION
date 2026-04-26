@@ -115,6 +115,7 @@ export function SdrLeadScoreWorkspaceSide(props: SdrLeadScoreWorkspaceSideProps)
           </div>
           <div className={styles.taskComposer}>
             <input
+              aria-label="Nova tarefa"
               onChange={(event) => setTaskInput(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
@@ -197,6 +198,7 @@ export function SdrLeadScoreWorkspaceSide(props: SdrLeadScoreWorkspaceSideProps)
 
           <div className={styles.supportComposer}>
             <input
+              aria-label="Mensagem de suporte"
               onChange={(event) => setSupportInput(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {

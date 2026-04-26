@@ -33,6 +33,7 @@ export default function OperationsPage() {
       <div className="panel" style={{ marginTop: "1rem" }}>
         <div style={{ display: "flex", gap: "1rem" }}>
           <input
+            aria-label="Buscar operacao administrativa"
             type="text"
             placeholder="Buscar por tenant, ID de workflow, execution, ou connector..."
             value={query}
@@ -132,7 +133,7 @@ function AuditLogsPanel() {
             <tbody>
               {logs.map((log: any) => (
                 <tr key={log.id}>
-                  <td>{new Date(log.createdAt).toLocaleString()}</td>
+                  <td>{new Date(log.createdAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}</td>
                   <td><strong>{log.action}</strong></td>
                   <td>{log.actorId}</td>
                   <td>{log.tenantId}</td>

@@ -214,11 +214,13 @@ export function BudgetPanel({
 
       <div style={{ display: "grid", gap: "0.75rem", gridTemplateColumns: "2fr 1fr auto" }}>
         <input
+          aria-label="Agente do limite de orcamento"
           onChange={(event) => onAgentChange(event.target.value)}
           placeholder="ceo-pack, sales-pack, maestro-orchestrator-pack"
           value={budgetForm.agentId}
         />
         <input
+          aria-label="Limite mensal do agente"
           min={1}
           onChange={(event) => onLimitChange(Number(event.target.value))}
           type="number"

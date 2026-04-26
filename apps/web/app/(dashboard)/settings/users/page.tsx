@@ -95,6 +95,7 @@ export default function UsersAdminPage() {
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
         <input
+          aria-label="Buscar usuarios"
           onChange={(event) => setFilters((current) => ({ ...current, search: event.target.value }))}
           placeholder="Buscar por nome/email"
           value={filters.search}
@@ -161,6 +162,7 @@ export default function UsersAdminPage() {
                   {removeCandidate === user.id ? (
                     <div style={{ display: "grid", gap: "0.4rem", marginTop: "0.5rem" }}>
                       <input
+                        aria-label="Confirmar remocao de usuario"
                         onChange={(event) => setRemoveConfirmation(event.target.value)}
                         placeholder='Digite "REMOVER"'
                         value={removeConfirmation}

@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 // 
 import { QueueManager } from "../src.js";
 import { QUEUE_CONFIG } from "../src/definitions.js";

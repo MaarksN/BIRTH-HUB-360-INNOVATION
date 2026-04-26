@@ -50,6 +50,7 @@ export default async function OutputsPage({
 
       <form style={{ display: "flex", gap: "0.6rem", maxWidth: 420 }}>
         <input
+          aria-label="Filtrar por tipo de output"
           defaultValue={typeFilter}
           name="type"
           placeholder="technical-log ou executive-report"

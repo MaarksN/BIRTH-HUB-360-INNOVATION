@@ -121,6 +121,7 @@ export default function ProfileSecurityPage() {
           <strong>Passo 2: validar TOTP</strong>
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <input
+              aria-label="Codigo TOTP"
               maxLength={6}
               onBlur={() => setTotpCode((current) => current.trim())}
               onChange={(event) => setTotpCode(event.target.value)}
@@ -157,6 +158,7 @@ export default function ProfileSecurityPage() {
       <article style={{ border: "1px solid var(--border)", borderRadius: "1rem", padding: "1rem" }}>
         <strong>Campo rico sanitizado com DOMPurify</strong>
         <textarea
+          aria-label="Notas de recovery codes"
           onChange={(event) => setRichNotes(event.target.value)}
           rows={4}
           style={{ marginTop: "0.75rem", width: "100%" }}

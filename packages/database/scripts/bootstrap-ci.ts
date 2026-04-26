@@ -1,4 +1,3 @@
-// @ts-expect-error TODO: remover suppressão ampla
 // 
 import { schemaPath } from "./lib/paths.js";
 import { createScriptRuntime } from "./lib/runtime.js";

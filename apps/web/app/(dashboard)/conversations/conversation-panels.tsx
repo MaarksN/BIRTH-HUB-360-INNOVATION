@@ -36,6 +36,7 @@ export function ConversationListPanel(props: ConversationListProps) {
     <aside className="panel" style={{ display: "grid", gap: "0.85rem", alignContent: "start" }}>
       <div style={{ display: "grid", gap: "0.6rem" }}>
         <input
+          aria-label="Buscar conversas"
           onChange={(event) => onFilterChange("q", event.target.value)}
           placeholder="Buscar por assunto ou mensagem"
           value={filters.q}
@@ -62,6 +63,7 @@ export function ConversationListPanel(props: ConversationListProps) {
 
       <div style={{ display: "grid", gap: "0.55rem" }}>
         <input
+          aria-label="Assunto da nova conversa"
           onChange={(event) => onNewConversationChange("subject", event.target.value)}
           placeholder="Assunto da nova thread"
           value={newConversation.subject}

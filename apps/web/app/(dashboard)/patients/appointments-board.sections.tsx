@@ -67,7 +67,7 @@ export function AppointmentsBoardFiltersSection({
   return (
     <section className="panel" style={{ display: "grid", gap: "0.85rem" }}>
       <div className="filter-row">
-        <input onChange={(event) => onDateChange(event.target.value)} type="date" value={date} />
+        <input aria-label="Data da agenda" onChange={(event) => onDateChange(event.target.value)} type="date" value={date} />
         <select onChange={(event) => onViewChange(event.target.value as AppointmentsBoardView)} value={view}>
           <option value="day">Dia</option>
           <option value="week">Semana</option>

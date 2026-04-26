@@ -148,6 +148,7 @@ export function GlobalSearch() {
             <div className="search-dialog__header">
               <Search size={18} />
               <input
+                aria-label="Busca global"
                 onChange={(event) => {
                   startTransition(() => {
                     setQuery(event.target.value);

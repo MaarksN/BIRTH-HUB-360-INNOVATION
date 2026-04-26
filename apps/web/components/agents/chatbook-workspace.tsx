@@ -1313,6 +1313,7 @@ export function ChatbookWorkspace() {
             </span>
           </div>
           <input
+            aria-label="Buscar no historico local"
             className="agent-input"
             onChange={(event) => setHistoryQuery(event.target.value)}
             placeholder="Buscar no historico local"

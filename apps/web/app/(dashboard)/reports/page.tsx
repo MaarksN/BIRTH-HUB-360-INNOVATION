@@ -51,6 +51,7 @@ export default async function ReportsPage({
 
       <form className="panel" style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
         <input
+          aria-label="Filtrar por tipo de relatorio"
           defaultValue={typeFilter}
           name="type"
           placeholder="technical-log ou executive-report"
