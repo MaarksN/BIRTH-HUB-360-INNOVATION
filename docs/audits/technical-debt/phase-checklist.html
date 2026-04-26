@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Checklist de Fases — Dívida Técnica</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17211c;
+        --muted: #5d6961;
+        --paper: #f7f4eb;
+        --panel: #fffaf0;
+        --line: #d8d0be;
+        --line-strong: #8a806c;
+        --green: #1f8f62;
+        --green-soft: #dff2e9;
+        --yellow: #c88914;
+        --yellow-soft: #fff1cc;
+        --red: #c9463a;
+        --red-soft: #f8ddd9;
+        --blueprint: #244d61;
+        --shadow: 0 20px 70px rgba(31, 38, 33, 0.13);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(90deg, rgba(23, 33, 28, 0.045) 1px, transparent 1px) 0 0 / 32px 32px,
+          linear-gradient(rgba(23, 33, 28, 0.035) 1px, transparent 1px) 0 0 / 32px 32px,
+          radial-gradient(circle at top left, rgba(36, 77, 97, 0.16), transparent 34rem),
+          var(--paper);
+        color: var(--ink);
+        font-family: "Aptos", "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 42px 0 56px;
+      }
+
+      .masthead {
+        border-top: 6px solid var(--ink);
+        display: grid;
+        gap: 22px;
+        grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+        padding: 28px 0 26px;
+      }
+
+      h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2rem, 4vw, 4.35rem);
+        font-weight: 800;
+        letter-spacing: 0;
+        line-height: 0.96;
+        margin: 0;
+        max-width: 12ch;
+      }
+
+      .subtitle {
+        color: var(--muted);
+        font-size: 1.02rem;
+        margin: 18px 0 0;
+        max-width: 70ch;
+      }
+
+      .status-ledger {
+        align-self: stretch;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: 12px;
+        padding: 18px;
+      }
+
+      .ledger-line {
+        align-items: center;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
+      }
+
+      .ledger-line:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .value {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+      }
+
+      .legend {
+        align-items: center;
+        border: 1px solid var(--line);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        justify-content: space-between;
+        margin: 12px 0 24px;
+        padding: 14px 16px;
+      }
+
+      .legend-item,
+      .phase-status {
+        align-items: center;
+        display: inline-flex;
+        gap: 8px;
+      }
+
+      .dot {
+        border: 2px solid rgba(23, 33, 28, 0.26);
+        border-radius: 999px;
+        display: inline-block;
+        flex: 0 0 auto;
+        height: 16px;
+        width: 16px;
+      }
+
+      .dot.green {
+        background: var(--green);
+      }
+
+      .dot.yellow {
+        background: var(--yellow);
+      }
+
+      .dot.red {
+        background: var(--red);
+      }
+
+      .board {
+        background: rgba(255, 250, 240, 0.88);
+        border: 1px solid var(--line-strong);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 16px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--ink);
+        color: #fff9ea;
+        font-size: 0.78rem;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      tbody tr:hover {
+        background: rgba(36, 77, 97, 0.055);
+      }
+
+      .phase-id {
+        color: var(--blueprint);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .phase-title {
+        font-weight: 800;
+        margin: 0 0 4px;
+      }
+
+      .phase-scope {
+        color: var(--muted);
+        margin: 0;
+      }
+
+      .pill {
+        border-radius: 999px;
+        display: inline-flex;
+        font-size: 0.78rem;
+        font-weight: 800;
+        padding: 4px 9px;
+        white-space: nowrap;
+      }
+
+      .pill.green {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+
+      .pill.yellow {
+        background: var(--yellow-soft);
+        color: #815a00;
+      }
+
+      .pill.red {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+
+      .evidence {
+        color: var(--muted);
+        margin: 0;
+      }
+
+      code {
+        background: rgba(23, 33, 28, 0.08);
+        border: 1px solid rgba(23, 33, 28, 0.1);
+        border-radius: 4px;
+        font-family: "Cascadia Mono", Consolas, monospace;
+        font-size: 0.9em;
+        padding: 1px 5px;
+      }
+
+      .notes {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 24px;
+      }
+
+      .note {
+        border-top: 4px solid var(--ink);
+        background: rgba(255, 250, 240, 0.78);
+        padding: 16px;
+      }
+
+      .note h2 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.2rem;
+        margin: 0 0 8px;
+      }
+
+      .note p {
+        color: var(--muted);
+        margin: 0;
+      }
+
+      @media (max-width: 860px) {
+        main {
+          width: min(100% - 20px, 1180px);
+          padding-top: 24px;
+        }
+
+        .masthead,
+        .notes {
+          grid-template-columns: 1fr;
+        }
+
+        .board {
+          overflow-x: auto;
+        }
+
+        table {
+          min-width: 920px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="masthead" aria-labelledby="page-title">
+        <div>
+          <h1 id="page-title">Checklist das fases</h1>
+          <p class="subtitle">
+            Estado do roadmap de remediação técnica em 26/04/2026. As cores indicam o estágio atual:
+            concluído por evidência, iniciado com lacunas, ou ainda não iniciado.
+          </p>
+        </div>
+
+        <aside class="status-ledger" aria-label="Resumo do checklist">
+          <div class="ledger-line">
+            <span class="label">Fases avaliadas</span>
+            <span class="value">13</span>
+          </div>
+          <div class="ledger-line">
+            <span class="label">Feitas</span>
+            <span class="value">1</span>
+          </div>
+          <div class="ledger-line">
+            <span class="label">Precisam melhoria</span>
+            <span class="value">10</span>
+          </div>
+          <div class="ledger-line">
+            <span class="label">Não iniciadas</span>
+            <span class="value">2</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="legend" aria-label="Legenda de status">
+        <span class="legend-item"><span class="dot green"></span> Feito</span>
+        <span class="legend-item"><span class="dot yellow"></span> Precisa de melhoria</span>
+        <span class="legend-item"><span class="dot red"></span> Não iniciado</span>
+        <strong>Parada atual: FASE 1 — Multi-tenancy, RBAC e matriz de permissões</strong>
+      </section>
+
+      <section class="board" aria-label="Tabela de fases do roadmap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fase</th>
+              <th>Escopo</th>
+              <th>Status</th>
+              <th>Verificação feita</th>
+              <th>Próximo passo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="phase-id">FASE 0</td>
+              <td>
+                <p class="phase-title">Segurança crítica e vazamento de dados</p>
+                <p class="phase-scope">Secrets, tokens em logs/URL, bypass de autorização, multi-tenant, webhooks, dependências críticas e agentes destrutivos.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot green"></span><span class="pill green">Feito</span></span></td>
+              <td><p class="evidence"><code>pnpm security:guards</code>, <code>pnpm test:isolation</code>, <code>pnpm db:check:all</code>, <code>pnpm test:critical:coverage</code> e scanner de credenciais passaram.</p></td>
+              <td><p class="evidence">Manter como gate contínuo no CI e investigar apenas novas regressões.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 1</td>
+              <td>
+                <p class="phase-title">Multi-tenancy, RBAC e matriz de permissões</p>
+                <p class="phase-scope">tenantId, ownership, RBAC, permissões visuais vs backend, testes negativos e separação admin global/tenant.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence">RLS clínico e suíte de isolamento passam; ainda falta matriz central completa e cobertura negativa por perfil.</p></td>
+              <td><p class="evidence">Criar matriz RBAC versionada e ampliar testes por recurso/ownership.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 2</td>
+              <td>
+                <p class="phase-title">Banco, transações, idempotência e concorrência</p>
+                <p class="phase-scope">Migrations, constraints, índices, transações, outbox, locks, dedupe e consistência de filas/jobs.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence">Schema clínico, migrations registradas, drift, FK e RLS passam. Outbox/locks/retry seguro ainda não foram fechados.</p></td>
+              <td><p class="evidence">Mapear operações críticas e adicionar idempotência/locks/transactions onde faltar.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 3</td>
+              <td>
+                <p class="phase-title">Typecheck, lint, dead code e qualidade base</p>
+                <p class="phase-scope">any, as any, ts-ignore, imports mortos, duplicação, complexidade e arquivos grandes.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence"><code>pnpm typecheck</code> e <code>pnpm lint</code> passam; o roadmap ainda lista dívida de any/ts-ignore/dead code.</p></td>
+              <td><p class="evidence">Reduzir suppressions e criar baseline mensurável para complexidade e código morto.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 4</td>
+              <td>
+                <p class="phase-title">Testes críticos e coverage</p>
+                <p class="phase-scope">Fluxos críticos, permissões, multi-tenant, idempotência, webhooks, concorrência, contratos e cobertura mínima.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence"><code>pnpm test</code> e <code>pnpm test:critical:coverage</code> passaram, mas a cobertura ainda está no piso mínimo configurado.</p></td>
+              <td><p class="evidence">Elevar cobertura por domínio e adicionar testes de contrato/concor­rência onde faltarem.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 5</td>
+              <td>
+                <p class="phase-title">Arquitetura e boundaries</p>
+                <p class="phase-scope">Camadas, controllers finos, services/domínio, dependency boundaries, ciclos e contratos entre módulos.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot red"></span><span class="pill red">Não iniciado</span></span></td>
+              <td><p class="evidence">Não houve rodada dedicada de arquitetura/boundaries nesta sequência.</p></td>
+              <td><p class="evidence">Executar auditoria de imports/ciclos e priorizar boundaries críticos.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 6</td>
+              <td>
+                <p class="phase-title">Observabilidade e operação</p>
+                <p class="phase-scope">Logs estruturados, requestId/correlationId, métricas, tracing, audit log, healthcheck, alertas e runbooks.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence">Há logger estruturado e health/readiness em partes do sistema; métricas, tracing, alertas e runbooks ainda precisam maturar.</p></td>
+              <td><p class="evidence">Definir painel operacional mínimo e alertas para filas, webhooks, DB e autenticação.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 7</td>
+              <td>
+                <p class="phase-title">Integrações, resiliência e filas</p>
+                <p class="phase-scope">Timeout, retry com backoff/jitter, circuit breaker, DLQ, dedupe, assinatura de webhook, schemas externos e logs.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence">Regressões críticas de webhooks/idempotência passam; cobertura de retry, DLQ, circuit breaker e timeouts ainda é parcial.</p></td>
+              <td><p class="evidence">Padronizar client HTTP resiliente e política de filas com DLQ/dedupe.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 8</td>
+              <td>
+                <p class="phase-title">Agentes, IA e tool calling seguro</p>
+                <p class="phase-scope">Prompt injection, allowlist de tools, approval flow, sandbox, limites de custo/tokens, validação de saída e auditoria.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence">Agent packs e guardrails básicos passam, mas ainda falta fechamento formal de sandbox, aprovação humana e testes adversariais.</p></td>
+              <td><p class="evidence">Criar política de tool calling e testes maliciosos por tool sensível.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 9</td>
+              <td>
+                <p class="phase-title">Frontend, UX, acessibilidade e i18n</p>
+                <p class="phase-scope">Loading/error/empty states, validação de formulário, feedback, confirmação destrutiva, a11y, i18n, timezone e moeda/data.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot red"></span><span class="pill red">Não iniciado</span></span></td>
+              <td><p class="evidence">Não houve rodada dedicada de UX/a11y/i18n nesta sequência.</p></td>
+              <td><p class="evidence">Auditar telas críticas com axe/Lighthouse e testes de fluxos assíncronos.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 10</td>
+              <td>
+                <p class="phase-title">Supply chain, CI/CD, release e documentação</p>
+                <p class="phase-scope">Lockfile, audit, SBOM, Actions com SHA, Docker com digest, CI gates, changelog, versionamento, rollback e docs.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence">CI recebeu gates; <code>security:licenses</code> e audit high passaram. SBOM, pin por SHA/digest e release docs ainda faltam.</p></td>
+              <td><p class="evidence">Adicionar SBOM, pinning de actions/imagens e política de release/rollback.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 11</td>
+              <td>
+                <p class="phase-title">Privacidade, LGPD e qualidade de dados</p>
+                <p class="phase-scope">PII em logs, retenção, exclusão/exportação, anonimização, minimização, reconciliação e auditoria de dados críticos.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence">Testes de consentimento/retenção foram reativados; política completa de retenção/exportação/PII ainda precisa fechamento.</p></td>
+              <td><p class="evidence">Criar matriz de dados pessoais e validar logs/fixtures/payloads frontend.</p></td>
+            </tr>
+            <tr>
+              <td class="phase-id">FASE 12</td>
+              <td>
+                <p class="phase-title">Developer experience e manutenção contínua</p>
+                <p class="phase-scope">Setup local, scripts padronizados, onboarding, templates, comando único de validação, devcontainer, pré-commit e automação.</p>
+              </td>
+              <td><span class="phase-status"><span class="dot yellow"></span><span class="pill yellow">Precisa melhoria</span></span></td>
+              <td><p class="evidence"><code>workspace:audit</code> passa e geração Prisma foi estabilizada; onboarding/devcontainer/templates ainda não foram concluídos.</p></td>
+              <td><p class="evidence">Documentar comando único de validação e padronizar setup local/CI.</p></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="notes" aria-label="Notas de interpretação">
+        <article class="note">
+          <h2>Critério verde</h2>
+          <p>Há evidência recente de comando/gate passando e o escopo principal da fase foi fechado para o objetivo atual.</p>
+        </article>
+        <article class="note">
+          <h2>Critério amarelo</h2>
+          <p>A fase tem base implementada ou verificações parciais, mas ainda possui lacunas relevantes no roadmap.</p>
+        </article>
+        <article class="note">
+          <h2>Critério vermelho</h2>
+          <p>Não houve execução dedicada suficiente para considerar a fase iniciada nesta sequência de trabalho.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

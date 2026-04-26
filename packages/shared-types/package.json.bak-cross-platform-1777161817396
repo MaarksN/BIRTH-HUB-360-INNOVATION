@@ -7,7 +7,7 @@
     "build": "tsc -b tsconfig.json --force",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node ../../scripts/run-node-tests-if-present.mjs src",
+    "test": "sh -c 'files=$(find src -name \"*.test.ts\" -print); if [ -n \"$files\" ]; then node --import tsx --test $files; else echo \"No tests found\"; fi'",
     "clean": "rimraf dist"
   },
   "devDependencies": {

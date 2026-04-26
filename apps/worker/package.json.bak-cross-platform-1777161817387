@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "load:test": "node --import tsx src/load/parallelLoad.test.ts",
     "start": "node dist/apps/worker/src/index.js",
-    "test": "node ../../scripts/run-node-tests-if-present.mjs src",
+    "test": "sh -c 'files=$(find src test -name \"*.test.ts\" -print 2>/dev/null); if [ -n \"$files\" ]; then node --import tsx --test --test-concurrency=1 $files; else echo \"No tests found\"; fi'",
     "test:isolation": "node --import tsx --test --test-concurrency=1 test/**/*.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

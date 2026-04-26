@@ -13,7 +13,8 @@ const ignoredDirs = new Set([
   "build",
   "coverage",
   ".next",
-  ".turbo"
+  ".turbo",
+  ".cache"
 ]);
 
 function walk(dir) {

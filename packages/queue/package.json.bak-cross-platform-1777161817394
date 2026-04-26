@@ -18,7 +18,7 @@
     "build": "tsc -p tsconfig.json",
     "test:load": "tsx load-test/bullmq-load-test.ts",
     "schedule:crons": "tsx scripts/schedule-recurring-jobs.ts",
-    "test": "node ../../scripts/run-node-tests-if-present.mjs src",
+    "test": "sh -c 'files=$(find tests -name \"*.test.ts\" -print 2>/dev/null); if [ -n \"$files\" ]; then node --import tsx --test $files; else echo \"No tests found\"; fi'",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "clean": "rimraf dist"
