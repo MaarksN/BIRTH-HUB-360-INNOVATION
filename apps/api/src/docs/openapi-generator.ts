@@ -23,7 +23,7 @@ export interface OpenAPIParameter {
   in: "query" | "path" | "header" | "cookie";
   description: string;
   required: boolean;
-  schema: any;
+  schema: Record<string, unknown>;
   example?: unknown;
 }
 
@@ -32,7 +32,7 @@ export interface OpenAPIRequestBody {
   required: boolean;
   content: {
     [mediaType: string]: {
-      schema: any;
+      schema: Record<string, unknown>;
       examples?: Record<string, unknown>;
     };
   };
@@ -42,7 +42,7 @@ export interface OpenAPIResponse {
   description: string;
   content?: {
     [mediaType: string]: {
-      schema: any;
+      schema: Record<string, unknown>;
       examples?: Record<string, unknown>;
     };
   };
@@ -50,7 +50,7 @@ export interface OpenAPIResponse {
 
 export class OpenAPIGenerator {
   private routes: Map<string, RouteDefinition> = new Map();
-  private schemas: Map<string, any> = new Map();
+  private schemas: Map<string, z.ZodTypeAny> = new Map();
 
   /**
    * Register a route for documentation
@@ -63,7 +63,7 @@ export class OpenAPIGenerator {
   /**
    * Register a schema for reuse
    */
-  registerSchema(name: string, schema: any): void {
+  registerSchema(name: string, schema: z.ZodTypeAny): void {
     this.schemas.set(name, schema);
   }
 
@@ -75,8 +75,8 @@ export class OpenAPIGenerator {
     version: string;
     description?: string;
     baseUrl: string;
-    securitySchemes?: Record<string, any>;
-  }): any {
+    securitySchemes?: Record<string, unknown>;
+  }): Record<string, unknown> {
     return {
       openapi: "3.1.0",
       info: {
@@ -102,8 +102,8 @@ export class OpenAPIGenerator {
   /**
    * Generate paths section
    */
-  private generatePaths(): Record<string, any> {
-    const paths: Record<string, any> = {};
+  private generatePaths(): Record<string, Record<string, unknown>> {
+    const paths: Record<string, Record<string, unknown>> = {};
 
     for (const [, route] of this.routes) {
       if (!paths[route.path]) {
@@ -128,7 +128,7 @@ export class OpenAPIGenerator {
   /**
    * Generate parameters
    */
-  private generateParameters(route: RouteDefinition): any[] {
+  private generateParameters(route: RouteDefinition): OpenAPIParameter[] {
     if (!route.parameters) return [];
 
     return route.parameters.map((param) => ({
@@ -144,8 +144,8 @@ export class OpenAPIGenerator {
   /**
    * Generate responses
    */
-  private generateResponses(route: RouteDefinition): Record<number, any> {
-    const responses: Record<number, any> = {};
+  private generateResponses(route: RouteDefinition): Record<string, OpenAPIResponse> {
+    const responses: Record<string, OpenAPIResponse> = {};
 
     for (const [code, response] of Object.entries(route.responses)) {
       responses[code] = {
@@ -160,8 +160,8 @@ export class OpenAPIGenerator {
   /**
    * Generate schemas
    */
-  private generateSchemas(): Record<string, any> {
-    const schemas: Record<string, any> = {};
+  private generateSchemas(): Record<string, Record<string, unknown>> {
+    const schemas: Record<string, Record<string, unknown>> = {};
 
     for (const [name, schema] of this.schemas) {
       schemas[name] = this.zodToOpenAPI(schema);
@@ -173,7 +173,7 @@ export class OpenAPIGenerator {
   /**
    * Generate tags
    */
-  private generateTags(): any[] {
+  private generateTags(): Array<{ description: string; name: string }> {
     const tags = new Set<string>();
 
     for (const [, route] of this.routes) {
@@ -189,7 +189,7 @@ export class OpenAPIGenerator {
   /**
    * Convert Zod schema to OpenAPI schema
    */
-  private zodToOpenAPI(zodSchema: z.ZodSchema<any>): any {
+  private zodToOpenAPI(_zodSchema: z.ZodTypeAny): Record<string, unknown> {
     // Simplified conversion - in production, use a library like @asteasolutions/zod-to-openapi
     return {
       type: "object",

@@ -102,24 +102,24 @@ void test("Workflow runner smoke test executes CEO agent and persists the result
   const agentCalls: Array<{ agentId: string; contextSummary: string; input: Record<string, unknown> }> = [];
 
   try {
-    // @ts-expect-error test limit
+    // @ts-expect-error isolated runner mock limit
     prisma.workflowExecution.findUnique = mock.fn(async () => createMockWorkflowExecution());
-    // @ts-expect-error test limit
+    // @ts-expect-error isolated runner mock limit
     prisma.workflow.findFirst = mock.fn(async () => createMockWorkflow());
-    // @ts-expect-error test limit
+    // @ts-expect-error isolated runner mock limit
     prisma.stepResult.findMany = mock.fn(async () => []);
-    // @ts-expect-error test limit
+    // @ts-expect-error isolated runner mock limit
     prisma.stepResult.create = mock.fn(async (args) => { createdResults.push(args.data); return createMockStepResult(args.data); });
-    // @ts-expect-error test limit
+    // @ts-expect-error isolated runner mock limit
     prisma.workflowExecution.update = mock.fn(async (args) => { executionUpdates.push(args.data); return createMockWorkflowExecution(args.data); });
-    // @ts-expect-error test limit
+    // @ts-expect-error isolated runner mock limit
     prisma.quotaUsage.findFirst = mock.fn(async () => null);
-    // @ts-expect-error test limit
+    // @ts-expect-error isolated runner mock limit
     prisma.subscription.findFirst = mock.fn(async () => null);
-    // @ts-expect-error test limit
+    // @ts-expect-error isolated runner mock limit
     prisma.usageRecord.create = mock.fn(async (args) => { usageRecords.push(args.data); return args.data; });
     const fakeQueue = { add: () => Promise.resolve(undefined) };
-    // @ts-expect-error test mock limit
+    // @ts-expect-error isolated runner mock limit
     const runner = new WorkflowRunner(fakeQueue, {
       agentExecutor: {
         execute: (args) => {

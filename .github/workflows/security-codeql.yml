@@ -21,22 +21,22 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
+        uses: github/codeql-action/init@95e58e9a2cdfd71adc6e0353d5c52f41a045d225
         with:
           build-mode: none
           languages: javascript-typescript
           queries: security-extended,security-and-quality
 
       - name: Analyze with CodeQL
-        uses: github/codeql-action/analyze@v4
+        uses: github/codeql-action/analyze@95e58e9a2cdfd71adc6e0353d5c52f41a045d225
         with:
           category: "/language:javascript-typescript"
           output: reports/codeql
@@ -55,7 +55,7 @@ jobs:
 
       - name: Upload CodeQL SARIF
         if: always() && steps.resolve-sarif.outputs.sarif_file != ''
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@95e58e9a2cdfd71adc6e0353d5c52f41a045d225
         with:
           category: "/language:javascript-typescript"
           sarif_file: ${{ steps.resolve-sarif.outputs.sarif_file }}

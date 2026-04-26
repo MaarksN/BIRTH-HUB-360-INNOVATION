@@ -171,7 +171,7 @@ export function validate<T>(schema: z.ZodSchema<T>, data: unknown): ValidationRe
   if (result.success) {
     return { success: true, data: result.data };
   }
-  return { success: false, errors: result.error.issues || (result.error as any).errors };
+  return { success: false, errors: result.error.issues };
 }
 
 /**

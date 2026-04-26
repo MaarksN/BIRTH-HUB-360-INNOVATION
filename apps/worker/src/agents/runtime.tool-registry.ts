@@ -1,7 +1,7 @@
 import type { AgentManifest } from "@birthub/agents-core";
 import { PolicyEngine } from "@birthub/agents-core/policy";
 import { BaseTool, DbReadTool, HttpTool, SendEmailTool } from "@birthub/agents-core/tools";
-import { prisma } from "@birthub/database";
+import { Prisma, prisma } from "@birthub/database";
 import { z } from "zod";
 
 import { runtimeMemory } from "./runtime.memory.js";
@@ -156,7 +156,7 @@ export function createRuntimeToolRegistry(input: {
               operation: payload.operation,
               table: payload.table,
               traceId: context.traceId
-            } as any,
+            } as Prisma.InputJsonValue,
             entityId: entityId ?? context.traceId,
             entityType: payload.table,
             tenantId: context.tenantId

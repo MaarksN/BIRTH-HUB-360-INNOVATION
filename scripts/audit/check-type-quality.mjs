@@ -33,11 +33,16 @@ function countDecisionPoints(text) {
 const files = gitFiles().filter(shouldScan);
 const rows = files.map((file) => {
   const text = readFileSync(path.join(repoRoot, file), "utf8");
+  const suppressions = lineMatches(text, /@ts-(ignore|expect-error)/);
+  const unjustifiedSuppressions = suppressions.filter(
+    (row) => !/@ts-(ignore|expect-error)\s+.{12,}/.test(row.text)
+  );
   return {
     file,
     lines: text.split(/\r?\n/).length,
     explicitAny: lineMatches(text, /(^|[^A-Za-z0-9_])(:\s*any\b|\bas\s+any\b)/).length,
-    suppressions: lineMatches(text, /@ts-(ignore|expect-error)/).length,
+    suppressions: suppressions.length,
+    unjustifiedSuppressions: unjustifiedSuppressions.length,
     decisionPoints: countDecisionPoints(text)
   };
 });
@@ -48,12 +53,18 @@ const report = {
   totals: {
     explicitAny: rows.reduce((sum, row) => sum + row.explicitAny, 0),
     suppressions: rows.reduce((sum, row) => sum + row.suppressions, 0),
+    unjustifiedSuppressions: rows.reduce((sum, row) => sum + row.unjustifiedSuppressions, 0),
     filesOver500Lines: rows.filter((row) => row.lines > 500).length,
     filesOver80DecisionPoints: rows.filter((row) => row.decisionPoints > 80).length
   },
   hotspots: rows
     .filter((row) => row.explicitAny || row.suppressions || row.lines > 500 || row.decisionPoints > 80)
-    .sort((a, b) => b.suppressions - a.suppressions || b.explicitAny - a.explicitAny || b.lines - a.lines)
+    .sort((a, b) =>
+      b.unjustifiedSuppressions - a.unjustifiedSuppressions ||
+      b.suppressions - a.suppressions ||
+      b.explicitAny - a.explicitAny ||
+      b.lines - a.lines
+    )
     .slice(0, 40)
 };
 
@@ -64,15 +75,16 @@ const lines = [
   `- Scanned files: ${report.scannedFiles}`,
   `- Explicit any / as any: ${report.totals.explicitAny}`,
   `- TS suppressions: ${report.totals.suppressions}`,
+  `- Unjustified TS suppressions: ${report.totals.unjustifiedSuppressions}`,
   `- Files over 500 lines: ${report.totals.filesOver500Lines}`,
   `- Files over 80 decision points: ${report.totals.filesOver80DecisionPoints}`,
   "",
   "## Hotspots",
   "",
-  "| file | lines | explicit any | suppressions | decision points |",
-  "| --- | ---: | ---: | ---: | ---: |",
+  "| file | lines | explicit any | suppressions | unjustified suppressions | decision points |",
+  "| --- | ---: | ---: | ---: | ---: | ---: |",
   ...report.hotspots.map(
-    (row) => `| ${row.file} | ${row.lines} | ${row.explicitAny} | ${row.suppressions} | ${row.decisionPoints} |`
+    (row) => `| ${row.file} | ${row.lines} | ${row.explicitAny} | ${row.suppressions} | ${row.unjustifiedSuppressions} | ${row.decisionPoints} |`
   )
 ];
 

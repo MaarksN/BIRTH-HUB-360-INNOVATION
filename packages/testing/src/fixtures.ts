@@ -85,11 +85,61 @@ export function createTestAgent(overrides?: Partial<TestAgent>): TestAgent {
 }
 
 // ============ MOCK ADAPTERS ============
+type ListFilter = { limit?: number; offset?: number };
+type ContactFilter = ListFilter & { email?: string };
+type ProductFilter = ListFilter & { sku?: string };
+type MockContact = {
+  createdAt: Date;
+  email?: string;
+  externalId: string;
+  id: string;
+  metadata?: unknown;
+  name?: string;
+  phone?: string;
+  updatedAt: Date;
+};
+type MockProduct = {
+  createdAt: Date;
+  externalId: string;
+  id: string;
+  name?: string;
+  price?: number;
+  quantity?: number;
+  sku?: string;
+  updatedAt: Date;
+};
+type MockPayment = {
+  amount?: number;
+  createdAt: Date;
+  currency?: string;
+  externalId: string;
+  id: string;
+  metadata?: unknown;
+  status: string;
+  updatedAt: Date;
+};
+type MockRequest = {
+  body: unknown;
+  context: Record<string, unknown>;
+  params: Record<string, unknown>;
+  query: Record<string, unknown>;
+  user: TestUser;
+};
+type MockResponse = {
+  body: unknown;
+  headers: Record<string, string>;
+  json: (data: unknown) => MockResponse;
+  send: (data: unknown) => MockResponse;
+  setHeader: (key: string, value: string) => void;
+  status: (code: number) => MockResponse;
+  statusCode: number;
+};
+
 export class MockCrmAdapter  {
   readonly name = "mock-crm";
   readonly version = "1.0.0";
 
-  private contacts: Map<string, any> = new Map();
+  private contacts: Map<string, MockContact> = new Map();
   private initialized = false;
 
   async initialize(): Promise<void> {
@@ -137,7 +187,7 @@ export class MockCrmAdapter  {
     return this.contacts.get(id) ?? null;
   }
 
-  async listContacts(filter?: any): Promise<any[]> {
+  async listContacts(filter?: ContactFilter): Promise<MockContact[]> {
     let results = Array.from(this.contacts.values());
 
     if (filter?.email) {
@@ -163,7 +213,7 @@ export class MockErpAdapter  {
   readonly name = "mock-erp";
   readonly version = "1.0.0";
 
-  private products: Map<string, any> = new Map();
+  private products: Map<string, MockProduct> = new Map();
   private initialized = false;
 
   async initialize(): Promise<void> {
@@ -211,7 +261,7 @@ export class MockErpAdapter  {
     return this.products.get(id) ?? null;
   }
 
-  async listProducts(filter?: any): Promise<any[]> {
+  async listProducts(filter?: ProductFilter): Promise<MockProduct[]> {
     let results = Array.from(this.products.values());
 
     if (filter?.sku) {
@@ -272,7 +322,7 @@ export class MockanyAdapter  {
     return this.payments.get(id) ?? null;
   }
 
-  async refundany(paymentId: string, amount?: any): Promise<any> {
+  async refundany(paymentId: string, amount?: number): Promise<Record<string, unknown>> {
     const payment = this.payments.get(paymentId);
     if (!payment) throw new Error(`any ${paymentId} not found`);
 
@@ -285,7 +335,7 @@ export class MockanyAdapter  {
     };
   }
 
-  async listanys(filter?: any): Promise<any[]> {
+  async listanys(filter?: ListFilter): Promise<MockPayment[]> {
     return Array.from(this.payments.values()).slice(
       filter?.offset ?? 0,
       (filter?.offset ?? 0) + (filter?.limit ?? 100)
@@ -304,7 +354,7 @@ export class MockanyAdapter  {
 }
 
 // ============ REQUEST/RESPONSE FIXTURES ============
-export function createMockRequest(overrides: any = {}): any {
+export function createMockRequest(overrides: Partial<MockRequest> = {}): MockRequest {
   return {
     context: {
       requestId: randomUUID(),
@@ -322,8 +372,8 @@ export function createMockRequest(overrides: any = {}): any {
   };
 }
 
-export function createMockResponse(): any {
-  const response = {
+export function createMockResponse(): MockResponse {
+  const response: MockResponse = {
     status: (code: number) => {
       response.statusCode = code;
       return response;
@@ -337,7 +387,7 @@ export function createMockResponse(): any {
       return response;
     },
     statusCode: 200,
-    body: null as any,
+    body: null,
     headers: {} as Record<string, string>,
     setHeader: (key: string, value: string) => {
       response.headers[key] = value;

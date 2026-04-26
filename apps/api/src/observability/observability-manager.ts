@@ -108,8 +108,8 @@ export class ObservabilityManager {
   /**
    * Get metrics summary
    */
-  getMetricsSummary(): Record<string, any> {
-    const summary: Record<string, any> = {};
+  getMetricsSummary(): Record<string, unknown> {
+    const summary: Record<string, unknown> = {};
 
     for (const [name, events] of this.metrics) {
       if (events.length === 0) continue;
@@ -177,7 +177,10 @@ export class RequestObservabilityContext {
     name: string,
     fn: (span: ReturnType<ReturnType<typeof trace.getTracer>["startSpan"]>) => Promise<T>
   ): Promise<T> {
-    return this.manager.createSpan(name, fn, this.spanContext as any);
+    const attributes = Object.fromEntries(
+      Object.entries(this.spanContext).filter(([, value]) => value !== undefined)
+    ) as Record<string, string | number | boolean>;
+    return this.manager.createSpan(name, fn, attributes);
   }
 
   /**

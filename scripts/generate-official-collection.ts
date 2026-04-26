@@ -357,7 +357,7 @@ function titleCase(value: string): string {
 
 function buildSkillEntries(
   agentId: string,
-  items: Array<{ description: string; name: string; inputSchema?: any; outputSchema?: any }>
+  items: Array<{ description: string; name: string; inputSchema?: Record<string, unknown>; outputSchema?: Record<string, unknown> }>
 ): AgentManifest["skills"] {
   return items.slice(0, 8).map((item, index) => ({
     description: item.description,
@@ -370,7 +370,7 @@ function buildSkillEntries(
 
 function buildToolEntries(
   agentId: string,
-  items: Array<{ description: string; name: string; inputSchema?: any; outputSchema?: any }>
+  items: Array<{ description: string; name: string; inputSchema?: Record<string, unknown>; outputSchema?: Record<string, unknown> }>
 ): AgentManifest["tools"] {
   return items.slice(0, 6).map((item, index) => ({
     description: item.description,

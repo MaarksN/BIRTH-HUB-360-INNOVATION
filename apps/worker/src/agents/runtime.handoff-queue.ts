@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 
-import { prisma } from "@birthub/database";
+import { Prisma, prisma } from "@birthub/database";
 import { getAgentQueueName } from "@birthub/queue";
 import type { Queue } from "bullmq";
 
@@ -28,11 +28,11 @@ export async function enqueueSpecialistAgent(input: {
         ...input.context,
         correlationId,
         parentExecutionId: input.executionId
-      } as any,
+      } as Prisma.InputJsonValue,
       metadata: {
         correlationId,
         parentExecutionId: input.executionId
-      } as any,
+      } as Prisma.InputJsonValue,
       organizationId: input.organizationId,
       source: "WORKFLOW",
       status: "RUNNING",
@@ -72,7 +72,7 @@ export async function enqueueSpecialistAgent(input: {
         parentExecutionId: input.executionId,
         queueName,
         targetAgentId: input.targetAgentId
-      } as any,
+      } as Prisma.InputJsonValue,
       entityId: childExecutionId,
       entityType: "agent_execution",
       tenantId: input.tenantId

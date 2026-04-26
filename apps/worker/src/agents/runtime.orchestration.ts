@@ -8,7 +8,7 @@ import {
 } from "@birthub/agents-core";
 import { PolicyEngine } from "@birthub/agents-core/policy";
 import { getWorkerConfig } from "@birthub/config";
-import { prisma } from "@birthub/database";
+import { Prisma, prisma } from "@birthub/database";
 import { getAgentQueueName } from "@birthub/queue";
 import { Queue } from "bullmq";
 
@@ -94,7 +94,7 @@ export async function executeManifestAgentRuntime(input: RuntimeExecutionInput):
       data: {
         metadata: {
           logs
-        } as any
+        } as Prisma.InputJsonValue
       },
       where: {
         id: input.executionId
@@ -274,7 +274,7 @@ export async function executeManifestAgentRuntime(input: RuntimeExecutionInput):
     data: {
       action: "AGENT_LEARNING_PUBLISHED",
       actorId: input.userId ?? null,
-      diff: learningRecord as any,
+      diff: learningRecord as unknown as Prisma.InputJsonValue,
       entityId: learningRecord.id,
       entityType: "agent_learning",
       tenantId: input.tenantId

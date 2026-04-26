@@ -36,6 +36,7 @@
     "audit:type-quality": "node ./scripts/audit/check-type-quality.mjs",
     "audit:frontend": "node ./scripts/audit/check-frontend-quality.mjs",
     "audit:privacy-data": "node ./scripts/audit/check-privacy-data.mjs",
+    "audit:workflow-pinning": "node ./scripts/audit/check-workflow-pinning.mjs",
     "db:generate": "pnpm --filter @birthub/database db:generate",
     "db:migrate:deploy": "pnpm --filter @birthub/database db:migrate:deploy",
     "db:check:all": "pnpm --filter @birthub/database db:check:all",

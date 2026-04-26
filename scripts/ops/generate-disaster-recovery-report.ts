@@ -23,12 +23,12 @@ export type DisasterRecoveryReadinessReport = {
 };
 
 type BuildDisasterRecoveryReadinessOptions = {
-  backupHealth?: any;
-  drill?: any;
-  rollbackEvidence?: any;
+  backupHealth?: Record<string, unknown> | null;
+  drill?: Record<string, unknown> | null;
+  rollbackEvidence?: Record<string, unknown> | null;
 };
 
-function readJsonIfExists(filePath: string): any | null {
+function readJsonIfExists(filePath: string): Record<string, unknown> | null {
   if (!existsSync(filePath)) {
     return null;
   }
@@ -42,7 +42,7 @@ function readJsonIfExists(filePath: string): any | null {
   }
 }
 
-function normalizeLegacyDrill(drill: any): any {
+function normalizeLegacyDrill(drill: Record<string, unknown> | null): Record<string, unknown> | null {
   if (!drill || drill.__parseError) {
     return drill;
   }

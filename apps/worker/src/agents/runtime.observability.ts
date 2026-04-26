@@ -1,4 +1,4 @@
-import { prisma } from "@birthub/database";
+import { Prisma, prisma } from "@birthub/database";
 
 export type AgentRuntimeEventName =
   | "agent.plan.created"
@@ -40,7 +40,7 @@ export async function emitAgentRuntimeEvent(input: {
         status: input.status,
         tenantId: input.tenantId,
         tool: input.tool ?? null
-      } as any,
+      } as Prisma.InputJsonValue,
       entityId: input.executionId,
       entityType: "agent_execution",
       tenantId: input.tenantId
