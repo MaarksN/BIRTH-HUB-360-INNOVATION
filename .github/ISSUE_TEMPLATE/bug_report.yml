@@ -1,0 +1,32 @@
+name: Bug report
+description: Registrar falha reproduzivel com impacto e evidencia.
+title: "[bug] "
+labels: ["bug", "triage"]
+body:
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto
+      description: Usuario, tenant, modulo e severidade afetados.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Liste os passos, payloads e comandos necessarios.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencia
+      description: Logs redigidos, screenshots, traces ou links de CI.
+    validations:
+      required: true

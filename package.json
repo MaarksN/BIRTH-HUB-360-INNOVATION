@@ -31,6 +31,8 @@
     "typecheck:core": "turbo run typecheck --filter=@birthub/web --filter=@birthub/api --filter=@birthub/worker --filter=@birthub/testing",
     "test": "turbo run test --concurrency=1",
     "workspace:audit": "node ./scripts/ci/workspace-audit.mjs",
+    "audit:checklist": "node ./scripts/audit/checklist-remediation.mjs",
+    "audit:boundaries": "node ./scripts/audit/check-architecture-boundaries.mjs",
     "db:generate": "pnpm --filter @birthub/database db:generate",
     "db:migrate:deploy": "pnpm --filter @birthub/database db:migrate:deploy",
     "db:check:all": "pnpm --filter @birthub/database db:check:all",

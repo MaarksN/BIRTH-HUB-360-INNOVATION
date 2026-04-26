@@ -1,0 +1,27 @@
+# BirthHub 360 ownership map.
+* @platform-architecture
+
+/apps/api/ @platform-api
+/apps/web/ @product-frontend
+/apps/worker/ @platform-operations
+/apps/voice-engine/ @platform-operations
+
+/packages/auth/ @platform-security
+/packages/security/ @platform-security
+/packages/database/ @platform-data
+/packages/logger/ @platform-observability
+/packages/queue/ @platform-operations
+/packages/integrations/ @platform-integrations
+/packages/connectors-core/ @platform-integrations
+/packages/agents-core/ @platform-agents
+/packages/agents-registry/ @platform-agents
+/packages/agent-packs/ @platform-agents
+/packages/workflows-core/ @platform-workflows
+
+/.github/ @platform-architecture
+/infra/ @platform-operations
+/k8s/ @platform-operations
+/scripts/security/ @platform-security
+/scripts/release/ @platform-operations
+/docs/security/ @platform-security
+/docs/audits/ @platform-architecture

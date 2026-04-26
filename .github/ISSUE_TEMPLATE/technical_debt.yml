@@ -1,0 +1,39 @@
+name: Divida tecnica
+description: Registrar melhoria estrutural com criterio de aceite.
+title: "[debt] "
+labels: ["technical-debt", "triage"]
+body:
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Fase do checklist
+      options:
+        - F0 Seguranca critica
+        - F1 Multi-tenancy/RBAC
+        - F2 Banco/idempotencia
+        - F3 TypeScript/lint
+        - F4 Testes/coverage
+        - F5 Arquitetura/boundaries
+        - F6 Observabilidade
+        - F7 Integracoes/resiliencia
+        - F8 Agentes/LLM
+        - F9 Frontend/UX/a11y/i18n
+        - F10 Supply chain/release
+        - F11 LGPD
+        - F12 DevEx
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencia atual
+      description: Arquivos, comandos, relatorios e risco objetivo.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterio de aceite
+      description: O que precisa acontecer para fechar a divida.
+    validations:
+      required: true

@@ -5,21 +5,28 @@ Descreva de forma curta o que esta PR entrega.
 ## O que foi alterado
 
 - [ ] Estrutura/arquitetura
-- [ ] TypeScript / módulos
+- [ ] TypeScript / modulos
 - [ ] Lint / DX
 - [ ] Testes
 - [ ] Build / scripts
-- [ ] Documentação
+- [ ] Documentacao
 
-## Checklist obrigatório
+## Evidencias obrigatorias
 
 - [ ] `pnpm typecheck`
 - [ ] `pnpm lint`
 - [ ] `pnpm test`
-- [ ] `pnpm build`
+- [ ] `pnpm audit:checklist`
 - [ ] Sem artefatos indevidos versionados
-- [ ] Riscos e impactos documentados
+- [ ] Riscos, dados sensiveis e rollback documentados
 
-## Riscos / Pendências
+## Seguranca, privacidade e tenancy
 
-Descreva riscos remanescentes, limitações ou follow-ups.
+- [ ] Sem `.env` ou segredo real versionado
+- [ ] Rotas mutantes validam sessao/autorizacao no backend
+- [ ] Fluxos multi-tenant filtram por `tenantId`/organizacao no backend
+- [ ] Logs e auditoria nao expõem PII, tokens ou Authorization
+
+## Riscos / Pendencias
+
+Descreva riscos remanescentes, limitacoes ou follow-ups.
