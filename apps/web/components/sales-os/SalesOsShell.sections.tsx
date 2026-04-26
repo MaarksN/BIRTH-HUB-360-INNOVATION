@@ -79,7 +79,7 @@ function SalesOsChatComposer(input: {
         <Mic size={16} />
       </button>
       <input
-        aria-label={copy.composerPlaceholder}
+        aria-label="Mensagem do Sales OS"
         onChange={(event) => onInputChange(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
