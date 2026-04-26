@@ -105,18 +105,19 @@ export default function OperationsPage() {
 
 function AuditLogsPanel() {
   const [logs, setLogs] = useState<any[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchWithSession('/api/bff/api/v1/admin/audit-logs')
       .then(res => res.json())
       .then(data => setLogs(data.logs || []))
-      .catch(console.error);
+      .catch(() => setLoadError("Nao foi possivel carregar a trilha de auditoria."));
   }, []);
 
   return (
     <section className="panel" style={{ marginTop: "2rem" }}>
       <h2>Trilha de Auditoria (Operacional)</h2>
-      {logs.length === 0 ? <p>Sem logs recentes.</p> : (
+      {loadError ? <p style={{ color: "red" }}>{loadError}</p> : logs.length === 0 ? <p>Sem logs recentes.</p> : (
         <div style={{ maxHeight: "300px", overflowY: "auto" }}>
           <table className="table" style={{ width: "100%", textAlign: "left" }}>
             <thead>
@@ -148,18 +149,19 @@ function AuditLogsPanel() {
 
 function TroubleshootingPanel() {
   const [metrics, setMetrics] = useState<any>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchWithSession('/api/bff/api/v1/analytics/operations')
       .then(res => res.json())
       .then(data => setMetrics(data.metrics || null))
-      .catch(console.error);
+      .catch(() => setLoadError("Nao foi possivel carregar metricas operacionais."));
   }, []);
 
   return (
     <section className="panel" style={{ marginTop: "2rem" }}>
       <h2>Troubleshooting Guiado & Saúde</h2>
-      {!metrics ? <p>Carregando métricas de operação...</p> : (
+      {loadError ? <p style={{ color: "red" }}>{loadError}</p> : !metrics ? <p>Carregando métricas de operação...</p> : (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
           <div>
             <h3>Playbook: Retries & Queue</h3>
